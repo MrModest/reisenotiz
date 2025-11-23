@@ -198,7 +198,7 @@ function TimelineItem({
       {...(status === 'in-progress' ? { 'aria-current': 'step' } : {})}
     >
       {/* Date */}
-      <div className="flex flex-col justify-start min-w-[80px]">
+      <div className="flex flex-col justify-start min-w-20">
         <TimelineTime className="text-right pr-2">{date}</TimelineTime>
         <TimelineTime className="text-right pr-2 text-primary font-semibold">{time}</TimelineTime>
       </div>
