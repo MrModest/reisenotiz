@@ -39,7 +39,7 @@ export const TimelineLayout = ({
         >
           <Link
             to={item.link}
-            className='relative block rounded-sm border border-border/40 bg-card/30 shadow-sm transition-all duration-200 hover:bg-accent/50 hover:border-border hover:shadow-md focus:bg-accent/50 focus:border-border focus:shadow-md hover:scale-[1.02] focus:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer -mx-4 px-4 py-4'
+            className='relative block rounded-sm border border-border/40 bg-card/30 shadow-sm transition-all duration-200 hover:bg-accent/50 hover:border-border hover:shadow-md focus:bg-accent/50 focus:border-border focus:shadow-md hover:scale-[1.02] focus:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer px-4 py-4'
           >
             <TimelineItem
               date={item.date}
