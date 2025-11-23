@@ -3,7 +3,6 @@ import { Timeline, TimelineItem } from './timeline'
 import { motion } from 'motion/react'
 import type { TimelineElement } from './types'
 import { Link } from 'react-router'
-import { Icon } from '@/components/icon/icon'
 
 interface TimelineLayoutProps {
   items: TimelineElement[];
