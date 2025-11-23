@@ -76,9 +76,11 @@ Timeline.displayName = 'Timeline'
  */
 interface TimelineItemProps extends Omit<HTMLMotionProps<'li'>, 'ref'> {
   /** Date string for the timeline item */
-  date?: string
+  date: string
+  /** Time string for the timeline item */
+  time: string
   /** Title of the timeline item */
-  title?: string
+  title: string
   /** Description text */
   description?: string
   /** Custom icon element */
@@ -102,6 +104,7 @@ interface TimelineItemProps extends Omit<HTMLMotionProps<'li'>, 'ref'> {
 function TimelineItem({
   className,
   date,
+  time,
   title,
   description,
   icon,
@@ -168,6 +171,7 @@ function TimelineItem({
         <div className="grid grid-cols-[minmax(auto,8rem)_auto_1fr] items-start px-4">
           <div className="pr-4 text-right">
             <TimelineTime className="text-destructive">{date}</TimelineTime>
+            <TimelineTime className="text-destructive">{time}</TimelineTime>
           </div>
 
           <div className="mx-3 flex flex-col items-center justify-start gap-y-2">
@@ -194,8 +198,9 @@ function TimelineItem({
       {...(status === 'in-progress' ? { 'aria-current': 'step' } : {})}
     >
       {/* Date */}
-      <div className="flex flex-col justify-start pt-1">
+      <div className="flex flex-col justify-start">
         <TimelineTime className="text-right pr-4">{date}</TimelineTime>
+        <TimelineTime className="text-right pr-4 text-primary font-semibold">{time}</TimelineTime>
       </div>
 
       {/* Timeline dot and connector */}

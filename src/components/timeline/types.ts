@@ -6,7 +6,9 @@ export type TimelineColor = 'primary' | 'secondary' | 'muted' | 'accent' | 'dest
 
 export interface TimelineElement {
   id: number;
+  link: string;
   date: string;
+  time: string;
   title: string;
   description: string;
   icon?: ReactNode | (() => ReactNode);

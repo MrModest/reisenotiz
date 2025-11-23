@@ -2,6 +2,7 @@ import React from 'react'
 import { Timeline, TimelineItem } from './timeline'
 import { motion } from 'motion/react'
 import type { TimelineElement } from './types'
+import { Link } from 'react-router'
 
 interface TimelineLayoutProps {
   items: TimelineElement[];
@@ -35,15 +36,18 @@ export const TimelineLayout = ({
             ease: 'easeOut',
           }}
         >
-          <TimelineItem
-            date={item.date}
-            title={item.title}
-            description={item.description}
-            icon={typeof item.icon === 'function' ? item.icon() : item.icon || customIcon}
-            iconColor={item.color || iconColor}
-            connectorColor={item.color || connectorColor}
-            showConnector={index !== items.length - 1}
-          />
+          <Link to={item.link}>
+            <TimelineItem
+              date={item.date}
+              time={item.time}
+              title={item.title}
+              description={item.description}
+              icon={typeof item.icon === 'function' ? item.icon() : item.icon || customIcon}
+              iconColor={item.color || iconColor}
+              connectorColor={item.color || connectorColor}
+              showConnector={index !== items.length - 1}
+            />
+          </Link>
         </motion.div>
       ))}
     </Timeline>
