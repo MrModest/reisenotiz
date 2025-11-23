@@ -1,9 +1,11 @@
 import { Link } from "react-router"
 import { Icon } from "@/components/icon/icon"
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item"
+import { cn } from "@/lib/utils"
 
 interface TripsProps {
   trips: Trip[]
+  className?: string
 }
 
 interface Trip {
@@ -14,9 +16,9 @@ interface Trip {
   description: string
 }
 
-export function Trips({trips}: TripsProps) {
+export function Trips({trips, className}: TripsProps) {
   return (
-    <div className="flex flex-col">
+    <div className={cn("flex flex-col", className)}>
       {trips.map(trip => (
         <Trip key={trip.id} trip={trip} />
       ))}

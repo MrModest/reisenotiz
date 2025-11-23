@@ -34,9 +34,6 @@ export function Navigation({ variant }: NavigationProps) {
   if (variant === 'sidebar') {
     return (
       <div className="flex flex-col gap-2 p-4">
-        <div className="px-3 py-4 mb-4">
-          <h1 className="text-2xl font-bold">Reisenotiz</h1>
-        </div>
         {navItems.map((item) => (
           <NavLink
             key={item.to}
