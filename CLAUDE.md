@@ -56,6 +56,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Icon Component** (`src/components/icon/icon.tsx`):
 - Wrapper around Lucide React icons
+- All used icons should be wrapped by it before being used.
 
 ### Build Configuration
 

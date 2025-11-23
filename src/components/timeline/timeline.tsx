@@ -45,7 +45,7 @@ function Timeline({ className, iconsize, size, children, ...props }: TimelinePro
       aria-label="Timeline"
       className={cn(
         timelineVariants({ size }),
-        'relative min-h-[600px] w-full max-w-2xl mx-auto py-8',
+        'relative min-h-[600px] w-full max-w-2xl mx-auto py-8 px-4 overflow-x-hidden',
         className
       )}
       {...props}
@@ -194,13 +194,13 @@ function TimelineItem({
 
   const content = (
     <div
-      className="grid grid-cols-[1fr_auto_1fr] gap-4 items-start"
+      className="grid grid-cols-[minmax(auto,140px)_auto_1fr] gap-4 items-start"
       {...(status === 'in-progress' ? { 'aria-current': 'step' } : {})}
     >
       {/* Date */}
       <div className="flex flex-col justify-start">
-        <TimelineTime className="text-right pr-4">{date}</TimelineTime>
-        <TimelineTime className="text-right pr-4 text-primary font-semibold">{time}</TimelineTime>
+        <TimelineTime className="text-right pr-2">{date}</TimelineTime>
+        <TimelineTime className="text-right pr-2 text-primary font-semibold">{time}</TimelineTime>
       </div>
 
       {/* Timeline dot and connector */}

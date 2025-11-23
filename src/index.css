@@ -113,8 +113,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {

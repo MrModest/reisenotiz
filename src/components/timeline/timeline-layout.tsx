@@ -3,6 +3,7 @@ import { Timeline, TimelineItem } from './timeline'
 import { motion } from 'motion/react'
 import type { TimelineElement } from './types'
 import { Link } from 'react-router'
+import { Icon } from '@/components/icon/icon'
 
 interface TimelineLayoutProps {
   items: TimelineElement[];
@@ -25,7 +26,7 @@ export const TimelineLayout = ({
 }: TimelineLayoutProps) => {
   return (
     <Timeline size={size} className={className}>
-      {[...items].reverse().map((item, index) => (
+      {[...items].map((item, index) => (
         <motion.div
           key={index}
           initial={animate ? { opacity: 0, y: 20 } : false}
@@ -36,7 +37,10 @@ export const TimelineLayout = ({
             ease: 'easeOut',
           }}
         >
-          <Link to={item.link}>
+          <Link
+            to={item.link}
+            className='relative block rounded-sm border border-border/40 bg-card/30 shadow-sm transition-all duration-200 hover:bg-accent/50 hover:border-border hover:shadow-md focus:bg-accent/50 focus:border-border focus:shadow-md hover:scale-[1.02] focus:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer -mx-4 px-4 py-4'
+          >
             <TimelineItem
               date={item.date}
               time={item.time}
@@ -45,7 +49,6 @@ export const TimelineLayout = ({
               icon={typeof item.icon === 'function' ? item.icon() : item.icon || customIcon}
               iconColor={item.color || iconColor}
               connectorColor={item.color || connectorColor}
-              showConnector={index !== items.length - 1}
             />
           </Link>
         </motion.div>
