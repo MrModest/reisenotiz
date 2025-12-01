@@ -1,4 +1,5 @@
-import type { DateTime } from './datetime'
+import { DateTime } from './datetime'
+import { ZonedInstant } from './types'
 
 /**
  * Common date/time formatting utilities.
@@ -29,8 +30,8 @@ export function formatDateTime(dt: DateTime): string {
 /**
  * Formats as "23/11/2025"
  */
-export function formatDateShort(dt: DateTime): string {
-  return dt.format('dd/MM/yyyy')
+export function formatDateShort(dt: ZonedInstant): string {
+  return DateTime.from(dt).format('dd/MM/yyyy')
 }
 
 /**

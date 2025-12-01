@@ -28,13 +28,38 @@
  * ```
  */
 
+import { formatDate, formatDateISO, formatDateShort, formatDateTime, formatRelative, formatTime } from './formatters'
+
 export { DateTime } from './datetime'
 export type { ZonedInstant } from './types'
-export {
-  formatDate,
-  formatTime,
-  formatDateTime,
-  formatDateShort,
-  formatDateISO,
-  formatRelative
-} from './formatters'
+export const formatTo = {
+  /**
+   * Formats date as "Nov 23, 2025"
+   */
+  date: formatDate,
+
+  /**
+   * Formats time as "20:30"
+   */
+  time: formatTime,
+
+  /**
+   * Formats as "Nov 23, 2025 at 20:30"
+   */
+  dateTime: formatDateTime,
+
+  /**
+   * Formats as "23/11/2025"
+   */
+  dateShort: formatDateShort,
+
+  /**
+   * Formats as "2025-11-23" (ISO date only)
+   */
+  dateISO: formatDateISO,
+
+  /**
+   * Formats relative time (e.g., "2 hours ago", "in 3 days")
+   */
+  relative: formatRelative
+}

@@ -8,7 +8,7 @@ export function TripTimelinePage() {
   const { tripId } = useParams()
   const trip = trips.find(t => t.id === tripId)
 
-  useHeaderTitle(trip?.title)
+  useHeaderTitle(trip?.name)
 
   return (
     <TimelineLayout items={timelineData} size="md" animate={true} />

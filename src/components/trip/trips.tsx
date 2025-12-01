@@ -2,18 +2,12 @@ import { Link } from "react-router"
 import { Icon } from "@/components/icon/icon"
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item"
 import { cn } from "@/lib/utils"
+import { formatTo } from "@/lib/datetime"
+import type { Trip } from "@/types"
 
 interface TripsProps {
   trips: Trip[]
   className?: string
-}
-
-interface Trip {
-  id: string
-  title: string
-  startDate: string
-  endDate: string
-  description: string
 }
 
 export function Trips({trips, className}: TripsProps) {
@@ -34,8 +28,8 @@ export function Trip({ trip }: { trip: Trip }) {
           <Icon name="trip" />
         </ItemMedia>
         <ItemContent>
-          <ItemTitle>{trip.title}</ItemTitle>
-          <ItemDescription>{trip.startDate} - {trip.endDate}</ItemDescription>
+          <ItemTitle>{trip.name}</ItemTitle>
+          <ItemDescription>{formatTo.dateShort(trip.startDate)} - {formatTo.dateShort(trip.endDate)}</ItemDescription>
         </ItemContent>
       </Link>
     </Item>

@@ -4,7 +4,7 @@ import { Icon } from '@/components/icon/icon'
 export const timelineData: TimelineElement[] = [
   {
     id: 1,
-    link: '/trips/1/item/1',
+    link: '/trips/1/items/1',
     title: 'First event',
     date: '2022-01-01',
     time: '10:00',
@@ -15,7 +15,7 @@ export const timelineData: TimelineElement[] = [
   },
   {
     id: 2,
-    link: '/trips/1/item/2',
+    link: '/trips/1/items/2',
     title: 'Second event',
     date: '2022-02-01',
     time: '14:30',
@@ -26,7 +26,7 @@ export const timelineData: TimelineElement[] = [
   },
   {
     id: 3,
-    link: '/trips/1/item/3',
+    link: '/trips/1/items/3',
     title: 'Third event',
     date: '2022-03-01',
     time: '09:15',

@@ -1,3 +1,4 @@
+import { Flight, TripItem, UUID } from '@/types'
 import { trips } from './trips'
 
 const persons = [
@@ -23,30 +24,31 @@ const airports = {
   },
 }
 
-export const tripsItems = [{
-  id: "bbc32db4-d180-41a1-bc30-afa9dccc85b3",
-  tripId: trips[0].id,
-  title: 'Flight to Tokyo',
-  type: 'Flight',
-  flightNumber: 'PC5030',
-  carrier: 'Pegasus',
-  bookingCode: 'Q4LTAL',
-  seat: '12F, 36B',
-  passengers: persons,
-  departure: {
-    airport: airports["BER"],
-    terminal: '2',
-    gate: 'A24',
-    time: { date: '2023-04-01T18:00:00.000Z', zone: airports["BER"].tzone }
-  },
-  arrival: {
-    airport: airports["HND"],
-    terminal: '1',
-    gate: 'unknown',
-    time: { date: '2023-04-02T10:00:00.000Z', zone: airports["HND"].tzone }
-  },
-  note: 'Empty note',
-  attachments: []
-}]
+export const tripsItems: TripItem[] = [
+  {
+    id: 'bbc32db4-d180-41a1-bc30-afa9dccc85b3' as UUID,
+    tripId: trips[0].id,
+    type: 'Flight',
+    flightNumber: 'PC5030',
+    carrier: 'Pegasus',
+    bookingCode: 'Q4LTAL',
+    seat: '12F, 36B',
+    passengers: persons,
+    departure: {
+      airport: airports["BER"],
+      terminal: '2',
+      gate: 'A24',
+      time: { instant: '2023-04-01T18:00:00.000Z', zone: airports["BER"].tzone }
+    },
+    arrival: {
+      airport: airports["HND"],
+      terminal: '1',
+      gate: 'unknown',
+      time: { instant: '2023-04-02T10:00:00.000Z', zone: airports["HND"].tzone }
+    },
+    note: 'Empty note',
+    attachments: []
+  } as Flight
+]
 
 

@@ -3,7 +3,8 @@ import { AppLayout } from "@/components/layout/app-layout"
 import { HomePage } from "@/pages/home"
 import { TripsPage } from "@/pages/trips"
 import { SettingsPage } from "@/pages/settings"
-import { TripTimelinePage } from "@/pages/tripTimeline"
+import { TripTimelinePage } from "@/pages/trip-timeline"
+import { TripItemViewPage } from "@/pages/trip-item-view"
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ export const router = createBrowserRouter([
       {
         path: "trips/:tripId",
         Component: TripTimelinePage
+      },
+      {
+        path: "trips/:tripId/items/:itemId",
+        Component: TripItemViewPage
       },
       {
         path: "settings",
