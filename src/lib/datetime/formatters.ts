@@ -14,6 +14,13 @@ export function formatDate(dt: DateTime): string {
 }
 
 /**
+ * Formats date as "Sun, 23 Nov"
+ */
+export function formatDayShort(dt: ZonedInstant): string {
+  return DateTime.from(dt).format('EEE, dd LLL')
+}
+
+/**
  * Formats time as "20:30"
  */
 export function formatTime(dt: ZonedInstant): string {
@@ -28,10 +35,10 @@ export function formatDateTime(dt: DateTime): string {
 }
 
 /**
- * Formats as "23/11/2025"
+ * Formats as "23.11.2025"
  */
 export function formatDateShort(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('dd/MM/yyyy')
+  return DateTime.from(dt).format('dd.MM.yyyy')
 }
 
 /**

@@ -28,7 +28,15 @@
  * ```
  */
 
-import { formatDate, formatDateISO, formatDateShort, formatDateTime, formatRelative, formatTime } from './formatters'
+import {
+  formatDate,
+  formatDateISO,
+  formatDateShort,
+  formatDateTime,
+  formatDayShort,
+  formatRelative,
+  formatTime
+} from './formatters'
 
 export { DateTime } from './datetime'
 export type { ZonedInstant } from './types'
@@ -49,9 +57,14 @@ export const formatTo = {
   dateTime: formatDateTime,
 
   /**
-   * Formats as "23/11/2025"
+   * Formats as "23.11.2025"
    */
   dateShort: formatDateShort,
+
+  /**
+   * Formats date as "Sun, 23 Nov"
+   */
+  dayShort: formatDayShort,
 
   /**
    * Formats as "2025-11-23" (ISO date only)

@@ -42,7 +42,7 @@ export const TimelineLayout = ({
             className='relative block rounded-sm border border-border/40 bg-card/30 shadow-sm transition-all duration-200 hover:bg-accent/50 hover:border-border hover:shadow-md focus:bg-accent/50 focus:border-border focus:shadow-md hover:scale-[1.02] focus:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer px-4 py-4'
           >
             <TimelineItem
-              date={formatTo.dateShort(item.datetime)}
+              date={formatTo.dayShort(item.datetime)}
               time={formatTo.time(item.datetime)}
               title={item.title}
               description={item.description}
