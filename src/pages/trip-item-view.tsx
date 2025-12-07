@@ -6,9 +6,9 @@ import { useParams } from "react-router"
 export function TripItemViewPage() {
   const { tripId, itemId } = useParams<{ tripId: UUID; itemId: UUID }>()
 
-  const tripItem = tripsItems.find(item => item.id === itemId && item.tripId === tripId)
+  const tripItem = tripsItems.find(item => item.id === itemId && item.tripId === tripId)!
 
   return (
-    <TripItemView tripItem={tripsItems[0]} className="mt-2" />
+    <TripItemView tripItem={tripItem} />
   )
 }

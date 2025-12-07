@@ -1,6 +1,8 @@
 import { Icon } from '@/components/icon'
 import { formatTo } from '@/lib/datetime'
 import type { Flight, FlightPoint } from '@/types'
+import { FieldView } from '@/components/trip-item/field-view'
+import { cn } from '@/lib/utils'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -12,7 +14,7 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
 
   return (
     <div className={className}>
-      <div className='flex flex-col md:flex-row gap-x-4 justify-center items-center px-4'>
+      <div className='flex flex-col md:flex-row gap-x-4 justify-around items-center'>
         <FlightPoint point={flight.departure} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center'>
           <div className='flex-1 border border-current' />
@@ -21,13 +23,19 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
         </div>
         <FlightPoint point={flight.arrival} />
       </div>
+      <div className='grid grid-cols-2 mt-4 justify-between'>
+        <FieldView label='Airline' value={flight.carrier} />
+        <FieldView label='Flight' value={flight.flightNumber} />
+        <FieldView label='Booking' value={flight.bookingCode} />
+        <FieldView label='Seat' value={flight.seat} />
+      </div>
     </div>
   )
 }
 
 function FlightPoint( { point }: { point: FlightPoint }) {
   return (
-    <div className='border rounded-lg p-2'>
+    <div className='border rounded-lg p-2 w-full md:w-fit'>
       <p className='flex flex-row justify-between'>
         <span className='text-primary font-bold'>{point.airport.code}</span>
         <span className='text-primary/80'>{point.airport.address.city}</span>
