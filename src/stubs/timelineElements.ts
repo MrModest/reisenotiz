@@ -4,10 +4,11 @@ import { tripsItems } from './tripItems'
 
 export const timelineData: TimelineElement[] = [
   ...getTimelineItems(tripsItems[0] as Flight),
+  ...getTimelineItems(tripsItems[1] as Flight),
   {
     id: 'timeline-element-2',
     datetime: {
-      instant: '2025-12-02T05:00:00Z',
+      instant: '2025-12-03T05:00:00Z',
       zone: 'Asia/Tokyo'
     },
     link: '/some/link',

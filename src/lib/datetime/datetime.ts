@@ -79,6 +79,10 @@ export class DateTime {
     return this.dt.zoneName!
   }
 
+  get utcOffset(): string {
+    return this.dt.toFormat(`ZZ`)
+  }
+
   /**
    * Returns the UTC instant as ISO string.
    */

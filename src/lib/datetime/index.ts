@@ -36,7 +36,8 @@ import {
   formatDayShort,
   formatDuration,
   formatRelative,
-  formatTime
+  formatTime,
+  formatUtcOffset
 } from './formatters'
 
 export { DateTime } from './datetime'
@@ -80,5 +81,10 @@ export const formatTo = {
   /**
    * Formats duration as "2h 30m"
    */
-  duration: formatDuration
+  duration: formatDuration,
+
+  /**
+   * Formats UTC offset as "+02:00"
+   */
+  utcOffset: formatUtcOffset
 }

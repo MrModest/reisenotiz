@@ -59,3 +59,7 @@ export function formatDuration(start: ZonedInstant, end: ZonedInstant): string {
   const duration = DateTime.duration(start, end)
   return `${duration.hours}h ${duration.minutes}m`
 }
+
+export function formatUtcOffset(datetime: ZonedInstant): string {
+  return DateTime.from(datetime).utcOffset
+}

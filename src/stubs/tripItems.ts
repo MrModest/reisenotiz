@@ -49,11 +49,34 @@ export const tripsItems: TripItem[] = [
     arrival: {
       airport: airports["HND"],
       terminal: '1',
-      time: { instant: '2025-12-20T10:00:00.000Z', zone: airports["HND"].tzone }
+      time: { instant: '2025-12-02T06:00:00.000Z', zone: airports["HND"].tzone }
     },
     note: 'Empty note',
     attachments: []
-  } as Flight
+  } as Flight,
+  {
+    id: 'cbc32db4-d180-41a1-bc30-afa9dccc85b3' as UUID,
+    tripId: trips[0].id,
+    type: 'Flight',
+    flightNumber: 'PC5031',
+    carrier: 'Pegasus',
+    bookingCode: 'Q4LTAL',
+    seat: '12F, 36B',
+    passengers: persons,
+    departure: {
+      airport: airports["HND"],
+      terminal: '1',
+      gate: 'B16',
+      time: { instant: '2025-12-10T10:00:00.000Z', zone: airports["HND"].tzone }
+    },
+    arrival: {
+      airport: airports["BER"],
+      terminal: '2',
+      time: { instant: '2025-12-10T20:00:00.000Z', zone: airports["BER"].tzone }
+    },
+    note: 'Empty note',
+    attachments: []
+  }
 ]
 
 
