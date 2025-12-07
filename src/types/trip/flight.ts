@@ -33,7 +33,7 @@ function isPast(datetime: ZonedInstant): boolean {
   return DateTime.from(datetime).isPast()
 }
 
-export function getTimelineItems(flight: Flight): TimelineElement[] {
+export function getFlightTimelineItems(flight: Flight): TimelineElement[] {
   return [
     {
       id: `${flight.id}-departure`,

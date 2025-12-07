@@ -4,6 +4,7 @@ import type { Airport, Flight, FlightPoint } from '@/types'
 import { FieldView } from '@/components/trip-item/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { LongRightArrowIcon } from '@/components/icon/LongRightArrowIcon'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -73,16 +74,6 @@ function AirportDetails({ airport }: { airport: Airport }) {
     <div className='flex flex-col gap-2'>
       <FieldView label='Airport' value={airport.name} />
       <FieldView label='Address' value={airport.address.line} />
-    </div>
-  )
-}
-
-function LongRightArrowIcon({ label }: { label: string }) {
-  return (
-    <div className='grid grid-cols-[1fr_auto_1fr] items-center'>
-      <div className='flex-1 border border-current' />
-      <span className='text-xs text-center whitespace-nowrap px-1'>{label}</span>
-      <Icon name='arrow-right' />
     </div>
   )
 }

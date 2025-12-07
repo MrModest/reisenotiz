@@ -1,10 +1,16 @@
 import type { TimelineElement } from '@/components/timeline'
-import { Flight, getTimelineItems } from '@/types'
+import {
+  Flight,
+  getFlightTimelineItems,
+  Hotel,
+  getHotelTimelineItems
+} from '@/types'
 import { tripsItems } from './tripItems'
 
 export const timelineData: TimelineElement[] = [
-  ...getTimelineItems(tripsItems[0] as Flight),
-  ...getTimelineItems(tripsItems[1] as Flight),
+  ...getFlightTimelineItems(tripsItems[0] as Flight),
+  ...getFlightTimelineItems(tripsItems[1] as Flight),
+  ...getHotelTimelineItems(tripsItems[2] as Hotel),
   {
     id: 'timeline-element-2',
     datetime: {

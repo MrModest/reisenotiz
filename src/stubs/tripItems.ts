@@ -1,4 +1,4 @@
-import { Airport, Flight, TripItem, UUID } from '@/types'
+import { Airport, Flight, Hotel, TripItem, UUID } from '@/types'
 import { trips } from './trips'
 
 const persons = [
@@ -76,7 +76,39 @@ export const tripsItems: TripItem[] = [
     },
     note: 'Empty note',
     attachments: []
-  }
+  },
+  {
+    id: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3' as UUID,
+    tripId: trips[0].id,
+    type: 'Hotel',
+    name: 'NH Leipzig Messe',
+    address: {
+      line: 'Dummy-hotel-straße 345, 12345 Leipzig',
+      city: 'Leipzig',
+      country: 'Germany'
+    },
+    contact: '+49 177 1234567',
+    reservedOn: 'Max Mustermann',
+    guests: 3,
+    rooms: 1,
+    reservation: {
+      checkIn: {
+        available: { instant: '2025-03-12T15:00:00.000Z', zone: 'Europe/Berlin' },
+        planned: { instant: '2025-03-12T18:30:00.000Z', zone: 'Europe/Berlin' }
+      },
+      checkOut: {
+        available: { instant: '2025-03-13T11:00:00.000Z', zone: 'Europe/Berlin' },
+        planned: { instant: '2025-03-13T10:00:00.000Z', zone: 'Europe/Berlin' }
+      }
+    },
+    note: 'notify hotel that we come late',
+    attachments: [
+      { id: '1', name: 'Booking#1234.pdf' },
+      { id: '2', name: 'Booking#2345.pdf' },
+      { id: '3', name: 'Booking#3456.pdf' },
+      { id: '4', name: 'Booking#4567.pdf' }
+    ]
+  } as Hotel
 ]
 
 
