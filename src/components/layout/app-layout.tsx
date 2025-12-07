@@ -31,13 +31,16 @@ function AppLayoutContent() {
       <main className="flex-1 flex flex-col overflow-hidden">
         <Header title={title} />
         <div className={cn(
-          "flex flex-1 justify-center",
+          "flex-1",
           "pb-16 md:pb-0",
-          "px-4 pt-2 ",
-          "w-full md:w-fit",
           "overflow-y-auto overflow-x-hidden" // vertical scroll only
         )}>
-          <Outlet />
+          <div className={cn(
+            "px-4 pt-2",
+            "w-full md:w-fit md:mx-auto"
+          )}>
+            <Outlet />
+          </div>
         </div>
       </main>
 
