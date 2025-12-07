@@ -1,5 +1,5 @@
 import { Link } from "react-router"
-import { Icon } from "@/components/icon/icon"
+import { Icon } from "@/components/icon"
 import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item"
 import { cn } from "@/lib/utils"
 import { formatTo } from "@/lib/datetime"

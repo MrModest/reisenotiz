@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router'
 import { cn } from '@/lib/utils'
-import { Icon, IconName } from '@/components/icon/icon'
+import { Icon, IconName } from '@/components/icon'
 
 interface NavigationProps {
   variant: 'sidebar' | 'bottom'

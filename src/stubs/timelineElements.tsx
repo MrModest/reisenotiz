@@ -1,12 +1,12 @@
 import type { TimelineElement } from '@/components/timeline'
-import { Icon } from '@/components/icon/icon'
+import { Icon, IconName } from '@/components/icon'
 import { Flight, getTimelineItems } from '@/types'
 import { tripsItems } from './tripItems'
 
 export const timelineData: TimelineElement[] = [
   ...getTimelineItems(tripsItems[0] as Flight).map(item => ({
     ...item,
-    icon: <Icon name={item.icon as string} />
+    icon: <Icon name={item.icon as IconName} />
   })),
   {
     id: "1",
