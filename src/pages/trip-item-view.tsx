@@ -1,4 +1,4 @@
-import { TripItemView } from "@/components/trip-item-view"
+import { TripItemView } from "@/components/trip-item"
 import { tripsItems } from "@/stubs/tripItems"
 import { UUID } from "@/types"
 import { useParams } from "react-router"

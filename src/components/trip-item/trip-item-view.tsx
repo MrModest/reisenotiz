@@ -1,5 +1,5 @@
 import { Flight, TripItem } from "@/types"
-import { FlightItemView } from "./flight-item-view"
+import { FlightItemView } from "./flight/item-view"
 
 interface TripItemViewProps {
   tripItem: TripItem
