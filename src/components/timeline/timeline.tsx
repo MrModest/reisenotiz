@@ -2,7 +2,6 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { motion, HTMLMotionProps } from 'motion/react'
-import { AlertCircle, Loader2 } from 'lucide-react'
 import type { TimelineColor } from './types'
 import { Icon, IconName } from '@/components/icon'
 
@@ -143,7 +142,7 @@ function TimelineItem({
 
           <div className="mx-3 flex flex-col items-center justify-start gap-y-2">
             <div className="relative flex h-8 w-8 animate-pulse items-center justify-center rounded-full bg-muted ring-8 ring-background">
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <Icon name="loader" className="h-4 w-4 animate-spin text-muted-foreground" />
             </div>
             {showConnector && <div className="h-full w-0.5 animate-pulse bg-muted" />}
           </div>

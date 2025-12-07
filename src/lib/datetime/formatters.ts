@@ -1,5 +1,5 @@
 import { DateTime } from './datetime'
-import { Duration, ZonedInstant } from './types'
+import type { ZonedInstant } from './types'
 
 /**
  * Common date/time formatting utilities.
