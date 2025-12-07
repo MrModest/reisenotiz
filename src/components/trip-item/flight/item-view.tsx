@@ -2,7 +2,6 @@ import { Icon } from '@/components/icon'
 import { formatTo } from '@/lib/datetime'
 import type { Flight, FlightPoint } from '@/types'
 import { FieldView } from '@/components/trip-item/field-view'
-import { cn } from '@/lib/utils'
 
 interface FlightItemViewProps {
   flight: Flight

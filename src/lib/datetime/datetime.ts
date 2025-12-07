@@ -30,8 +30,10 @@ export class DateTime {
 
   /**
    * Creates a DateTime representing the current moment in the specified timezone.
+   * Defaults to UTC if no timezone is provided.
+   * @param zone IANA timezone name (e.g., "America/Los_Angeles")
    */
-  static now(zone: string): DateTime {
+  static now(zone: string = 'utc'): DateTime {
     return new DateTime(LuxonDateTime.now().setZone(zone))
   }
 
@@ -57,6 +59,13 @@ export class DateTime {
    * Serializes to ZonedInstant format for storage.
    */
   toJSON(): ZonedInstant {
+    return {
+      instant: this.dt.toUTC().toISO()!,
+      zone: this.dt.zoneName!
+    }
+  }
+
+  toZonedInstant(): ZonedInstant {
     return {
       instant: this.dt.toUTC().toISO()!,
       zone: this.dt.zoneName!
@@ -89,6 +98,10 @@ export class DateTime {
    */
   isAfter(other: DateTime): boolean {
     return this.dt > other.dt
+  }
+
+  isPast(): boolean {
+    return this.isBefore(DateTime.now(this.dt.zoneName!))
   }
 
   /**

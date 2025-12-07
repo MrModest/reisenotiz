@@ -1,6 +1,5 @@
 import { Flight, TripItem } from "@/types"
 import { FlightItemView } from "./flight/item-view"
-import { cn } from "@/lib/utils"
 
 interface TripItemViewProps {
   tripItem: TripItem
@@ -9,7 +8,7 @@ interface TripItemViewProps {
 
 export function TripItemView({ tripItem, className }: TripItemViewProps) {
   if (tripItem.type === 'Flight') {
-    return <FlightItemView flight={tripItem as Flight} className={cn('w-full md:w-fit', className)} />
+    return <FlightItemView flight={tripItem as Flight} className={className} />
   }
 
   return (

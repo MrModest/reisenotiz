@@ -1,4 +1,4 @@
-import { ZonedInstant } from "@/lib/datetime"
+import { DateTime, ZonedInstant } from "@/lib/datetime"
 import { Person } from "./person"
 import { TripItem } from "./trip-item"
 import { TimelineElement } from "@/components/timeline"
@@ -29,6 +29,10 @@ export interface Flight extends TripItem {
   arrival: FlightPoint
 }
 
+function isPast(datetime: ZonedInstant): boolean {
+  return DateTime.from(datetime).isPast()
+}
+
 export function getTimelineItems(flight: Flight): TimelineElement[] {
   return [
     {
@@ -37,7 +41,8 @@ export function getTimelineItems(flight: Flight): TimelineElement[] {
       description: `${flight.departure.airport.name} (${flight.departure.airport.code})`,
       datetime: flight.departure.time,
       link: `/trips/${flight.tripId}/items/${flight.id}`,
-      icon: 'flight-departure'
+      icon: 'flight-departure',
+      color: isPast(flight.departure.time) ? 'muted' : 'primary'
     },
     {
       id: `${flight.id}-arrival`,
@@ -45,7 +50,8 @@ export function getTimelineItems(flight: Flight): TimelineElement[] {
       description: `${flight.arrival.airport.name} (${flight.arrival.airport.code})`,
       datetime: flight.arrival.time,
       link: `/trips/${flight.tripId}/items/${flight.id}`,
-      icon: 'flight-arrival'
+      icon: 'flight-arrival',
+      color: isPast(flight.arrival.time) ? 'muted' : 'primary'
     }
   ]
 }

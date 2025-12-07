@@ -4,6 +4,19 @@ import { tripsItems } from './tripItems'
 
 export const timelineData: TimelineElement[] = [
   ...getTimelineItems(tripsItems[0] as Flight),
+  {
+    id: 'timeline-element-2',
+    datetime: {
+      instant: '2025-12-02T05:00:00Z',
+      zone: 'Asia/Tokyo'
+    },
+    link: '/some/link',
+    title: 'Lunch Break',
+    description: 'Enjoy a nice meal at a local restaurant.',
+    icon: 'calendar',
+    status: 'completed',
+    color: 'accent',
+  }
 ]
 
 timelineData.sort((a, b) =>

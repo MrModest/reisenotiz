@@ -44,12 +44,12 @@ export const tripsItems: TripItem[] = [
       airport: airports["BER"],
       terminal: '2',
       gate: 'A24',
-      time: { instant: '2023-04-01T18:00:00.000Z', zone: airports["BER"].tzone }
+      time: { instant: '2025-12-01T18:00:00.000Z', zone: airports["BER"].tzone }
     },
     arrival: {
       airport: airports["HND"],
       terminal: '1',
-      time: { instant: '2023-04-02T10:00:00.000Z', zone: airports["HND"].tzone }
+      time: { instant: '2025-12-20T10:00:00.000Z', zone: airports["HND"].tzone }
     },
     note: 'Empty note',
     attachments: []
