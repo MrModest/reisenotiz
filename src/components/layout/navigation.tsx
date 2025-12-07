@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { NavLink } from 'react-router'
 import { cn } from '@/lib/utils'
 import { Icon, IconName } from '@/components/icon'
 
 interface NavigationProps {
   variant: 'sidebar' | 'bottom'
+  onCollapsedChange?: (collapsed: boolean) => void
 }
 
 interface NavItem {
@@ -30,28 +32,55 @@ const navItems: NavItem[] = [
   },
 ]
 
-export function Navigation({ variant }: NavigationProps) {
+export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
+  const handleToggleCollapse = () => {
+    const newCollapsed = !isCollapsed
+    setIsCollapsed(newCollapsed)
+    onCollapsedChange?.(newCollapsed)
+  }
+
   if (variant === 'sidebar') {
     return (
-      <div className="flex flex-col gap-2 p-4">
-        {navItems.map((item) => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) =>
-              cn(
-                'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                'hover:bg-accent hover:text-accent-foreground',
-                isActive
-                  ? 'bg-accent text-accent-foreground'
-                  : 'text-muted-foreground'
-              )
-            }
+      <div className="flex flex-col h-full">
+        <div className="flex flex-col gap-2 p-4">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  'hover:bg-accent hover:text-accent-foreground',
+                  isActive
+                    ? 'bg-accent text-accent-foreground'
+                    : 'text-muted-foreground',
+                  isCollapsed && 'justify-center'
+                )
+              }
+              title={isCollapsed ? item.label : undefined}
+            >
+              <Icon name={item.icon} className="size-5" />
+              {!isCollapsed && <span>{item.label}</span>}
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="mt-auto p-4">
+          <button
+            onClick={handleToggleCollapse}
+            className={cn(
+              "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full",
+              "hover:bg-accent hover:text-accent-foreground text-muted-foreground",
+              isCollapsed && "justify-center"
+            )}
+            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            <Icon name={item.icon} className="size-5" />
-            <span>{item.label}</span>
-          </NavLink>
-        ))}
+            <Icon name={isCollapsed ? "menu" : "sidebar-close"} className="size-5" />
+            {!isCollapsed && <span>Collapse</span>}
+          </button>
+        </div>
       </div>
     )
   }

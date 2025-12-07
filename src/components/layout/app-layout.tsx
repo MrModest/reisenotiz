@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Outlet } from 'react-router'
 import { Navigation } from './navigation'
 import { Header } from './header'
 import { HeaderProvider, useHeader } from '@/contexts/header-context'
+import { cn } from '@/lib/utils'
 
 export function AppLayout() {
   return (
@@ -13,12 +15,16 @@ export function AppLayout() {
 
 function AppLayoutContent() {
   const { title } = useHeader()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
     <div className="h-screen flex flex-col md:flex-row overflow-hidden">
       {/* Desktop: Side navigation */}
-      <aside className="hidden md:flex md:flex-col md:w-64 md:border-r md:border-border md:overflow-y-auto">
-        <Navigation variant="sidebar" />
+      <aside className={cn(
+        "hidden md:flex md:flex-col md:border-r md:border-border md:overflow-y-auto transition-all duration-300",
+        isCollapsed ? "md:w-20" : "md:w-64"
+      )}>
+        <Navigation variant="sidebar" onCollapsedChange={setIsCollapsed} />
       </aside>
 
       {/* Main content area */}

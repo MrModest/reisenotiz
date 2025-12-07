@@ -24,6 +24,8 @@ export type IconName = 'arrow-right'
   | 'calendar'
   | 'chevron-right'
   | 'circle-alert'
+  | 'menu'
+  | 'sidebar-close'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -78,6 +80,10 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='chevron-right' className={style} />
     case 'circle-alert':
       return <DynamicIcon name='circle-alert' className={style} />
+    case 'menu':
+      return <DynamicIcon name='panel-left' className={style} />
+    case 'sidebar-close':
+      return <DynamicIcon name='panel-left-close' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />
