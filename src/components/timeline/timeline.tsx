@@ -162,19 +162,19 @@ function TimelineItem({
   if (error) {
     return (
       <motion.li
-        className={cn(commonClassName, 'border border-destructive/50 bg-destructive/10')}
+        className={cn(commonClassName, 'bg-destructive/10')}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         role="alert"
         {...props}
       >
-        <div className="grid grid-cols-[minmax(auto,8rem)_auto_1fr] items-start px-4">
-          <div className="pr-4 text-right">
+        <div className="grid grid-cols-[minmax(auto,8rem)_auto_1fr] items-start">
+          <div className="flex flex-col justify-start min-w-20 text-right">
             <TimelineTime className="text-destructive">{date}</TimelineTime>
             <TimelineTime className="text-destructive">{time}</TimelineTime>
           </div>
 
-          <div className="mx-3 flex flex-col items-center justify-start gap-y-2">
+          <div className="mx-3 flex flex-col items-center justify-start">
             <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-destructive/20 ring-8 ring-background">
               <AlertCircle className="h-4 w-4 text-destructive" />
             </div>
@@ -199,8 +199,8 @@ function TimelineItem({
     >
       {/* Date */}
       <div className="flex flex-col justify-start min-w-20">
-        <TimelineTime className="text-right pr-2">{date}</TimelineTime>
-        <TimelineTime className="text-right pr-2 text-primary font-semibold">{time}</TimelineTime>
+        <TimelineTime className="text-right pr-2 text-sm">{date}</TimelineTime>
+        <TimelineTime className="text-right pr-2 text-primary font-semibold text-xl">{time}</TimelineTime>
       </div>
 
       {/* Timeline dot and connector */}

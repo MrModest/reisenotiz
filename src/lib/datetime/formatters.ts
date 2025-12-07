@@ -16,8 +16,8 @@ export function formatDate(dt: DateTime): string {
 /**
  * Formats time as "20:30"
  */
-export function formatTime(dt: DateTime): string {
-  return dt.format('HH:mm')
+export function formatTime(dt: ZonedInstant): string {
+  return DateTime.from(dt).format('HH:mm')
 }
 
 /**

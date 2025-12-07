@@ -1,3 +1,4 @@
+import { ZonedInstant } from '@/lib/datetime'
 import { ReactNode } from 'react'
 
 export type TimelineSize = 'sm' | 'md' | 'lg'
@@ -5,10 +6,9 @@ export type TimelineStatus = 'completed' | 'in-progress' | 'pending'
 export type TimelineColor = 'primary' | 'secondary' | 'muted' | 'accent' | 'destructive'
 
 export interface TimelineElement {
-  id: number;
+  id: string;
   link: string;
-  date: string;
-  time: string;
+  datetime: ZonedInstant;
   title: string;
   description: string;
   icon?: ReactNode | (() => ReactNode);
