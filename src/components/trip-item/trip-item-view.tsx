@@ -1,5 +1,6 @@
 import { Flight, TripItem } from "@/types"
 import { FlightItemView } from "./flight/item-view"
+import { useHeaderTitle } from "@/hooks/use-header-title"
 
 interface TripItemViewProps {
   tripItem: TripItem
@@ -7,13 +8,30 @@ interface TripItemViewProps {
 }
 
 export function TripItemView({ tripItem, className }: TripItemViewProps) {
-  if (tripItem.type === 'Flight') {
-    return <FlightItemView flight={tripItem as Flight} className={className} />
-  }
+  const result = getView({ tripItem, className })
 
-  return (
-    <div className={className}>
-      <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
-    </div>
-  )
+  useHeaderTitle(result.title)
+
+  return result.view
+}
+
+function getView({ tripItem, className }: TripItemViewProps) {
+  switch (tripItem.type) {
+    case 'Flight':
+      return {
+        view: <FlightItemView flight={tripItem as Flight} className={className} />,
+        title: 'Flight Details'
+      }
+    default:
+      return {
+        view: (
+          (
+            <div className={className}>
+              <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
+            </div>
+          )
+        ),
+        title: 'Unsupported Type'
+      }
+  }
 }

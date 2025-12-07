@@ -1,8 +1,18 @@
+import { useEffect } from "react"
+
 interface HeaderProps {
   title?: string
 }
 
 export function Header({ title = "Reisenotiz" }: HeaderProps) {
+  useEffect(() => {
+    if (title !== "Reisenotiz") {
+      document.title = title + " - Reisenotiz"
+    } else {
+      document.title = "Reisenotiz"
+    }
+  }, [title])
+
   return (
     <header className="border-b border-border bg-background sticky top-0 z-10">
       <div className="px-4 py-4">
