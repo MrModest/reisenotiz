@@ -1,5 +1,5 @@
 import { DateTime as LuxonDateTime } from 'luxon'
-import type { ZonedInstant } from './types'
+import type { Duration, ZonedInstant } from './types'
 
 /**
  * Immutable datetime abstraction for timezone-aware dates.
@@ -44,6 +44,13 @@ export class DateTime {
   ): DateTime {
     const dt = LuxonDateTime.fromObject({ ...obj }, { zone })
     return new DateTime(dt)
+  }
+
+  static duration(start: ZonedInstant, end: ZonedInstant): Duration {
+    const startDate = DateTime.from(start)
+    const endDate = DateTime.from(end)
+
+    return endDate.dt.diff(startDate.dt, ['hours', 'minutes']).toObject() as Duration
   }
 
   /**

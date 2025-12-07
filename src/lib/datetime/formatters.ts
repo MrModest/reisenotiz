@@ -1,5 +1,5 @@
 import { DateTime } from './datetime'
-import { ZonedInstant } from './types'
+import { Duration, ZonedInstant } from './types'
 
 /**
  * Common date/time formatting utilities.
@@ -53,4 +53,9 @@ export function formatDateISO(dt: DateTime): string {
  */
 export function formatRelative(dt: DateTime, base?: DateTime): string {
   return dt.toRelative(base) ?? formatDateTime(dt)
+}
+
+export function formatDuration(start: ZonedInstant, end: ZonedInstant): string {
+  const duration = DateTime.duration(start, end)
+  return `${duration.hours}h ${duration.minutes}m`
 }

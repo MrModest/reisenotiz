@@ -2,19 +2,19 @@ import { ZonedInstant } from "@/lib/datetime"
 import { Person } from "./person"
 import { TripItem } from "./trip-item"
 import { TimelineElement } from "@/components/timeline"
+import { Address } from "./address"
 
 export interface Airport {
   code: string
   name: string
-  city: string
-  country: string
+  address: Address
   tzone: string
 }
 
 export interface FlightPoint {
   airport: Airport
-  terminal: string
-  gate: string
+  terminal?: string
+  gate?: string
   time: ZonedInstant
 }
 

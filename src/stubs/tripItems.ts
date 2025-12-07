@@ -1,4 +1,4 @@
-import { Flight, TripItem, UUID } from '@/types'
+import { Airport, Flight, TripItem, UUID } from '@/types'
 import { trips } from './trips'
 
 const persons = [
@@ -7,19 +7,25 @@ const persons = [
   { id: 'f12afa65-22c8-4545-8f34-0523d00c789d', fullname: 'Mark Smith', contacts: [] }
 ]
 
-const airports = {
+const airports: Record<string, Airport> = {
   "BER": {
     code: "BER",
     name: "Berlin Brandenburg Airport",
-    city: "Berlin",
-    country: "Germany",
+    address: {
+      line: "Willy-Brandt-Platz 1, 12529 Schönefeld",
+      city: "Schönefeld",
+      country: "Germany"
+    },
     tzone: "Europe/Berlin"
   },
   "HND": {
     code: "HND",
     name: "Tokyo Haneda Airport",
-    city: "Tokyo",
-    country: "Japan",
+    address: {
+      line: "Haneda Airport, 144-0041 Ota City, Tokyo",
+      city: "Tokyo",
+      country: "Japan"
+    },
     tzone: "Asia/Tokyo"
   },
 }
@@ -43,7 +49,6 @@ export const tripsItems: TripItem[] = [
     arrival: {
       airport: airports["HND"],
       terminal: '1',
-      gate: 'unknown',
       time: { instant: '2023-04-02T10:00:00.000Z', zone: airports["HND"].tzone }
     },
     note: 'Empty note',

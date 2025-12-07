@@ -26,6 +26,7 @@ export type IconName = 'arrow-right'
   | 'circle-alert'
   | 'menu'
   | 'sidebar-close'
+  | 'no-data'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -84,6 +85,8 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='panel-left' className={style} />
     case 'sidebar-close':
       return <DynamicIcon name='panel-left-close' className={style} />
+    case 'no-data':
+      return <DynamicIcon name='circle-question-mark' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />

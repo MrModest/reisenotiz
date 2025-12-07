@@ -34,6 +34,7 @@ import {
   formatDateShort,
   formatDateTime,
   formatDayShort,
+  formatDuration,
   formatRelative,
   formatTime
 } from './formatters'
@@ -74,5 +75,10 @@ export const formatTo = {
   /**
    * Formats relative time (e.g., "2 hours ago", "in 3 days")
    */
-  relative: formatRelative
+  relative: formatRelative,
+
+  /**
+   * Formats duration as "2h 30m"
+   */
+  duration: formatDuration
 }
