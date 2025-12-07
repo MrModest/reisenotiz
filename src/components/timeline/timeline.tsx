@@ -4,6 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { motion, HTMLMotionProps } from 'motion/react'
 import { AlertCircle, Loader2 } from 'lucide-react'
 import type { TimelineColor } from './types'
+import { Icon, IconName } from '@/components/icon'
 
 const timelineVariants = cva('flex flex-col relative', {
   variants: {
@@ -84,7 +85,7 @@ interface TimelineItemProps extends Omit<HTMLMotionProps<'li'>, 'ref'> {
   /** Description text */
   description?: string
   /** Custom icon element */
-  icon?: React.ReactNode
+  icon?: IconName
   /** Color theme for the icon */
   iconColor?: TimelineColor
   /** Current status of the item */
@@ -176,7 +177,7 @@ function TimelineItem({
 
           <div className="mx-3 flex flex-col items-center justify-start">
             <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-destructive/20 ring-8 ring-background">
-              <AlertCircle className="h-4 w-4 text-destructive" />
+              <Icon name="circle-alert" className="h-4 w-4 text-destructive" />
             </div>
             {showConnector && <TimelineConnector status="pending" className="h-full" />}
           </div>
@@ -334,7 +335,7 @@ function TimelineIcon({
   color = 'primary',
   iconSize = 'md',
 }: {
-  icon?: React.ReactNode
+  icon?: IconName
   color?: 'primary' | 'secondary' | 'muted' | 'accent' | 'destructive'
   iconSize?: 'sm' | 'md' | 'lg'
 }) {
@@ -368,7 +369,7 @@ function TimelineIcon({
     >
       {icon ? (
         <div className={cn('flex items-center justify-center', iconSizeClasses[iconSize])}>
-          {icon}
+          <Icon name={icon} />
         </div>
       ) : (
         <div className={cn('rounded-full', iconSizeClasses[iconSize])} />

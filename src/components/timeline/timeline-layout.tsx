@@ -1,15 +1,15 @@
-import React from 'react'
 import { Timeline, TimelineItem } from './timeline'
 import { motion } from 'motion/react'
 import type { TimelineElement } from './types'
 import { Link } from 'react-router'
 import { formatTo } from '@/lib/datetime'
+import { IconName } from '@/components/icon'
 
 interface TimelineLayoutProps {
   items: TimelineElement[];
   size?: 'sm' | 'md' | 'lg';
   iconColor?: 'primary' | 'secondary' | 'muted' | 'accent';
-  customIcon?: React.ReactNode;
+  customIcon?: IconName;
   animate?: boolean;
   connectorColor?: 'primary' | 'secondary' | 'muted' | 'accent';
   className?: string;
@@ -46,7 +46,7 @@ export const TimelineLayout = ({
               time={formatTo.time(item.datetime)}
               title={item.title}
               description={item.description}
-              icon={typeof item.icon === 'function' ? item.icon() : item.icon || customIcon}
+              icon={item.icon || customIcon}
               iconColor={item.color || iconColor}
               connectorColor={item.color || connectorColor}
             />
