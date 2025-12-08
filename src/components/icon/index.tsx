@@ -11,6 +11,7 @@ export type IconName = 'arrow-right'
   | 'close'
   | 'luggage'
   | 'boarding'
+  | 'flight'
   | 'flight-departure'
   | 'flight-arrival'
   | 'hotel-checkIn'
@@ -28,6 +29,8 @@ export type IconName = 'arrow-right'
   | 'sidebar-close'
   | 'no-data'
   | 'loader'
+  | 'logo'
+  | 'timeline'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -56,6 +59,8 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='luggage' className={style} />
     case 'boarding':
       return <DynamicIcon name='orbit' className={style} />
+    case 'flight':
+      return <DynamicIcon name='plane' className={style} />
     case 'flight-departure':
       return <DynamicIcon name='plane-takeoff' className={style} />
     case 'flight-arrival':
@@ -90,6 +95,10 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='circle-question-mark' className={style} />
     case 'loader':
       return <DynamicIcon name='loader-circle' className={style} />
+    case 'logo':
+      return <DynamicIcon name='map' className={style} />
+    case 'timeline':
+      return <DynamicIcon name='calendar-fold' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />

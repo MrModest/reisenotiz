@@ -2,6 +2,7 @@ import { Flight, Hotel, TripItem } from "@/types"
 import { useHeaderTitle } from "@/hooks/use-header-title"
 import { FlightItemView } from "./flight/item-view"
 import { HotelItemView } from "./hotel/item-view"
+import { IconName } from "@/components/icon"
 
 interface TripItemViewProps {
   tripItem: TripItem
@@ -11,7 +12,7 @@ interface TripItemViewProps {
 export function TripItemView({ tripItem, className }: TripItemViewProps) {
   const result = getView({ tripItem, className })
 
-  useHeaderTitle(result.title)
+  useHeaderTitle(result.title, result.icon as IconName)
 
   return result.view
 }
@@ -21,12 +22,14 @@ function getView({ tripItem, className }: TripItemViewProps) {
     case 'Flight':
       return {
         view: <FlightItemView flight={tripItem as Flight} className={className} />,
-        title: 'Flight Details'
+        title: 'Flight Details',
+        icon: 'flight'
       }
     case 'Hotel':
       return {
         view: <HotelItemView hotel={tripItem as Hotel} className={className} />,
-        title: 'Accommodation Details'
+        title: 'Accommodation Details',
+        icon: 'hotel-checkIn'
       }
     default:
       return {
