@@ -2,7 +2,7 @@ import { LongRightArrowIcon } from "@/components/icon/LongRightArrowIcon"
 
 export function DateRange({ children }: { children: React.ReactNode }) {
   return (
-    <div className='flex flex-col md:flex-row gap-x-4 justify-around items-center'>
+    <div className='flex flex-col md:flex-row gap-x-4 justify-between items-center'>
       {children}
     </div>
   )
@@ -16,6 +16,6 @@ DateRange.Point = function DateRangeStart({ children }: { children: React.ReactN
   )
 }
 
-DateRange.Separator = function DateRangeSeparator({ label }: { label: string }) {
+DateRange.Separator = function DateRangeSeparator({ label }: { label?: string }) {
   return <LongRightArrowIcon label={label} />
 }

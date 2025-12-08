@@ -18,22 +18,27 @@ export function HotelItemView({ hotel, className }: HotelItemViewProps) {
           label='Check In'
           time={hotel.reservation.checkIn}
         />
-        <DateRange.Separator label='dummy' />
+        <DateRange.Separator />
         <ReservationPoint
           label='Check Out'
           time={hotel.reservation.checkOut}
         />
       </DateRange>
-      <div className='grid grid-cols-2 mt-4 justify-between'>
+      <div className='mt-4 grid grid-cols-1'>
+          <FieldView label='Name' value={hotel.name} />
+          <FieldView
+            label='Address'
+            value={hotel.address.line}
+            subValue={`${hotel.address.country}, ${hotel.address.city}`}
+          />
+      </div>
+      <SeparatorWithLabel label='Details' />
+      <div className='grid grid-cols-2 gap-x-2 justify-between'>
         <FieldView label='Reserved On' value={hotel.reservedOn} />
         <FieldView label='Guests' value={hotel.guests.toString()} />
         <FieldView label='Rooms' value={hotel.rooms.toString()} />
-        <FieldView label='Address' value={hotel.address.line} />
-        <FieldView label='City' value={hotel.address.city} />
-        <FieldView label='Country' value={hotel.address.country} />
         <FieldView label='Phone' value={hotel.contact} />
       </div>
-      <SeparatorWithLabel label='Details' />
     </div>
   )
 }
