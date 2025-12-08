@@ -1,22 +1,22 @@
-import { useEffect } from "react"
+import { useEffect } from 'react'
 
 interface HeaderProps {
   title?: string
 }
 
-export function Header({ title = "Reisenotiz" }: HeaderProps) {
+export function Header({ title = 'Reisenotiz' }: HeaderProps) {
   useEffect(() => {
-    if (title !== "Reisenotiz") {
-      document.title = title + " - Reisenotiz"
+    if (title !== 'Reisenotiz') {
+      document.title = title + ' - Reisenotiz'
     } else {
-      document.title = "Reisenotiz"
+      document.title = 'Reisenotiz'
     }
   }, [title])
 
   return (
-    <header className="border-b border-border bg-background sticky top-0 z-10">
-      <div className="px-4 py-4">
-        <h1 className="text-2xl font-semibold">{title}</h1>
+    <header className='border-b border-border bg-background sticky top-0 z-10'>
+      <div className='px-4 py-4'>
+        <h1 className='text-2xl font-semibold'>{title}</h1>
       </div>
     </header>
   )

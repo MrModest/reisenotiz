@@ -18,17 +18,17 @@ const navItems: NavItem[] = [
   {
     to: '/',
     label: 'Home',
-    icon: "home",
+    icon: 'home',
   },
   {
     to: '/trips',
     label: 'Trips',
-    icon: "trip",
+    icon: 'trip',
   },
   {
     to: '/settings',
     label: 'Settings',
-    icon: "settings",
+    icon: 'settings',
   },
 ]
 
@@ -43,8 +43,8 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
 
   if (variant === 'sidebar') {
     return (
-      <div className="flex flex-col h-full">
-        <div className="flex flex-col gap-2 p-4">
+      <div className='flex flex-col h-full'>
+        <div className='flex flex-col gap-2 p-4'>
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -61,23 +61,23 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
               }
               title={isCollapsed ? item.label : undefined}
             >
-              <Icon name={item.icon} className="size-5" />
+              <Icon name={item.icon} className='size-5' />
               {!isCollapsed && <span>{item.label}</span>}
             </NavLink>
           ))}
         </div>
 
-        <div className="mt-auto p-4">
+        <div className='mt-auto p-4'>
           <button
             onClick={handleToggleCollapse}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full",
-              "hover:bg-accent hover:text-accent-foreground text-muted-foreground",
-              isCollapsed && "justify-center"
+              'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full',
+              'hover:bg-accent hover:text-accent-foreground text-muted-foreground',
+              isCollapsed && 'justify-center'
             )}
-            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
-            <Icon name={isCollapsed ? "menu" : "sidebar-close"} className="size-5" />
+            <Icon name={isCollapsed ? 'menu' : 'sidebar-close'} className='size-5' />
             {!isCollapsed && <span>Collapse</span>}
           </button>
         </div>
@@ -86,7 +86,7 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
   }
 
   return (
-    <div className="flex justify-around items-center h-16 px-4">
+    <div className='flex justify-around items-center h-16 px-4'>
       {navItems.map((item) => (
         <NavLink
           key={item.to}
@@ -101,8 +101,8 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
             )
           }
         >
-          <Icon name={item.icon} className="size-5" />
-          <span className="text-xs font-medium">{item.label}</span>
+          <Icon name={item.icon} className='size-5' />
+          <span className='text-xs font-medium'>{item.label}</span>
         </NavLink>
       ))}
     </div>
