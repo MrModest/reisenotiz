@@ -1,5 +1,5 @@
 import { Flight, Hotel, TripItem } from "@/types"
-import { useHeaderTitle } from "@/hooks/use-header-title"
+import { useHeaderTitle, useHeaderAction } from "@/hooks/use-header-title"
 import { FlightItemView } from "./flight/item-view"
 import { HotelItemView } from "./hotel/item-view"
 import { IconName } from "@/components/icon"
@@ -13,6 +13,12 @@ export function TripItemView({ tripItem, className }: TripItemViewProps) {
   const result = getView({ tripItem, className })
 
   useHeaderTitle(result.title, result.icon as IconName)
+  useHeaderAction({
+    icon: 'edit',
+    onClick: () => {
+      console.log('Edit trip item:', tripItem.id)
+    }
+  })
 
   return result.view
 }

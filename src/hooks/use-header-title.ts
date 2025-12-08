@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useHeader } from '@/contexts/header-context'
+import { useHeader, HeaderAction } from '@/contexts/header-context'
 import { IconName } from '@/components/icon'
 
 export function useHeaderTitle(
@@ -20,4 +20,18 @@ export function useHeaderTitle(
     title, setTitle,
     icon, setIcon
   ])
+}
+
+export function useHeaderAction(
+  action: HeaderAction | undefined
+) {
+  const { setAction } = useHeader()
+
+  useEffect(() => {
+    setAction(action)
+
+    return () => {
+      setAction(undefined)
+    }
+  }, [action, setAction])
 }

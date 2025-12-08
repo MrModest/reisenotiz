@@ -31,6 +31,7 @@ export type IconName = 'arrow-right'
   | 'loader'
   | 'logo'
   | 'timeline'
+  | 'edit'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -99,6 +100,8 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='map' className={style} />
     case 'timeline':
       return <DynamicIcon name='calendar-fold' className={style} />
+    case 'edit':
+      return <DynamicIcon name='square-pen' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />
