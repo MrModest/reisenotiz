@@ -51,13 +51,13 @@ function FlightPoint( { point }: { point: FlightPoint }) {
         <span className='text-primary font-bold'>{point.airport.code}</span>
         <span className='text-primary/80'>{point.airport.address.city}</span>
       </p>
-      <p className='flex flex-row justify-between items-center gap-2'>
+      <div className='flex flex-row justify-between items-center gap-2'>
         <div>
           <span className='text-lg font-semibold'>{formatTo.time(point.time)}</span>
           <span className='ml-0.5 text-[0.6rem] font-light align-super'>({formatTo.utcOffset(point.time)})</span>
         </div>
         <span className='text-base font-thin'>{formatTo.dayShort(point.time)}</span>
-      </p>
+      </div>
       <p className='flex flex-row flex-wrap gap-2 text-xs items-center justify-between'>
         <span>Terminal: {point.terminal}</span>
         <span className='flex flex-row items-center gap-x-1'>
