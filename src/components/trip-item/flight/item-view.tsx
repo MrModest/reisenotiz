@@ -4,7 +4,7 @@ import type { Airport, Flight, FlightPoint } from '@/types'
 import { FieldView } from '@/components/trip-item/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { LongRightArrowIcon } from '@/components/icon/LongRightArrowIcon'
+import { DateRange } from '../date-range'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -16,11 +16,11 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
 
   return (
     <div className={className}>
-      <div className='flex flex-col md:flex-row gap-x-4 justify-around items-center'>
+      <DateRange>
         <FlightPoint point={flight.departure} />
-        <LongRightArrowIcon label={duration} />
+        <DateRange.Separator label={duration} />
         <FlightPoint point={flight.arrival} />
-      </div>
+      </DateRange>
       <div className='grid grid-cols-2 mt-4 justify-between'>
         <FieldView label='Airline' value={flight.carrier} />
         <FieldView label='Flight' value={flight.flightNumber} />
@@ -46,7 +46,7 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
 
 function FlightPoint( { point }: { point: FlightPoint }) {
   return (
-    <div className='border rounded-lg p-2 w-full md:w-fit'>
+    <DateRange.Point>
       <p className='flex flex-row justify-between'>
         <span className='text-primary font-bold'>{point.airport.code}</span>
         <span className='text-primary/80'>{point.airport.address.city}</span>
@@ -65,7 +65,7 @@ function FlightPoint( { point }: { point: FlightPoint }) {
           <span>{!!point.gate ? point.gate : <Icon name='no-data' className='inline-block size-3 my-0.5' />}</span>
         </span>
       </p>
-    </div>
+    </DateRange.Point>
   )
 }
 

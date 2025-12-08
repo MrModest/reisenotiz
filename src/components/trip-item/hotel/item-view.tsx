@@ -2,8 +2,8 @@ import { formatTo, ZonedInstant } from '@/lib/datetime'
 import type { Hotel } from '@/types'
 import { FieldView } from '@/components/trip-item/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
-import { LongRightArrowIcon } from '@/components/icon/LongRightArrowIcon'
 import { cn } from '@/lib/utils'
+import { DateRange } from '@/components/trip-item/date-range'
 
 interface HotelItemViewProps {
   hotel: Hotel
@@ -13,17 +13,17 @@ interface HotelItemViewProps {
 export function HotelItemView({ hotel, className }: HotelItemViewProps) {
   return (
     <div className={className}>
-      <div className='flex flex-col md:flex-row gap-x-4 justify-around items-center'>
+      <DateRange>
         <ReservationPoint
           label='Check In'
           time={hotel.reservation.checkIn}
         />
-        <LongRightArrowIcon />
+        <DateRange.Separator label='dummy' />
         <ReservationPoint
           label='Check Out'
           time={hotel.reservation.checkOut}
         />
-      </div>
+      </DateRange>
       <div className='grid grid-cols-2 mt-4 justify-between'>
         <FieldView label='Reserved On' value={hotel.reservedOn} />
         <FieldView label='Guests' value={hotel.guests.toString()} />
@@ -45,15 +45,15 @@ interface ReservationPointProps {
 
 function ReservationPoint({ label, time }: ReservationPointProps) {
   return (
-    <div className='border rounded-lg p-2 w-full md:w-fit'>
-      <p className='flex flex-row justify-between gap-4 mb-1'>
+    <DateRange.Point>
+      <div className='flex flex-row justify-between gap-4 mb-1'>
         <span className='text-muted-foreground text-sm font-semibold tracking-wide uppercase'>{label}</span>
         <span className='text-sm font-semibold tracking-wide uppercase'>{formatTo.dayShort(time.planned || time.available)}</span>
-      </p>
-      <p className='flex flex-row justify-between items-center gap-2'>
+      </div>
+      <div className='flex flex-row justify-between items-center gap-2'>
         <FieldView label='Available' value={formatTo.time(time.available)} />
         <FieldView className={cn({ 'invisible': !time.planned })} label='Planned' value={formatTo.time(time.planned || time.available)} />
-      </p>
-    </div>
+      </div>
+    </DateRange.Point>
   )
 }
