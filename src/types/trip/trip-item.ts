@@ -5,7 +5,7 @@ const tripItemTypes = [
   'Flight',
   'LongLandTransfer',
   'PublicTransport',
-  'Hotel',
+  'Accomodation',
   'POI'
 ] as const
 

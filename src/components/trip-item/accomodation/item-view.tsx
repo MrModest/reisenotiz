@@ -1,43 +1,43 @@
 import { formatTo, ZonedInstant } from '@/lib/datetime'
-import type { Hotel } from '@/types'
+import type { Accomodation } from '@/types'
 import { FieldView } from '@/components/trip-item/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { DateRange } from '@/components/trip-item/date-range'
 
 interface HotelItemViewProps {
-  hotel: Hotel
+  accomodation: Accomodation
   className?: string
 }
 
-export function HotelItemView({ hotel, className }: HotelItemViewProps) {
+export function AccomodationItemView({ accomodation, className }: HotelItemViewProps) {
   return (
     <div className={className}>
       <DateRange>
         <ReservationPoint
           label='Check In'
-          time={hotel.reservation.checkIn}
+          time={accomodation.reservation.checkIn}
         />
         <DateRange.Separator />
         <ReservationPoint
           label='Check Out'
-          time={hotel.reservation.checkOut}
+          time={accomodation.reservation.checkOut}
         />
       </DateRange>
       <div className='mt-4 grid grid-cols-1'>
-          <FieldView label='Name' value={hotel.name} />
+          <FieldView label='Name' value={accomodation.site.name} />
           <FieldView
             label='Address'
-            value={hotel.address.line}
-            subValue={`${hotel.address.country}, ${hotel.address.city}`}
+            value={accomodation.site.address.line}
+            subValue={`${accomodation.site.address.country}, ${accomodation.site.address.city}`}
           />
       </div>
       <SeparatorWithLabel label='Details' />
       <div className='grid grid-cols-2 gap-x-2 justify-between'>
-        <FieldView label='Reserved On' value={hotel.reservedOn} />
-        <FieldView label='Guests' value={hotel.guests.toString()} />
-        <FieldView label='Rooms' value={hotel.rooms.toString()} />
-        <FieldView label='Phone' value={hotel.contact} />
+        <FieldView label='Reserved On' value={accomodation.reservedOn} />
+        <FieldView label='Guests' value={accomodation.guests.toString()} />
+        <FieldView label='Rooms' value={accomodation.rooms.toString()} />
+        <FieldView label='Phone' value={accomodation.contact} />
       </div>
     </div>
   )
