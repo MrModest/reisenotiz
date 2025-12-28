@@ -14,7 +14,7 @@ export function AppLayout() {
 }
 
 function AppLayoutContent() {
-  const { title, icon, action } = useHeader()
+  const { title, icon, actions } = useHeader()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
@@ -29,7 +29,7 @@ function AppLayoutContent() {
 
       {/* Main content area */}
       <main className='flex-1 flex flex-col overflow-hidden'>
-        <Header title={title} icon={icon} action={action} />
+        <Header title={title} icon={icon} actions={actions} />
         <div className={cn(
           'flex-1',
           'pb-16 md:pb-0',

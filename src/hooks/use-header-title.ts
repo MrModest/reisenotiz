@@ -23,15 +23,15 @@ export function useHeaderTitle(
 }
 
 export function useHeaderAction(
-  action: HeaderAction | undefined
+  actions: HeaderAction[]
 ) {
-  const { setAction } = useHeader()
+  const { setActions } = useHeader()
 
   useEffect(() => {
-    setAction(action)
+    setActions(actions)
 
     return () => {
-      setAction(undefined)
+      setActions([])
     }
-  }, [action, setAction])
+  }, [actions, setActions])
 }

@@ -13,12 +13,12 @@ export function TripItemView({ tripItem, className }: TripItemViewProps) {
   const result = getView({ tripItem, className })
 
   useHeaderTitle(result.title, result.icon as IconName)
-  useHeaderAction({
+  useHeaderAction([{
     icon: 'edit',
     onClick: () => {
       console.log('Edit trip item:', tripItem.id)
     }
-  })
+  }])
 
   return result.view
 }

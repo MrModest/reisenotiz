@@ -6,8 +6,8 @@ interface HeaderContextValue {
   setTitle: (title: string | undefined) => void
   icon?: IconName
   setIcon: (icon: IconName | undefined) => void
-  action?: HeaderAction
-  setAction: (action: HeaderAction | undefined) => void
+  actions: HeaderAction[]
+  setActions: (action: HeaderAction[]) => void
 }
 
 export interface HeaderAction {
@@ -21,13 +21,13 @@ const HeaderContext = createContext<HeaderContextValue | undefined>(undefined)
 export function HeaderProvider({ children }: { children: ReactNode }) {
   const [title, setTitle] = useState<string | undefined>()
   const [icon, setIcon] = useState<IconName | undefined>()
-  const [action, setAction] = useState<HeaderAction | undefined>()
+  const [actions, setActions] = useState<HeaderAction[]>([])
 
   return (
     <HeaderContext.Provider value={{
       title, setTitle,
       icon, setIcon,
-      action, setAction
+      actions, setActions
     }}>
       {children}
     </HeaderContext.Provider>
