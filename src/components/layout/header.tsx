@@ -28,6 +28,7 @@ export function Header({ title = 'Reisenotiz', icon, actions = [] }: HeaderProps
         <div className='flex flex-row items-center space-x-2'>
           {(actions).map(action => (
             <Button
+              key={action.label || action.icon}
               variant='outline'
               size={action.label ? undefined : 'icon'}
               onClick={action.onClick}
