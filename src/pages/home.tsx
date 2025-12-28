@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { airports } from '@/stubs/airports'
-import { Combobox, ComboboxOptions } from '@/components/ui/combo-box'
+import { Combobox, ComboboxOptions } from '@/components/ui/combobox'
 import { Separator } from '@/components/ui/separator'
 
 export function HomePage() {
