@@ -5,6 +5,7 @@ import { TripsPage } from "@/pages/trips"
 import { SettingsPage } from "@/pages/settings"
 import { TripTimelinePage } from "@/pages/trip-timeline"
 import { TripItemViewPage } from "@/pages/trip-item-view"
+import { TripItemEditPage } from "@/pages/trip-item-edit"
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
       {
         path: "trips/:tripId/items/:itemId",
         Component: TripItemViewPage
+      },
+      {
+        path: "trips/:tripId/items/:itemId/edit",
+        Component: TripItemEditPage
       },
       {
         path: "settings",

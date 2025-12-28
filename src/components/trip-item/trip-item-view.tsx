@@ -3,6 +3,7 @@ import { useHeaderTitle, useHeaderAction } from "@/hooks/use-header-title"
 import { FlightItemView } from "./flight/item-view"
 import { HotelItemView } from "./hotel/item-view"
 import { IconName } from "@/components/icon"
+import { useNavigate, useParams } from "react-router"
 
 interface TripItemViewProps {
   tripItem: TripItem
@@ -11,12 +12,14 @@ interface TripItemViewProps {
 
 export function TripItemView({ tripItem, className }: TripItemViewProps) {
   const result = getView({ tripItem, className })
+  const navigate = useNavigate()
+  const { tripId, itemId } = useParams<{ tripId: string; itemId: string }>()
 
   useHeaderTitle(result.title, result.icon as IconName)
   useHeaderAction([{
     icon: 'edit',
     onClick: () => {
-      console.log('Edit trip item:', tripItem.id)
+      navigate(`/trips/${tripId}/items/${itemId}/edit`)
     }
   }])
 

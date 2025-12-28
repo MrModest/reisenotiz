@@ -32,6 +32,8 @@ export type IconName = 'arrow-right'
   | 'logo'
   | 'timeline'
   | 'edit'
+  | 'save'
+  | 'cancel'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -102,6 +104,10 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='calendar-fold' className={style} />
     case 'edit':
       return <DynamicIcon name='square-pen' className={style} />
+    case 'save':
+      return <DynamicIcon name='save' className={style} />
+    case 'cancel':
+      return <DynamicIcon name='ban' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />
