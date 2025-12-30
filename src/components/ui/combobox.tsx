@@ -56,7 +56,7 @@ function CommandAddItem({
       }}
       className={cn(
         'flex w-full text-blue-500 cursor-pointer text-sm px-2 py-1.5 rounded-sm items-center focus:outline-none',
-        'hover:bg-blue-200 focus:!bg-blue-200'
+        'hover:bg-blue-200 focus:bg-blue-200!'
       )}
     >
       <Icon name='add' className='mr-2 h-4 w-4' />
@@ -184,7 +184,7 @@ export function Combobox({
                   className={cn(
                     'cursor-pointer',
                     // Override CommandItem class name
-                    'focus:!bg-blue-200 hover:!bg-blue-200 aria-selected:bg-transparent'
+                    'focus:bg-blue-200! hover:bg-blue-200! aria-selected:bg-transparent'
                   )}
                 >
                   {/* min to avoid the check icon being too small when the option.label is long. */}
