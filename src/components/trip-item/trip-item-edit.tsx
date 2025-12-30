@@ -1,7 +1,8 @@
-import { TripItem } from '@/types'
+import { Flight, TripItem } from '@/types'
 import { useHeaderTitle, useHeaderAction } from '@/hooks/use-header-title'
 import { IconName } from '@/components/icon'
 import { useNavigate } from 'react-router'
+import { FlightItemEdit } from './flight/edit/item-edit'
 
 interface TripItemEditProps {
   tripItem: TripItem
@@ -33,9 +34,7 @@ function getEdit({ tripItem, className }: TripItemEditProps) {
     case 'Flight':
       return {
         view: (
-          <div className={className}>
-            <p className="text-muted-foreground">Flight edit form (not implemented yet)</p>
-          </div>
+          <FlightItemEdit flight={tripItem as Flight} className={className} />
         ),
         title: 'Edit Flight',
         icon: 'flight'
