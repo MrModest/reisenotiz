@@ -32,9 +32,7 @@ function AppLayoutContent() {
         'hidden md:flex md:flex-col md:border-r md:border-border md:overflow-y-auto transition-all duration-300',
         isCollapsed ? 'md:w-20' : 'md:w-64'
       )}>
-        <div className='flex items-center justify-between p-8 h-16 border-b border-border'>
-          <ThemeSwitcher theme={theme} onSwitch={setTheme} />
-        </div>
+        <ThemeSwitcher theme={theme} onSwitch={setTheme} collapsed={isCollapsed} />
         <Navigation variant='sidebar' onCollapsedChange={setIsCollapsed} />
       </aside>
 
