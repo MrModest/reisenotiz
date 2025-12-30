@@ -42,7 +42,7 @@ export function getFlightTimelineItems(flight: Flight): TimelineElement[] {
       datetime: flight.departure.time,
       link: `/trips/${flight.tripId}/items/${flight.id}`,
       icon: 'flight-departure',
-      color: isPast(flight.departure.time) ? 'muted' : 'active'
+      status: isPast(flight.departure.time) ? 'inactive' : 'active'
     },
     {
       id: `${flight.id}-arrival`,
@@ -51,7 +51,7 @@ export function getFlightTimelineItems(flight: Flight): TimelineElement[] {
       datetime: flight.arrival.time,
       link: `/trips/${flight.tripId}/items/${flight.id}`,
       icon: 'flight-arrival',
-      color: isPast(flight.arrival.time) ? 'muted' : 'active'
+      status: isPast(flight.arrival.time) ? 'inactive' : 'active'
     }
   ]
 }

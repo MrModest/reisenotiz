@@ -3,7 +3,6 @@ import { cn } from '@/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 import type { TimelineSize, TimelineStatus } from './types'
 import { Icon, IconName } from '@/components/icon'
-import { stat } from 'fs'
 
 const timelineVariants = cva('flex flex-col relative', {
   variants: {
