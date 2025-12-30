@@ -3,8 +3,6 @@
 
 import { useState } from 'react'
 
-import { Check, ChevronsUpDown, CirclePlus } from 'lucide-react'
-
 import { Button } from '@/components/ui/button'
 import {
   Command,
@@ -20,6 +18,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
+import { Icon } from '@/components/icon'
 
 export type ComboboxOptions = {
   value: string
@@ -60,7 +59,7 @@ function CommandAddItem({
         'hover:bg-blue-200 focus:!bg-blue-200'
       )}
     >
-      <CirclePlus className='mr-2 h-4 w-4' />
+      <Icon name='add' className='mr-2 h-4 w-4' />
       Create '{query}'
     </div>
   )
@@ -83,6 +82,7 @@ export function Combobox({
   const canCreate = !!(query && isAlreadyCreated)
 
   function handleSelect(option: ComboboxOptions) {
+    console.log('onSelect', option)
     if (onChange) {
       onChange(option)
       setOpen(false)
@@ -118,7 +118,7 @@ export function Combobox({
               {placeholder ?? 'Select'}
             </div>
           )}
-          <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+          <Icon name='chevrons-up-down' className='ml-2 h-4 w-4 shrink-0 opacity-50' />
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-full min-w-[500px] p-0'>
@@ -170,10 +170,7 @@ export function Combobox({
                   key={option.label}
                   tabIndex={0}
                   value={option.label}
-                  onSelect={() => {
-                    console.log('onSelect')
-                    handleSelect(option)
-                  }}
+                  onSelect={() => {handleSelect(option)}}
                   onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
                     if (event.key === 'Enter') {
                       // Process to prevent onSelect from firing, but it does not work well with StackBlitz.
@@ -189,7 +186,7 @@ export function Combobox({
                   )}
                 >
                   {/* min to avoid the check icon being too small when the option.label is long. */}
-                  <Check
+                  <Icon name='check'
                     className={cn(
                       'mr-2 h-4 w-4 min-h-4 min-w-4',
                       selected === option.value ? 'opacity-100' : 'opacity-0'

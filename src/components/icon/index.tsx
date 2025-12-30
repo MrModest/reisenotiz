@@ -24,6 +24,7 @@ export type IconName = 'arrow-right'
   | 'time'
   | 'calendar'
   | 'chevron-right'
+  | 'chevrons-up-down'
   | 'circle-alert'
   | 'menu'
   | 'sidebar-close'
@@ -35,6 +36,8 @@ export type IconName = 'arrow-right'
   | 'save'
   | 'cancel'
   | 'search'
+  | 'check'
+  | 'add'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -111,6 +114,12 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='ban' className={style} />
     case 'search':
       return <DynamicIcon name='search' className={style} />
+    case 'check':
+      return <DynamicIcon name='check' className={style} />
+    case 'add':
+      return <DynamicIcon name='circle-plus' className={style} />
+    case 'chevrons-up-down':
+      return <DynamicIcon name='chevrons-up-down' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />
