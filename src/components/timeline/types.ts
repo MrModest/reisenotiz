@@ -2,7 +2,7 @@ import { ZonedInstant } from '@/lib/datetime'
 import { IconName } from '@/components/icon'
 
 export type TimelineSize = 'sm' | 'md' | 'lg'
-export type TimelineStatus = 'completed' | 'in-progress' | 'pending'
+export type TimelineStatus = 'active' | 'inactive'
 export type TimelineColor = 'primary' | 'secondary' | 'muted' | 'accent' | 'destructive'
 
 export interface TimelineElement {

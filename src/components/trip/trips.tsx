@@ -23,7 +23,7 @@ export function Trips({trips, className}: TripsProps) {
 export function Trip({ trip }: { trip: Trip }) {
   return (
     <Item variant="outline" size="sm" asChild>
-      <Link to={`/trips/${trip.id}`} key={trip.id}>
+      <Link to={`/trips/${trip.id}`} key={trip.id} className="card">
         <ItemMedia>
           <Icon name="trip" />
         </ItemMedia>

@@ -65,7 +65,7 @@ function Item({
       data-slot="item"
       data-variant={variant}
       data-size={size}
-      className={cn(itemVariants({ variant, size, className }))}
+      className={cn("bg-card", itemVariants({ variant, size, className }))}
       {...props}
     />
   )

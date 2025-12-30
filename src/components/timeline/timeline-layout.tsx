@@ -8,20 +8,16 @@ import { IconName } from '@/components/icon'
 interface TimelineLayoutProps {
   items: TimelineElement[];
   size?: 'sm' | 'md' | 'lg';
-  iconColor?: 'primary' | 'secondary' | 'muted' | 'accent';
   customIcon?: IconName;
   animate?: boolean;
-  connectorColor?: 'primary' | 'secondary' | 'muted' | 'accent';
   className?: string;
 }
 
 export const TimelineLayout = ({
   items,
   size = 'md',
-  iconColor,
   customIcon,
   animate = true,
-  connectorColor,
   className,
 }: TimelineLayoutProps) => {
   return (
@@ -39,7 +35,7 @@ export const TimelineLayout = ({
         >
           <Link
             to={item.link}
-            className='relative block rounded-sm border border-border/40 bg-card/30 shadow-sm transition-all duration-200 hover:bg-accent/50 hover:border-border hover:shadow-md focus:bg-accent/50 focus:border-border focus:shadow-md hover:scale-[1.02] focus:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer px-4 py-4'
+            className='block card'
           >
             <TimelineItem
               date={formatTo.dayShort(item.datetime)}
@@ -47,8 +43,6 @@ export const TimelineLayout = ({
               title={item.title}
               description={item.description}
               icon={item.icon || customIcon}
-              iconColor={item.color || iconColor}
-              connectorColor={item.color || connectorColor}
             />
           </Link>
         </motion.div>

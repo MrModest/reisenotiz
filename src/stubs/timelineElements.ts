@@ -21,8 +21,7 @@ export const timelineData: TimelineElement[] = [
     title: 'Lunch Break',
     description: 'Enjoy a nice meal at a local restaurant.',
     icon: 'calendar',
-    status: 'completed',
-    color: 'accent',
+    status: 'inactive',
   }
 ]
 

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
-import { motion, HTMLMotionProps } from 'motion/react'
-import type { TimelineColor } from './types'
+import type { TimelineSize, TimelineStatus } from './types'
 import { Icon, IconName } from '@/components/icon'
+import { stat } from 'fs'
 
 const timelineVariants = cva('flex flex-col relative', {
   variants: {
@@ -26,7 +26,7 @@ const timelineVariants = cva('flex flex-col relative', {
  */
 interface TimelineProps extends React.HTMLAttributes<HTMLOListElement>, VariantProps<typeof timelineVariants> {
   /** Size of the timeline icons */
-  iconsize?: 'sm' | 'md' | 'lg';
+  iconsize?: TimelineSize;
 }
 
 /**
@@ -72,9 +72,9 @@ Timeline.displayName = 'Timeline'
 /**
  * TimelineItem component props interface
  * @interface TimelineItemProps
- * @extends {Omit<HTMLMotionProps<"li">, "ref">}
+ * @extends {React.ComponentProps<'li'>}
  */
-interface TimelineItemProps extends Omit<HTMLMotionProps<'li'>, 'ref'> {
+interface TimelineItemProps extends React.ComponentProps<'li'> {
   /** Date string for the timeline item */
   date: string
   /** Time string for the timeline item */
@@ -85,20 +85,12 @@ interface TimelineItemProps extends Omit<HTMLMotionProps<'li'>, 'ref'> {
   description?: string
   /** Custom icon element */
   icon?: IconName
-  /** Color theme for the icon */
-  iconColor?: TimelineColor
   /** Current status of the item */
-  status?: 'completed' | 'in-progress' | 'pending'
-  /** Color theme for the connector line */
-  connectorColor?: TimelineColor
+  status?: TimelineStatus
   /** Whether to show the connector line */
   showConnector?: boolean
   /** Size of the icon */
-  iconsize?: 'sm' | 'md' | 'lg'
-  /** Loading state */
-  loading?: boolean
-  /** Error message */
-  error?: string
+  iconsize?: TimelineSize
 }
 
 function TimelineItem({
@@ -108,120 +100,11 @@ function TimelineItem({
   title,
   description,
   icon,
-  iconColor,
-  status = 'completed',
-  connectorColor,
+  status = 'active',
   showConnector = true,
   iconsize,
-  loading,
-  error,
-  initial,
-  animate,
-  transition,
   ...props
 } : TimelineItemProps) {
-  const commonClassName = cn(
-    'relative w-full mb-8 last:mb-0',
-    className,
-  )
-
-  // Loading State
-  if (loading) {
-    return (
-      <motion.li
-        className={commonClassName}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        role="status"
-        {...props}
-      >
-        <div className="grid grid-cols-[minmax(auto,8rem)_auto_1fr] items-start px-4">
-          <div className="pr-4 text-right">
-            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
-          </div>
-
-          <div className="mx-3 flex flex-col items-center justify-start gap-y-2">
-            <div className="relative flex h-8 w-8 animate-pulse items-center justify-center rounded-full bg-muted ring-8 ring-background">
-              <Icon name="loader" className="h-4 w-4 animate-spin text-muted-foreground" />
-            </div>
-            {showConnector && <div className="h-full w-0.5 animate-pulse bg-muted" />}
-          </div>
-
-          <div className="flex flex-col gap-2 pl-2">
-            <div className="space-y-2">
-              <div className="h-4 w-24 animate-pulse rounded bg-muted" />
-              <div className="h-3 w-48 animate-pulse rounded bg-muted" />
-            </div>
-          </div>
-        </div>
-      </motion.li>
-    )
-  }
-
-  // Error State
-  if (error) {
-    return (
-      <motion.li
-        className={cn(commonClassName, 'bg-destructive/10')}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        role="alert"
-        {...props}
-      >
-        <div className="grid grid-cols-[minmax(auto,8rem)_auto_1fr] items-start">
-          <div className="flex flex-col justify-start min-w-20 text-right">
-            <TimelineTime className="text-destructive">{date}</TimelineTime>
-            <TimelineTime className="text-destructive">{time}</TimelineTime>
-          </div>
-
-          <div className="mx-3 flex flex-col items-center justify-start">
-            <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-destructive/20 ring-8 ring-background">
-              <Icon name="circle-alert" className="h-4 w-4 text-destructive" />
-            </div>
-            {showConnector && <TimelineConnector status="pending" className="h-full" />}
-          </div>
-
-          <div className="flex flex-col gap-2 pl-2">
-            <TimelineHeader>
-              <TimelineTitle className="text-destructive">{title || 'Error'}</TimelineTitle>
-            </TimelineHeader>
-            <TimelineDescription className="text-destructive">{error}</TimelineDescription>
-          </div>
-        </div>
-      </motion.li>
-    )
-  }
-
-  const content = (
-    <div
-      className="grid grid-cols-[auto_auto_1fr] gap-3 items-start"
-      {...(status === 'in-progress' ? { 'aria-current': 'step' } : {})}
-    >
-      {/* Date */}
-      <div className="flex flex-col justify-start min-w-20">
-        <TimelineTime className="text-right pr-2 text-sm">{date}</TimelineTime>
-        <TimelineTime className="text-right pr-2 text-primary font-semibold text-xl">{time}</TimelineTime>
-      </div>
-
-      {/* Timeline dot and connector */}
-      <div className="flex flex-col items-center">
-        <div className="relative z-10">
-          <TimelineIcon icon={icon} color={iconColor} iconSize={iconsize} />
-        </div>
-        {showConnector && (
-          <div className="h-16 w-0.5 bg-border mt-2" />
-        )}
-      </div>
-
-      {/* Content */}
-      <TimelineContent>
-        <TimelineHeader>
-          <TimelineTitle>{title}</TimelineTitle>
-        </TimelineHeader>
-        <TimelineDescription>{description}</TimelineDescription>
-      </TimelineContent>
-    </div>
-  )
 
   // Filter out Framer Motion specific props
   const {
@@ -230,19 +113,34 @@ function TimelineItem({
     onDragStart,
     onDragEnd,
     onAnimationStart,
-    onAnimationComplete,
-    transformTemplate,
-    whileHover,
-    whileTap,
-    whileDrag,
-    whileFocus,
-    whileInView,
     ...filteredProps
   } = props
 
   return (
-    <li className={commonClassName} {...filteredProps}>
-      {content}
+    <li className={cn('relative w-full mb-8 last:mb-0 bg-card', className)} {...filteredProps}>
+      <div className="grid grid-cols-[auto_auto_1fr] gap-3 items-start">
+        {/* Date */}
+        <div className="flex flex-col justify-start min-w-20">
+          <TimelineTime className="text-right pr-2 text-sm">{date}</TimelineTime>
+          <TimelineTime className="text-right pr-2 text-primary font-semibold text-xl">{time}</TimelineTime>
+        </div>
+
+        {/* Timeline dot and connector */}
+        <div className="flex flex-col items-center">
+          <div className="relative z-10">
+            <TimelineIcon icon={icon} iconSize={iconsize} status={status} />
+          </div>
+          {showConnector && <TimelineConnector />}
+        </div>
+
+        {/* Content */}
+        <TimelineContent>
+          <TimelineHeader>
+            <TimelineTitle>{title}</TimelineTitle>
+          </TimelineHeader>
+          <TimelineDescription>{description}</TimelineDescription>
+        </TimelineContent>
+      </div>
     </li>
   )
 }
@@ -291,24 +189,8 @@ function TimelineTime({ className, date, format, children, ...props }: TimelineT
 }
 TimelineTime.displayName = 'TimelineTime'
 
-function TimelineConnector({ className, status = 'completed', color, ...props }: React.HTMLAttributes<HTMLDivElement> & {
-  status?: 'completed' | 'in-progress' | 'pending'
-  color?: 'primary' | 'secondary' | 'muted' | 'accent'
-}) {
-  return (<div
-    className={cn(
-      'w-0.5',
-      {
-        'bg-primary': color === 'primary' || (!color && status === 'completed'),
-        'bg-muted': color === 'muted' || (!color && status === 'pending'),
-        'bg-secondary': color === 'secondary',
-        'bg-accent': color === 'accent',
-        'bg-linear-to-b from-primary to-muted': !color && status === 'in-progress',
-      },
-      className,
-    )}
-    {...props}
-  />)
+function TimelineConnector() {
+  return (<div className="h-16 w-0.5 bg-border mt-2" />)
 }
 TimelineConnector.displayName = 'TimelineConnector'
 
@@ -331,12 +213,12 @@ TimelineTitle.displayName = 'TimelineTitle'
 
 function TimelineIcon({
   icon,
-  color = 'primary',
   iconSize = 'md',
+  status = 'active'
 }: {
   icon?: IconName
-  color?: 'primary' | 'secondary' | 'muted' | 'accent' | 'destructive'
-  iconSize?: 'sm' | 'md' | 'lg'
+  iconSize?: TimelineSize,
+  status?: TimelineStatus
 }) {
   const sizeClasses = {
     sm: 'h-8 w-8',
@@ -350,20 +232,15 @@ function TimelineIcon({
     lg: 'h-6 w-6',
   }
 
-  const colorClasses = {
-    primary: 'bg-primary text-primary-foreground',
-    secondary: 'bg-secondary text-secondary-foreground',
-    muted: 'bg-muted text-muted-foreground',
-    accent: 'bg-accent text-accent-foreground',
-    destructive: 'bg-destructive text-destructive-foreground',
-  }
-
   return (
     <div
       className={cn(
-        'relative flex items-center justify-center rounded-full ring-8 ring-background shadow-sm',
+        'flex items-center justify-center rounded-full ring-2 ring-primary',
         sizeClasses[iconSize],
-        colorClasses[color],
+        {
+          'bg-primary/90 text-primary-foreground': status === 'active',
+          'bg-primary/50 text-primary': status === 'inactive',
+        },
       )}
     >
       {icon ? (

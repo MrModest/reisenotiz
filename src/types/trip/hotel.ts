@@ -37,7 +37,7 @@ export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
       datetime: hotel.reservation.checkIn.planned || hotel.reservation.checkIn.available,
       link: `/trips/${hotel.tripId}/items/${hotel.id}`,
       icon: 'hotel-checkIn',
-      color: isPast(hotel.reservation.checkIn.planned || hotel.reservation.checkIn.available) ? 'muted' : 'primary'
+      status: isPast(hotel.reservation.checkIn.available) ? 'inactive' : 'active'
     },
     {
       id: `${hotel.id}-checkout`,
@@ -46,7 +46,7 @@ export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
       datetime: hotel.reservation.checkOut.planned || hotel.reservation.checkOut.available,
       link: `/trips/${hotel.tripId}/items/${hotel.id}`,
       icon: 'hotel-checkOut',
-      color: isPast(hotel.reservation.checkOut.planned || hotel.reservation.checkOut.available) ? 'muted' : 'primary'
+      status: isPast(hotel.reservation.checkOut.available) ? 'inactive' : 'active',
     }
   ]
 }
