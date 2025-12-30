@@ -1,7 +1,7 @@
-import { Flight, Accomodation, TripItem } from "@/types"
+import { Flight, Accommodation, TripItem } from "@/types"
 import { useHeaderTitle, useHeaderAction } from "@/hooks/use-header-title"
 import { FlightItemView } from "./flight/item-view"
-import { AccomodationItemView } from "./accomodation/item-view"
+import { AccommodationItemView } from "./accommodation/item-view"
 import { IconName } from "@/components/icon"
 import { useNavigate, useParams } from "react-router"
 
@@ -34,10 +34,10 @@ function getView({ tripItem, className }: TripItemViewProps) {
         title: 'Flight Details',
         icon: 'flight'
       }
-    case 'Accomodation':
+    case 'Accommodation':
       return {
-        view: <AccomodationItemView accomodation={tripItem as Accomodation} className={className} />,
-        title: `${(tripItem as Accomodation).site.kind} Details`,
+        view: <AccommodationItemView accommodation={tripItem as Accommodation} className={className} />,
+        title: `${(tripItem as Accommodation).site.kind} Details`,
         icon: 'hotel-checkIn'
       }
     default:

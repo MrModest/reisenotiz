@@ -1,1 +1,1 @@
-export { airportDictionary, accomodationDictionary } from './dicts'
+export { airportDictionary, accommodationDictionary } from './dicts'

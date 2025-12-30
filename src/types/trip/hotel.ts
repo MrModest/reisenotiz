@@ -8,15 +8,15 @@ export interface HotelReservation {
   checkOut: { available: ZonedInstant; planned?: ZonedInstant }
 }
 
-export interface AccomodationSite {
+export interface AccommodationSite {
   name: string
   kind: 'Hotel' | 'Hostel' | 'Apartment' | 'Guesthouse' | 'BnB' | 'Resort' | 'Other'
   address: Address
 }
 
-export interface Accomodation extends TripItem {
-  type: 'Accomodation'
-  site: AccomodationSite
+export interface Accommodation extends TripItem {
+  type: 'Accommodation'
+  site: AccommodationSite
   contact: string
   reservedOn: string
   guests: number
@@ -28,7 +28,7 @@ function isPast(datetime: ZonedInstant): boolean {
   return DateTime.from(datetime).isPast()
 }
 
-export function getHotelTimelineItems(hotel: Accomodation): TimelineElement[] {
+export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
   return [
     {
       id: `${hotel.id}-checkin`,

@@ -40,7 +40,7 @@ function getEdit({ tripItem, className }: TripItemEditProps) {
         title: 'Edit Flight',
         icon: 'flight'
       }
-    case 'Hotel':
+    case 'Accommodation':
       return {
         view: (
           <div className={className}>

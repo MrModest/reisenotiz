@@ -1,4 +1,4 @@
-import { Flight, Accomodation, TripItem, UUID } from '@/types'
+import { Flight, Accommodation, TripItem, UUID } from '@/types'
 import { trips } from './trips'
 import { airportsByCode } from './airports'
 
@@ -58,7 +58,7 @@ export const tripsItems: TripItem[] = [
   {
     id: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3' as UUID,
     tripId: trips[0].id,
-    type: 'Accomodation',
+    type: 'Accommodation',
     site: {
       name: 'NH Leipzig Messe',
       kind: 'Hotel',
@@ -89,7 +89,7 @@ export const tripsItems: TripItem[] = [
       { id: '3', name: 'Booking#3456.pdf' },
       { id: '4', name: 'Booking#4567.pdf' }
     ]
-  } as Accomodation
+  } as Accommodation
 ]
 
 
