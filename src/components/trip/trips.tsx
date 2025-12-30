@@ -12,7 +12,7 @@ interface TripsProps {
 
 export function Trips({trips, className}: TripsProps) {
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
+    <div className={cn("flex flex-col gap-2 md:min-w-[480px]", className)}>
       {trips.map(trip => (
         <Trip key={trip.id} trip={trip} />
       ))}
