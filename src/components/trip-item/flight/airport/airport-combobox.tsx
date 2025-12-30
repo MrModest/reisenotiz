@@ -54,7 +54,7 @@ export function AirportCombobox({
     })
   }
 
-  function handleCreateRequest(label: string) {
+  function handleCreate(label: string) {
     setNewAirportOption({
       code: label.slice(0, 3).toUpperCase(),
       name: label
@@ -95,8 +95,8 @@ export function AirportCombobox({
         selected={value?.code ?? ''}
         disabled={disabled}
         className={className}
-        onChange={handleSelect}
-        onCreate={handleCreateRequest}
+        onSelect={handleSelect}
+        onCreate={handleCreate}
       />
 
       <Dialog open={modalOpen} onOpenChange={handleModalClose}>

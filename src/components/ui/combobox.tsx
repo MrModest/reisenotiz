@@ -31,7 +31,7 @@ interface ComboboxProps {
   className?: string
   placeholder?: string
   disabled?: boolean
-  onChange: (option: ComboboxOptions) => void
+  onSelect: (option: ComboboxOptions) => void
   onCreate?: (label: ComboboxOptions['label']) => void
 }
 
@@ -40,18 +40,18 @@ interface ComboboxProps {
  */
 function CommandAddItem({
   query,
-  onCreate,
+  onSelect,
 }: {
   query: string
-  onCreate: () => void
+  onSelect: () => void
 }) {
   return (
     <div
       tabIndex={0}
-      onClick={onCreate}
+      onClick={onSelect}
       onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Enter') {
-          onCreate()
+          onSelect()
         }
       }}
       className={cn(
@@ -71,26 +71,26 @@ export function Combobox({
   className,
   placeholder,
   disabled,
-  onChange,
+  onSelect,
   onCreate,
 }: ComboboxProps) {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
 
-  // Doesn't allow to create duplicate options
+  // Queried option already exists
   const isAlreadyCreated = !options.some((option) => option.label === query)
-  const canCreate = !!(query && isAlreadyCreated)
 
   function handleSelect(option: ComboboxOptions) {
     console.log('onSelect', option)
-    if (onChange) {
-      onChange(option)
+    if (onSelect) {
+      onSelect(option)
       setOpen(false)
       setQuery('')
     }
   }
 
   function handleCreate() {
+    console.log('onCreate', query)
     if (onCreate && query) {
       onCreate(query)
       setOpen(false)
@@ -110,8 +110,9 @@ export function Combobox({
           className={cn('w-full font-normal', className)}
         >
           {selected && selected.length > 0 ? (
-            <div className='truncate mr-auto'>
-              {options.find((item) => item.value === selected)?.label}
+            <div className='truncate mr-auto flex items-center gap-1'>
+              <span className='px-1 bg-primary/50 rounded-sm'>{options.find((item) => item.value === selected)?.value}</span>
+              <span>{options.find((item) => item.value === selected)?.label}</span>
             </div>
           ) : (
             <div className='text-slate-600 mr-auto'>
@@ -144,7 +145,7 @@ export function Combobox({
           />
           <CommandEmpty className='flex pl-1 py-1 w-full'>
             {query && (
-              <CommandAddItem query={query} onCreate={() => handleCreate()} />
+              <CommandAddItem query={query} onSelect={() => handleCreate()} />
             )}
           </CommandEmpty>
 
@@ -160,8 +161,9 @@ export function Combobox({
               )}
 
               {/* Create */}
-              {canCreate && (
-                <CommandAddItem query={query} onCreate={() => handleCreate()} />
+              {/* (If query isn't empty or queried item doesn't exist already) */}
+              {query && isAlreadyCreated && (
+                <CommandAddItem query={query} onSelect={() => handleCreate()} />
               )}
 
               {/* Select */}
