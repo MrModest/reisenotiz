@@ -4,8 +4,12 @@ import { Navigation } from './navigation'
 import { Header } from './header'
 import { HeaderProvider, useHeader } from '@/contexts/header-context'
 import { cn } from '@/lib/utils'
+import { accomodationDictionary, airportDictionary } from '@/services'
 
 export function AppLayout() {
+  airportDictionary.load()
+  accomodationDictionary.load()
+
   return (
     <HeaderProvider>
       <AppLayoutContent />
