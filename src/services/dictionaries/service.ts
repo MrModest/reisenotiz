@@ -68,6 +68,11 @@ export class Dictionary<T extends { name: string }> {
     return this.cache
   }
 
+  getAllValues(): T[] {
+    this.ensureLoaded()
+    return Object.values(this.cache)
+  }
+
   async add(item: T): Promise<void> {
     this.ensureLoaded()
     this.cache[item.name] = item
