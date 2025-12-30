@@ -5,6 +5,8 @@ import { Header } from './header'
 import { HeaderProvider, useHeader } from '@/contexts/header-context'
 import { cn } from '@/lib/utils'
 import { accommodationDictionary, airportDictionary } from '@/services'
+import ThemeSwitcher from '../theme-switcher'
+import { useTheme } from '@/hooks/use-theme'
 
 export function AppLayout() {
   airportDictionary.load()
@@ -18,6 +20,8 @@ export function AppLayout() {
 }
 
 function AppLayoutContent() {
+  const [theme, setTheme] = useTheme()
+
   const { title, icon, actions } = useHeader()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
@@ -28,6 +32,9 @@ function AppLayoutContent() {
         'hidden md:flex md:flex-col md:border-r md:border-border md:overflow-y-auto transition-all duration-300',
         isCollapsed ? 'md:w-20' : 'md:w-64'
       )}>
+        <div className='flex items-center justify-between p-8 h-16 border-b border-border'>
+          <ThemeSwitcher theme={theme} onSwitch={setTheme} />
+        </div>
         <Navigation variant='sidebar' onCollapsedChange={setIsCollapsed} />
       </aside>
 
