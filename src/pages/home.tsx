@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { AirportCombobox, AirportOption } from '@/components/trip-item/flight/airport/airport-combobox'
+import { AirportCombobox, AirportOption } from '@/components/trip-item/flight/edit/airport-combobox'
 import { airportDictionary } from '@/services'
 import { AddressNone } from '@/types/trip/address'
 

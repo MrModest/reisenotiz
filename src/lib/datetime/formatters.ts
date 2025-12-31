@@ -44,8 +44,8 @@ export function formatDateShort(dt: ZonedInstant): string {
 /**
  * Formats as "2025-11-23" (ISO date only)
  */
-export function formatDateISO(dt: DateTime): string {
-  return dt.format('yyyy-MM-dd')
+export function formatDateISO(dt: ZonedInstant): string {
+  return DateTime.from(dt).format('yyyy-MM-dd')
 }
 
 /**

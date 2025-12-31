@@ -1,5 +1,7 @@
 import { z } from 'zod'
 import { schemas } from '@/lib/validations/commons'
+import { Flight } from '@/types'
+import { formatTo } from '@/lib/datetime'
 
 const airportSchema = z.object({
   code: z.string().min(3, 'Airport code must be at least 3 characters').max(4),
@@ -27,4 +29,30 @@ export const flightFormSchema = z.object({
   arrival: flightPointSchema
 })
 
-export type FlightFormValues = z.infer<typeof flightFormSchema>
+export type FlightFormSchema = z.infer<typeof flightFormSchema>
+
+export function defaultsFromFlight(flight: Flight): FlightFormSchema {
+  return {
+    flightNumber: flight.flightNumber,
+    carrier: flight.carrier,
+    bookingCode: flight.bookingCode,
+    seat: flight.seat,
+    passengers: flight.passengers,
+    departure: {
+      airport: flight.departure.airport,
+      terminal: flight.departure.terminal,
+      gate: flight.departure.gate,
+      date: formatTo.dateISO(flight.departure.time),
+      time: formatTo.time(flight.departure.time),
+      timezone: flight.departure.airport.tzone
+    },
+    arrival: {
+      airport: flight.arrival.airport,
+      terminal: flight.arrival.terminal,
+      gate: flight.arrival.gate,
+      date: formatTo.dateISO(flight.arrival.time),
+      time: formatTo.time(flight.arrival.time),
+      timezone: flight.arrival.airport.tzone
+    }
+  }
+}

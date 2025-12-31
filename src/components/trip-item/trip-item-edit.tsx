@@ -2,7 +2,7 @@ import { Flight, TripItem } from '@/types'
 import { useHeaderTitle, useHeaderAction } from '@/hooks/use-header-title'
 import { IconName } from '@/components/icon'
 import { useNavigate } from 'react-router'
-import { FlightItemEdit } from './flight/edit/item-edit'
+import { FlightItemEdit } from './flight/item-edit'
 
 interface TripItemEditProps {
   tripItem: TripItem
