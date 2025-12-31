@@ -3,6 +3,7 @@ import { Person } from "./person"
 import { TripItem } from "./trip-item"
 import { TimelineElement } from "@/components/timeline"
 import { Address } from "./address"
+import { routes } from "@/lib/routes"
 
 export interface Airport {
   code: string
@@ -40,7 +41,7 @@ export function getFlightTimelineItems(flight: Flight): TimelineElement[] {
       title: `Departure: ${flight.flightNumber}`,
       description: `${flight.departure.airport.name} (${flight.departure.airport.code})`,
       datetime: flight.departure.time,
-      link: `/trips/${flight.tripId}/items/${flight.id}`,
+      link: routes.trips.item(flight.tripId, flight.id),
       icon: 'flight-departure',
       status: isPast(flight.departure.time) ? 'inactive' : 'active'
     },
@@ -49,7 +50,7 @@ export function getFlightTimelineItems(flight: Flight): TimelineElement[] {
       title: `Arrival: ${flight.flightNumber}`,
       description: `${flight.arrival.airport.name} (${flight.arrival.airport.code})`,
       datetime: flight.arrival.time,
-      link: `/trips/${flight.tripId}/items/${flight.id}`,
+      link: routes.trips.item(flight.tripId, flight.id),
       icon: 'flight-arrival',
       status: isPast(flight.arrival.time) ? 'inactive' : 'active'
     }

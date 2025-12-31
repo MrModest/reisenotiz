@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { NavLink } from 'react-router'
 import { cn } from '@/lib/utils'
 import { Icon, IconName } from '@/components/icon'
+import { routes } from '@/lib/routes'
 
 interface NavigationProps {
   variant: 'sidebar' | 'bottom'
@@ -16,17 +17,17 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   {
-    to: '/',
+    to: routes.root,
     label: 'Home',
     icon: 'home',
   },
   {
-    to: '/trips',
+    to: routes.trips.list(),
     label: 'Trips',
     icon: 'trip',
   },
   {
-    to: '/settings',
+    to: routes.settings,
     label: 'Settings',
     icon: 'settings',
   },

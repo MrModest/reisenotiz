@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Icon, IconName } from '@/components/icon'
 import { Button } from '@/components/ui/button'
 import { HeaderAction } from '@/contexts/header-context'
+import { Title } from '../ui/title'
 
 interface HeaderProps {
   title?: string;
@@ -20,11 +21,8 @@ export function Header({ title = 'Reisenotiz', icon, actions = [] }: HeaderProps
 
   return (
     <header className='border-b border-border bg-background sticky top-0 z-10'>
-      <div className='px-4 py-4 flex flex-row items-center justify-between'>
-        <div className='flex flex-row items-center'>
-          <Icon name={icon || 'logo'} className='inline-block mr-2 align-middle' />
-          <h1 className='text-2xl font-semibold'>{title}</h1>
-        </div>
+      <div className='p-3 flex flex-row items-center justify-between'>
+        <Title title={title} icon={icon || 'logo'} />
         <div className='flex flex-row items-center space-x-2'>
           {(actions).map(action => (
             <Button

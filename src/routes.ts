@@ -6,10 +6,11 @@ import { SettingsPage } from "@/pages/settings"
 import { TripTimelinePage } from "@/pages/trip-timeline"
 import { TripItemViewPage } from "@/pages/trip-item-view"
 import { TripItemEditPage } from "@/pages/trip-item-edit"
+import { routes } from "@/lib/routes"
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: routes.root,
     Component: AppLayout,
     children: [
       {
@@ -17,19 +18,19 @@ export const router = createBrowserRouter([
         Component: HomePage
       },
       {
-        path: "trips",
+        path: routes.trips.list(),
         Component: TripsPage,
       },
       {
-        path: "trips/:tripId",
+        path: routes.trips.trip(":tripId"),
         Component: TripTimelinePage
       },
       {
-        path: "trips/:tripId/items/:itemId",
+        path: routes.trips.item(":tripId", ":itemId"),
         Component: TripItemViewPage
       },
       {
-        path: "trips/:tripId/items/:itemId/edit",
+        path: routes.trips.editItem(":tripId", ":itemId"),
         Component: TripItemEditPage
       },
       {

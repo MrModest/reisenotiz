@@ -4,6 +4,7 @@ import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/comp
 import { cn } from "@/lib/utils"
 import { formatTo } from "@/lib/datetime"
 import type { Trip } from "@/types"
+import { routes } from "@/lib/routes"
 
 interface TripsProps {
   trips: Trip[]
@@ -23,7 +24,7 @@ export function Trips({trips, className}: TripsProps) {
 export function Trip({ trip }: { trip: Trip }) {
   return (
     <Item variant="outline" size="sm" asChild>
-      <Link to={`/trips/${trip.id}`} key={trip.id} className="card">
+      <Link to={routes.trips.trip(trip.id)} key={trip.id} className="card">
         <ItemMedia>
           <Icon name="trip" />
         </ItemMedia>

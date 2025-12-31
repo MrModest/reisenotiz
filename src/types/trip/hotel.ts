@@ -2,6 +2,7 @@ import { DateTime, ZonedInstant } from "@/lib/datetime"
 import { TripItem } from "./trip-item"
 import { TimelineElement } from "@/components/timeline"
 import { Address } from "./address"
+import { routes } from "@/lib/routes"
 
 export interface HotelReservation {
   checkIn: { available: ZonedInstant; planned?: ZonedInstant }
@@ -35,7 +36,7 @@ export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
       title: `Check-In: ${hotel.site.name}`,
       description: `${hotel.site.address.line}`,
       datetime: hotel.reservation.checkIn.planned || hotel.reservation.checkIn.available,
-      link: `/trips/${hotel.tripId}/items/${hotel.id}`,
+      link: routes.trips.item(hotel.tripId, hotel.id),
       icon: 'hotel-checkIn',
       status: isPast(hotel.reservation.checkIn.available) ? 'inactive' : 'active'
     },
@@ -44,7 +45,7 @@ export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
       title: `Check-Out: ${hotel.site.name}`,
       description: `${hotel.site.address.line}`,
       datetime: hotel.reservation.checkOut.planned || hotel.reservation.checkOut.available,
-      link: `/trips/${hotel.tripId}/items/${hotel.id}`,
+      link: routes.trips.item(hotel.tripId, hotel.id),
       icon: 'hotel-checkOut',
       status: isPast(hotel.reservation.checkOut.available) ? 'inactive' : 'active',
     }

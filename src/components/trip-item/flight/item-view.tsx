@@ -5,6 +5,8 @@ import { FieldView } from '@/components/trip-item/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DateRange } from '../date-range'
+import { Title } from '@/components/ui/title'
+import { Button } from '@/components/ui/button'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -16,6 +18,16 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
 
   return (
     <div className={className}>
+      <div className='flex justify-between items-center'>
+        <Title className='py-4' title='Flight Details' icon='flight' />
+        <Button
+          variant='outline'
+          size='icon'
+          onClick={() => {}}
+        >
+          <Icon name='edit' />
+        </Button>
+      </div>
       <DateRange>
         <FlightPoint point={flight.departure} />
         <DateRange.Separator label={duration} />

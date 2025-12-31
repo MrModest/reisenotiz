@@ -1,4 +1,4 @@
-import { Flight, Accommodation, TripItem } from "@/types"
+import { Flight, Accommodation, TripItem, Trip } from "@/types"
 import { useHeaderTitle, useHeaderAction } from "@/hooks/use-header-title"
 import { FlightItemView } from "./flight/item-view"
 import { AccommodationItemView } from "./accommodation/item-view"
@@ -6,50 +6,28 @@ import { IconName } from "@/components/icon"
 import { useNavigate, useParams } from "react-router"
 
 interface TripItemViewProps {
+  trip: Trip
   tripItem: TripItem
   className?: string
 }
 
-export function TripItemView({ tripItem, className }: TripItemViewProps) {
-  const result = getView({ tripItem, className })
-  const navigate = useNavigate()
-  const { tripId, itemId } = useParams<{ tripId: string; itemId: string }>()
+export function TripItemView({ trip, tripItem, className }: TripItemViewProps) {
+  useHeaderTitle(trip.name, 'trip')
 
-  useHeaderTitle(result.title, result.icon as IconName)
-  useHeaderAction([{
-    icon: 'edit',
-    onClick: () => {
-      navigate(`/trips/${tripId}/items/${itemId}/edit`)
-    }
-  }])
-
-  return result.view
+  return getView({ tripItem, className })
 }
 
-function getView({ tripItem, className }: TripItemViewProps) {
+function getView({ tripItem, className }: { tripItem: TripItem; className?: string }) {
   switch (tripItem.type) {
     case 'Flight':
-      return {
-        view: <FlightItemView flight={tripItem as Flight} className={className} />,
-        title: 'Flight Details',
-        icon: 'flight'
-      }
+      return (<FlightItemView flight={tripItem as Flight} className={className} />)
     case 'Accommodation':
-      return {
-        view: <AccommodationItemView accommodation={tripItem as Accommodation} className={className} />,
-        title: `${(tripItem as Accommodation).site.kind} Details`,
-        icon: 'hotel-checkIn'
-      }
+      return (<AccommodationItemView accommodation={tripItem as Accommodation} className={className} />)
     default:
-      return {
-        view: (
-          (
-            <div className={className}>
-              <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
-            </div>
-          )
-        ),
-        title: 'Unsupported Type'
-      }
+      return (
+        <div className={className}>
+          <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
+        </div>
+      )
   }
 }

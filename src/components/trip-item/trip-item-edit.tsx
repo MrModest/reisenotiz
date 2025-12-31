@@ -1,7 +1,6 @@
 import { Flight, TripItem } from '@/types'
-import { useHeaderTitle, useHeaderAction } from '@/hooks/use-header-title'
+import { useHeaderTitle } from '@/hooks/use-header-title'
 import { IconName } from '@/components/icon'
-import { useNavigate } from 'react-router'
 import { FlightItemEdit } from './flight/item-edit'
 
 interface TripItemEditProps {
@@ -11,20 +10,8 @@ interface TripItemEditProps {
 
 export function TripItemEdit({ tripItem, className }: TripItemEditProps) {
   const result = getEdit({ tripItem, className })
-  const navigate = useNavigate()
 
   useHeaderTitle(result.title, result.icon as IconName)
-  useHeaderAction([{
-    icon: 'save',
-    onClick: () => {
-      console.log('Save trip item:', tripItem.id)
-    }
-  }, {
-    icon: 'cancel',
-    onClick: () => {
-      navigate(-1)
-    }
-  }])
 
   return result.view
 }
