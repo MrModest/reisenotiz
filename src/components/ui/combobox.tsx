@@ -111,7 +111,7 @@ export function Combobox({
         >
           {selected && selected.length > 0 ? (
             <div className='truncate mr-auto flex items-center gap-1'>
-              <span className='px-1 bg-primary/50 rounded-sm'>{options.find((item) => item.value === selected)?.value}</span>
+              <span className='px-2 py-0.5 bg-primary/50 rounded-sm'>{options.find((item) => item.value === selected)?.value}</span>
               <span>{options.find((item) => item.value === selected)?.label}</span>
             </div>
           ) : (
