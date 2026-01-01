@@ -7,8 +7,9 @@ import { AirportCombobox, AirportOption } from './edit/airport-combobox'
 import { airportDictionary } from '@/services/dictionaries/dicts'
 import { AddressNone } from '@/types/trip/address'
 import { Field } from '@/components/ui/field'
-import { Button } from '@/components/ui/button'
-import { Title } from '@/components/ui/title'
+import { useNavigate } from 'react-router'
+import { cn } from '@/lib/utils'
+import { ItemHeader } from '../item-header'
 
 interface FlightItemEditProps {
   flight: Flight
@@ -18,6 +19,7 @@ interface FlightItemEditProps {
 
 export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProps) {
   const [selectedAirport, setSelectedAirport] = useState<AirportOption | null>(null)
+  const navigate = useNavigate()
 
   const form = useForm<FlightFormSchema>({
     resolver: zodResolver(flightFormSchema),
@@ -35,11 +37,16 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
   const airports = airportDictionary.getAllValues()
 
   return (
-    <form className={className} onSubmit={form.handleSubmit(onSubmit)}>
-      <Field orientation="horizontal" className='flex-row-reverse my-2'>
-        <Title className='py-2 pb-4' title='Flight Details' icon='flight' />
-        <Button type="submit">Submit</Button>
-        <Button variant="outline" type="button">Cancel</Button>
+    <form className={cn('md:min-w-[480px]', className)} onSubmit={form.handleSubmit(onSubmit)}>
+      <Field orientation="horizontal" className='flex-row items-center justify-between my-2'>
+        <ItemHeader
+          title='Edit Flight'
+          icon='flight'
+          buttons={[
+            { icon: 'save', isSubmit: true },
+            { icon: 'cancel', onClick: () => navigate(-1) }
+          ]}
+        />
       </Field>
       <div>
         <AirportCombobox

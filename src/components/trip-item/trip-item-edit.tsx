@@ -1,22 +1,22 @@
-import { Flight, TripItem } from '@/types'
+import { Flight, Trip, TripItem } from '@/types'
 import { useHeaderTitle } from '@/hooks/use-header-title'
-import { IconName } from '@/components/icon'
 import { FlightItemEdit } from './flight/item-edit'
 
 interface TripItemEditProps {
+  trip: Trip
   tripItem: TripItem
   className?: string
 }
 
-export function TripItemEdit({ tripItem, className }: TripItemEditProps) {
+export function TripItemEdit({ trip, tripItem, className }: TripItemEditProps) {
   const result = getEdit({ tripItem, className })
 
-  useHeaderTitle(result.title, result.icon as IconName)
+  useHeaderTitle(trip.name, 'trip')
 
   return result.view
 }
 
-function getEdit({ tripItem, className }: TripItemEditProps) {
+function getEdit({ tripItem, className }: { tripItem: TripItem; className?: string }) {
   switch (tripItem.type) {
     case 'Flight':
       return {

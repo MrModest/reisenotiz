@@ -1,9 +1,7 @@
 import { Flight, Accommodation, TripItem, Trip } from "@/types"
-import { useHeaderTitle, useHeaderAction } from "@/hooks/use-header-title"
+import { useHeaderTitle } from "@/hooks/use-header-title"
 import { FlightItemView } from "./flight/item-view"
 import { AccommodationItemView } from "./accommodation/item-view"
-import { IconName } from "@/components/icon"
-import { useNavigate, useParams } from "react-router"
 
 interface TripItemViewProps {
   trip: Trip

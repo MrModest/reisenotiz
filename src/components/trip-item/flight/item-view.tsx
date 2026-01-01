@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DateRange } from '../date-range'
 import { Title } from '@/components/ui/title'
 import { Button } from '@/components/ui/button'
+import { useNavigate } from 'react-router'
+import { ItemHeader } from '../item-header'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -15,18 +17,18 @@ interface FlightItemViewProps {
 
 export function FlightItemView({ flight, className }: FlightItemViewProps) {
   const duration = formatTo.duration(flight.departure.time, flight.arrival.time)
+  const navigate = useNavigate()
 
   return (
     <div className={className}>
       <div className='flex justify-between items-center'>
-        <Title className='py-4' title='Flight Details' icon='flight' />
-        <Button
-          variant='outline'
-          size='icon'
-          onClick={() => {}}
-        >
-          <Icon name='edit' />
-        </Button>
+        <ItemHeader
+          title='Flight Details'
+          icon='flight'
+          buttons={[
+            { icon: 'edit', onClick: () => navigate('edit') }
+          ]}
+        />
       </div>
       <DateRange>
         <FlightPoint point={flight.departure} />
