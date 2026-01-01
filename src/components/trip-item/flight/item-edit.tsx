@@ -38,7 +38,7 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
 
   return (
     <form className={cn('md:min-w-[480px]', className)} onSubmit={form.handleSubmit(onSubmit)}>
-      <Field orientation="horizontal" className='flex-row items-center justify-between my-2'>
+      <Field orientation='horizontal' className='flex-row items-center justify-between'>
         <ItemHeader
           title='Edit Flight'
           icon='flight'
