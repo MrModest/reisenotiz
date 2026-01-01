@@ -4,6 +4,8 @@ import { FieldView } from '@/components/trip-item/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { DateRange } from '@/components/trip-item/date-range'
+import { ItemHeader } from '../item-header'
+import { useNavigate } from 'react-router'
 
 interface HotelItemViewProps {
   accommodation: Accommodation
@@ -11,8 +13,19 @@ interface HotelItemViewProps {
 }
 
 export function AccommodationItemView({ accommodation, className }: HotelItemViewProps) {
+  const navigate = useNavigate()
+
   return (
     <div className={className}>
+      <div className='flex justify-between items-center'>
+        <ItemHeader
+          title={`${accommodation.site.kind} Details`}
+          icon='hotel-checkIn'
+          buttons={[
+            { icon: 'edit', onClick: () => navigate('edit') }
+          ]}
+        />
+      </div>
       <DateRange>
         <ReservationPoint
           label='Check In'
@@ -32,7 +45,7 @@ export function AccommodationItemView({ accommodation, className }: HotelItemVie
             subValue={`${accommodation.site.address.country}, ${accommodation.site.address.city}`}
           />
       </div>
-      <SeparatorWithLabel label='Details' />
+      <SeparatorWithLabel label='Details' className='mt-2' />
       <div className='grid grid-cols-2 gap-x-2 justify-between'>
         <FieldView label='Reserved On' value={accommodation.reservedOn} />
         <FieldView label='Guests' value={accommodation.guests.toString()} />
