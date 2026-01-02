@@ -16,6 +16,7 @@ export function ItemHeader({ title, icon, buttons }: ItemHeaderProps) {
         {
           buttons.map(button => (
             <Button
+              key={button.icon}
               variant='outline'
               size='icon'
               type={button.isSubmit ? 'submit' : undefined}

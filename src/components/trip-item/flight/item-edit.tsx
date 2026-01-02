@@ -3,13 +3,15 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Flight } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
-import { AirportCombobox, AirportOption } from './edit/airport-combobox'
 import { airportDictionary } from '@/services/dictionaries/dicts'
 import { AddressNone } from '@/types/trip/address'
 import { Field } from '@/components/ui/field'
 import { useNavigate } from 'react-router'
 import { cn } from '@/lib/utils'
 import { ItemHeader } from '../item-header'
+import { SeparatorWithLabel } from '@/components/ui/separator'
+import { AirportSelector, AirportSuggestion } from './edit/airport-selector'
+import { airports } from '@/stubs/airports'
 
 interface FlightItemEditProps {
   flight: Flight
@@ -18,7 +20,7 @@ interface FlightItemEditProps {
 }
 
 export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProps) {
-  const [selectedAirport, setSelectedAirport] = useState<AirportOption | null>(null)
+  const [selectedAirport, setSelectedAirport] = useState<AirportSuggestion>()
   const navigate = useNavigate()
 
   const form = useForm<FlightFormSchema>({
@@ -34,7 +36,11 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
     onSave?.(updatedFlight)
   }
 
-  const airports = airportDictionary.getAllValues()
+  const airportSuggestions: AirportSuggestion[] = airportDictionary.getAllValues()
+    .map(a => ({
+      code: a.code,
+      name: a.name
+    }))
 
   return (
     <form className={cn('md:min-w-[480px]', className)} onSubmit={form.handleSubmit(onSubmit)}>
@@ -48,14 +54,13 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
           ]}
         />
       </Field>
-      <div>
-        <AirportCombobox
-          options={airports}
-          value={selectedAirport}
-          onSelect={setSelectedAirport}
-          onCreate={handleCreateAirport}
-        />
-      </div>
+      <SeparatorWithLabel label='Departure' className='mb-2' />
+      <AirportSelector
+        suggestions={airportSuggestions}
+        selected={selectedAirport?.code || ''}
+        onSelect={code => setSelectedAirport(airports.find(a => a.code === code)!)}
+        onCreate={handleCreateAirport}
+      />
     </form>
   )
 }
@@ -65,7 +70,7 @@ function convert(data: FlightFormSchema): Flight {
   return {} as Flight
 }
 
-function handleCreateAirport(newAirport: AirportOption) {
+function handleCreateAirport(newAirport: AirportSuggestion) {
   airportDictionary.add({
     code: newAirport.code,
     name: newAirport.name,
