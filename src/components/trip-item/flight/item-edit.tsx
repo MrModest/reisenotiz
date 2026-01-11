@@ -8,6 +8,9 @@ import { cn } from '@/lib/utils'
 import { ItemHeader } from '../item-header'
 import { Separator, SeparatorWithLabel } from '@/components/ui/separator'
 import { FieldInput } from '../field-input'
+import { FieldTextarea } from '../field-textarea'
+import { FieldPassengers } from '../field-passengers'
+import { FieldAttachments } from '../field-attachments'
 import { DateTime, ZonedInstant } from '@/lib/datetime'
 
 interface FlightItemEditProps {
@@ -56,6 +59,12 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
           <FieldInput name='bookingCode' label='Booking' />
           <FieldInput name='seat' label='Seat(s)' />
         </FieldSet>
+        <SeparatorWithLabel label='Note' className='my-4' />
+        <FieldTextarea name='note' label='' placeholder='Add any notes about this flight...' />
+        <SeparatorWithLabel label='Passengers' className='mb-2 mt-6' />
+        <FieldPassengers name='passengers' />
+        <SeparatorWithLabel label='Attachments' className='mb-2 mt-6' />
+        <FieldAttachments name='attachments' tripItemId={flight.id} />
       </form>
     </FormProvider>
   )
@@ -66,7 +75,7 @@ function AirportPoint({ direction: direction }: { direction: 'departure' | 'arri
     <>
       <SeparatorWithLabel label={direction} className='mb-2 mt-6 capitalize' />
       <FieldSet className='flex-row gap-2'>
-        <FieldInput className='w-15' name={`${direction}.airport.code`} label='Code' />
+        <FieldInput required className='w-15' name={`${direction}.airport.code`} label='Code' />
         <FieldInput name={`${direction}.airport.name`} label='Name' />
       </FieldSet>
       <FieldSet className='gap-1 mt-4'>
@@ -104,9 +113,9 @@ function convert(data: FlightFormSchema, tripId: UUID, flightId: UUID): Flight {
     type: 'Flight',
     id: flightId,
     tripId: tripId,
-    note: '',
-    passengers: [],
-    attachments: [],
+    note: data.note || '',
+    passengers: data.passengers || [],
+    attachments: data.attachments || [],
     flightNumber: data.flightNumber,
     carrier: data.carrier,
     departure: {
