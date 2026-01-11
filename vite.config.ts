@@ -20,7 +20,6 @@ export default defineConfig({
         enabled: true,
         type: 'module'
       },
-      includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
       manifest: {
         name: 'Reisenotiz',
         short_name: 'Reisenotiz',
@@ -30,14 +29,57 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: 'logo192.png',
-            sizes: '192x192',
-            type: 'image/png'
+            "src": "logo/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
           },
           {
-            src: 'logo512.png',
-            sizes: '512x512',
-            type: 'image/png'
+            "src": "logo/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+          },
+          {
+            "src": "logo/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+          },
+          {
+            "src": "logo/favicon-48x48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+          },
+          {
+            "src": "logo/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "logo/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "logo/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+          },
+          {
+            "src": "logo/apple-touch-icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+          },
+          {
+            "src": "logo/apple-touch-icon-167x167.png",
+            "sizes": "167x167",
+            "type": "image/png"
+          },
+          {
+            "src": "logo/apple-touch-icon-180x180.png",
+            "sizes": "180x180",
+            "type": "image/png"
           }
         ]
       },
