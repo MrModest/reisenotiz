@@ -1,12 +1,14 @@
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Flight } from '@/types'
+import { Flight, UUID } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
-import { Field } from '@/components/ui/field'
+import { Field, FieldSet } from '@/components/ui/field'
 import { useNavigate } from 'react-router'
 import { cn } from '@/lib/utils'
 import { ItemHeader } from '../item-header'
-import { SeparatorWithLabel } from '@/components/ui/separator'
+import { Separator, SeparatorWithLabel } from '@/components/ui/separator'
+import { FieldInput } from '../field-input'
+import { DateTime, ZonedInstant } from '@/lib/datetime'
 
 interface FlightItemEditProps {
   flight: Flight
@@ -25,29 +27,101 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
 
   function onSubmit(data: FlightFormSchema) {
     console.log('formData', data)
-    const updatedFlight = convert(data)
+    const updatedFlight = convert(data, flight.tripId, flight.id)
     console.log('updatedFlight', updatedFlight)
     onSave?.(updatedFlight)
   }
 
   return (
-    <form className={cn('md:min-w-[480px]', className)} onSubmit={form.handleSubmit(onSubmit)}>
-      <Field orientation='horizontal' className='flex-row items-center justify-between'>
-        <ItemHeader
-          title='Edit Flight'
-          icon='flight'
-          buttons={[
-            { icon: 'save', isSubmit: true },
-            { icon: 'cancel', onClick: () => navigate(-1) }
-          ]}
-        />
-      </Field>
-      <SeparatorWithLabel label='Departure' className='mb-2' />
-    </form>
+    <FormProvider {...form}>
+      <form className={cn('md:min-w-[480px] mb-10', className)} onSubmit={form.handleSubmit(onSubmit)}>
+        <Field orientation='horizontal' className='flex-row items-center justify-between'>
+          <ItemHeader
+            title='Edit Flight'
+            icon='flight'
+            buttons={[
+              { icon: 'save', isSubmit: true },
+              { icon: 'cancel', onClick: () => navigate(-1) }
+            ]}
+          />
+        </Field>
+        <FieldSet>
+          <FieldInput name='flightNumber' label='Flight Number' />
+          <FieldInput name='carrier' label='Airline' />
+        </FieldSet>
+        <AirportPoint direction='departure' />
+        <AirportPoint direction='arrival' />
+        <Separator className='my-4' />
+        <FieldSet className='flex-row gap-2'>
+          <FieldInput name='bookingCode' label='Booking' />
+          <FieldInput name='seat' label='Seat(s)' />
+        </FieldSet>
+      </form>
+    </FormProvider>
   )
 }
 
-function convert(data: FlightFormSchema): Flight {
-  // Conversion logic from FlightFormSchema to Flight goes here
-  return {} as Flight
+function AirportPoint({ direction: direction }: { direction: 'departure' | 'arrival' }) {
+  return (
+    <>
+      <SeparatorWithLabel label={direction} className='mb-2 mt-6 capitalize' />
+      <FieldSet className='flex-row gap-2'>
+        <FieldInput className='w-15' name={`${direction}.airport.code`} label='Code' />
+        <FieldInput name={`${direction}.airport.name`} label='Name' />
+      </FieldSet>
+      <FieldSet className='gap-1 mt-4'>
+        <FieldInput name={`${direction}.airport.address.line`} label='Street, Home number' />
+        <div className='flex flex-row gap-2'>
+          <FieldInput name={`${direction}.airport.address.city`} label='City' />
+          <FieldInput name={`${direction}.airport.address.country`} label='Country' />
+        </div>
+      </FieldSet>
+      <FieldSet className='flex-row gap-2 mt-4'>
+        <FieldInput name={`${direction}.date`} label='Date' />
+        <FieldInput name={`${direction}.time`} label='Time' />
+        <FieldInput name={`${direction}.timezone`} label='Timezone' />
+      </FieldSet>
+      <FieldSet className='flex-row gap-2 mt-4'>
+        <FieldInput name={`${direction}.terminal`} label='Terminal' />
+        <FieldInput name={`${direction}.gate`} label='Gate' />
+      </FieldSet>
+    </>
+  )
+}
+
+function convertTime(date: string, time: string, tz: string): ZonedInstant {
+  const [year, month, day] = date.split('-').map(s => parseInt(s))
+  const [hour, minute] = time.split(':').map(s => parseInt(s))
+
+  return DateTime.fromObject({
+    year, month, day,
+    hour, minute
+  }, tz).toZonedInstant()
+}
+
+function convert(data: FlightFormSchema, tripId: UUID, flightId: UUID): Flight {
+  return {
+    type: 'Flight',
+    id: flightId,
+    tripId: tripId,
+    note: '',
+    passengers: [],
+    attachments: [],
+    flightNumber: data.flightNumber,
+    carrier: data.carrier,
+    departure: {
+      airport: data.departure.airport,
+      time: convertTime(data.departure.date, data.departure.time, data.departure.timezone),
+      terminal: data.departure.terminal,
+      gate: data.departure.gate,
+    },
+    arrival: {
+      airport: data.arrival.airport,
+      time: convertTime(data.arrival.date, data.arrival.time, data.arrival.timezone),
+      terminal: data.arrival.terminal,
+      gate: data.arrival.gate,
+    },
+    bookingCode: data.bookingCode,
+    seat: data.seat,
+  } as Flight
 }
