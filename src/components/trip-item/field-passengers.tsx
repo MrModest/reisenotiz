@@ -17,6 +17,16 @@ export function FieldPassengers({ name, className }: FieldPassengersProps) {
 
   return (
     <Field className={cn('gap-2', className)}>
+      <Button
+        type='button'
+        variant='outline'
+        size='sm'
+        onClick={() => append({ id: generateUUID(), fullname: '', contacts: [] })}
+        className='w-full'
+      >
+        <Icon name='add' className='h-4 w-4 mr-2' />
+        Add Passenger
+      </Button>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
         {fields.map((field, index) => (
           <FieldSet key={field.id} className='gap-2 p-3 border border-input rounded-md'>
@@ -32,20 +42,10 @@ export function FieldPassengers({ name, className }: FieldPassengersProps) {
                 <Icon name='close' className='h-4 w-4' />
               </Button>
             </div>
-            <FieldInput name={`${name}.${index}.fullname`} label='Full Name' />
+            <FieldInput required name={`${name}.${index}.fullname`} label='Full Name' />
           </FieldSet>
         ))}
       </div>
-      <Button
-        type='button'
-        variant='outline'
-        size='sm'
-        onClick={() => append({ id: generateUUID(), fullname: '', contacts: [] })}
-        className='w-full'
-      >
-        <Icon name='add' className='h-4 w-4 mr-2' />
-        Add Passenger
-      </Button>
     </Field>
   )
 }
