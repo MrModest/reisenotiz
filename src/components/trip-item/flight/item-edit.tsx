@@ -77,9 +77,9 @@ function AirportPoint({ direction: direction }: { direction: 'departure' | 'arri
         </div>
       </FieldSet>
       <FieldSet className='flex-row gap-2 mt-4'>
-        <FieldInput name={`${direction}.date`} label='Date' />
-        <FieldInput name={`${direction}.time`} label='Time' />
-        <FieldInput name={`${direction}.timezone`} label='Timezone' />
+        <FieldInput required name={`${direction}.date`} label='Date' />
+        <FieldInput required name={`${direction}.time`} label='Time' />
+        <FieldInput required name={`${direction}.timezone`} label='Timezone' />
       </FieldSet>
       <FieldSet className='flex-row gap-2 mt-4'>
         <FieldInput name={`${direction}.terminal`} label='Terminal' />
