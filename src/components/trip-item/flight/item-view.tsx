@@ -5,8 +5,6 @@ import { FieldView } from '@/components/trip-item/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DateRange } from '../date-range'
-import { Title } from '@/components/ui/title'
-import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router'
 import { ItemHeader } from '../item-header'
 

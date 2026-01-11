@@ -156,3 +156,7 @@ const { onChange, onBlur, name, ref } = register('firstName');
 // same as above
 <input {...register('firstName')} />
 ```
+
+### Never use Server Components
+
+This project doesn't use and doesn't intent to use Server Components in any way. So you should not have anything like "use server" or "use client". Moreover, be very accurate when using async functions since React components supports them not everywhere.

@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { airportDictionary } from '@/services'
-import { AddressNone } from '@/types/trip/address'
 
 export function HomePage() {
   const [count, setCount] = useState(0)
