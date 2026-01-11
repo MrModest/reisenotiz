@@ -24,7 +24,9 @@ export const flightFormSchema = z.object({
   carrier: z.string().optional(),
   bookingCode: z.string().optional(),
   seat: z.string().optional(),
+  note: z.string().optional(),
   passengers: z.array(schemas.person).optional(),
+  attachments: z.array(schemas.attachment).optional(),
   departure: flightPointSchema,
   arrival: flightPointSchema
 })
@@ -37,7 +39,9 @@ export function defaultsFromFlight(flight: Flight): FlightFormSchema {
     carrier: flight.carrier,
     bookingCode: flight.bookingCode,
     seat: flight.seat,
+    note: flight.note,
     passengers: flight.passengers,
+    attachments: flight.attachments,
     departure: {
       airport: flight.departure.airport,
       terminal: flight.departure.terminal,
