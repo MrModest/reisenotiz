@@ -1,7 +1,7 @@
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { useFormField } from '@/hooks/use-form-field'
 import { cn } from '@/lib/utils'
-import { useController, useFormContext } from 'react-hook-form'
 
 interface FieldInputProps {
   name: string
@@ -10,8 +10,7 @@ interface FieldInputProps {
 };
 
 export function FieldInput({ name, label, className }: FieldInputProps) {
-  const { control } = useFormContext()
-  const { field, fieldState: { error } } = useController({ name, control })
+  const { field, error } = useFormField(name)
 
   return (
     <Field className={cn('gap-0', className)}>
