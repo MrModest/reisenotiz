@@ -12,6 +12,7 @@ import { FieldTextarea } from '../field-textarea'
 import { FieldPassengers } from '../field-passengers'
 import { FieldAttachments } from '../field-attachments'
 import { DateTime, ZonedInstant } from '@/lib/datetime'
+import { Button } from '@/components/ui/button'
 
 interface FlightItemEditProps {
   flight: Flight
@@ -65,6 +66,10 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
         <FieldPassengers name='passengers' />
         <SeparatorWithLabel label='Attachments' className='mb-2 mt-6' />
         <FieldAttachments name='attachments' tripItemId={flight.id} />
+        <Field className='mt-4'>
+          <Button type='submit' variant='default'>Save</Button>
+          <Button onClick={() => navigate(-1)} variant='secondary'>Cancel</Button>
+        </Field>
       </form>
     </FormProvider>
   )
