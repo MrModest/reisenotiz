@@ -1,5 +1,6 @@
 import { Flight, Accommodation, TripItem, Trip } from "@/types"
-import { useHeaderTitle } from "@/hooks/use-header-title"
+import { useHeaderTitle, useHeaderBackButton } from "@/hooks/use-header-title"
+import { useNavigate } from "react-router"
 import { FlightItemView } from "./flight/item-view"
 import { AccommodationItemView } from "./accommodation/item-view"
 
@@ -10,7 +11,10 @@ interface TripItemViewProps {
 }
 
 export function TripItemView({ trip, tripItem, className }: TripItemViewProps) {
+  const navigate = useNavigate()
+
   useHeaderTitle(trip.name, 'trip')
+  useHeaderBackButton(true)
 
   return getView({ tripItem, className })
 }

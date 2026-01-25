@@ -8,6 +8,10 @@ interface HeaderContextValue {
   setIcon: (icon: IconName | undefined) => void
   actions: HeaderAction[]
   setActions: (action: HeaderAction[]) => void
+  showBackButton: boolean
+  setShowBackButton: (show: boolean) => void
+  onBack?: () => void
+  setOnBack: (onBack: (() => void) | undefined) => void
 }
 
 export interface HeaderAction {
@@ -22,12 +26,16 @@ export function HeaderProvider({ children }: { children: ReactNode }) {
   const [title, setTitle] = useState<string | undefined>()
   const [icon, setIcon] = useState<IconName | undefined>()
   const [actions, setActions] = useState<HeaderAction[]>([])
+  const [showBackButton, setShowBackButton] = useState(false)
+  const [onBack, setOnBack] = useState<(() => void) | undefined>()
 
   return (
     <HeaderContext.Provider value={{
       title, setTitle,
       icon, setIcon,
-      actions, setActions
+      actions, setActions,
+      showBackButton, setShowBackButton,
+      onBack, setOnBack
     }}>
       {children}
     </HeaderContext.Provider>

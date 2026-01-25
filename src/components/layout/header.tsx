@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useNavigate } from 'react-router'
 import { Icon, IconName } from '@/components/icon'
 import { Button } from '@/components/ui/button'
 import { HeaderAction } from '@/contexts/header-context'
@@ -8,9 +9,13 @@ interface HeaderProps {
   title?: string;
   icon?: IconName;
   actions?: HeaderAction[];
+  onBack?: () => void;
+  showBackButton?: boolean;
 }
 
-export function Header({ title = 'Reisenotiz', icon, actions = [] }: HeaderProps) {
+export function Header({ title = 'Reisenotiz', icon, actions = [], onBack, showBackButton = false }: HeaderProps) {
+  const navigate = useNavigate()
+
   useEffect(() => {
     if (title !== 'Reisenotiz') {
       document.title = title + ' - Reisenotiz'
@@ -19,10 +24,29 @@ export function Header({ title = 'Reisenotiz', icon, actions = [] }: HeaderProps
     }
   }, [title])
 
+  const handleBack = () => {
+    if (onBack) {
+      onBack()
+    } else {
+      navigate(-1)
+    }
+  }
+
   return (
     <header className='border-b border-border bg-background sticky top-0 z-10'>
       <div className='p-3 flex flex-row items-center justify-between'>
-        <Title title={title} icon={icon || 'logo'} />
+        <div className='flex flex-row items-center space-x-2'>
+          {showBackButton && (
+            <Button
+              variant='ghost'
+              size='icon'
+              onClick={handleBack}
+            >
+              <Icon name='back' />
+            </Button>
+          )}
+          <Title title={title} icon={icon || 'logo'} />
+        </div>
         <div className='flex flex-row items-center space-x-2'>
           {(actions).map(action => (
             <Button

@@ -22,7 +22,7 @@ export function AppLayout() {
 function AppLayoutContent() {
   const [theme, setTheme] = useTheme()
 
-  const { title, icon, actions } = useHeader()
+  const { title, icon, actions, showBackButton, onBack } = useHeader()
   const [isCollapsed, setIsCollapsed] = useState(false)
 
   return (
@@ -38,7 +38,7 @@ function AppLayoutContent() {
 
       {/* Main content area */}
       <main className='flex-1 flex flex-col overflow-hidden'>
-        <Header title={title} icon={icon} actions={actions} />
+        <Header title={title} icon={icon} actions={actions} showBackButton={showBackButton} onBack={onBack} />
         <div className={cn(
           'flex-1',
           'pb-16 md:pb-0',

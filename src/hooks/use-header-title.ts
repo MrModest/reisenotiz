@@ -35,3 +35,24 @@ export function useHeaderAction(
     }
   }, [actions, setActions])
 }
+
+export function useHeaderBackButton(
+  showBackButton: boolean = false,
+  onBack?: () => void
+) {
+  const { setShowBackButton, setOnBack } = useHeader()
+
+  useEffect(() => {
+    setShowBackButton(showBackButton)
+    if (onBack) {
+      setOnBack(() => onBack)
+    } else {
+      setOnBack(undefined)
+    }
+
+    return () => {
+      setShowBackButton(false)
+      setOnBack(undefined)
+    }
+  }, [showBackButton, onBack, setShowBackButton, setOnBack])
+}

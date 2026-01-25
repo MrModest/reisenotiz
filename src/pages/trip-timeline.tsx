@@ -1,7 +1,7 @@
 import { useParams } from 'react-router'
 import { TimelineLayout } from '@/components/timeline'
 import { useTrip, useTimelineElements } from '@/store'
-import { useHeaderTitle } from '@/hooks/use-header-title'
+import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
 import { UUID } from '@/types'
 
 export function TripTimelinePage() {
@@ -19,6 +19,7 @@ function TripTimelineContent({ tripId }: { tripId: UUID }) {
   const timelineElements = useTimelineElements(tripId)
 
   useHeaderTitle(trip?.name, 'timeline')
+  useHeaderBackButton(true)
 
   if (!trip) {
     return <NotFound />
