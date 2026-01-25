@@ -1,8 +1,10 @@
-import { trips } from '@/stubs/trips'
+import { useTrips } from '@/store'
 import { Trips } from '@/components/trip/trips'
 import { useHeaderTitle } from '@/hooks/use-header-title'
 
 export function TripsPage() {
+  const trips = useTrips()
+
   useHeaderTitle('Trips', 'trip')
 
   return (

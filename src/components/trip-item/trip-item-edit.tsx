@@ -5,23 +5,24 @@ import { FlightItemEdit } from './flight/item-edit'
 interface TripItemEditProps {
   trip: Trip
   tripItem: TripItem
+  onSave: (item: TripItem) => void
   className?: string
 }
 
-export function TripItemEdit({ trip, tripItem, className }: TripItemEditProps) {
-  const result = getEdit({ tripItem, className })
+export function TripItemEdit({ trip, tripItem, onSave, className }: TripItemEditProps) {
+  const result = getEdit({ tripItem, onSave, className })
 
   useHeaderTitle(trip.name, 'trip')
 
   return result.view
 }
 
-function getEdit({ tripItem, className }: { tripItem: TripItem; className?: string }) {
+function getEdit({ tripItem, onSave, className }: { tripItem: TripItem; onSave: (item: TripItem) => void; className?: string }) {
   switch (tripItem.type) {
     case 'Flight':
       return {
         view: (
-          <FlightItemEdit flight={tripItem as Flight} className={className} />
+          <FlightItemEdit flight={tripItem as Flight} onSave={onSave} className={className} />
         ),
         title: 'Edit Flight',
         icon: 'flight'

@@ -19,7 +19,7 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
   const navigate = useNavigate()
 
   return (
-    <div className={cn('w-full md:w-[480px]', className)}>
+    <div className={cn('w-default', className)}>
       <div className='flex justify-between items-center'>
         <ItemHeader
           title='Flight Details'

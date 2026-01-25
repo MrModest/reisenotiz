@@ -46,7 +46,8 @@ function AppLayoutContent() {
         )}>
           <div className={cn(
             'px-4 pt-2',
-            'w-full md:w-fit md:mx-auto'
+            'flex justify-center',
+            'w-full'
           )}>
             <Outlet />
           </div>

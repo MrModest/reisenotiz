@@ -44,7 +44,7 @@ function Timeline({ className, iconsize, size, children, ...props }: TimelinePro
       aria-label="Timeline"
       className={cn(
         timelineVariants({ size }),
-        'relative min-h-[600px] w-full max-w-2xl mx-auto py-8',
+        'relative max-w-2xl py-8',
         className
       )}
       {...props}
