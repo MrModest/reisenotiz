@@ -29,14 +29,14 @@ export default function ThemeSwitcher({ theme, onSwitch, collapsed = false, clas
   }
 
   return (
-    <div className={cn('flex items-center gap-2 p-4', className)}>
-      <Icon name='light-theme' className='size-5' />
+    <div className={cn('flex items-center justify-center gap-2 p-4', className)}>
+      Light <Icon name='light-theme' className='size-5' />
       <Switch
         checked={isDark}
         onCheckedChange={() => onSwitch(isDark ? 'light' : 'dark')}
         aria-label='Toggle theme'
       />
-      <Icon name='dark-theme' className='size-5' />
+      <Icon name='dark-theme' className='size-5' /> Dark
     </div>
   )
 }
