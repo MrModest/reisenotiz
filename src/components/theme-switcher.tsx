@@ -16,7 +16,7 @@ export default function ThemeSwitcher({ theme, onSwitch, collapsed = false, clas
       <button
         onClick={() => onSwitch(isDark ? 'light' : 'dark')}
         className={cn(
-          'flex items-center justify-center p-4 m-2 rounded-md transition-colors',
+          'flex items-center justify-center p-3 m-2 rounded-md transition-colors',
           'hover:bg-accent hover:text-accent-foreground text-muted-foreground',
           className
         )}
@@ -29,7 +29,7 @@ export default function ThemeSwitcher({ theme, onSwitch, collapsed = false, clas
   }
 
   return (
-    <div className={cn('flex items-center gap-2 p-6', className)}>
+    <div className={cn('flex items-center gap-2 p-4', className)}>
       <Icon name='light-theme' className='size-5' />
       <Switch
         checked={isDark}

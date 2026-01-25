@@ -14,11 +14,10 @@ export function FieldTextarea({ name, label, className, placeholder }: FieldText
   const { field, error } = useFormField(name)
 
   return (
-    <Field className={cn('gap-0', className)}>
+    <Field className={cn('gap-0.5', className)}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <Textarea
         aria-invalid={!!error}
-        className='px-2 rounded-sm'
         id={name}
         placeholder={placeholder}
         {...field}
