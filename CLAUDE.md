@@ -86,6 +86,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Icon Component** (`src/components/icon/icon.tsx`):
 - Wrapper around Lucide React icons
 - All used icons should be wrapped by it before being used
+- Whenever you need pass an icon as a variable, DO NOT pass a ReactNote. Use `IconName` as a type and just use the generic `Icon` component with passing the `name={icon}` as property.
 
 **Header Context** (`src/contexts/header-context.tsx`):
 - Provides dynamic header title/actions

@@ -29,7 +29,7 @@ export const tripsItems: TripItem[] = [
       terminal: '1',
       time: { instant: '2025-12-02T06:00:00.000Z', zone: airportsByCode["HND"].tzone }
     },
-    note: 'Empty note',
+    note: '',
     attachments: []
   } as Flight,
   {
@@ -52,7 +52,7 @@ export const tripsItems: TripItem[] = [
       terminal: '2',
       time: { instant: '2025-12-10T20:00:00.000Z', zone: airportsByCode["BER"].tzone }
     },
-    note: 'Empty note',
+    note: '',
     attachments: []
   },
   {

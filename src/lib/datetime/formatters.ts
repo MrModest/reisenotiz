@@ -9,8 +9,8 @@ import type { ZonedInstant } from './types'
 /**
  * Formats date as "Nov 23, 2025"
  */
-export function formatDate(dt: DateTime): string {
-  return dt.format('LLL dd, yyyy')
+export function formatDate(dt: ZonedInstant): string {
+  return DateTime.from(dt).format('LLL dd, yyyy')
 }
 
 /**

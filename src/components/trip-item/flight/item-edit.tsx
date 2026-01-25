@@ -1,4 +1,4 @@
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Flight, UUID } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
@@ -6,13 +6,98 @@ import { Field, FieldSet } from '@/components/ui/field'
 import { useNavigate } from 'react-router'
 import { cn } from '@/lib/utils'
 import { ItemHeader } from '../item-header'
-import { Separator, SeparatorWithLabel } from '@/components/ui/separator'
+import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '../field-input'
 import { FieldTextarea } from '../field-textarea'
 import { FieldPassengers } from '../field-passengers'
 import { FieldAttachments } from '../field-attachments'
-import { DateTime, ZonedInstant } from '@/lib/datetime'
+import { DateTime, ZonedInstant, formatTo } from '@/lib/datetime'
 import { Button } from '@/components/ui/button'
+import { CollapsibleSection } from '../collapsible-section'
+import { getCountryFlag } from '@/lib/utils/country-flag'
+
+function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
+  const airport = useWatch({ name: `${direction}.airport` })
+  const date = useWatch({ name: `${direction}.date` })
+  const time = useWatch({ name: `${direction}.time` })
+  const timezone = useWatch({ name: `${direction}.timezone` })
+
+  if (!airport?.code || !date || !time || !timezone) {
+    return <span className='text-muted-foreground text-sm'>No {direction} info</span>
+  }
+
+  const flag = airport.address?.country ? getCountryFlag(airport.address.country) : '🌐'
+  const airportDisplay = airport.name
+    ? `${airport.name} (${airport.code})`
+    : airport.code
+
+  const zonedInstant = convertTime(date, time, timezone)
+
+  return (
+    <div className='flex items-start gap-2 text-sm'>
+      <span className='text-xl'>{flag}</span>
+      <div>
+        <div className='font-medium'>{airportDisplay}</div>
+        <div className='text-muted-foreground'>
+          {formatTo.date(zonedInstant)} · {formatTo.time(zonedInstant)} ({timezone})
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function NoteSection({ children }: { children: React.ReactNode }) {
+  const note = useWatch({ name: 'note' })
+
+  const preview = note && note.trim() !== '' ? (() => {
+    const firstLine = note.split('\n')[0]
+    const truncated = firstLine.length > 60 ? firstLine.slice(0, 60) + '...' : firstLine
+    return <span className='text-sm text-foreground'>{truncated}</span>
+  })() : undefined
+
+  return (
+    <CollapsibleSection
+      label='Note'
+      preview={preview}
+      defaultOpen={false}
+      className='my-4'
+    >
+      {children}
+    </CollapsibleSection>
+  )
+}
+
+function PassengersSection({ children }: { children: React.ReactNode }) {
+  const passengers = useWatch({ name: 'passengers' })
+  const count = passengers?.length || 0
+  const label = count > 0 ? `Passengers (${count})` : 'Passengers'
+
+  return (
+    <CollapsibleSection
+      label={label}
+      defaultOpen={false}
+      className='mb-2 mt-6'
+    >
+      {children}
+    </CollapsibleSection>
+  )
+}
+
+function AttachmentsSection({ children }: { children: React.ReactNode }) {
+  const attachments = useWatch({ name: 'attachments' })
+  const count = attachments?.length || 0
+  const label = count > 0 ? `Attachments (${count})` : 'Attachments'
+
+  return (
+    <CollapsibleSection
+      label={label}
+      defaultOpen={false}
+      className='mb-2 mt-6'
+    >
+      {children}
+    </CollapsibleSection>
+  )
+}
 
 interface FlightItemEditProps {
   flight: Flight
@@ -53,19 +138,38 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
           <FieldInput name='flightNumber' label='Flight Number' />
           <FieldInput name='carrier' label='Airline' />
         </FieldSet>
-        <AirportPoint direction='departure' />
-        <AirportPoint direction='arrival' />
+        <CollapsibleSection
+          label='Departure'
+          icon='flight-departure'
+          preview={<AirportPreview direction='departure' />}
+          defaultOpen={false}
+          className='mb-2 mt-6'
+        >
+          <AirportPoint direction='departure' />
+        </CollapsibleSection>
+        <CollapsibleSection
+          label='Arrival'
+          icon='flight-arrival'
+          preview={<AirportPreview direction='arrival' />}
+          defaultOpen={false}
+          className='mb-2 mt-6'
+        >
+          <AirportPoint direction='arrival' />
+        </CollapsibleSection>
         <Separator className='my-4' />
         <FieldSet className='flex-row gap-2'>
           <FieldInput name='bookingCode' label='Booking' />
           <FieldInput name='seat' label='Seat(s)' />
         </FieldSet>
-        <SeparatorWithLabel label='Note' className='my-4' />
-        <FieldTextarea name='note' label='' placeholder='Add any notes about this flight...' />
-        <SeparatorWithLabel label='Passengers' className='mb-2 mt-6' />
-        <FieldPassengers name='passengers' />
-        <SeparatorWithLabel label='Attachments' className='mb-2 mt-6' />
-        <FieldAttachments name='attachments' tripItemId={flight.id} />
+        <NoteSection>
+          <FieldTextarea name='note' label='' placeholder='Add any notes about this flight...' />
+        </NoteSection>
+        <PassengersSection>
+          <FieldPassengers name='passengers' />
+        </PassengersSection>
+        <AttachmentsSection>
+          <FieldAttachments name='attachments' tripItemId={flight.id} />
+        </AttachmentsSection>
         <Separator className='mt-4 mb-6' />
         <Field>
           <Button type='submit' variant='default'>Save</Button>
@@ -79,7 +183,6 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
 function AirportPoint({ direction: direction }: { direction: 'departure' | 'arrival' }) {
   return (
     <>
-      <SeparatorWithLabel label={direction} className='mb-2 mt-6 capitalize' />
       <FieldSet className='flex-row gap-2'>
         <FieldInput required className='w-15' name={`${direction}.airport.code`} label='Code' />
         <FieldInput name={`${direction}.airport.name`} label='Name' />
