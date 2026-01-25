@@ -15,7 +15,7 @@ export function FieldInput({ name, label, required: isRequired = false, classNam
 
   return (
     <Field className={cn('gap-0.5', className)}>
-      <FieldLabel className='gap-1' htmlFor={name}>
+      <FieldLabel className='gap-1 pr-10' htmlFor={name}>
         {label}
         {isRequired && (<sup className='font-bold -mb-5 text-lg text-red-600'>*</sup>)}
       </FieldLabel>

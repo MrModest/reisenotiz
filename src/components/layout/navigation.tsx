@@ -52,7 +52,7 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
               to={item.to}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                  'flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-colors',
                   'hover:bg-accent hover:text-accent-foreground',
                   isActive
                     ? 'bg-accent text-accent-foreground'
@@ -72,7 +72,7 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
           <button
             onClick={handleToggleCollapse}
             className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors w-full',
+              'flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-colors w-full',
               'hover:bg-accent hover:text-accent-foreground text-muted-foreground',
               isCollapsed && 'justify-center'
             )}

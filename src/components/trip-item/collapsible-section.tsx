@@ -20,8 +20,11 @@ export function CollapsibleSection({
   children
 }: CollapsibleSectionProps) {
   return (
-    <Collapsible defaultOpen={defaultOpen} className={cn('group border border-border rounded-md p-3', className)}>
-      <CollapsibleTrigger className='w-full'>
+    <Collapsible
+      defaultOpen={defaultOpen}
+      className={cn('group border border-border rounded-sm p-0 bg-muted', className)}
+    >
+      <CollapsibleTrigger className='w-full p-2 bg-background group-data-[state=closed]:rounded-sm group-data-[state=open]:rounded-t-sm'>
         <div className='flex items-center justify-between hover:opacity-70 transition-opacity'>
           <div className='flex items-center gap-2'>
             {icon && <Icon name={icon} className='w-4 h-4' />}
@@ -38,13 +41,13 @@ export function CollapsibleSection({
             />
           </div>
         </div>
-        {preview && (
-          <div className='mt-1.5 group-data-[state=open]:hidden'>
-            {preview}
-          </div>
-        )}
       </CollapsibleTrigger>
-      <CollapsibleContent className='mt-3'>
+      {preview && (
+        <div className='p-2 pt-0 mt-1.5 group-data-[state=open]:hidden'>
+          {preview}
+        </div>
+      )}
+      <CollapsibleContent className='p-2 pt-2'>
         {children}
       </CollapsibleContent>
     </Collapsible>
