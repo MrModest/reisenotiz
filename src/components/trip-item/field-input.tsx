@@ -20,7 +20,7 @@ export function FieldInput({ name, label, required: isRequired = false, classNam
         {isRequired && (<sup className='font-bold -mb-5 text-lg text-red-600'>*</sup>)}
       </FieldLabel>
       <Input aria-invalid={!!error} className='h-fit px-2 rounded-sm' id={name} {...field} />
-      {error && <FieldError className='text-xs font-thin text-foreground'>{error.message?.toString()}</FieldError>}
+      {error && <FieldError className='text-xs font-thin'>{error.message?.toString()}</FieldError>}
     </Field>
   )
 }

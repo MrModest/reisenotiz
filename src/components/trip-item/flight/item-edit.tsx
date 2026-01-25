@@ -66,7 +66,8 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
         <FieldPassengers name='passengers' />
         <SeparatorWithLabel label='Attachments' className='mb-2 mt-6' />
         <FieldAttachments name='attachments' tripItemId={flight.id} />
-        <Field className='mt-4'>
+        <Separator className='mt-4 mb-6' />
+        <Field>
           <Button type='submit' variant='default'>Save</Button>
           <Button onClick={() => navigate(-1)} variant='secondary'>Cancel</Button>
         </Field>
