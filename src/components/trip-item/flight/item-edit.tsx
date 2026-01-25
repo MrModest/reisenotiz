@@ -49,7 +49,7 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
             ]}
           />
         </Field>
-        <FieldSet>
+        <FieldSet className='flex-row gap-2 mt-4'>
           <FieldInput name='flightNumber' label='Flight Number' />
           <FieldInput name='carrier' label='Airline' />
         </FieldSet>
