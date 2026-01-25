@@ -19,7 +19,7 @@ export function ItemHeader({ title, icon, buttons }: ItemHeaderProps) {
               key={button.icon}
               variant='outline'
               size='icon'
-              type={button.isSubmit ? 'submit' : undefined}
+              type={button.isSubmit ? 'submit' : 'button'}
               onClick={button.onClick}
             >
               <Icon name={button.icon} />

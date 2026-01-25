@@ -173,7 +173,7 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
         <Separator className='mt-4 mb-6' />
         <Field>
           <Button type='submit' variant='default'>Save</Button>
-          <Button onClick={() => navigate(-1)} variant='secondary'>Cancel</Button>
+          <Button type='button' onClick={() => navigate(-1)} variant='secondary'>Cancel</Button>
         </Field>
       </form>
     </FormProvider>
