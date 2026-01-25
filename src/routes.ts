@@ -5,6 +5,7 @@ import { TripsPage } from "@/pages/trips"
 import { SettingsPage } from "@/pages/settings"
 import { TripTimelinePage } from "@/pages/trip-timeline"
 import { TripItemViewPage } from "@/pages/trip-item-view"
+import { TripItemCreatePage } from "@/pages/trip-item-create"
 import { TripItemEditPage } from "@/pages/trip-item-edit"
 import { routes } from "@/lib/routes"
 
@@ -28,6 +29,10 @@ export const router = createBrowserRouter([
       {
         path: routes.trips.item(":tripId", ":itemId"),
         Component: TripItemViewPage
+      },
+      {
+        path: routes.trips.trip(":tripId") + "/items/new",
+        Component: TripItemCreatePage
       },
       {
         path: routes.trips.editItem(":tripId", ":itemId"),

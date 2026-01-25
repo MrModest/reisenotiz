@@ -1,5 +1,6 @@
 import { useParams } from 'react-router'
 import { TimelineLayout } from '@/components/timeline'
+import { AddTripItemFab } from '@/components/trip-timeline'
 import { useTrip, useTimelineElements } from '@/store'
 import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
 import { UUID } from '@/types'
@@ -26,7 +27,10 @@ function TripTimelineContent({ tripId }: { tripId: UUID }) {
   }
 
   return (
-    <TimelineLayout items={timelineElements} size='md' animate={true} />
+    <>
+      <TimelineLayout items={timelineElements} size='md' animate={true} />
+      <AddTripItemFab tripId={tripId} />
+    </>
   )
 }
 

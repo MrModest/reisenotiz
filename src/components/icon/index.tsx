@@ -38,6 +38,9 @@ export type IconName = 'arrow-right'
   | 'search'
   | 'check'
   | 'add'
+  | 'car'
+  | 'train'
+  | 'bed'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -118,6 +121,12 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='check' className={style} />
     case 'add':
       return <DynamicIcon name='circle-plus' className={style} />
+    case 'car':
+      return <DynamicIcon name='car' className={style} />
+    case 'train':
+      return <DynamicIcon name='train' className={style} />
+    case 'bed':
+      return <DynamicIcon name='bed' className={style} />
     case 'chevrons-up-down':
       return <DynamicIcon name='chevrons-up-down' className={style} />
     case 'unknown':
