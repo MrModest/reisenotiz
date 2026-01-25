@@ -52,7 +52,7 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
               to={item.to}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-colors',
+                  'card flex items-center gap-3',
                   'hover:bg-accent hover:text-accent-foreground',
                   isActive
                     ? 'bg-accent text-accent-foreground'

@@ -210,6 +210,6 @@
 
 @layer components {
   .card {
-    @apply rounded-lg bg-card shadow-sm transition-all duration-200 hover:shadow-md focus:bg-accent/50 focus:shadow-md hover:scale-[1.02] focus:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer px-3 py-3;
+    @apply rounded-sm bg-card shadow-sm transition-all duration-200 hover:shadow-md focus:bg-accent/50 focus:shadow-md hover:scale-[1.02] focus:scale-[1.02] active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 cursor-pointer p-3;
   }
 }

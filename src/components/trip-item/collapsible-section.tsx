@@ -22,7 +22,7 @@ export function CollapsibleSection({
   return (
     <Collapsible
       defaultOpen={defaultOpen}
-      className={cn('group border border-border rounded-sm p-0 bg-muted', className)}
+      className={cn('group w-full border border-border rounded-sm p-0 bg-muted', className)}
     >
       <CollapsibleTrigger className='w-full p-2 bg-background group-data-[state=closed]:rounded-sm group-data-[state=open]:rounded-t-sm'>
         <div className='flex items-center justify-between hover:opacity-70 transition-opacity'>

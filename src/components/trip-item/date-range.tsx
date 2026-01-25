@@ -10,7 +10,7 @@ export function DateRange({ children }: { children: React.ReactNode }) {
 
 DateRange.Point = function DateRangeStart({ children }: { children: React.ReactNode }) {
   return (
-    <div className='bg-card border rounded-md p-2 w-full md:w-fit'>
+    <div className='bg-card border rounded-sm p-2 w-full md:w-fit'>
       {children}
     </div>
   )

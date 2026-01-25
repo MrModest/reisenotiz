@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DateRange } from '../date-range'
 import { useNavigate } from 'react-router'
 import { ItemHeader } from '../item-header'
+import { cn } from '@/lib/utils'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -18,7 +19,7 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
   const navigate = useNavigate()
 
   return (
-    <div className={className}>
+    <div className={cn('w-full md:w-[480px]', className)}>
       <div className='flex justify-between items-center'>
         <ItemHeader
           title='Flight Details'
