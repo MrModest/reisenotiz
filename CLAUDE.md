@@ -34,7 +34,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - CSS variables for light/dark mode theming
 - Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
-- **Design System**: See `DESIGN_SYSTEM.md` for unified border radius and spacing guidelines
+- **Design System**: See `docs/agents/DESIGN_SYSTEM.md` for unified border radius and spacing guidelines
   - ALWAYS consult this file when creating or modifying UI components
   - Use subtle rounding (almost square) and compact spacing throughout
 
