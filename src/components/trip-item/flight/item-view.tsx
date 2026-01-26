@@ -8,6 +8,9 @@ import { DateRange } from '../date-range'
 import { useNavigate } from 'react-router'
 import { ItemHeader } from '../item-header'
 import { cn } from '@/lib/utils'
+import { useState } from 'react'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -17,6 +20,13 @@ interface FlightItemViewProps {
 export function FlightItemView({ flight, className }: FlightItemViewProps) {
   const duration = formatTo.duration(flight.departure.time, flight.arrival.time)
   const navigate = useNavigate()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+  const handleDelete = () => {
+    // TODO: Implement actual delete logic
+    setDeleteDialogOpen(false)
+    navigate('..')
+  }
 
   return (
     <div className={cn('w-default', className)}>
@@ -25,7 +35,8 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
           title='Flight Details'
           icon='flight'
           buttons={[
-            { icon: 'edit', onClick: () => navigate('edit') }
+            { icon: 'edit', onClick: () => navigate('edit') },
+            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) }
           ]}
         />
       </div>
@@ -53,6 +64,25 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
           <AirportDetails airport={flight.arrival.airport} />
         </TabsContent>
       </Tabs>
+
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent showCloseButton={false} className='sm:max-w-fit'>
+          <DialogHeader>
+            <DialogTitle>Delete Flight</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this flight?<br/>This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant='outline' onClick={() => setDeleteDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant='destructive' onClick={handleDelete}>
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
