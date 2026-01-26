@@ -33,11 +33,13 @@ import {
   formatDateISO,
   formatDateShort,
   formatDateTime,
+  formatDayMonth,
   formatDayShort,
   formatDuration,
   formatRelative,
   formatTime,
-  formatUtcOffset
+  formatUtcOffset,
+  formatWeekday
 } from './formatters'
 
 export { DateTime } from './datetime'
@@ -67,6 +69,16 @@ export const formatTo = {
    * Formats date as "Sun, 23 Nov"
    */
   dayShort: formatDayShort,
+
+  /**
+   * Formats weekday as "Sun"
+   */
+  weekday: formatWeekday,
+
+  /**
+   * Formats as "23 Nov"
+   */
+  dayMonth: formatDayMonth,
 
   /**
    * Formats as "2025-11-23" (ISO date only)

@@ -21,6 +21,20 @@ export function formatDayShort(dt: ZonedInstant): string {
 }
 
 /**
+ * Formats weekday as "Sunday"
+ */
+export function formatWeekday(dt: ZonedInstant): string {
+  return DateTime.from(dt).format('EEEE')
+}
+
+/**
+ * Formats as "Nov 23"
+ */
+export function formatDayMonth(dt: ZonedInstant): string {
+  return DateTime.from(dt).format('LLL dd')
+}
+
+/**
  * Formats time as "20:30"
  */
 export function formatTime(dt: ZonedInstant): string {

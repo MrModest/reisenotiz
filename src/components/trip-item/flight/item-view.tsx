@@ -29,7 +29,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
 
   return (
     <div className={cn('w-default', className)}>
-      <div className='flex justify-between items-center'>
+      <div className='flex justify-between items-center w-full'>
         <ItemHeader
           title='Flight Details'
           icon='flight'
@@ -88,12 +88,15 @@ function FlightPoint( { point }: { point: FlightPoint }) {
         <span className='text-primary font-bold'>{point.airport.code}</span>
         <span className='text-primary/80'>{point.airport.address.city}</span>
       </p>
-      <div className='flex flex-row justify-between items-center gap-2'>
-        <div>
+      <div className='flex flex-row justify-between items-start gap-2'>
+        <div className='flex flex-col'>
+          <span className='-mb-1.5 pb-0 text-[0.6rem] text-right font-light text-muted-foreground'>{formatTo.utcOffset(point.time)}</span>
           <span className='text-lg font-semibold'>{formatTo.time(point.time)}</span>
-          <span className='ml-0.5 text-[0.6rem] font-light align-super'>({formatTo.utcOffset(point.time)})</span>
         </div>
-        <span className='text-base font-thin'>{formatTo.dayShort(point.time)}</span>
+        <div className='flex flex-col items-end'>
+          <span className='pb-0 -mb-1.5 font-light text-muted-foreground text-[0.6rem]'>{formatTo.weekday(point.time)}</span>
+          <span className='text-lg '>{formatTo.dayMonth(point.time)}</span>
+        </div>
       </div>
       <p className='flex flex-row flex-wrap gap-2 text-xs items-center justify-between'>
         <span>Terminal: {point.terminal}</span>

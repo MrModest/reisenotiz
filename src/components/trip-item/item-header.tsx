@@ -12,7 +12,7 @@ export function ItemHeader({ title, icon, buttons }: ItemHeaderProps) {
   return (
     <>
       <Title size='md' className='py-4' title={title} icon={icon} />
-      <div className='flex gap-2'>
+      <div className='flex gap-2 py-4'>
         {
           buttons.map(button => (
             <Button
