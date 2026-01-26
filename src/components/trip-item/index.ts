@@ -1,2 +1,2 @@
 export { TripItemView } from './trip-item-view'
-export { TripItemEdit } from './trip-item-edit'
+export { TripItemForm } from './trip-item-form'

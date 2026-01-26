@@ -1,30 +1,44 @@
 import { Flight, Trip, TripItem } from '@/types'
 import { useHeaderTitle } from '@/hooks/use-header-title'
-import { FlightItemEdit } from './flight/item-edit'
+import { FlightItemForm } from './flight/item-form'
 
 interface TripItemEditProps {
   trip: Trip
   tripItem: TripItem
   onSave: (item: TripItem) => void
+  onCancel: () => void
+  isCreate?: boolean
   className?: string
 }
 
-export function TripItemEdit({ trip, tripItem, onSave, className }: TripItemEditProps) {
-  const result = getEdit({ tripItem, onSave, className })
+export function TripItemForm({ trip, tripItem, onSave, onCancel, isCreate, className }: TripItemEditProps) {
+  const result = getEdit({ tripItem, onSave, onCancel, isCreate, className })
 
   useHeaderTitle(trip.name, 'trip')
 
   return result.view
 }
 
-function getEdit({ tripItem, onSave, className }: { tripItem: TripItem; onSave: (item: TripItem) => void; className?: string }) {
+function getEdit({ tripItem, onSave, onCancel, isCreate, className }: {
+  tripItem: TripItem
+  onSave: (item: TripItem) => void
+  onCancel: () => void
+  isCreate?: boolean
+  className?: string
+}) {
   switch (tripItem.type) {
     case 'Flight':
       return {
         view: (
-          <FlightItemEdit flight={tripItem as Flight} onSave={onSave} className={className} />
+          <FlightItemForm
+            flight={tripItem as Flight}
+            onSubmit={onSave}
+            onCancel={onCancel}
+            title={isCreate ? 'New Flight' : 'Edit Flight'}
+            className={className}
+          />
         ),
-        title: 'Edit Flight',
+        title: isCreate ? 'New Flight' : 'Edit Flight',
         icon: 'flight'
       }
     case 'Accommodation':
@@ -34,7 +48,7 @@ function getEdit({ tripItem, onSave, className }: { tripItem: TripItem; onSave: 
             <p className="text-muted-foreground">Hotel edit form (not implemented yet)</p>
           </div>
         ),
-        title: 'Edit Accommodation',
+        title: isCreate ? 'New Accommodation' : 'Edit Accommodation',
         icon: 'hotel-checkIn'
       }
     default:

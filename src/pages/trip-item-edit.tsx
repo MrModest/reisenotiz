@@ -1,4 +1,4 @@
-import { TripItemEdit } from "@/components/trip-item"
+import { TripItemForm } from "@/components/trip-item"
 import { useTrip, useTripItem, useTripsStore } from "@/store"
 import { UUID } from "@/types"
 import { useParams, useNavigate } from "react-router"
@@ -28,8 +28,10 @@ function TripItemEditContent({ tripId, itemId }: { tripId: UUID; itemId: UUID })
     navigate(-1)
   }
 
+  const handleCancel = () => navigate(-1)
+
   return (
-    <TripItemEdit trip={trip} tripItem={tripItem} onSave={handleSave} />
+    <TripItemForm trip={trip} tripItem={tripItem} onSave={handleSave} onCancel={handleCancel} />
   )
 }
 

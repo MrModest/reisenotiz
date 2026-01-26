@@ -3,7 +3,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Flight, UUID } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
 import { Field, FieldSet } from '@/components/ui/field'
-import { useNavigate } from 'react-router'
 import { cn } from '@/lib/utils'
 import { ItemHeader } from '../item-header'
 import { Separator } from '@/components/ui/separator'
@@ -99,38 +98,38 @@ function AttachmentsSection({ children }: { children: React.ReactNode }) {
   )
 }
 
-interface FlightItemEditProps {
+interface FlightItemFormProps {
   flight: Flight
-  onSave?: (flight: Flight) => void
+  onSubmit: (flight: Flight) => void
+  onCancel: () => void
+  title?: string
   className?: string
 }
 
-export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProps) {
-  const navigate = useNavigate()
-
+export function FlightItemForm({ flight, onSubmit, onCancel, title, className }: FlightItemFormProps) {
   const form = useForm<FlightFormSchema>({
     resolver: zodResolver(flightFormSchema),
     defaultValues: defaultsFromFlight(flight),
     mode: 'onTouched'
   })
 
-  function onSubmit(data: FlightFormSchema) {
+  function handleSubmit(data: FlightFormSchema) {
     console.log('formData', data)
     const updatedFlight = convert(data, flight.tripId, flight.id)
     console.log('updatedFlight', updatedFlight)
-    onSave?.(updatedFlight)
+    onSubmit(updatedFlight)
   }
 
   return (
     <FormProvider {...form}>
-      <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(onSubmit)}>
+      <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(handleSubmit)}>
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
-            title='Edit Flight'
+            title={title || 'Flight'}
             icon='flight'
             buttons={[
               { icon: 'save', isSubmit: true },
-              { icon: 'cancel', onClick: () => navigate(-1) }
+              { icon: 'cancel', onClick: onCancel }
             ]}
           />
         </Field>
@@ -173,7 +172,7 @@ export function FlightItemEdit({ flight, onSave, className }: FlightItemEditProp
         <Separator className='mt-4 mb-6' />
         <Field>
           <Button type='submit' variant='default'>Save</Button>
-          <Button type='button' onClick={() => navigate(-1)} variant='secondary'>Cancel</Button>
+          <Button type='button' onClick={onCancel} variant='secondary'>Cancel</Button>
         </Field>
       </form>
     </FormProvider>

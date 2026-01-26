@@ -1,6 +1,6 @@
-import { TripItemEdit } from "@/components/trip-item"
+import { TripItemForm } from "@/components/trip-item"
 import { useTrip, useTripsStore } from "@/store"
-import { TripItemType, UUID } from "@/types"
+import { TripItem, TripItemType, UUID } from "@/types"
 import { useParams, useNavigate, useSearchParams } from "react-router"
 import { createDraftItem } from "@/lib/draft-items"
 
@@ -27,16 +27,20 @@ function TripItemCreateContent({ tripId, type }: { tripId: UUID; type: TripItemT
 
   const draftItem = createDraftItem(tripId, type)
 
-  const handleSave = (item: typeof draftItem) => {
+  const handleSave = (item: TripItem) => {
     createTripItem(item)
     navigate(-1)
   }
 
+  const handleCancel = () => navigate(-1)
+
   return (
-    <TripItemEdit
+    <TripItemForm
       trip={trip}
       tripItem={draftItem}
       onSave={handleSave}
+      onCancel={handleCancel}
+      isCreate
     />
   )
 }
