@@ -7,21 +7,18 @@ interface TripItemViewProps {
   trip: Trip
   tripItem: TripItem
   className?: string
+  onDelete: () => void
 }
 
-export function TripItemView({ trip, tripItem, className }: TripItemViewProps) {
+export function TripItemView({ trip, tripItem, className, onDelete }: TripItemViewProps) {
   useHeaderTitle(trip.name, 'trip')
   useHeaderBackButton(true)
 
-  return getView({ tripItem, className })
-}
-
-function getView({ tripItem, className }: { tripItem: TripItem; className?: string }) {
   switch (tripItem.type) {
     case 'Flight':
-      return (<FlightItemView flight={tripItem as Flight} className={className} />)
+      return (<FlightItemView flight={tripItem as Flight} className={className} onDelete={onDelete} />)
     case 'Accommodation':
-      return (<AccommodationItemView accommodation={tripItem as Accommodation} className={className} />)
+      return (<AccommodationItemView accommodation={tripItem as Accommodation} className={className} onDelete={onDelete} />)
     default:
       return (
         <div className={className}>

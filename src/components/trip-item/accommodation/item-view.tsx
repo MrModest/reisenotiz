@@ -6,14 +6,23 @@ import { cn } from '@/lib/utils'
 import { DateRange } from '@/components/trip-item/date-range'
 import { ItemHeader } from '../item-header'
 import { useNavigate } from 'react-router'
+import { useState } from 'react'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 
 interface HotelItemViewProps {
   accommodation: Accommodation
   className?: string
+  onDelete: () => void
 }
 
-export function AccommodationItemView({ accommodation, className }: HotelItemViewProps) {
+export function AccommodationItemView({ accommodation, className, onDelete }: HotelItemViewProps) {
   const navigate = useNavigate()
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+
+  const handleDelete = () => {
+    setDeleteDialogOpen(false)
+    onDelete()
+  }
 
   return (
     <div className={className}>
@@ -22,7 +31,8 @@ export function AccommodationItemView({ accommodation, className }: HotelItemVie
           title={`${accommodation.site.kind} Details`}
           icon='hotel-checkIn'
           buttons={[
-            { icon: 'edit', onClick: () => navigate('edit') }
+            { icon: 'edit', onClick: () => navigate('edit') },
+            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) }
           ]}
         />
       </div>
@@ -52,6 +62,15 @@ export function AccommodationItemView({ accommodation, className }: HotelItemVie
         <FieldView label='Rooms' value={accommodation.rooms.toString()} />
         <FieldView label='Phone' value={accommodation.contact} />
       </div>
+
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title={`Delete ${accommodation.site.kind}`}
+        description={<>Are you sure you want to delete <b>{accommodation.site.name}</b>?<br/>This action cannot be undone.</>}
+        onConfirm={handleDelete}
+        confirmLabel='Delete'
+      />
     </div>
   )
 }

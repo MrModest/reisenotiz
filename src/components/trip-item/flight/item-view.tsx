@@ -14,17 +14,17 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 interface FlightItemViewProps {
   flight: Flight
   className?: string
+  onDelete: () => void
 }
 
-export function FlightItemView({ flight, className }: FlightItemViewProps) {
+export function FlightItemView({ flight, className, onDelete }: FlightItemViewProps) {
   const duration = formatTo.duration(flight.departure.time, flight.arrival.time)
   const navigate = useNavigate()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
   const handleDelete = () => {
-    // TODO: Implement actual delete logic
     setDeleteDialogOpen(false)
-    navigate('..')
+    onDelete()
   }
 
   return (
@@ -68,7 +68,12 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title='Delete Flight'
-        description={<>Are you sure you want to delete this flight?<br/>This action cannot be undone.</>}
+        description={
+          <>
+            Are you sure you want to delete <b>{flight.flightNumber}</b>?<br/>
+            This action cannot be undone.
+          </>
+        }
         onConfirm={handleDelete}
         confirmLabel='Delete'
       />
