@@ -255,7 +255,7 @@ function TimelineIcon({
 
 function TimelineDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={cn('max-w-sm text-sm text-muted-foreground', className)} {...props} />
+    <p className={cn('text-sm text-muted-foreground', className)} {...props} />
   )
 }
 
