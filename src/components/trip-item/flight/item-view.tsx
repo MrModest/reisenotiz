@@ -9,8 +9,7 @@ import { useNavigate } from 'react-router'
 import { ItemHeader } from '../item-header'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -65,24 +64,14 @@ export function FlightItemView({ flight, className }: FlightItemViewProps) {
         </TabsContent>
       </Tabs>
 
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent showCloseButton={false} className='sm:max-w-fit'>
-          <DialogHeader>
-            <DialogTitle>Delete Flight</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this flight?<br/>This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant='outline' onClick={() => setDeleteDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant='destructive' onClick={handleDelete}>
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title='Delete Flight'
+        description={<>Are you sure you want to delete this flight?<br/>This action cannot be undone.</>}
+        onConfirm={handleDelete}
+        confirmLabel='Delete'
+      />
     </div>
   )
 }
