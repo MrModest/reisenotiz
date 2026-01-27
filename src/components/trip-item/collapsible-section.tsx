@@ -24,26 +24,26 @@ export function CollapsibleSection({
       defaultOpen={defaultOpen}
       className={cn('group w-full border border-border rounded-sm p-0 brightness-125', className)}
     >
-      <CollapsibleTrigger className='w-full p-2 bg-background group-data-[state=closed]:rounded-sm group-data-[state=open]:rounded-t-sm'>
+      <CollapsibleTrigger className='w-full p-2 bg-background rounded-sm group-data-open:rounded-b-none'>
         <div className='flex items-center justify-between hover:opacity-70 transition-opacity'>
           <div className='flex items-center gap-2'>
-            {icon && <Icon name={icon} className='w-4 h-4' />}
+            {icon && <Icon name={icon} className='size-4' />}
             <span className='font-medium text-sm'>{label}</span>
           </div>
-          <div className='w-4 h-4 shrink-0'>
+          <div className='size-4 shrink-0'>
             <Icon
               name='edit'
-              className='w-4 h-4 group-data-[state=open]:hidden'
+              className='size-4 group-data-open:hidden'
             />
             <Icon
               name='check'
-              className='w-4 h-4 hidden group-data-[state=open]:block'
+              className='size-4 hidden group-data-open:block'
             />
           </div>
         </div>
       </CollapsibleTrigger>
       {preview && (
-        <div className='p-2 pt-0 mt-1.5 group-data-[state=open]:hidden'>
+        <div className='p-2 pt-0 mt-1.5 group-data-open:hidden'>
           {preview}
         </div>
       )}
