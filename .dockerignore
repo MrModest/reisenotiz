@@ -1,0 +1,55 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# PWA
+dev-dist
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Docker
+docker/docker-compose.yml
+Dockerfile*
+.dockerignore
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Test files
+coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+
+# Documentation
+*.md
+docs
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+.eslintcache
+.prettierignore
+.serena
+.claude

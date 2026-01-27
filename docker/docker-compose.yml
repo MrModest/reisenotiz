@@ -1,0 +1,17 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: reisenotiz:latest
+    ports:
+      - "8080:8080"
+    # Uncomment to run with custom UID/GID
+    # user: "1000:1000"
+    restart: unless-stopped
+    # Read-only filesystem for extra security
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
