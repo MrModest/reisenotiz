@@ -23,16 +23,14 @@ export function Trips({trips, className}: TripsProps) {
 
 export function Trip({ trip }: { trip: Trip }) {
   return (
-    <Item variant="outline" size="sm" asChild>
-      <Link to={routes.trips.trip(trip.id)} key={trip.id} className="card">
-        <ItemMedia>
-          <Icon name="trip" />
-        </ItemMedia>
-        <ItemContent>
-          <ItemTitle>{trip.name}</ItemTitle>
-          <ItemDescription>{formatTo.dateShort(trip.startDate)} - {formatTo.dateShort(trip.endDate)}</ItemDescription>
-        </ItemContent>
-      </Link>
+    <Item variant="outline" size="sm" render={<Link to={routes.trips.trip(trip.id)} key={trip.id} className="card" />}>
+      <ItemMedia>
+        <Icon name="trip" />
+      </ItemMedia>
+      <ItemContent>
+        <ItemTitle>{trip.name}</ItemTitle>
+        <ItemDescription>{formatTo.dateShort(trip.startDate)} - {formatTo.dateShort(trip.endDate)}</ItemDescription>
+      </ItemContent>
     </Item>
   )
 }
