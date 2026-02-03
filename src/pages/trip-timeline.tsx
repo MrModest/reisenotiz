@@ -1,5 +1,5 @@
 import { useParams } from 'react-router'
-import { TimelineLayout } from '@/components/timeline'
+import { TimelineLayout } from '@/components/ui/timeline'
 import { AddTripItemFab } from '@/components/trip-timeline'
 import { useTrip, useTimelineElements } from '@/store'
 import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'

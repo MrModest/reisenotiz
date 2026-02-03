@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTripsStore } from './trips-store'
 import { Accommodation, Flight, getFlightTimelineItems, getHotelTimelineItems, TripItem, UUID } from '@/types'
-import { TimelineElement } from '@/components/timeline'
+import { TimelineElement } from '@/components/ui/timeline'
 
 /**
  * Get all trips as an array

@@ -1,4 +1,4 @@
-import type { TimelineElement } from '@/components/timeline'
+import type { TimelineElement } from '@/components/ui/timeline'
 import {
   Flight,
   getFlightTimelineItems,

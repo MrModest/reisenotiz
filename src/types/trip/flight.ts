@@ -1,7 +1,7 @@
 import { DateTime, ZonedInstant } from "@/lib/datetime"
 import { Person } from "./person"
 import { TripItem } from "./trip-item"
-import { TimelineElement } from "@/components/timeline"
+import { TimelineElement } from "@/components/ui/timeline"
 import { Address } from "./address"
 import { routes } from "@/lib/routes"
 
