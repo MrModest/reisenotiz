@@ -21,7 +21,7 @@
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-hook-form": "^7.69.0",
-    "react-router": "^7.9.6",
+    "react-router": "^7.13.0",
     "tailwind-merge": "^3.3.1",
     "uuid": "^13.0.0",
     "zod": "^4.1.13",
@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
-    "@stylistic/eslint-plugin": "^5.5.0",
+    "@stylistic/eslint-plugin": "^5.7.1",
     "@tailwindcss/vite": "^4.1.16",
     "@types/luxon": "^3.7.1",
     "@types/node": "^25.0.3",
@@ -41,12 +41,12 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
+    "eslint-plugin-react-refresh": "^0.5.0",
     "globals": "^17.1.0",
     "tailwindcss": "^4.1.16",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.3",
     "vite": "^7.2.0",
-    "vite-plugin-pwa": "^1.1.0"
+    "vite-plugin-pwa": "^1.2.0"
   }
 }
