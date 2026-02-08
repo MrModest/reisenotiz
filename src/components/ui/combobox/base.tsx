@@ -121,7 +121,7 @@ function ComboboxList({ className, ...props }: ComboboxPrimitive.List.Props) {
     <ComboboxPrimitive.List
       data-slot="combobox-list"
       className={cn(
-        "no-scrollbar max-h-[min(calc(--spacing(72)---spacing(9)),calc(var(--available-height)---spacing(9)))] scroll-py-1 overflow-y-auto p-1 data-empty:p-0 overflow-y-auto overscroll-contain",
+        "no-scrollbar max-h-[min(calc(--spacing(72)---spacing(9)),calc(var(--available-height)---spacing(9)))] scroll-py-1 p-1 data-empty:p-0 overflow-y-auto overscroll-contain",
         className
       )}
       {...props}
@@ -144,12 +144,18 @@ function ComboboxItem({
       {...props}
     >
       {children}
-      <ComboboxPrimitive.ItemIndicator
+      <ComboboxItemIndicator />
+    </ComboboxPrimitive.Item>
+  )
+}
+
+function ComboboxItemIndicator() {
+  return (
+    <ComboboxPrimitive.ItemIndicator
         render={<span className="pointer-events-none absolute right-2 flex items-center justify-center" />}
       >
         <CheckIcon className="pointer-events-none" />
-      </ComboboxPrimitive.ItemIndicator>
-    </ComboboxPrimitive.Item>
+    </ComboboxPrimitive.ItemIndicator>
   )
 }
 
@@ -238,15 +244,21 @@ function ComboboxChip({
     >
       {children}
       {showRemove && (
-        <ComboboxPrimitive.ChipRemove
-          render={<Button variant="ghost" size="icon-xs" />}
-          className="-ml-1 opacity-50 hover:opacity-100"
-          data-slot="combobox-chip-remove"
-        >
-          <XIcon className="pointer-events-none" />
-        </ComboboxPrimitive.ChipRemove>
+        <ComboboxChipRemove />
       )}
     </ComboboxPrimitive.Chip>
+  )
+}
+
+function ComboboxChipRemove() {
+  return (
+    <ComboboxPrimitive.ChipRemove
+      render={<Button variant="ghost" size="icon-xs" />}
+      className="-ml-1 opacity-50 hover:opacity-100"
+      data-slot="combobox-chip-remove"
+    >
+      <XIcon className="pointer-events-none" />
+    </ComboboxPrimitive.ChipRemove>
   )
 }
 
@@ -276,6 +288,7 @@ export {
   ComboboxContent,
   ComboboxList,
   ComboboxItem,
+  ComboboxItemIndicator,
   ComboboxGroup,
   ComboboxLabel,
   ComboboxCollection,
@@ -283,6 +296,7 @@ export {
   ComboboxSeparator,
   ComboboxChips,
   ComboboxChip,
+  ComboboxChipRemove,
   ComboboxChipsInput,
   ComboboxTrigger,
   ComboboxValue,
