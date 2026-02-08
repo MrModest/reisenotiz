@@ -1,3 +1,4 @@
+export * from './address'
 export * from './attachment'
 export * from './flight'
 export * from './hotel'
