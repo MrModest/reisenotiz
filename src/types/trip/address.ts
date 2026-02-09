@@ -1,7 +1,7 @@
 export interface Address {
   country: string,
   city: string,
-  line: string,
+  line?: string,
   geoPoint?: GeoPoint
 }
 
@@ -12,6 +12,5 @@ export interface GeoPoint {
 
 export const AddressNone: Address = {
   country: 'None',
-  city: 'None',
-  line: 'None'
+  city: 'None'
 }

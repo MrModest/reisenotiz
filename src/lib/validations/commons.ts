@@ -8,7 +8,7 @@ const geoPointSchema = z.object({
 const addressSchema = z.object({
   country: z.string().min(1, 'Country is required'),
   city: z.string().min(1, 'City is required'),
-  line: z.string().min(1, 'Address line is required'),
+  line: z.string().optional(),
   geoPoint: geoPointSchema.optional()
 })
 

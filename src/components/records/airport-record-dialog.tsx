@@ -64,6 +64,11 @@ export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportR
     ? airportDictionary.get(watchedCode.toUpperCase())
     : undefined
 
+  function handleFormSubmit(e: React.FormEvent) {
+    e.stopPropagation()
+    form.handleSubmit(handleSubmit)(e)
+  }
+
   function handleSubmit(data: UserAirportSchema) {
     const airportData: Airport = {
       code: data.code,
@@ -93,7 +98,7 @@ export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportR
           </DialogDescription>
         </DialogHeader>
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className='flex flex-col gap-4'>
+          <form onSubmit={handleFormSubmit} className='flex flex-col gap-4'>
             <FieldSet className='flex-row gap-2'>
               <FieldInput name='code' label='Code' placeholder='IATA' disabled={isEditing} className='w-24 shrink-0' />
               <FieldInput name='name' label='Name' placeholder='Airport name' />

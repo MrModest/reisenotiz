@@ -21,12 +21,11 @@ import { useAirports } from '@/hooks/use-airports'
 import { AirportRecordDialog } from '@/components/records/airport-record-dialog'
 
 function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
-  const airport = useWatch({ name: `${direction}.airport` })
-  const date = useWatch({ name: `${direction}.date` })
-  const time = useWatch({ name: `${direction}.time` })
-  const timezone = useWatch({ name: `${direction}.timezone` })
+  const airport: Airport = useWatch({ name: `${direction}.airport` })
+  const date: string = useWatch({ name: `${direction}.date` })
+  const time: string = useWatch({ name: `${direction}.time` })
 
-  if (!airport?.code || !date || !time || !timezone) {
+  if (!airport?.code) {
     return <span className='text-muted-foreground text-sm'>No {direction} info</span>
   }
 
@@ -35,7 +34,7 @@ function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
     ? `${airport.name} (${airport.code})`
     : airport.code
 
-  const zonedInstant = convertTime(date, time, timezone)
+  const zonedInstant = convertTime(date, time, airport.tzone)
 
   return (
     <div className='flex items-start gap-2 text-sm'>
@@ -43,7 +42,7 @@ function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
       <div>
         <div className='font-medium'>{airportDisplay}</div>
         <div className='text-muted-foreground'>
-          {formatTo.date(zonedInstant)} · {formatTo.time(zonedInstant)} ({timezone})
+          {formatTo.date(zonedInstant)} · {formatTo.time(zonedInstant)} · {airport.tzone}
         </div>
       </div>
     </div>
@@ -189,23 +188,18 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
   const { setValue, getValues } = useFormContext<FlightFormSchema>()
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  const initialCode = getValues(`${direction}.airport.code`)
+  const initialAirport = getValues(`${direction}.airport`)
   const [selected, setSelected] = useState<Airport | null>(() =>
-    initialCode ? airports.find((a) => a.code === initialCode) ?? null : null
+    initialAirport?.code ? initialAirport as Airport : null
   )
 
   function handleAirportSelect(airport: Airport | null) {
-    if (!airport) return
     setSelected(airport)
-    const prefix = `${direction}.airport` as const
-    setValue(`${prefix}.code`, airport.code)
-    setValue(`${prefix}.name`, airport.name)
-    setValue(`${prefix}.address.city`, airport.address.city)
-    setValue(`${prefix}.address.country`, airport.address.country)
-    setValue(`${prefix}.address.line`, airport.address.line)
-    if (airport.tzone) {
-      setValue(`${direction}.timezone`, airport.tzone)
+    if (!airport) {
+      setValue(`${direction}.airport`, { code: '', name: '', tzone: 'Etc/Utc' })
+      return
     }
+    setValue(`${direction}.airport`, airport)
   }
 
   return (
@@ -223,22 +217,22 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
           variant='outline'
           onClick={() => setDialogOpen(true)}
         >
-          <Icon name='add' />
-          Add New
+          <Icon name={selected ? 'edit' : 'add'} />
+          {selected ? 'Edit' : 'Add New'}
         </Button>
       </FieldSet>
       <AirportPreview direction={direction} />
-      <FieldSet className='flex-row items-end gap-2 mt-4'>
+      <FieldSet className='grid grid-cols-2 md:flex md:flex-row items-end gap-2 mt-4'>
         <FieldInput required name={`${direction}.date`} label='Date' />
         <FieldInput required name={`${direction}.time`} label='Time' />
-        <Separator className='mx-2' orientation='vertical' />
+        <Separator className='mx-2 hidden md:block' orientation='vertical' />
         <FieldInput name={`${direction}.terminal`} label='Terminal' />
         <FieldInput name={`${direction}.gate`} label='Gate' />
       </FieldSet>
       <AirportRecordDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        airport={null}
+        airport={selected}
         onSave={handleAirportSelect}
       />
     </>
@@ -267,13 +261,13 @@ function convert(data: FlightFormSchema, tripId: UUID, flightId: UUID): Flight {
     carrier: data.carrier,
     departure: {
       airport: data.departure.airport,
-      time: convertTime(data.departure.date, data.departure.time, data.departure.timezone),
+      time: convertTime(data.departure.date, data.departure.time, data.departure.airport.tzone),
       terminal: data.departure.terminal,
       gate: data.departure.gate,
     },
     arrival: {
       airport: data.arrival.airport,
-      time: convertTime(data.arrival.date, data.arrival.time, data.arrival.timezone),
+      time: convertTime(data.arrival.date, data.arrival.time, data.arrival.airport.tzone),
       terminal: data.arrival.terminal,
       gate: data.arrival.gate,
     },

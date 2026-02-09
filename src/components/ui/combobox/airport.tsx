@@ -60,7 +60,7 @@ export function AirportSelector({ items, selected = null, onSelect }: AirportSel
   return (
     <Combobox
       items={displayItems}
-      value={selected ?? undefined}
+      value={selected}
       filter={() => true} // We handle filtering ourselves (otherswise it doesn't handle ranking and it is too slow with large lists)
       onInputValueChange={(val) => setQuery(val)}
       itemToStringValue={(item: Airport) => item.code}
