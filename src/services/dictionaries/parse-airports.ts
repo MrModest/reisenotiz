@@ -1,6 +1,4 @@
 import type { Airport } from '@/types'
-import airportsCsv from './data/airports.csv?raw'
-import countriesCsv from './data/countries.csv?raw'
 
 // Can be replaced with a library like 'papaparse' if the CSV format gets more complex
 function parseCsvLine(line: string): string[] {
@@ -22,7 +20,9 @@ function parseCsvLine(line: string): string[] {
   return result
 }
 
-export function parseCountries(): Record<string, string> {
+export async function parseCountries(): Promise<Record<string, string>> {
+  const response = await fetch('/dicts/countries.csv')
+  const countriesCsv = await response.text()
   const lines = countriesCsv.trim().split('\n')
   const headers = parseCsvLine(lines[0])
   const idx = (col: string) => headers.indexOf(col)
@@ -41,12 +41,16 @@ export function parseCountries(): Record<string, string> {
   return result
 }
 
-export function parseAirports(): Record<string, Airport> {
+export async function parseAirports(): Promise<Record<string, Airport>> {
+  const response = await fetch('/dicts/airports.csv')
+  console.log('Fetched airports')
+  const airportsCsv = await response.text()
   const lines = airportsCsv.trim().split('\n')
+  console.log(`Received ${lines.length} lines`)
   const headers = parseCsvLine(lines[0])
   const idx = (col: string) => headers.indexOf(col)
 
-  const countryMap = parseCountries()
+  const countryMap = await parseCountries()
 
   const result: Record<string, Airport> = {}
 
