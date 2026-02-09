@@ -8,7 +8,12 @@ import { TimelineElement } from '@/components/ui/timeline'
  */
 export function useTrips() {
   const tripsRecord = useTripsStore(state => state.trips)
-  return useMemo(() => Object.values(tripsRecord), [tripsRecord])
+  return useMemo(
+    () => Object.values(tripsRecord).sort((a, b) =>
+      b.startDate.instant.localeCompare(a.startDate.instant)
+    ),
+    [tripsRecord]
+  )
 }
 
 /**
