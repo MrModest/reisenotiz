@@ -42,6 +42,8 @@ export type IconName = 'arrow-right'
   | 'train'
   | 'bed'
   | 'trash'
+  | 'chevron-down'
+  | 'x'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -132,6 +134,10 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='chevrons-up-down' className={style} />
     case 'trash':
       return <DynamicIcon name='trash-2' className={style} />
+    case 'chevron-down':
+      return <DynamicIcon name='chevron-down' className={style} />
+    case 'x':
+      return <DynamicIcon name='x' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />
