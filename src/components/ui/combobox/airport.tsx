@@ -63,7 +63,7 @@ export function AirportSelector({ items, onSelect }: AirportSelectorProps) {
         onSelect(value)
       }}
     >
-      <ComboboxInput className='rounded-xs' placeholder="Search airports..." />
+      <ComboboxInput className='rounded-xs' placeholder="Search airports..." showClear />
       <ComboboxContent className='rounded-xs'>
         <ComboboxEmpty>
           {query.trim().length < MIN_QUERY_LENGTH
