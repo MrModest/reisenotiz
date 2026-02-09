@@ -36,7 +36,8 @@
 
 ## State Management
 - Zustand for global state (only valid, complete entities)
-- React Hook Form + Zod for form state and validation
+- Separate stores: `trips-store.ts` for trips, `user-records/` for user-managed records (airports, etc.)
+- React Hook Form + Zod v4 for form state and validation
 - Draft state stays local (never in global store)
 
 ## CRUD Flow Pattern
@@ -45,12 +46,17 @@
 - Pages orchestrate data, navigation, and persistence
 - See `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` for detailed patterns
 
+## UI Primitives
+- Base UI (`@base-ui/react`) for low-level primitives (Tabs, Switch, etc.)
+- Custom combobox components in `src/components/ui/combobox/` (base + airport-specific)
+- Dialog and ConfirmDialog components in `src/components/ui/`
+
 ## File Organization
-- Components in `src/components/` (grouped by domain: ui, layout, timeline, trip, etc.)
-- Pages in `src/pages/`
+- Components in `src/components/` (grouped by domain: ui, layout, trip-timeline, trip, trip-item, records, etc.)
+- Pages in `src/pages/` (with `records/` subdirectory)
 - Types in `src/types/`
 - Hooks in `src/hooks/`
-- Store in `src/store/`
+- Store in `src/store/` (with `user-records/` subdirectory)
 - Utilities in `src/lib/`
 - Services in `src/services/`
 - Mock data in `src/stubs/`
