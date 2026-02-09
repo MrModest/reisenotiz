@@ -1,6 +1,6 @@
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Flight, UUID } from '@/types'
+import { Airport, Flight, UUID } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
 import { Field, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
@@ -14,6 +14,8 @@ import { DateTime, ZonedInstant, formatTo } from '@/lib/datetime'
 import { Button } from '@/components/ui/button'
 import { CollapsibleSection } from '../collapsible-section'
 import { getCountryFlag } from '@/lib/utils/country-flag'
+import { AirportSelector } from '@/components/ui/combobox/airport'
+import { airportDictionary } from '@/services'
 
 function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
   const airport = useWatch({ name: `${direction}.airport` })
@@ -179,10 +181,31 @@ export function FlightItemForm({ flight, onSubmit, onCancel, title, className }:
   )
 }
 
-function AirportPoint({ direction: direction }: { direction: 'departure' | 'arrival' }) {
+function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
+  const { setValue } = useFormContext<FlightFormSchema>()
+
+  function handleAirportSelect(airport: Airport | null) {
+    if (!airport) return
+    const prefix = `${direction}.airport` as const
+    setValue(`${prefix}.code`, airport.code)
+    setValue(`${prefix}.name`, airport.name)
+    setValue(`${prefix}.address.city`, airport.address.city)
+    setValue(`${prefix}.address.country`, airport.address.country)
+    setValue(`${prefix}.address.line`, airport.address.line)
+    if (airport.tzone) {
+      setValue(`${direction}.timezone`, airport.tzone)
+    }
+  }
+
   return (
     <>
-      <FieldSet className='flex-row gap-2'>
+      <FieldSet className='mt-2'>
+        <AirportSelector
+          items={airportDictionary.getAllValues()}
+          onSelect={handleAirportSelect}
+        />
+      </FieldSet>
+      <FieldSet className='flex-row gap-2 mt-4'>
         <FieldInput required className='w-15' name={`${direction}.airport.code`} label='Code' />
         <FieldInput name={`${direction}.airport.name`} label='Name' />
       </FieldSet>
