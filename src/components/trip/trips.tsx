@@ -21,7 +21,7 @@ export function Trips({ trips, className }: TripsProps) {
 
   return (
     <div className={cn('flex flex-col gap-2 w-default', className)}>
-      <Item variant="outline" size="sm" onClick={() => setDialogOpen(true)} className="cursor-pointer">
+      <Item variant="outline" size="sm" onClick={() => setDialogOpen(true)} className="cursor-pointer hover:bg-accent hover:text-accent-foreground hover:scale-[1.02] active:scale-[0.98] transition-transform">
         <ItemMedia>
           <Icon name="add" />
         </ItemMedia>
@@ -44,7 +44,7 @@ function TripItem({ trip }: { trip: Trip }) {
 
   return (
     <>
-      <Item variant="outline" size="sm" onClick={() => navigate(routes.trips.trip(trip.id))} className="cursor-pointer">
+      <Item variant="outline" size="sm" onClick={() => navigate(routes.trips.trip(trip.id))} className="cursor-pointer hover:bg-accent hover:text-accent-foreground hover:scale-[1.02] active:scale-[0.98] transition-transform">
         <ItemMedia>
           <Icon name="trip" />
         </ItemMedia>
