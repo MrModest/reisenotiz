@@ -1,4 +1,4 @@
-code,icao,name,latitude,longitude,elevation,url,time_zone,city_code,country,city,state,county,type
+code,icao,name,latitude,longitude,elevation,url,time_zone,city_code,country_code,city,state,county,type
 AAA,NTGA,Anaa,-17.3506654,-145.51111994065877,36,,Pacific/Tahiti,AAA,PF,,,,AP
 AAB,YARY,Arrabury Airport,-26.6967835,141.049092,328,,Australia/Brisbane,AAB,AU,Tanbar,Queensland,Barcoo Shire,AP
 AAC,HEAR,El Arish International Airport,31.0742836,33.829171518733695,85,,Africa/Cairo,AAC,EG,Arish,Muhafazat Shamal Sina',,AP
