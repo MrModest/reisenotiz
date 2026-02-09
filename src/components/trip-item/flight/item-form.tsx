@@ -11,6 +11,8 @@ import { FieldInput } from '../field-input'
 import { FieldTextarea } from '../field-textarea'
 import { FieldPassengers } from '../field-passengers'
 import { FieldAttachments } from '../field-attachments'
+import { FieldDatePicker } from '../field-date-picker'
+import { FieldTimePicker } from '../field-time-picker'
 import { DateTime, ZonedInstant, formatTo } from '@/lib/datetime'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
@@ -223,11 +225,11 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
       </FieldSet>
       <AirportPreview direction={direction} />
       <FieldSet className='grid grid-cols-2 md:flex md:flex-row items-end gap-2 mt-4'>
-        <FieldInput required name={`${direction}.date`} label='Date' />
-        <FieldInput required name={`${direction}.time`} label='Time' />
-        <Separator className='mx-2 hidden md:block' orientation='vertical' />
-        <FieldInput name={`${direction}.terminal`} label='Terminal' />
-        <FieldInput name={`${direction}.gate`} label='Gate' />
+        <FieldDatePicker className='md:w-32' required name={`${direction}.date`} label='Date' />
+        <FieldTimePicker className='md:w-20' required name={`${direction}.time`} label='Time' />
+        <Separator className='mx-auto hidden md:block invisible' orientation='vertical' />
+        <FieldInput className='md:w-15' name={`${direction}.terminal`} label='Terminal' />
+        <FieldInput className='md:w-15' name={`${direction}.gate`} label='Gate' />
       </FieldSet>
       <AirportRecordDialog
         open={dialogOpen}

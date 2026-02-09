@@ -23,6 +23,7 @@ export type IconName = 'arrow-right'
   | 'warning'
   | 'time'
   | 'calendar'
+  | 'chevron-left'
   | 'chevron-right'
   | 'chevrons-up-down'
   | 'circle-alert'
@@ -96,6 +97,8 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='clock-4' className={style} />
     case 'calendar':
       return <DynamicIcon name='calendar' className={style} />
+    case 'chevron-left':
+      return <DynamicIcon name='chevron-left' className={style} />
     case 'chevron-right':
       return <DynamicIcon name='chevron-right' className={style} />
     case 'circle-alert':
