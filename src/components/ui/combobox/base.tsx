@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 

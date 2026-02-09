@@ -113,7 +113,7 @@ function AirportDetails({ airport }: { airport: Airport }) {
   return (
     <div className='flex flex-col gap-2'>
       <FieldView label='Airport' value={airport.name} />
-      <FieldView label='Address' value={airport.address.line} />
+      <FieldView label='Address' value={airport.address.line || 'Unknown'} />
     </div>
   )
 }

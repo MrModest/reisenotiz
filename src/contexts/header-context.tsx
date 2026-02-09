@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { IconName } from '@/components/icon'
 import { createContext, useContext, useState, type ReactNode } from 'react'
 

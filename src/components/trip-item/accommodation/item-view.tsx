@@ -51,7 +51,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
           <FieldView label='Name' value={accommodation.site.name} />
           <FieldView
             label='Address'
-            value={accommodation.site.address.line}
+            value={accommodation.site.address.line || 'Unknown'}
             subValue={`${accommodation.site.address.country}, ${accommodation.site.address.city}`}
           />
       </div>
