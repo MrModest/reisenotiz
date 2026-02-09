@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { Item, ItemContent, ItemDescription, ItemTitle } from "../item"
 import {
   Combobox,
@@ -18,23 +18,34 @@ export interface AirportSelectorProps {
   onSelect: (airport: Airport | null) => void
 }
 
+function scoreAirport(airport: Airport, q: string): number {
+  const code = airport.code.toLowerCase()
+  const name = airport.name.toLowerCase()
+  const city = airport.address.city.toLowerCase()
+  const country = airport.address.country.toLowerCase()
+
+  if (code.startsWith(q)) return 7
+  if (code.includes(q)) return 6
+  if (name.startsWith(q)) return 5
+  if (city.startsWith(q)) return 4
+  if (name.includes(q)) return 3
+  if (city.includes(q)) return 2
+  if (country.includes(q)) return 1
+  return 0
+}
+
 function filterAirports(items: Airport[], query: string): Airport[] {
   const q = query.trim().toLowerCase()
   if (q.length < MIN_QUERY_LENGTH) return []
 
-  const matches: Airport[] = []
+  const scored: { airport: Airport; score: number }[] = []
   for (const airport of items) {
-    if (
-      airport.code.toLowerCase().includes(q) ||
-      airport.name.toLowerCase().includes(q) ||
-      airport.address.city.toLowerCase().includes(q) ||
-      airport.address.country.toLowerCase().includes(q)
-    ) {
-      matches.push(airport)
-      if (matches.length >= MAX_RESULTS) break
-    }
+    const score = scoreAirport(airport, q)
+    if (score > 0) scored.push({ airport, score })
   }
-  return matches
+
+  scored.sort((a, b) => b.score - a.score)
+  return scored.slice(0, MAX_RESULTS).map((s) => s.airport)
 }
 
 export function AirportSelector({ items, onSelect }: AirportSelectorProps) {
@@ -43,6 +54,7 @@ export function AirportSelector({ items, onSelect }: AirportSelectorProps) {
   return (
     <Combobox
       items={filterAirports(items, query)}
+      filter={() => true} // We handle filtering ourselves (otherswise it doesn't handle ranking and it is too slow with large lists)
       onInputValueChange={(value) => setQuery(value)}
       itemToStringValue={(item: Airport) => item.code}
       itemToStringLabel={(item: Airport) => item.name}
