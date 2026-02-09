@@ -7,7 +7,11 @@ export const airports: Airport[] = [
     address: {
       line: "Willy-Brandt-Platz 1, 12529 Schönefeld",
       city: "Schönefeld",
-      country: "Germany"
+      country: "Germany",
+      geoPoint: {
+        latitude: 52.361738,
+        longitude: 13.502341
+      }
     },
     tzone: "Europe/Berlin"
   },

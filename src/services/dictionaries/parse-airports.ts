@@ -50,34 +50,31 @@ export async function parseAirports(): Promise<Record<string, Airport>> {
   const headers = parseCsvLine(lines[0])
   const idx = (col: string) => headers.indexOf(col)
 
-  const countryMap = await parseCountries()
-
   const result: Record<string, Airport> = {}
 
   for (let i = 1; i < lines.length; i++) {
     const values = parseCsvLine(lines[i])
 
-    const code = values[idx('iata_code')]
+    const code = values[idx('iata')]
     const name = values[idx('name')]
     if (!code || !name) continue
 
-    const lat = parseFloat(values[idx('latitude_deg')])
-    const lon = parseFloat(values[idx('longitude_deg')])
-
-    const country = countryMap[values[idx('iso_country')]] || values[idx('iso_country')]
+    const lat = parseFloat(values[idx('latitude')])
+    const lon = parseFloat(values[idx('longitude')])
 
     result[code] = {
       code,
       name,
       address: {
-        country: country ?? '',
-        city: values[idx('municipality')] ?? '',
         line: '',
-        ...(Number.isFinite(lat) && Number.isFinite(lon)
-          ? { geoPoint: { latitude: lat, longitude: lon } }
-          : {}),
+        city: values[idx('city')],
+        country: values[idx('country')],
+        geoPoint: {
+          latitude: lat,
+          longitude: lon
+        },
       },
-      tzone: values[idx('time_zone')] ?? 'UTC',
+      tzone: values[idx('timezone')] ?? 'Etc/Utc',
     }
   }
 
