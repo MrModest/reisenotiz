@@ -15,6 +15,7 @@ const MIN_QUERY_LENGTH = 2
 
 export interface AirportSelectorProps {
   items: Airport[]
+  selected?: Airport | null
   onSelect: (airport: Airport | null) => void
 }
 
@@ -48,19 +49,25 @@ function filterAirports(items: Airport[], query: string): Airport[] {
   return scored.slice(0, MAX_RESULTS).map((s) => s.airport)
 }
 
-export function AirportSelector({ items, onSelect }: AirportSelectorProps) {
+export function AirportSelector({ items, selected = null, onSelect }: AirportSelectorProps) {
   const [query, setQuery] = useState("")
+
+  const filtered = filterAirports(items, query)
+  const displayItems = selected && !filtered.some((a) => a.code === selected.code)
+    ? [selected, ...filtered]
+    : filtered
 
   return (
     <Combobox
-      items={filterAirports(items, query)}
+      items={displayItems}
+      value={selected ?? undefined}
       filter={() => true} // We handle filtering ourselves (otherswise it doesn't handle ranking and it is too slow with large lists)
-      onInputValueChange={(value) => setQuery(value)}
+      onInputValueChange={(val) => setQuery(val)}
       itemToStringValue={(item: Airport) => item.code}
       itemToStringLabel={(item: Airport) => item.name}
       isItemEqualToValue={(a, b) => a.code === b.code}
-      onValueChange={(value) => {
-        onSelect(value)
+      onValueChange={(val) => {
+        onSelect(val)
       }}
     >
       <ComboboxInput className='rounded-xs' placeholder="Search airports..." showClear />

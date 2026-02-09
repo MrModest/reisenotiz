@@ -22,6 +22,7 @@ interface AirportRecordDialogProps {
   open: boolean
   onClose: () => void
   airport: Airport | null
+  onSave?: (airport: Airport) => void
 }
 
 function defaultValues(airport: Airport | null): UserAirportSchema {
@@ -42,7 +43,7 @@ function defaultValues(airport: Airport | null): UserAirportSchema {
   })
 }
 
-export function AirportRecordDialog({ open, onClose, airport }: AirportRecordDialogProps) {
+export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportRecordDialogProps) {
   const addAirport = userRecords.useAirports((s) => s.addAirport)
   const updateAirport = userRecords.useAirports((s) => s.updateAirport)
   const isEditing = !!airport
@@ -76,6 +77,7 @@ export function AirportRecordDialog({ open, onClose, airport }: AirportRecordDia
     } else {
       addAirport(airportData)
     }
+    onSave?.(airportData)
     onClose()
   }
 

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Airport, Flight, UUID } from '@/types'
@@ -17,7 +18,7 @@ import { CollapsibleSection } from '../collapsible-section'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { AirportSelector } from '@/components/ui/combobox/airport'
 import { useAirports } from '@/hooks/use-airports'
-import { userRecords } from '@/store'
+import { AirportRecordDialog } from '@/components/records/airport-record-dialog'
 
 function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
   const airport = useWatch({ name: `${direction}.airport` })
@@ -185,14 +186,17 @@ export function FlightItemForm({ flight, onSubmit, onCancel, title, className }:
 
 function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
   const airports = useAirports()
-
   const { setValue, getValues } = useFormContext<FlightFormSchema>()
-  const addAirport = userRecords.useAirports((s) => s.addAirport)
-  const airportCode = useWatch({ name: `${direction}.airport.code` })
-  const airportName = useWatch({ name: `${direction}.airport.name` })
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  const initialCode = getValues(`${direction}.airport.code`)
+  const [selected, setSelected] = useState<Airport | null>(() =>
+    initialCode ? airports.find((a) => a.code === initialCode) ?? null : null
+  )
 
   function handleAirportSelect(airport: Airport | null) {
     if (!airport) return
+    setSelected(airport)
     const prefix = `${direction}.airport` as const
     setValue(`${prefix}.code`, airport.code)
     setValue(`${prefix}.name`, airport.name)
@@ -204,64 +208,39 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
     }
   }
 
-  function handleSaveToRecords() {
-    const values = getValues()
-    const point = values[direction]
-    if (!point.airport.code || !point.airport.name) return
-    addAirport({
-      code: point.airport.code,
-      name: point.airport.name,
-      address: {
-        city: point.airport.address?.city || '',
-        country: point.airport.address?.country || '',
-        line: point.airport.address?.line || '',
-      },
-      tzone: point.timezone || '',
-    })
-  }
-
-  const canSave = airportCode && airportName
-
   return (
     <>
-      <FieldSet className='mt-2'>
-        <AirportSelector
-          items={airports}
-          onSelect={handleAirportSelect}
-        />
-      </FieldSet>
-      <FieldSet className='flex-row gap-2 mt-4'>
-        <FieldInput required className='w-15' name={`${direction}.airport.code`} label='Code' />
-        <FieldInput name={`${direction}.airport.name`} label='Name' />
-      </FieldSet>
-      <FieldSet className='gap-1 mt-4'>
-        <FieldInput name={`${direction}.airport.address.line`} label='Street, Home number' />
-        <div className='flex flex-row gap-2'>
-          <FieldInput name={`${direction}.airport.address.city`} label='City' />
-          <FieldInput name={`${direction}.airport.address.country`} label='Country' />
+      <FieldSet className='flex-row items-end gap-2 my-2'>
+        <div className='flex-1'>
+          <AirportSelector
+            items={airports}
+            selected={selected}
+            onSelect={handleAirportSelect}
+          />
         </div>
+        <Button
+          type='button'
+          variant='outline'
+          onClick={() => setDialogOpen(true)}
+        >
+          <Icon name='add' />
+          Add New
+        </Button>
       </FieldSet>
-      <FieldSet className='flex-row gap-2 mt-4'>
+      <AirportPreview direction={direction} />
+      <FieldSet className='flex-row items-end gap-2 mt-4'>
         <FieldInput required name={`${direction}.date`} label='Date' />
         <FieldInput required name={`${direction}.time`} label='Time' />
-        <FieldInput required name={`${direction}.timezone`} label='Timezone' />
-      </FieldSet>
-      <FieldSet className='flex-row gap-2 mt-4'>
+        <Separator className='mx-2' orientation='vertical' />
         <FieldInput name={`${direction}.terminal`} label='Terminal' />
         <FieldInput name={`${direction}.gate`} label='Gate' />
       </FieldSet>
-      {canSave && (
-        <Button
-          type='button'
-          variant='ghost'
-          size='sm'
-          className='mt-2 self-start text-muted-foreground'
-          onClick={handleSaveToRecords}
-        >
-          <Icon name='save' />
-          Save to my records
-        </Button>
-      )}
+      <AirportRecordDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        airport={null}
+        onSave={handleAirportSelect}
+      />
     </>
   )
 }
