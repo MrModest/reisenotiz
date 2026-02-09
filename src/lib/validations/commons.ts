@@ -25,11 +25,19 @@ const attachmentSchema = z.object({
   note: z.string().optional()
 })
 
-const dateSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
+const dateSchema = z.string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must be in YYYY-MM-DD format')
 
-const timeSchema = z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Time must be in HH:MM format (24-hour)')
+const timeSchema = z.string()
+  .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Time must be in HH:MM format (24-hour)')
 
-const timezoneSchema = z.string().regex(/^[A-Z][a-z]+\/[A-Z][a-z_]+$/, 'Timezone must be a valid IANA timezone (e.g., America/Los_Angeles)')
+const timezoneSchema = z.string()
+  .regex(/^[A-Z][a-z]+\/[A-Z][a-z_]+$/, 'Timezone must be a valid IANA timezone (e.g., America/Los_Angeles)')
+
+const airportCodeSchema = z.string()
+  .min(3, 'Code must be 3-4 characters')
+  .max(4, 'Code must be 3-4 characters')
+  .transform((v) => v.toUpperCase())
 
 export const schemas = {
   geoPoint: geoPointSchema,
@@ -38,7 +46,8 @@ export const schemas = {
   attachment: attachmentSchema,
   date: dateSchema,
   time: timeSchema,
-  timezone: timezoneSchema
+  timezone: timezoneSchema,
+  airportCode: airportCodeSchema
 }
 export type GeoPointSchema = z.infer<typeof geoPointSchema>
 export type AddressSchema = z.infer<typeof addressSchema>

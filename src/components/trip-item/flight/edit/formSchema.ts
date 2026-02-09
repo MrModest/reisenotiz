@@ -4,7 +4,7 @@ import { Flight } from '@/types'
 import { formatTo } from '@/lib/datetime'
 
 const airportSchema = z.object({
-  code: z.string().min(3, 'Airport code must be at least 3 characters').max(4),
+  code: schemas.airportCode,
   name: z.string().min(1, 'Airport name is required'),
   address: schemas.address.optional(),
   tzone: z.string().optional()

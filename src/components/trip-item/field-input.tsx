@@ -7,10 +7,12 @@ interface FieldInputProps {
   name: string
   label: string
   required?: boolean
+  disabled?: boolean
+  placeholder?: string
   className?: string
 };
 
-export function FieldInput({ name, label, required: isRequired = false, className }: FieldInputProps) {
+export function FieldInput({ name, label, required: isRequired = false, disabled, placeholder, className }: FieldInputProps) {
   const { field, error } = useFormField(name)
 
   return (
@@ -19,7 +21,7 @@ export function FieldInput({ name, label, required: isRequired = false, classNam
         {label}
         {isRequired && (<sup className='font-bold -mb-5 text-lg text-red-600'>*</sup>)}
       </FieldLabel>
-      <Input aria-invalid={!!error} id={name} {...field} />
+      <Input aria-invalid={!!error} id={name} disabled={disabled} placeholder={placeholder} {...field} />
       {error && <FieldError className='text-xs font-thin'>{error.message?.toString()}</FieldError>}
     </Field>
   )

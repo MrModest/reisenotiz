@@ -6,3 +6,4 @@ export {
   useTripItems,
   useTimelineElements
 } from './selectors'
+export { userRecords } from './user-records'

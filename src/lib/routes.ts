@@ -15,4 +15,8 @@ export const routes = {
     editItem: (tripId: string, itemId: string) =>
       `/trips/${tripId}/items/${itemId}/edit`,
   },
+  records: {
+    root: '/records',
+    airports: '/records/airports',
+  },
 } as const

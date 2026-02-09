@@ -7,6 +7,8 @@ import { TripTimelinePage } from "@/pages/trip-timeline"
 import { TripItemViewPage } from "@/pages/trip-item-view"
 import { TripItemCreatePage } from "@/pages/trip-item-create"
 import { TripItemEditPage } from "@/pages/trip-item-edit"
+import { RecordsPage } from "@/pages/records"
+import { AirportsRecordsPage } from "@/pages/records/airports"
 import { routes } from "@/lib/routes"
 
 export const router = createBrowserRouter([
@@ -39,8 +41,16 @@ export const router = createBrowserRouter([
         Component: TripItemEditPage
       },
       {
-        path: "settings",
+        path: routes.settings,
         Component: SettingsPage
+      },
+      {
+        path: routes.records.root,
+        Component: RecordsPage
+      },
+      {
+        path: routes.records.airports,
+        Component: AirportsRecordsPage
       }
     ]
   },

@@ -12,10 +12,12 @@ import { FieldPassengers } from '../field-passengers'
 import { FieldAttachments } from '../field-attachments'
 import { DateTime, ZonedInstant, formatTo } from '@/lib/datetime'
 import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/icon'
 import { CollapsibleSection } from '../collapsible-section'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { AirportSelector } from '@/components/ui/combobox/airport'
-import { airportDictionary } from '@/services'
+import { useAirports } from '@/hooks/use-airports'
+import { userRecords } from '@/store'
 
 function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
   const airport = useWatch({ name: `${direction}.airport` })
@@ -182,7 +184,12 @@ export function FlightItemForm({ flight, onSubmit, onCancel, title, className }:
 }
 
 function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
-  const { setValue } = useFormContext<FlightFormSchema>()
+  const airports = useAirports()
+
+  const { setValue, getValues } = useFormContext<FlightFormSchema>()
+  const addAirport = userRecords.useAirports((s) => s.addAirport)
+  const airportCode = useWatch({ name: `${direction}.airport.code` })
+  const airportName = useWatch({ name: `${direction}.airport.name` })
 
   function handleAirportSelect(airport: Airport | null) {
     if (!airport) return
@@ -197,11 +204,29 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
     }
   }
 
+  function handleSaveToRecords() {
+    const values = getValues()
+    const point = values[direction]
+    if (!point.airport.code || !point.airport.name) return
+    addAirport({
+      code: point.airport.code,
+      name: point.airport.name,
+      address: {
+        city: point.airport.address?.city || '',
+        country: point.airport.address?.country || '',
+        line: point.airport.address?.line || '',
+      },
+      tzone: point.timezone || '',
+    })
+  }
+
+  const canSave = airportCode && airportName
+
   return (
     <>
       <FieldSet className='mt-2'>
         <AirportSelector
-          items={airportDictionary.getAllValues()}
+          items={airports}
           onSelect={handleAirportSelect}
         />
       </FieldSet>
@@ -225,6 +250,18 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
         <FieldInput name={`${direction}.terminal`} label='Terminal' />
         <FieldInput name={`${direction}.gate`} label='Gate' />
       </FieldSet>
+      {canSave && (
+        <Button
+          type='button'
+          variant='ghost'
+          size='sm'
+          className='mt-2 self-start text-muted-foreground'
+          onClick={handleSaveToRecords}
+        >
+          <Icon name='save' />
+          Save to my records
+        </Button>
+      )}
     </>
   )
 }

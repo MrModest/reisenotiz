@@ -2,10 +2,11 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { AirportSelector } from '@/components/ui/combobox/airport'
-import { airportDictionary } from '@/services'
+import { useAirports } from '@/hooks/use-airports'
 import type { Airport } from '@/types'
 
 export function HomePage() {
+  const airports = useAirports()
   const [count, setCount] = useState(0)
   const [selectedAirport, setSelectedAirport] = useState<Airport | null>(null)
 
@@ -16,7 +17,7 @@ export function HomePage() {
       </Button>
       <Separator className='my-4 w-full' orientation='horizontal' />
       <AirportSelector
-        items={airportDictionary.getAllValues()}
+        items={airports}
         onSelect={(airport) => {
           console.log('Selected airport:', airport)
           setSelectedAirport(airport)
