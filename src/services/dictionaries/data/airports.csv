@@ -669,7 +669,7 @@ BEN,HLLB,Benina International,32.1011324,20.27332790949631,387,,Africa/Tripoli,B
 BEO,YLMQ,Belmont,-33.033333,151.66667,26,,Australia/Sydney,NTL,AU,Belmont,New South Wales,Lake Macquarie Shire,AP
 BEP,VOBI,Bellary,15.16220255,76.88153285750052,1505,,Asia/Kolkata,BEP,IN,Bellary,Karnataka,Bellary,AP
 BEQ,EGXH,Honington,52.34289805,0.7708089433284024,180,,Europe/London,BEQ,GB,Thetford,England,Norfolk,AP
-BER,EDDB,Berlin Brandenburg Airport,52.3976851,13.5367764,239,https://ber.berlin-airport.de/,Europe/Berlin,BER,DE,,,,AP
+BER,EDDB,Berlin Brandenburg Airport,52.3976851,13.5367764,239,https://ber.berlin-airport.de/,Europe/Berlin,BER,DE,Schönefeld,Brandenburg,Germany,AP
 BES,LFRB,Brest Bretagne Airport,48.4428384,-4.4197626,344,,Europe/Paris,BES,FR,Guipavas,Brittany,Departement du Finistere,AP
 BET,PABE,Bethel Airport,60.78043015,-161.84026194740966,111,,America/Anchorage,BET,US,,,,AP
 BEU,YBIE,Bedourie,-24.23,139.445,301,,Australia/Brisbane,BEU,AU,,,,AP
