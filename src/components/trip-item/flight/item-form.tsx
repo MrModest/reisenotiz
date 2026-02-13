@@ -8,9 +8,7 @@ import { cn } from '@/lib/utils'
 import { ItemHeader } from '../item-header'
 import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '../field-input'
-import { FieldTextarea } from '../field-textarea'
 import { FieldPassengers } from '../field-passengers'
-import { FieldAttachments } from '../field-attachments'
 import { FieldDatePicker } from '../field-date-picker'
 import { FieldTimePicker } from '../field-time-picker'
 import { formatTo } from '@/lib/datetime'
@@ -158,7 +156,10 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
   function handleAirportSelect(airport: Airport | null) {
     setSelected(airport)
     if (!airport) {
-      setValue(`${direction}.airport`, { code: '', name: '', tzone: 'Etc/Utc' })
+      setValue(
+        `${direction}.airport`,
+        { code: '', name: '', tzone: 'Etc/Utc', address: { country: '', city: '' } }
+      )
       return
     }
     setValue(`${direction}.airport`, airport)

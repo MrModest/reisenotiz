@@ -119,11 +119,11 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, title
         </FieldSet>
 
         <FieldSet className='flex-row gap-2 mt-4'>
-          <FieldInput name='country' label='Country' required />
-          <FieldInput name='city' label='City' required />
+          <FieldInput name='siteAddress.country' label='Country' required />
+          <FieldInput name='siteAddress.city' label='City' required />
         </FieldSet>
         <FieldSet className='mt-4'>
-          <FieldInput name='addressLine' label='Address Line' placeholder='Street, floor, etc.' />
+          <FieldInput name='siteAddress.line' label='Address Line' placeholder='Street, floor, etc.' />
         </FieldSet>
 
         <Separator className='my-4' />
@@ -184,9 +184,9 @@ function convert(data: AccommodationFormSchema, tripId: UUID, itemId: UUID): Acc
       name: data.siteName,
       kind: data.siteKind,
       address: {
-        country: data.country,
-        city: data.city,
-        line: data.addressLine,
+        country: data.siteAddress.country,
+        city: data.siteAddress.city,
+        line: data.siteAddress.line,
       }
     },
     contact: data.contact || '',

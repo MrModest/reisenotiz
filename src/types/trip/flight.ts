@@ -8,7 +8,7 @@ import { routes } from "@/lib/routes"
 export interface Airport {
   code: string
   name: string
-  address?: Address
+  address: Address
   tzone: string
 }
 

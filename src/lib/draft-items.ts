@@ -1,7 +1,6 @@
 import { generateUUID } from "@/types/common/uuid"
 import { Flight, Accommodation, TripItem, TripItemType, UUID } from "@/types"
 import { DateTime } from "@/lib/datetime"
-import { AddressNone } from "@/types/trip/address"
 
 export function createDraftItem(tripId: UUID, type: TripItemType): TripItem {
   const base = {
@@ -25,6 +24,12 @@ export function createDraftItem(tripId: UUID, type: TripItemType): TripItem {
   }
 }
 
+const AddressDraft = {
+  country: '',
+  city: '',
+  line: ''
+}
+
 function createDraftFlight(base: { id: UUID; tripId: UUID; note: string; attachments: never[] }): Flight {
   const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const now = DateTime.now(localTimezone)
@@ -42,7 +47,7 @@ function createDraftFlight(base: { id: UUID; tripId: UUID; note: string; attachm
       airport: {
         code: '',
         name: '',
-        address: AddressNone,
+        address: AddressDraft,
         tzone: localTimezone
       },
       time: defaultTime,
@@ -53,7 +58,7 @@ function createDraftFlight(base: { id: UUID; tripId: UUID; note: string; attachm
       airport: {
         code: '',
         name: '',
-        address: AddressNone,
+        address: AddressDraft,
         tzone: localTimezone
       },
       time: defaultTime,
@@ -73,7 +78,7 @@ function createDraftAccommodation(base: { id: UUID; tripId: UUID; note: string; 
     site: {
       name: '',
       kind: 'Hotel',
-      address: AddressNone
+      address: AddressDraft
     },
     contact: '',
     reservedOn: '',

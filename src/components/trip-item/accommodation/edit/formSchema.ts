@@ -14,9 +14,7 @@ const reservationPointSchema = z.object({
 export const accommodationFormSchema = z.object({
   siteName: z.string().min(1, 'Name is required'),
   siteKind: z.enum(ACCOMMODATION_SITE_KINDS),
-  country: z.string().min(1, 'Country is required'),
-  city: z.string().min(1, 'City is required'),
-  addressLine: z.string().optional(),
+  siteAddress: schemas.address,
   contact: z.string().optional(),
   reservedOn: z.string().optional(),
   guests: z.preprocess(Number, z.number().int().min(1, 'At least 1 guest')),
@@ -35,9 +33,7 @@ export function defaultsFromAccommodation(acc: Accommodation): AccommodationForm
   return {
     siteName: site.name,
     siteKind: site.kind,
-    country: site.address.country,
-    city: site.address.city,
-    addressLine: site.address.line,
+    siteAddress: site.address,
     contact: acc.contact,
     reservedOn: acc.reservedOn,
     guests: acc.guests,

@@ -6,7 +6,7 @@ import { formatTo } from '@/lib/datetime'
 const airportSchema = z.object({
   code: schemas.airportCode,
   name: z.string().min(1, 'Airport name is required'),
-  address: schemas.address.optional(),
+  address: schemas.address,
   tzone: z.string()
 })
 

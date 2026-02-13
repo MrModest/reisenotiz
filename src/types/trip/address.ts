@@ -9,8 +9,3 @@ export interface GeoPoint {
   latitude: number,
   longitude: number
 }
-
-export const AddressNone: Address = {
-  country: 'None',
-  city: 'None'
-}
