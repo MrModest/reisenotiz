@@ -9,9 +9,21 @@ export interface HotelReservation {
   checkOut: { available: ZonedInstant; planned?: ZonedInstant }
 }
 
+export const ACCOMMODATION_SITE_KINDS = [
+  'Hotel',
+  'Hostel',
+  'Apartment',
+  'Guesthouse',
+  'BnB',
+  'Resort',
+  'Other'
+] as const
+
+export type AccommodationSiteKind = typeof ACCOMMODATION_SITE_KINDS[number]
+
 export interface AccommodationSite {
   name: string
-  kind: 'Hotel' | 'Hostel' | 'Apartment' | 'Guesthouse' | 'BnB' | 'Resort' | 'Other'
+  kind: AccommodationSiteKind
   address: Address
 }
 

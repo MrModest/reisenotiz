@@ -6,6 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useFormField } from '@/hooks/use-form-field'
 import { cn } from '@/lib/utils'
 import { Icon } from '@/components/icon'
+import { Required } from '@/components/ui/required'
 
 interface FieldDatePickerProps {
   name: string
@@ -41,7 +42,7 @@ export function FieldDatePicker({
     <Field className={cn('gap-0.5', className)}>
       <FieldLabel className='gap-1 pr-10' htmlFor={name}>
         {label}
-        {isRequired && <sup className='font-bold -mb-5 text-lg text-red-600'>*</sup>}
+        {isRequired && <Required />}
       </FieldLabel>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger

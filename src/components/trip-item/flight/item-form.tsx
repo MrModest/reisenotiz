@@ -13,10 +13,13 @@ import { FieldPassengers } from '../field-passengers'
 import { FieldAttachments } from '../field-attachments'
 import { FieldDatePicker } from '../field-date-picker'
 import { FieldTimePicker } from '../field-time-picker'
-import { DateTime, ZonedInstant, formatTo } from '@/lib/datetime'
+import { formatTo } from '@/lib/datetime'
+import { convertTime } from '../utils'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { CollapsibleSection } from '../collapsible-section'
+import { NoteSection } from '../section-note'
+import { AttachmentsSection } from '../section-attachments'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { AirportSelector } from '@/components/ui/combobox/airport'
 import { useAirports } from '@/hooks/use-airports'
@@ -51,47 +54,10 @@ function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
   )
 }
 
-function NoteSection({ children }: { children: React.ReactNode }) {
-  const note = useWatch({ name: 'note' })
-
-  const preview = note && note.trim() !== '' ? (() => {
-    const firstLine = note.split('\n')[0]
-    const truncated = firstLine.length > 60 ? firstLine.slice(0, 60) + '...' : firstLine
-    return <span className='text-sm text-foreground'>{truncated}</span>
-  })() : undefined
-
-  return (
-    <CollapsibleSection
-      label='Note'
-      preview={preview}
-      defaultOpen={false}
-      className='my-4'
-    >
-      {children}
-    </CollapsibleSection>
-  )
-}
-
 function PassengersSection({ children }: { children: React.ReactNode }) {
   const passengers = useWatch({ name: 'passengers' })
   const count = passengers?.length || 0
   const label = count > 0 ? `Passengers (${count})` : 'Passengers'
-
-  return (
-    <CollapsibleSection
-      label={label}
-      defaultOpen={false}
-      className='mb-2 mt-6'
-    >
-      {children}
-    </CollapsibleSection>
-  )
-}
-
-function AttachmentsSection({ children }: { children: React.ReactNode }) {
-  const attachments = useWatch({ name: 'attachments' })
-  const count = attachments?.length || 0
-  const label = count > 0 ? `Attachments (${count})` : 'Attachments'
 
   return (
     <CollapsibleSection
@@ -120,9 +86,7 @@ export function FlightItemForm({ flight, onSubmit, onCancel, title, className }:
   })
 
   function handleSubmit(data: FlightFormSchema) {
-    console.log('formData', data)
     const updatedFlight = convert(data, flight.tripId, flight.id)
-    console.log('updatedFlight', updatedFlight)
     onSubmit(updatedFlight)
   }
 
@@ -166,15 +130,11 @@ export function FlightItemForm({ flight, onSubmit, onCancel, title, className }:
           <FieldInput name='bookingCode' label='Booking' />
           <FieldInput name='seat' label='Seat(s)' />
         </FieldSet>
-        <NoteSection>
-          <FieldTextarea name='note' label='' placeholder='Add any notes about this flight...' />
-        </NoteSection>
+        <NoteSection name='note' placeholder='Add any notes about this flight...' />
         <PassengersSection>
           <FieldPassengers name='passengers' />
         </PassengersSection>
-        <AttachmentsSection>
-          <FieldAttachments name='attachments' tripItemId={flight.id} />
-        </AttachmentsSection>
+        <AttachmentsSection name='attachments' />
         <Separator className='mt-4 mb-6' />
         <Field>
           <Button type='submit' variant='default'>Save</Button>
@@ -241,39 +201,39 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
   )
 }
 
-function convertTime(date: string, time: string, tz: string): ZonedInstant {
-  const [year, month, day] = date.split('-').map(s => parseInt(s))
-  const [hour, minute] = time.split(':').map(s => parseInt(s))
-
-  return DateTime.fromObject({
-    year, month, day,
-    hour, minute
-  }, tz).toZonedInstant()
-}
-
 function convert(data: FlightFormSchema, tripId: UUID, flightId: UUID): Flight {
+  const depAirport = data.departure.airport
+  const arrAirport = data.arrival.airport
+
+  const attachments = (data.attachments || [])
+    .map(a => ({ ...a,
+      id: a.id as UUID,
+      tripItemId: flightId,
+      note: a.note || ''
+    }))
+
   return {
     type: 'Flight',
     id: flightId,
-    tripId: tripId,
+    tripId,
     note: data.note || '',
     passengers: data.passengers || [],
-    attachments: data.attachments || [],
-    flightNumber: data.flightNumber,
-    carrier: data.carrier,
+    attachments: attachments,
+    flightNumber: data.flightNumber || '',
+    carrier: data.carrier || '',
     departure: {
-      airport: data.departure.airport,
-      time: convertTime(data.departure.date, data.departure.time, data.departure.airport.tzone),
+      airport: depAirport,
+      time: convertTime(data.departure.date, data.departure.time, depAirport.tzone),
       terminal: data.departure.terminal,
       gate: data.departure.gate,
     },
     arrival: {
-      airport: data.arrival.airport,
-      time: convertTime(data.arrival.date, data.arrival.time, data.arrival.airport.tzone),
+      airport: arrAirport,
+      time: convertTime(data.arrival.date, data.arrival.time, arrAirport.tzone),
       terminal: data.arrival.terminal,
       gate: data.arrival.gate,
     },
-    bookingCode: data.bookingCode,
-    seat: data.seat,
-  } as Flight
+    bookingCode: data.bookingCode || '',
+    seat: data.seat || '',
+  }
 }

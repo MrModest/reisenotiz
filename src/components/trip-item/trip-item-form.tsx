@@ -1,6 +1,7 @@
-import { Flight, Trip, TripItem } from '@/types'
+import { Accommodation, Flight, Trip, TripItem } from '@/types'
 import { useHeaderTitle } from '@/hooks/use-header-title'
 import { FlightItemForm } from './flight/item-form'
+import { AccommodationItemForm } from './accommodation/item-form'
 
 interface TripItemEditProps {
   trip: Trip
@@ -44,9 +45,13 @@ function getEdit({ tripItem, onSave, onCancel, isCreate, className }: {
     case 'Accommodation':
       return {
         view: (
-          <div className={className}>
-            <p className="text-muted-foreground">Hotel edit form (not implemented yet)</p>
-          </div>
+          <AccommodationItemForm
+            accommodation={tripItem as Accommodation}
+            onSubmit={onSave}
+            onCancel={onCancel}
+            title={isCreate ? 'New Accommodation' : 'Edit Accommodation'}
+            className={className}
+          />
         ),
         title: isCreate ? 'New Accommodation' : 'Edit Accommodation',
         icon: 'hotel-checkIn'

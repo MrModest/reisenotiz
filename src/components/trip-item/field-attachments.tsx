@@ -5,17 +5,16 @@ import { FieldGroup } from '../ui/field'
 
 interface FieldAttachmentsProps {
   name: string
-  tripItemId: string
   className?: string
 }
 
-export function FieldAttachments({ name, tripItemId, className }: FieldAttachmentsProps) {
+export function FieldAttachments({ name, className }: FieldAttachmentsProps) {
   return (
     <FieldArrayList
       name={name}
       addButtonLabel='Add Attachment'
       itemLabel='Attachment'
-      onAdd={() => ({ id: generateUUID(), tripItemId, name: '', link: '', note: '' })}
+      onAdd={() => ({ id: generateUUID(), name: '', link: '', note: '' })}
       className={className}
     >
       {(index, name) => (
