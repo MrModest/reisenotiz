@@ -1,0 +1,17 @@
+name: Build and Push Docker Image (amd64)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    uses: ./.github/workflows/_docker-build.yml
+    with:
+      platform: linux/amd64
+      runner: ubuntu-latest
+      image: ghcr.io/${{ github.repository }}
+      tag-suffix: -amd64
