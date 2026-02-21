@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTripsStore } from './trips-store'
-import { Accommodation, Flight, getFlightTimelineItems, getHotelTimelineItems, TripItem, UUID } from '@/types'
+import { Accommodation, Flight, getFlightTimelineItems, getHotelTimelineItems, TripItem } from '@/types'
 import { TimelineElement } from '@/components/ui/timeline'
 
 /**
@@ -19,21 +19,21 @@ export function useTrips() {
 /**
  * Get a single trip by ID
  */
-export function useTrip(tripId: UUID) {
+export function useTrip(tripId: string) {
   return useTripsStore(state => state.getTripById(tripId))
 }
 
 /**
  * Get a single trip item by ID
  */
-export function useTripItem(itemId: UUID) {
+export function useTripItem(itemId: string) {
   return useTripsStore(state => state.getTripItemById(itemId))
 }
 
 /**
  * Get all trip items for a specific trip
  */
-export function useTripItems(tripId: UUID) {
+export function useTripItems(tripId: string) {
   const tripItemsRecord = useTripsStore(state => state.tripItems)
   return useMemo(() => {
     return Object.values(tripItemsRecord).filter(item => item.tripId === tripId)
@@ -43,7 +43,7 @@ export function useTripItems(tripId: UUID) {
 /**
  * Get timeline elements for a specific trip
  */
-export function useTimelineElements(tripId: UUID) {
+export function useTimelineElements(tripId: string) {
   const tripItems = useTripItems(tripId)
   return getTimelineElements(tripItems)
 }

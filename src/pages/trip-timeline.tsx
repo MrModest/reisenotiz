@@ -3,10 +3,9 @@ import { TimelineLayout } from '@/components/ui/timeline'
 import { AddTripItemFab } from '@/components/trip-timeline'
 import { useTrip, useTimelineElements } from '@/store'
 import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
-import { UUID } from '@/types'
 
 export function TripTimelinePage() {
-  const { tripId } = useParams<{ tripId: UUID }>()
+  const { tripId } = useParams<{ tripId: string }>()
 
   if (!tripId) {
     return <NotFound />
@@ -15,7 +14,7 @@ export function TripTimelinePage() {
   return <TripTimelineContent tripId={tripId} />
 }
 
-function TripTimelineContent({ tripId }: { tripId: UUID }) {
+function TripTimelineContent({ tripId }: { tripId: string }) {
   const trip = useTrip(tripId)
   const timelineElements = useTimelineElements(tripId)
 

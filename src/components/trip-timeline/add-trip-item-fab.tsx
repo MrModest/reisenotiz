@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { Icon, IconName } from '@/components/icon'
 import { routes } from '@/lib/routes'
-import { TripItemType, UUID } from '@/types'
+import { TripItemType } from '@/types'
 
 interface TripItemTypeConfig {
   type: TripItemType
@@ -21,7 +21,7 @@ const tripItemTypes: TripItemTypeConfig[] = [
 ]
 
 interface AddTripItemFabProps {
-  tripId: UUID
+  tripId: string
 }
 
 export function AddTripItemFab({ tripId }: AddTripItemFabProps) {

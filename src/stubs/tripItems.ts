@@ -1,4 +1,4 @@
-import { Flight, Accommodation, TripItem, UUID } from '@/types'
+import { Flight, Accommodation, TripItem } from '@/types'
 import { trips } from './trips'
 import { airportsByCode } from './airports'
 
@@ -10,7 +10,7 @@ const persons = [
 
 export const tripsItems: TripItem[] = [
   {
-    id: 'bbc32db4-d180-41a1-bc30-afa9dccc85b3' as UUID,
+    id: 'bbc32db4-d180-41a1-bc30-afa9dccc85b3',
     tripId: trips[0].id,
     type: 'Flight',
     flightNumber: 'PC5030',
@@ -33,7 +33,7 @@ export const tripsItems: TripItem[] = [
     attachments: []
   } as Flight,
   {
-    id: 'cbc32db4-d180-41a1-bc30-afa9dccc85b3' as UUID,
+    id: 'cbc32db4-d180-41a1-bc30-afa9dccc85b3',
     tripId: trips[0].id,
     type: 'Flight',
     flightNumber: 'PC5031',
@@ -56,7 +56,7 @@ export const tripsItems: TripItem[] = [
     attachments: []
   },
   {
-    id: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3' as UUID,
+    id: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3',
     tripId: trips[0].id,
     type: 'Accommodation',
     site: {
@@ -84,10 +84,10 @@ export const tripsItems: TripItem[] = [
     },
     note: 'notify hotel that we come late',
     attachments: [
-      { id: '1', name: 'Booking#1234.pdf' },
-      { id: '2', name: 'Booking#2345.pdf' },
-      { id: '3', name: 'Booking#3456.pdf' },
-      { id: '4', name: 'Booking#4567.pdf' }
+      { id: '1', name: 'Booking#1234.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking1234.pdf' },
+      { id: '2', name: 'Booking#2345.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking2345.pdf' },
+      { id: '3', name: 'Booking#3456.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking3456.pdf' },
+      { id: '4', name: 'Booking#4567.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking4567.pdf' }
     ]
   } as Accommodation
 ]

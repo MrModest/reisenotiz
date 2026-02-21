@@ -1,9 +1,7 @@
-import { UUID } from '@/types/common/uuid'
-
 export interface Attachment {
-  id: UUID;
-  tripItemId: UUID;
+  id: string;
+  tripItemId: string;
   link: string;
   name: string;
-  note: string
+  note?: string
 }

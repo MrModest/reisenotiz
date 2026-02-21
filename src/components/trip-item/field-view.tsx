@@ -1,7 +1,7 @@
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
-export function FieldView({label, value, subValue, className}: {label: string; value: string, subValue?: string; className?: string}) {
+export function FieldView({label, value, subValue, className}: {label: string; value: string | number; subValue?: string; className?: string}) {
   return (
     <div className={cn('flex flex-row py-1', className)}>
       <Separator orientation='vertical' className='mr-1' />

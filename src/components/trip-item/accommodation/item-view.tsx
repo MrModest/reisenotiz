@@ -57,10 +57,10 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
       </div>
       <SeparatorWithLabel label='Details' className='mt-2' />
       <div className='grid grid-cols-2 gap-x-2 justify-between'>
-        <FieldView label='Reserved On' value={accommodation.reservedOn} />
-        <FieldView label='Guests' value={accommodation.guests.toString()} />
-        <FieldView label='Rooms' value={accommodation.rooms.toString()} />
-        <FieldView label='Phone' value={accommodation.contact} />
+        <FieldView label='Reserved On' value={accommodation.reservedOn || ''} />
+        <FieldView label='Guests' value={accommodation.guests} />
+        <FieldView label='Rooms' value={accommodation.rooms} />
+        <FieldView label='Phone' value={accommodation.site.contact  || ''} />
       </div>
 
       <ConfirmDialog

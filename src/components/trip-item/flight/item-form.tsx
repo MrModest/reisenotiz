@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Airport, Flight, UUID } from '@/types'
+import { Airport, Flight } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
 import { Field, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
@@ -202,13 +202,12 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
   )
 }
 
-function convert(data: FlightFormSchema, tripId: UUID, flightId: UUID): Flight {
+function convert(data: FlightFormSchema, tripId: string, flightId: string): Flight {
   const depAirport = data.departure.airport
   const arrAirport = data.arrival.airport
 
   const attachments = (data.attachments || [])
     .map(a => ({ ...a,
-      id: a.id as UUID,
       tripItemId: flightId,
       note: a.note || ''
     }))

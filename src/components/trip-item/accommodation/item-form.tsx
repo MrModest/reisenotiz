@@ -1,6 +1,6 @@
 import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Accommodation, AccommodationSiteKind, UUID } from '@/types'
+import { Accommodation, AccommodationSiteKind } from '@/types'
 import { defaultsFromAccommodation, accommodationFormSchema, AccommodationFormSchema } from './edit/formSchema'
 import { Field, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
@@ -173,13 +173,13 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, title
   )
 }
 
-function convert(data: AccommodationFormSchema, tripId: UUID, itemId: UUID): Accommodation {
+function convert(data: AccommodationFormSchema, tripId: string, itemId: string): Accommodation {
   return {
     type: 'Accommodation',
     id: itemId,
     tripId,
     note: data.note || '',
-    attachments: (data.attachments || []).map(a => ({ ...a, id: a.id as UUID, tripItemId: itemId, note: a.note || '' })),
+    attachments: (data.attachments || []).map(a => ({ ...a, tripItemId: itemId, note: a.note || '' })),
     site: {
       name: data.siteName,
       kind: data.siteKind,
@@ -187,12 +187,12 @@ function convert(data: AccommodationFormSchema, tripId: UUID, itemId: UUID): Acc
         country: data.siteAddress.country,
         city: data.siteAddress.city,
         line: data.siteAddress.line,
-      }
+      },
+      contact: data.siteContact || '',
     },
-    contact: data.contact || '',
-    reservedOn: data.reservedOn || '',
-    guests: data.guests,
-    rooms: data.rooms,
+    reservedOn: data.reservedOn,
+    guests: data.guests || 0,
+    rooms: data.rooms || 0,
     reservation: {
       checkIn: {
         available: convertTime(data.checkIn.availableDate, data.checkIn.availableTime, data.checkIn.tzone),

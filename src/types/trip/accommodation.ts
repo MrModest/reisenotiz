@@ -4,9 +4,9 @@ import { TimelineElement } from "@/components/ui/timeline"
 import { Address } from "./address"
 import { routes } from "@/lib/routes"
 
-export interface HotelReservation {
-  checkIn: { available: ZonedInstant; planned?: ZonedInstant }
-  checkOut: { available: ZonedInstant; planned?: ZonedInstant }
+export interface ReservationPoint {
+  available: ZonedInstant;
+  planned?: ZonedInstant
 }
 
 export const ACCOMMODATION_SITE_KINDS = [
@@ -25,16 +25,19 @@ export interface AccommodationSite {
   name: string
   kind: AccommodationSiteKind
   address: Address
+  contact?: string
 }
 
 export interface Accommodation extends TripItem {
   type: 'Accommodation'
   site: AccommodationSite
-  contact: string
-  reservedOn: string
-  guests: number
+  reservedOn?: string // TODO: migrate to `Person`
+  guests: number // TODO: migrate to `Person[]`
   rooms: number
-  reservation: HotelReservation
+  reservation: {
+    checkIn: ReservationPoint
+    checkOut: ReservationPoint
+  }
 }
 
 function isPast(datetime: ZonedInstant): boolean {

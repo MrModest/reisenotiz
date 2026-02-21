@@ -1,8 +1,8 @@
 import { generateUUID } from "@/types/common/uuid"
-import { Flight, Accommodation, TripItem, TripItemType, UUID } from "@/types"
+import { Flight, Accommodation, TripItem, TripItemType } from "@/types"
 import { DateTime } from "@/lib/datetime"
 
-export function createDraftItem(tripId: UUID, type: TripItemType): TripItem {
+export function createDraftItem(tripId: string, type: TripItemType): TripItem {
   const base = {
     id: generateUUID(),
     tripId,
@@ -30,7 +30,7 @@ const AddressDraft = {
   line: ''
 }
 
-function createDraftFlight(base: { id: UUID; tripId: UUID; note: string; attachments: never[] }): Flight {
+function createDraftFlight(base: { id: string; tripId: string; note: string; attachments: never[] }): Flight {
   const localTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const now = DateTime.now(localTimezone)
   const defaultTime = now.toZonedInstant()
@@ -68,7 +68,7 @@ function createDraftFlight(base: { id: UUID; tripId: UUID; note: string; attachm
   }
 }
 
-function createDraftAccommodation(base: { id: UUID; tripId: UUID; note: string; attachments: never[] }): Accommodation {
+function createDraftAccommodation(base: { id: string; tripId: string; note: string; attachments: never[] }): Accommodation {
   const now = DateTime.now()
   const defaultTime = now.toZonedInstant()
 
@@ -78,10 +78,10 @@ function createDraftAccommodation(base: { id: UUID; tripId: UUID; note: string; 
     site: {
       name: '',
       kind: 'Hotel',
-      address: AddressDraft
+      address: AddressDraft,
+      contact: '',
     },
-    contact: '',
-    reservedOn: '',
+    reservedOn: undefined,
     guests: 1,
     rooms: 1,
     reservation: {

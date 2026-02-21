@@ -1,5 +1,4 @@
 import { Attachment } from "./attachment"
-import { UUID } from "@/types/common/uuid"
 
 const tripItemTypes = [
   'Flight',
@@ -12,8 +11,8 @@ const tripItemTypes = [
 export type TripItemType = typeof tripItemTypes[number]
 
 export interface TripItem {
-  id: UUID;
-  tripId: UUID;
+  id: string;
+  tripId: string;
   type: TripItemType;
   note: string;
   attachments: Attachment[];

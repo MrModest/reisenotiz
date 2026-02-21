@@ -1,25 +1,25 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import { Trip, TripItem, UUID } from '@/types'
+import { Trip, TripItem } from '@/types'
 import { generateUUID } from '@/types/common/uuid'
 
 interface TripsState {
   // Persisted State
-  trips: Record<UUID, Trip>
-  tripItems: Record<UUID, TripItem>
+  trips: Record<string, Trip>
+  tripItems: Record<string, TripItem>
 
   // Selectors (use outside of useTripsStore selector to avoid infinite loops)
-  getTripById: (id: UUID) => Trip | undefined
-  getTripItemById: (id: UUID) => TripItem | undefined
+  getTripById: (id: string) => Trip | undefined
+  getTripItemById: (id: string) => TripItem | undefined
 
   // CRUD Actions
-  createTrip: (trip: Omit<Trip, 'id'>) => UUID
-  updateTrip: (id: UUID, updates: Partial<Trip>) => void
-  deleteTrip: (id: UUID) => void
+  createTrip: (trip: Omit<Trip, 'id'>) => string
+  updateTrip: (id: string, updates: Partial<Trip>) => void
+  deleteTrip: (id: string) => void
 
-  createTripItem: (item: Omit<TripItem, 'id'>) => UUID
-  updateTripItem: (id: UUID, item: TripItem) => void
-  deleteTripItem: (id: UUID) => void
+  createTripItem: (item: Omit<TripItem, 'id'>) => string
+  updateTripItem: (id: string, item: TripItem) => void
+  deleteTripItem: (id: string) => void
 }
 
 export const useTripsStore = create<TripsState>()(

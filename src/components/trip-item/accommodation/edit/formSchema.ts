@@ -4,7 +4,7 @@ import { Accommodation, ACCOMMODATION_SITE_KINDS } from '@/types'
 import { formatTo } from '@/lib/datetime'
 
 const reservationPointSchema = z.object({
-  tzone: z.string().min(1, 'Timezone is required'),
+  tzone: schemas.timezone,
   availableDate: schemas.date,
   availableTime: schemas.time,
   plannedDate: schemas.date.optional(),
@@ -12,14 +12,14 @@ const reservationPointSchema = z.object({
 })
 
 export const accommodationFormSchema = z.object({
-  siteName: z.string().min(1, 'Name is required'),
+  siteName: schemas.string('Name', 200),
   siteKind: z.enum(ACCOMMODATION_SITE_KINDS),
   siteAddress: schemas.address,
-  contact: z.string().optional(),
-  reservedOn: z.string().optional(),
-  guests: z.preprocess(Number, z.number().int().min(1, 'At least 1 guest')),
-  rooms: z.preprocess(Number, z.number().int().min(1, 'At least 1 room')),
-  note: z.string().optional(),
+  siteContact: z.string().optional(),
+  reservedOn: schemas.string('Reserved on', 100, false).optional(),
+  guests: z.number().int().optional(),
+  rooms: z.number().int().optional(),
+  note: z.string().trim().optional(),
   attachments: z.array(schemas.attachment).optional(),
   checkIn: reservationPointSchema,
   checkOut: reservationPointSchema,
@@ -34,7 +34,7 @@ export function defaultsFromAccommodation(acc: Accommodation): AccommodationForm
     siteName: site.name,
     siteKind: site.kind,
     siteAddress: site.address,
-    contact: acc.contact,
+    siteContact: site.contact,
     reservedOn: acc.reservedOn,
     guests: acc.guests,
     rooms: acc.rooms,

@@ -1,10 +1,9 @@
 import { TripItemForm } from "@/components/trip-item"
 import { useTrip, useTripItem, useTripsStore } from "@/store"
-import { UUID } from "@/types"
 import { useParams, useNavigate } from "react-router"
 
 export function TripItemEditPage() {
-  const { tripId, itemId } = useParams<{ tripId: UUID; itemId: UUID }>()
+  const { tripId, itemId } = useParams<{ tripId: string; itemId: string }>()
 
   if (!tripId || !itemId) {
     return <NotFound />
@@ -13,7 +12,7 @@ export function TripItemEditPage() {
   return <TripItemEditContent tripId={tripId} itemId={itemId} />
 }
 
-function TripItemEditContent({ tripId, itemId }: { tripId: UUID; itemId: UUID }) {
+function TripItemEditContent({ tripId, itemId }: { tripId: string; itemId: string }) {
   const navigate = useNavigate()
   const trip = useTrip(tripId)
   const tripItem = useTripItem(itemId)

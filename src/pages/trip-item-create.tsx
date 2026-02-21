@@ -1,11 +1,11 @@
 import { TripItemForm } from "@/components/trip-item"
 import { useTrip, useTripsStore } from "@/store"
-import { TripItem, TripItemType, UUID } from "@/types"
+import { TripItem, TripItemType } from "@/types"
 import { useParams, useNavigate, useSearchParams } from "react-router"
 import { createDraftItem } from "@/lib/draft-items"
 
 export function TripItemCreatePage() {
-  const { tripId } = useParams<{ tripId: UUID }>()
+  const { tripId } = useParams<{ tripId: string }>()
   const [searchParams] = useSearchParams()
   const type = searchParams.get('type') as TripItemType | null
 
@@ -16,7 +16,7 @@ export function TripItemCreatePage() {
   return <TripItemCreateContent tripId={tripId} type={type} />
 }
 
-function TripItemCreateContent({ tripId, type }: { tripId: UUID; type: TripItemType }) {
+function TripItemCreateContent({ tripId, type }: { tripId: string; type: TripItemType }) {
   const navigate = useNavigate()
   const trip = useTrip(tripId)
   const createTripItem = useTripsStore(state => state.createTripItem)

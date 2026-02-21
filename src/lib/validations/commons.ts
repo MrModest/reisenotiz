@@ -1,15 +1,29 @@
 import { z } from 'zod'
 
+function stringSchema(fieldName: string, max?: number, required: boolean = true, trim: boolean = true){
+  let s = z.string()
+  if (trim) {
+    s = s.trim()
+  }
+  if (required) {
+    s = s.min(1, `${fieldName} is required`)
+  }
+  if (max !== undefined) {
+    s = s.max(max, `${fieldName} is longer than ${max} characters`)
+  }
+
+  return s
+}
+
 const geoPointSchema = z.object({
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180)
 })
 
 const addressSchema = z.object({
-  country: z.string().min(1, 'Country is required'),
-  city: z.string().min(1, 'City is required'),
-  line: z.string().optional(),
-  geoPoint: geoPointSchema.optional()
+  country: stringSchema('Country', 100),
+  city: stringSchema('City', 100),
+  line: stringSchema('City', 200).optional(),
 })
 
 const personSchema = z.object({
@@ -32,7 +46,15 @@ const timeSchema = z.string()
   .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, 'Time must be in HH:MM format (24-hour)')
 
 const timezoneSchema = z.string()
-  .regex(/^[A-Z][a-z]+\/[A-Z][a-z_]+$/, 'Timezone must be a valid IANA timezone (e.g., America/Los_Angeles)')
+  .min(1, 'Timezone is required')
+  .refine(val => {
+    try {
+      Intl.DateTimeFormat(undefined, { timeZone: val })
+      return true
+    } catch {
+      return false
+    }
+  }, 'Invalid timezone (e.g., Europe/Berlin, UTC, America/New_York)')
 
 const airportCodeSchema = z.string()
   .min(3, 'Code must be 3-4 characters')
@@ -40,6 +62,7 @@ const airportCodeSchema = z.string()
   .transform((v) => v.toUpperCase())
 
 export const schemas = {
+  string: stringSchema,
   geoPoint: geoPointSchema,
   address: addressSchema,
   person: personSchema,

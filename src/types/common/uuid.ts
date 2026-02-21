@@ -1,17 +1,15 @@
 import { v4 as uuidv4, NIL as NIL_UUID, validate } from 'uuid'
 
-export type UUID = string & { readonly _: unique symbol }
-
-export function generateUUID(): UUID {
-  return uuidv4() as UUID
+export function generateUUID(): string {
+  return uuidv4()
 }
 
-export const NoneId = NIL_UUID as UUID
+export const NoneId = NIL_UUID as string
 
-export function toUUID(uuid: string): UUID {
+export function validated(uuid: string): string {
   if (!validate(uuid)) {
     throw new Error(`The string '${uuid}' is not a valid UUID!`)
   }
 
-  return uuid as UUID
+  return uuid
 }
