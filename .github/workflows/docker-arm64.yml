@@ -13,7 +13,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
     with:
       platform: linux/arm64
       runner: ubuntu-24.04-arm

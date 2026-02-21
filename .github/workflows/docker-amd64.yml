@@ -13,7 +13,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
     with:
       platform: linux/amd64
       runner: ubuntu-latest
