@@ -8,6 +8,7 @@ import { ItemHeader } from '@/components/trip-item/item-header'
 import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '@/components/trip-item/field-input'
 import { FieldSelect } from '@/components/trip-item/field-select'
+import { FieldTimezone } from '@/components/trip-item/field-timezone'
 import { FieldDatePicker } from '@/components/trip-item/field-date-picker'
 import { FieldTimePicker } from '@/components/trip-item/field-time-picker'
 import { formatTo } from '@/lib/datetime'
@@ -64,7 +65,7 @@ function ReservationPointFields({ point }: { point: 'checkIn' | 'checkOut' }) {
   return (
     <>
       <FieldSet className='flex-row items-end gap-2 mt-2'>
-        <FieldInput name={`${point}.tzone`} label='Timezone' required placeholder='Europe/Berlin' className='flex-1' />
+        <FieldTimezone name={`${point}.tzone`} label='Timezone' required className='flex-1' />
       </FieldSet>
       <FieldSet className='grid grid-cols-2 md:flex md:flex-row items-end gap-2 mt-4'>
         <FieldDatePicker className='md:w-32' required name={`${point}.availableDate`} label='Available Date' />

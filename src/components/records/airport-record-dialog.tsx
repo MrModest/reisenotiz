@@ -17,6 +17,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import type { Airport } from '@/types'
+import { FieldTimezone } from '../trip-item/field-timezone'
 
 interface AirportRecordDialogProps {
   open: boolean
@@ -121,7 +122,7 @@ export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportR
               </div>
             </FieldSet>
 
-            <FieldInput name='tzone' label='Timezone' placeholder='e.g. Europe/Berlin' />
+            <FieldTimezone name='tzone' label='Timezone' />
 
             <DialogFooter>
               <Button type='button' variant='outline' onClick={onClose}>
