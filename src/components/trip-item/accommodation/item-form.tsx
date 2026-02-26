@@ -125,18 +125,18 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, title
         </FieldSet>
         <FieldSet className='mt-4'>
           <FieldInput name='siteAddress.line' label='Address Line' placeholder='Street, floor, etc.' />
+          <FieldInput name='siteContact' label='Phone / Contact' />
+        </FieldSet>
+
+        <Separator className='mt-4' />
+
+        <FieldSet className='flex-row gap-2 mt-4'>
+          <FieldInput className='grow' name='reservedOn' label='Reserved By' />
+          <FieldInput className='w-16' name='guests' label='Guests' type='number' />
+          <FieldInput className='w-16' name='rooms' label='Rooms' type='number' />
         </FieldSet>
 
         <Separator className='my-4' />
-
-        <FieldSet className='flex-row gap-2'>
-          <FieldInput name='reservedOn' label='Reserved By' />
-          <FieldInput name='contact' label='Phone / Contact' />
-        </FieldSet>
-        <FieldSet className='flex-row gap-2 mt-4'>
-          <FieldInput name='guests' label='Guests' type='number' />
-          <FieldInput name='rooms' label='Rooms' type='number' />
-        </FieldSet>
 
         <CollapsibleSection
           label='Check-In'
