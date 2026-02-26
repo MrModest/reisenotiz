@@ -72,11 +72,11 @@ interface FlightItemFormProps {
   flight: Flight
   onSubmit: (flight: Flight) => void
   onCancel: () => void
-  title?: string
+  isCreate: boolean
   className?: string
 }
 
-export function FlightItemForm({ flight, onSubmit, onCancel, title, className }: FlightItemFormProps) {
+export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className }: FlightItemFormProps) {
   const form = useForm<FlightFormSchema>({
     resolver: zodResolver(flightFormSchema),
     defaultValues: defaultsFromFlight(flight),
@@ -93,7 +93,7 @@ export function FlightItemForm({ flight, onSubmit, onCancel, title, className }:
       <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(handleSubmit)}>
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
-            title={title || 'Flight'}
+            title={isCreate ? 'New Flight' : 'Edit Flight'}
             icon='flight'
             buttons={[
               { icon: 'save', isSubmit: true },

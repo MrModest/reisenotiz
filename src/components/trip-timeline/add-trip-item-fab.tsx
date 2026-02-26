@@ -16,7 +16,7 @@ const tripItemTypes: TripItemTypeConfig[] = [
   { type: 'Flight', icon: 'flight', label: 'Flight' },
   { type: 'LongLandTransfer', icon: 'car', label: 'Land Transfer' },
   { type: 'PublicTransport', icon: 'train', label: 'Transport' },
-  { type: 'Accommodation', icon: 'bed', label: 'Accommodation' },
+  { type: 'Accommodation', icon: 'accommodation', label: 'Accommodation' },
   { type: 'POI', icon: 'map-pin', label: 'Point of Interest' },
 ]
 

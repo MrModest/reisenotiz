@@ -41,7 +41,7 @@ export type IconName = 'arrow-right'
   | 'add'
   | 'car'
   | 'train'
-  | 'bed'
+  | 'accommodation'
   | 'trash'
   | 'chevron-down'
   | 'x'
@@ -80,9 +80,9 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
     case 'flight-arrival':
       return <DynamicIcon name='plane-landing' className={style} />
     case 'hotel-checkIn':
-      return <DynamicIcon name='hotel' className={style} />
+      return <DynamicIcon name='square-arrow-right-enter' className={style} />
     case 'hotel-checkOut':
-      return <DynamicIcon name='hotel' className={style} />
+      return <DynamicIcon name='square-arrow-right-exit' className={style} />
     case 'map-pin':
       return <DynamicIcon name='map-pin' className={style} />
     case 'trip':
@@ -131,7 +131,7 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='car' className={style} />
     case 'train':
       return <DynamicIcon name='train' className={style} />
-    case 'bed':
+    case 'accommodation':
       return <DynamicIcon name='bed' className={style} />
     case 'chevrons-up-down':
       return <DynamicIcon name='chevrons-up-down' className={style} />

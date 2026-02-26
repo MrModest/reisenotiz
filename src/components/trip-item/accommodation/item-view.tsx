@@ -29,7 +29,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
       <div className='flex justify-between items-center'>
         <ItemHeader
           title={`${accommodation.site.kind} Details`}
-          icon='hotel-checkIn'
+          icon='accommodation'
           buttons={[
             { icon: 'edit', onClick: () => navigate('edit') },
             { icon: 'trash', onClick: () => setDeleteDialogOpen(true) }

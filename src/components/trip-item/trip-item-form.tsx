@@ -12,58 +12,47 @@ interface TripItemEditProps {
   className?: string
 }
 
-export function TripItemForm({ trip, tripItem, onSave, onCancel, isCreate, className }: TripItemEditProps) {
+export function TripItemForm({ trip, tripItem, onSave, onCancel, isCreate = false, className }: TripItemEditProps) {
   const result = getEdit({ tripItem, onSave, onCancel, isCreate, className })
 
   useHeaderTitle(trip.name, 'trip')
 
-  return result.view
+  return result
 }
 
 function getEdit({ tripItem, onSave, onCancel, isCreate, className }: {
   tripItem: TripItem
   onSave: (item: TripItem) => void
   onCancel: () => void
-  isCreate?: boolean
+  isCreate: boolean
   className?: string
 }) {
   switch (tripItem.type) {
     case 'Flight':
-      return {
-        view: (
-          <FlightItemForm
-            flight={tripItem as Flight}
-            onSubmit={onSave}
-            onCancel={onCancel}
-            title={isCreate ? 'New Flight' : 'Edit Flight'}
-            className={className}
-          />
-        ),
-        title: isCreate ? 'New Flight' : 'Edit Flight',
-        icon: 'flight'
-      }
+      return (
+        <FlightItemForm
+          flight={tripItem as Flight}
+          onSubmit={onSave}
+          onCancel={onCancel}
+          isCreate={isCreate}
+          className={className}
+        />
+      )
     case 'Accommodation':
-      return {
-        view: (
-          <AccommodationItemForm
-            accommodation={tripItem as Accommodation}
-            onSubmit={onSave}
-            onCancel={onCancel}
-            title={isCreate ? 'New Accommodation' : 'Edit Accommodation'}
-            className={className}
-          />
-        ),
-        title: isCreate ? 'New Accommodation' : 'Edit Accommodation',
-        icon: 'hotel-checkIn'
-      }
+      return (
+        <AccommodationItemForm
+          accommodation={tripItem as Accommodation}
+          onSubmit={onSave}
+          onCancel={onCancel}
+          isCreate={isCreate}
+          className={className}
+        />
+      )
     default:
-      return {
-        view: (
-          <div className={className}>
-            <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
-          </div>
-        ),
-        title: 'Unsupported Type'
-      }
+      return (
+        <div className={className}>
+          <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
+        </div>
+      )
   }
 }

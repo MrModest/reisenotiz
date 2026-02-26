@@ -83,11 +83,11 @@ interface AccommodationItemFormProps {
   accommodation: Accommodation
   onSubmit: (accommodation: Accommodation) => void
   onCancel: () => void
-  title?: string
+  isCreate: boolean
   className?: string
 }
 
-export function AccommodationItemForm({ accommodation, onSubmit, onCancel, title, className }: AccommodationItemFormProps) {
+export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCreate, className }: AccommodationItemFormProps) {
   const form = useForm<AccommodationFormSchema>({
     resolver: zodResolver(accommodationFormSchema),
     defaultValues: defaultsFromAccommodation(accommodation),
@@ -105,8 +105,8 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, title
 
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
-            title={title || 'Accommodation'}
-            icon='hotel-checkIn'
+            title={isCreate ? 'New Accommodation' : 'Edit Accommodation'}
+            icon='accommodation'
             buttons={[
               { icon: 'save', isSubmit: true },
               { icon: 'cancel', onClick: onCancel }
