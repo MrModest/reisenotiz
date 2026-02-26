@@ -44,7 +44,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
         <DateRange.Separator label={duration} />
         <FlightPoint point={flight.arrival} />
       </DateRange>
-      <div className='grid grid-cols-2 mt-4 justify-between'>
+      <div className='grid grid-cols-2 gap-2 mt-4 justify-between'>
         <FieldView label='Airline' value={flight.carrier} />
         <FieldView label='Flight' value={flight.flightNumber} />
         <FieldView label='Booking' value={flight.bookingCode} />

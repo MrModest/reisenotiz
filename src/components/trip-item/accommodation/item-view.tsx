@@ -47,7 +47,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
           time={accommodation.reservation.checkOut}
         />
       </DateRange>
-      <div className='mt-4 grid grid-cols-1'>
+      <div className='mt-4 grid grid-cols-1 gap-2'>
           <FieldView label='Name' value={accommodation.site.name} />
           <FieldView
             label='Address'
@@ -56,7 +56,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
           />
       </div>
       <SeparatorWithLabel label='Details' className='mt-2' />
-      <div className='grid grid-cols-2 gap-x-2 justify-between'>
+      <div className='grid grid-cols-2 gap-2 justify-between'>
         <FieldView label='Reserved On' value={accommodation.reservedOn || ''} />
         <FieldView label='Guests' value={accommodation.guests} />
         <FieldView label='Rooms' value={accommodation.rooms} />
