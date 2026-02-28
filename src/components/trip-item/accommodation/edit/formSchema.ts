@@ -12,6 +12,7 @@ const reservationPointSchema = z.object({
 })
 
 export const accommodationFormSchema = z.object({
+  siteId: z.string().optional(),
   siteName: schemas.string('Name', 200),
   siteKind: z.enum(ACCOMMODATION_SITE_KINDS),
   siteAddress: schemas.address,
@@ -31,6 +32,7 @@ export function defaultsFromAccommodation(acc: Accommodation): AccommodationForm
   const { site, reservation } = acc
 
   return {
+    siteId: site.id,
     siteName: site.name,
     siteKind: site.kind,
     siteAddress: site.address,

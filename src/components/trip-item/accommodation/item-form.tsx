@@ -1,32 +1,30 @@
-import { FormProvider, useForm, useWatch } from 'react-hook-form'
+import { useState } from 'react'
+import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Accommodation, AccommodationSiteKind } from '@/types'
+import { Accommodation } from '@/types'
 import { defaultsFromAccommodation, accommodationFormSchema, AccommodationFormSchema } from './edit/formSchema'
 import { Field, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
 import { ItemHeader } from '@/components/trip-item/item-header'
 import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '@/components/trip-item/field-input'
-import { FieldSelect } from '@/components/trip-item/field-select'
 import { FieldTimezone } from '@/components/trip-item/field-timezone'
 import { FieldDatePicker } from '@/components/trip-item/field-date-picker'
 import { FieldTimePicker } from '@/components/trip-item/field-time-picker'
 import { formatTo } from '@/lib/datetime'
 import { convertTime } from '@/components/trip-item/utils'
 import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/icon'
+import { getCountryFlag } from '@/lib/utils/country-flag'
 import { CollapsibleSection } from '@/components/trip-item/collapsible-section'
 import { NoteSection } from '@/components/trip-item/section-note'
 import { AttachmentsSection } from '@/components/trip-item/section-attachments'
+import { AccommodationSelector } from '@/components/ui/combobox/accommodation'
+import { useAccommodations } from '@/hooks/use-accommodations'
+import { AccommodationRecordDialog } from '@/components/records/accommodation-record-dialog'
+import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
+import { Badge } from '@/components/ui/badge'
 
-const SITE_KIND_OPTIONS: { value: AccommodationSiteKind; label: string }[] = [
-  { value: 'Hotel', label: 'Hotel' },
-  { value: 'Hostel', label: 'Hostel' },
-  { value: 'Apartment', label: 'Apartment' },
-  { value: 'Guesthouse', label: 'Guesthouse' },
-  { value: 'BnB', label: 'Bed & Breakfast' },
-  { value: 'Resort', label: 'Resort' },
-  { value: 'Other', label: 'Other' },
-]
 
 function ReservationPointPreview({ point }: { point: 'checkIn' | 'checkOut' }) {
   const availableDate: string = useWatch({ name: `${point}.availableDate` })
@@ -88,6 +86,11 @@ interface AccommodationItemFormProps {
 }
 
 export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCreate, className }: AccommodationItemFormProps) {
+  const accommodations = useAccommodations()
+  const [selectedRecord, setSelectedRecord] = useState<AccommodationSiteRecord | null>(() =>
+    accommodation.site.id ? (accommodations.find((r) => r.id === accommodation.site.id) ?? null) : null
+  )
+
   const form = useForm<AccommodationFormSchema>({
     resolver: zodResolver(accommodationFormSchema),
     defaultValues: defaultsFromAccommodation(accommodation),
@@ -114,19 +117,9 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCre
           />
         </Field>
 
-        <FieldSet className='flex-row gap-2 mt-4'>
-          <FieldInput name='siteName' label='Name' required className='flex-1' />
-          <FieldSelect name='siteKind' label='Type' required className='w-36' options={SITE_KIND_OPTIONS} />
-        </FieldSet>
+        <AccommodationSiteSelector accommodations={accommodations} selected={selectedRecord} onSelectedChange={setSelectedRecord} />
 
-        <FieldSet className='flex-row gap-2 mt-4'>
-          <FieldInput name='siteAddress.country' label='Country' required />
-          <FieldInput name='siteAddress.city' label='City' required />
-        </FieldSet>
-        <FieldSet className='mt-4'>
-          <FieldInput name='siteAddress.line' label='Address Line' placeholder='Street, floor, etc.' />
-          <FieldInput name='siteContact' label='Phone / Contact' />
-        </FieldSet>
+        {selectedRecord && <AccommodationSitePreview record={selectedRecord} />}
 
         <Separator className='mt-4' />
 
@@ -142,7 +135,6 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCre
           label='Check-In'
           icon='hotel-checkIn'
           preview={<ReservationPointPreview point='checkIn' />}
-          defaultOpen={false}
           className='mb-2 mt-6'
         >
           <ReservationPointFields point='checkIn' />
@@ -152,7 +144,6 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCre
           label='Check-Out'
           icon='hotel-checkOut'
           preview={<ReservationPointPreview point='checkOut' />}
-          defaultOpen={false}
           className='mb-2 mt-6'
         >
           <ReservationPointFields point='checkOut' />
@@ -174,6 +165,71 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCre
   )
 }
 
+interface AccommodationSiteSelectorProps {
+  accommodations: AccommodationSiteRecord[]
+  selected: AccommodationSiteRecord | null
+  onSelectedChange: (record: AccommodationSiteRecord | null) => void
+}
+
+function AccommodationSiteSelector({ accommodations, selected, onSelectedChange }: AccommodationSiteSelectorProps) {
+  const { setValue } = useFormContext<AccommodationFormSchema>()
+  const [dialogOpen, setDialogOpen] = useState(false)
+
+  function handleSelect(record: AccommodationSiteRecord | null) {
+    onSelectedChange(record)
+    setValue('siteId', record?.id)
+    if (!record) return
+    setValue('siteName', record.name)
+    setValue('siteKind', record.kind)
+    setValue('siteAddress', record.address)
+    setValue('siteContact', record.contact || '')
+  }
+
+  return (
+    <FieldSet className='flex-row items-end gap-2 mt-4'>
+      <div className='flex-1'>
+        <AccommodationSelector
+          items={accommodations}
+          selected={selected}
+          onSelect={handleSelect}
+        />
+      </div>
+      <Button
+        type='button'
+        variant='outline'
+        onClick={() => setDialogOpen(true)}
+      >
+        <Icon name={selected ? 'edit' : 'add'} />
+        {selected ? 'Edit' : 'Add New'}
+      </Button>
+      <AccommodationRecordDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        accommodation={selected}
+        onSave={handleSelect}
+      />
+    </FieldSet>
+  )
+}
+
+function AccommodationSitePreview({ record }: { record: AccommodationSiteRecord }) {
+  const flag = record.address?.country ? getCountryFlag(record.address.country) : '🌐'
+  return (
+    <div className='flex items-start gap-2 mt-2 text-sm'>
+      <span className='text-xl'>{flag}</span>
+      <div>
+        <div className='font-medium flex items-center gap-1'>
+          <Badge className='rounded-xs' variant='secondary'>{record.kind}</Badge>
+          {record.name}
+        </div>
+        <div className='text-muted-foreground'>
+          {record.address.line} · {record.address.country}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function convert(data: AccommodationFormSchema, tripId: string, itemId: string): Accommodation {
   return {
     type: 'Accommodation',
@@ -182,6 +238,7 @@ function convert(data: AccommodationFormSchema, tripId: string, itemId: string):
     note: data.note || '',
     attachments: (data.attachments || []).map(a => ({ ...a, tripItemId: itemId, note: a.note || '' })),
     site: {
+      id: data.siteId,
       name: data.siteName,
       kind: data.siteKind,
       address: {

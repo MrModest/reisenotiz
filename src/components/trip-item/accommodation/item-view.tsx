@@ -47,7 +47,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
         />
       </div>
       <div className='mt-4 grid grid-cols-1 gap-2'>
-          <FieldView label='Name' value={accommodation.site.name} />
+          <FieldView label={`Name (${accommodation.site.kind})`} value={accommodation.site.name} />
           <FieldView
             label='Address'
             value={accommodation.site.address.line || 'Unknown'}

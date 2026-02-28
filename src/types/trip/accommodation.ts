@@ -22,6 +22,7 @@ export const ACCOMMODATION_SITE_KINDS = [
 export type AccommodationSiteKind = typeof ACCOMMODATION_SITE_KINDS[number]
 
 export interface AccommodationSite {
+  id?: string
   name: string
   kind: AccommodationSiteKind
   address: Address
