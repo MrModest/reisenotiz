@@ -18,5 +18,6 @@ export const routes = {
   records: {
     root: '/records',
     airports: '/records/airports',
+    accommodations: '/records/accommodations',
   },
 } as const

@@ -28,6 +28,16 @@ export function RecordsPage() {
           </ItemContent>
           <Icon name='chevron-right' className='size-4 text-muted-foreground' />
         </Item>
+        <Item variant='outline' render={<Link to={routes.records.accommodations} />}>
+          <ItemMedia variant='icon'>
+            <Icon name='accommodation' />
+          </ItemMedia>
+          <ItemContent>
+            <ItemTitle>Accommodations</ItemTitle>
+            <ItemDescription>Manage custom accommodation records</ItemDescription>
+          </ItemContent>
+          <Icon name='chevron-right' className='size-4 text-muted-foreground' />
+        </Item>
       </ItemGroup>
     </div>
   )

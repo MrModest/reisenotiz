@@ -9,6 +9,7 @@ import { TripItemCreatePage } from "@/pages/trip-item-create"
 import { TripItemEditPage } from "@/pages/trip-item-edit"
 import { RecordsPage } from "@/pages/records"
 import { AirportsRecordsPage } from "@/pages/records/airports"
+import { AccommodationsRecordsPage } from "@/pages/records/accommodations"
 import { routes } from "@/lib/routes"
 
 export const router = createBrowserRouter([
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
       {
         path: routes.records.airports,
         Component: AirportsRecordsPage
+      },
+      {
+        path: routes.records.accommodations,
+        Component: AccommodationsRecordsPage
       }
     ]
   },
