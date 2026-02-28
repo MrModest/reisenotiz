@@ -10,8 +10,7 @@ import { ItemHeader } from '../item-header'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { FieldPersonView } from '../field-person-view'
-import { FieldAttachmentView } from '../field-attachment-view'
+import { FieldChipsView } from '../field-chips-view'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -52,6 +51,14 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
         <FieldView label='Booking' value={flight.bookingCode} />
         <FieldView label='Seat' value={flight.seat} />
       </div>
+      <div className='flex flex-col gap-2 mt-2'>
+        {flight.passengers.length > 0 && (
+          <FieldChipsView label='Passengers' icon='person' items={flight.passengers.map(p => ({ value: p.fullname }))} />
+        )}
+        {flight.attachments.length > 0 && (
+          <FieldChipsView label='Attachments' icon='attachment' items={flight.attachments.map(a => ({ value: a.name, link: a.link }))} />
+        )}
+      </div>
       <SeparatorWithLabel label='Details' />
       <Tabs defaultValue='departure'>
         <TabsList>
@@ -65,28 +72,6 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
           <AirportDetails airport={flight.arrival.airport} />
         </TabsContent>
       </Tabs>
-
-      {flight.passengers.length > 0 && (
-        <>
-          <SeparatorWithLabel label='Passengers' />
-          <div className='flex flex-wrap gap-2'>
-            {flight.passengers.map(p => (
-              <FieldPersonView key={p.id} person={p} />
-            ))}
-          </div>
-        </>
-      )}
-
-      {flight.attachments.length > 0 && (
-        <>
-          <SeparatorWithLabel label='Attachments' />
-          <div className='flex flex-wrap gap-2'>
-            {flight.attachments.map(a => (
-              <FieldAttachmentView key={a.id} attachment={a} />
-            ))}
-          </div>
-        </>
-      )}
 
       <ConfirmDialog
         open={deleteDialogOpen}
