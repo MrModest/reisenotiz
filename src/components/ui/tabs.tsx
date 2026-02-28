@@ -5,15 +5,19 @@ import { cn } from '@/lib/utils'
 
 function Tabs({
   className,
+  variant = 'default',
   orientation = 'horizontal',
   ...props
-}: TabsPrimitive.Root.Props) {
+}: TabsPrimitive.Root.Props & { variant?: 'default' | 'contained' }) {
   return (
     <TabsPrimitive.Root
       data-slot='tabs'
       data-orientation={orientation}
+      data-variant={variant}
       className={cn(
-        'gap-2 group/tabs flex data-[orientation=horizontal]:flex-col',
+        'group/tabs flex data-[orientation=horizontal]:flex-col',
+        variant === 'default' && 'gap-2',
+        variant === 'contained' && 'border border-border rounded-xs overflow-hidden gap-0',
         className
       )}
       {...props}
@@ -45,7 +49,11 @@ function TabsList({
     <TabsPrimitive.List
       data-slot='tabs-list'
       data-variant={variant}
-      className={cn(tabsListVariants({ variant }), className)}
+      className={cn(
+        tabsListVariants({ variant }),
+        'group-data-[variant=contained]/tabs:w-full group-data-[variant=contained]/tabs:rounded-none group-data-[variant=contained]/tabs:border-b group-data-[variant=contained]/tabs:border-border',
+        className
+      )}
       {...props}
     />
   )
@@ -71,7 +79,11 @@ function TabsContent({ className, ...props }: TabsPrimitive.Panel.Props) {
   return (
     <TabsPrimitive.Panel
       data-slot='tabs-content'
-      className={cn('text-xs/relaxed flex-1 outline-none', className)}
+      className={cn(
+        'text-xs/relaxed flex-1 outline-none',
+        'group-data-[variant=contained]/tabs:p-3',
+        className
+      )}
       {...props}
     />
   )

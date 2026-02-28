@@ -29,7 +29,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
   }
 
   return (
-    <div className={cn('w-default', className)}>
+    <div className={cn('w-default mb-10', className)}>
       <div className='flex justify-between items-center w-full'>
         <ItemHeader
           title='Flight Details'
@@ -59,11 +59,17 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
           <FieldChipsView label='Attachments' icon='attachment' items={flight.attachments.map(a => ({ value: a.name, link: a.link }))} />
         )}
       </div>
-      <SeparatorWithLabel label='Details' />
-      <Tabs defaultValue='departure'>
-        <TabsList>
-          <TabsTrigger value='departure'>Departure</TabsTrigger>
-          <TabsTrigger value='arrival'>Arrival</TabsTrigger>
+      <SeparatorWithLabel className='my-2' label='Details' />
+      <Tabs defaultValue='departure' variant='contained'>
+        <TabsList variant='line'>
+          <TabsTrigger value='departure'>
+            <Icon name='flight-departure' className='size-4' />
+            Departure
+          </TabsTrigger>
+          <TabsTrigger value='arrival'>
+            <Icon name='flight-arrival' className='size-4' />
+            Arrival
+          </TabsTrigger>
         </TabsList>
         <TabsContent value='departure'>
           <AirportDetails airport={flight.departure.airport} />
