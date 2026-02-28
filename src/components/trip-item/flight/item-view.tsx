@@ -10,6 +10,8 @@ import { ItemHeader } from '../item-header'
 import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { FieldPersonView } from '../field-person-view'
+import { FieldAttachmentView } from '../field-attachment-view'
 
 interface FlightItemViewProps {
   flight: Flight
@@ -63,6 +65,28 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
           <AirportDetails airport={flight.arrival.airport} />
         </TabsContent>
       </Tabs>
+
+      {flight.passengers.length > 0 && (
+        <>
+          <SeparatorWithLabel label='Passengers' />
+          <div className='flex flex-wrap gap-2'>
+            {flight.passengers.map(p => (
+              <FieldPersonView key={p.id} person={p} />
+            ))}
+          </div>
+        </>
+      )}
+
+      {flight.attachments.length > 0 && (
+        <>
+          <SeparatorWithLabel label='Attachments' />
+          <div className='flex flex-wrap gap-2'>
+            {flight.attachments.map(a => (
+              <FieldAttachmentView key={a.id} attachment={a} />
+            ))}
+          </div>
+        </>
+      )}
 
       <ConfirmDialog
         open={deleteDialogOpen}
