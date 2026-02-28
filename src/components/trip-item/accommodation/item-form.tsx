@@ -3,7 +3,7 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Accommodation } from '@/types'
 import { defaultsFromAccommodation, accommodationFormSchema, AccommodationFormSchema } from './edit/formSchema'
-import { Field, FieldSet } from '@/components/ui/field'
+import { Field, FieldLegend, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
 import { ItemHeader } from '@/components/trip-item/item-header'
 import { Separator } from '@/components/ui/separator'
@@ -65,14 +65,20 @@ function ReservationPointFields({ point }: { point: 'checkIn' | 'checkOut' }) {
       <FieldSet className='flex-row items-end gap-2 mt-2'>
         <FieldTimezone name={`${point}.tzone`} label='Timezone' required className='flex-1' />
       </FieldSet>
-      <FieldSet className='grid grid-cols-2 md:flex md:flex-row items-end gap-2 mt-4'>
-        <FieldDatePicker className='md:w-32' required name={`${point}.availableDate`} label='Available Date' />
-        <FieldTimePicker className='md:w-20' required name={`${point}.availableTime`} label='Time' />
-      </FieldSet>
-      <FieldSet className='grid grid-cols-2 md:flex md:flex-row items-end gap-2 mt-2'>
-        <FieldDatePicker className='md:w-32' name={`${point}.plannedDate`} label='Planned Date' />
-        <FieldTimePicker className='md:w-20' name={`${point}.plannedTime`} label='Time' />
-      </FieldSet>
+      <div className='grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-end gap-2 mt-4'>
+        <FieldSet className='flex-row justify-between gap-2'>
+          <FieldLegend>Available</FieldLegend>
+          <FieldDatePicker className='md:w-32' required name={`${point}.availableDate`} label='Date' />
+          <FieldTimePicker className='md:w-20' required name={`${point}.availableTime`} label='Time' />
+        </FieldSet>
+        <Separator orientation='vertical' className='self-stretch hidden md:block' />
+        <Separator orientation='horizontal' className='self-stretch my-2 block md:hidden' />
+        <FieldSet className='flex-row justify-between gap-2'>
+          <FieldLegend>Planned</FieldLegend>
+          <FieldDatePicker className='md:w-32' name={`${point}.plannedDate`} label='Date' />
+          <FieldTimePicker className='md:w-20' name={`${point}.plannedTime`} label='Time' />
+        </FieldSet>
+      </div>
     </>
   )
 }
