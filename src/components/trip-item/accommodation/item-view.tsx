@@ -54,13 +54,15 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
             value={accommodation.site.address.line || 'Unknown'}
             subValue={`${accommodation.site.address.country}, ${accommodation.site.address.city}`}
           />
+          {accommodation.site.contact && (
+            <FieldView label='Contact' value={accommodation.site.contact} />
+          )}
       </div>
       <SeparatorWithLabel label='Details' className='mt-2' />
       <div className='grid grid-cols-2 gap-2 justify-between'>
         <FieldView label='Reserved On' value={accommodation.reservedOn || ''} />
         <FieldView label='Guests' value={accommodation.guests} />
         <FieldView label='Rooms' value={accommodation.rooms} />
-        <FieldView label='Phone' value={accommodation.site.contact  || ''} />
       </div>
 
       <ConfirmDialog
