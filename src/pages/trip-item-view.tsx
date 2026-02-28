@@ -29,7 +29,7 @@ function TripItemViewContent({ tripId, itemId }: { tripId: string; itemId: strin
   }
 
   return (
-    <TripItemView trip={trip} tripItem={tripItem} onDelete={handleDelete} />
+    <TripItemView className='mb-10' trip={trip} tripItem={tripItem} onDelete={handleDelete} />
   )
 }
 

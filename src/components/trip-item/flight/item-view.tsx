@@ -29,7 +29,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
   }
 
   return (
-    <div className={cn('w-default mb-10', className)}>
+    <div className={cn('w-default', className)}>
       <div className='flex justify-between items-center w-full'>
         <ItemHeader
           title='Flight Details'
@@ -57,6 +57,9 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
         )}
         {flight.attachments.length > 0 && (
           <FieldChipsView label='Attachments' icon='attachment' items={flight.attachments.map(a => ({ value: a.name, link: a.link }))} />
+        )}
+        {flight.note && (
+          <FieldView label='Notes' value={flight.note} />
         )}
       </div>
       <SeparatorWithLabel className='my-2' label='Details' />

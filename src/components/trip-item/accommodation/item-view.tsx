@@ -65,6 +65,8 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
         <FieldView label='Rooms' value={accommodation.rooms} />
       </div>
 
+      {accommodation.note && <FieldView label='Notes' value={accommodation.note} className='mt-4' />}
+
       <ConfirmDialog
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
