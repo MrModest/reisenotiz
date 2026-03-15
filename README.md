@@ -46,6 +46,17 @@ pnpm preview
 
 See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
 
+## AI Disclamer
+
+- The project is defenetely **NOT** vibe-coded.
+- I'm a Software Engineer, and I wrote the majority of the code manually myself.
+- I do use AI, but do not trust it more than I would trust a random answer from Stack Overflow
+- I won't accept AI's code until it fits my vision of code quality. I feeds it with code examples written by myself manually.
+- Even by the app UX/UI you can see that AI would generate something less shitty than I did :D
+
 ## License
 
-TBD
+Right now it's BSL 1.1, but I might consider a change in the future. While I'm not decided, I want to secure myself via having more restrictive license. Relaxing the license later is easir than restricting it.
+
+While the code can't be considered trully open-sorsed, I think it still fits under "Fair Code" terms.
+See more here: https://fair.io/licenses/
