@@ -1,0 +1,51 @@
+# Reisenotiz
+
+A self-hosted, offline-first travel planning PWA for keeping track of trips, flights, accommodations, and travel documents — all stored locally in your browser.
+
+> **MVP Stage** — This project is in early development. Features are limited, data is stored in browser localStorage only (no backend sync yet), and breaking changes may occur. Use at your own risk and back up any important data.
+
+## Features
+
+- **Trip Management** — Create and organize trips with timeline views
+- **Flight Tracking** — Log flights with airport lookup (IATA codes, timezones)
+- **Accommodations** — Track hotels and other lodging with check-in/out details
+- **Custom Records** — Save your own airports and accommodation sites for quick reuse
+- **Offline-First PWA** — Works without internet, installable on mobile and desktop
+- **Dark Mode** — Light and dark theme support
+- **Passenger Management** — Track travelers across trip items
+- **Attachment Support** — Add notes and attachments to trip items
+
+## Installation
+
+### Docker Compose (example)
+
+```yaml
+services:
+  app:
+    image: ghcr.io/mrmodest/reisenotiz:sha-5d84e0b-arm64:edge-amd64 # change tag to `edge-arm64` for ARM64 builds
+    ports:
+      - "8080:8080"
+    # Uncomment to run with custom UID/GID
+    # user: "1000:1000"
+    restart: unless-stopped
+```
+
+1. Open [http://localhost:8080](http://localhost:8080) in your browser.
+
+### Build from source
+
+Requires Node.js 24+ and pnpm.
+
+```bash
+pnpm install
+pnpm build
+pnpm preview
+```
+
+## Roadmap
+
+See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
+
+## License
+
+TBD
