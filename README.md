@@ -51,7 +51,7 @@ See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
 - The project is defenetely **NOT** vibe-coded.
 - I'm a Software Engineer, and I wrote the majority of the code manually myself.
 - I do use AI, but do not trust it more than I would trust a random answer from Stack Overflow
-- I won't accept AI's code until it fits my vision of code quality. I feeds it with code examples written by myself manually.
+- I won't accept AI's code until it fits my vision of code quality. I feed it with code examples written by myself manually.
 - Even by the app UX/UI you can see that AI would generate something less shitty than I did :D
 
 ## License
