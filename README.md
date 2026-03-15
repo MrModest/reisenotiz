@@ -30,7 +30,7 @@ A self-hosted, offline-first travel planning PWA for keeping track of trips, fli
 ```yaml
 services:
   app:
-    image: ghcr.io/mrmodest/reisenotiz:sha-5d84e0b-arm64:edge-amd64 # change tag to `edge-arm64` for ARM64 builds
+    image: ghcr.io/mrmodest/reisenotiz:edge-amd64 # change tag to `edge-arm64` for ARM64 builds
     ports:
       - "8080:8080"
     # Uncomment to run with custom UID/GID
