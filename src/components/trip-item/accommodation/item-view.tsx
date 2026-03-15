@@ -1,4 +1,4 @@
-import { formatTo, ZonedInstant } from '@/lib/datetime'
+import { formatTo } from '@/lib/datetime'
 import type { Accommodation } from '@/types'
 import { FieldView } from '@/components/trip-item/field-view'
 import { Separator, SeparatorWithLabel } from '@/components/ui/separator'
@@ -38,12 +38,12 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
       <div className='grid grid-cols-[1fr_auto_1fr] gap-3 bg-card py-2 px-3 rounded-xs'>
         <ReservationPoint
           label='Check In'
-          time={accommodation.reservation.checkIn}
+          stayInterval={accommodation.stayInterval}
         />
         <Separator orientation='vertical' />
         <ReservationPoint
           label='Check Out'
-          time={accommodation.reservation.checkOut}
+          stayInterval={accommodation.stayInterval}
         />
       </div>
       <div className='mt-4 grid grid-cols-1 gap-2'>
@@ -80,15 +80,19 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
 
 interface ReservationPointProps {
   label: string
-  time: { available: ZonedInstant; planned?: ZonedInstant }
+  stayInterval: Accommodation['stayInterval']
 }
 
-function ReservationPoint({ label, time }: ReservationPointProps) {
+function ReservationPoint({ label, stayInterval }: ReservationPointProps) {
+  const time = label === 'Check In'
+    ? stayInterval.planned?.in || stayInterval.provided.in
+    : stayInterval.planned?.out || stayInterval.provided.out
+
   return (
     <div className={cn('flex flex-col', { 'items-end': label === 'Check Out' })}>
       <span className='text-xs text-muted-foreground font-medium uppercase tracking-wide mb-2'>{label}</span>
-      <span className='text-base font-semibold tracking-wide uppercase'>{formatTo.dayShort(time.planned || time.available)}</span>
-      <span className='text-lg'>{formatTo.time(time.planned || time.available)}</span>
+      <span className='text-base font-semibold tracking-wide uppercase'>{formatTo.dayShort(time)}</span>
+      <span className='text-lg'>{formatTo.time(time)}</span>
     </div>
   )
 }

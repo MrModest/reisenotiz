@@ -4,9 +4,9 @@ import { TimelineElement } from "@/components/ui/timeline"
 import { Address } from "./address"
 import { routes } from "@/lib/routes"
 
-export interface ReservationPoint {
-  available: ZonedInstant;
-  planned?: ZonedInstant
+export interface StayInterval {
+  in: ZonedInstant;
+  out: ZonedInstant
 }
 
 export const ACCOMMODATION_SITE_KINDS = [
@@ -36,9 +36,9 @@ export interface Accommodation extends TripItem {
   reservedOn?: string // TODO: migrate to `Person`
   guests: number // TODO: migrate to `Person[]`
   rooms: number
-  reservation: {
-    checkIn: ReservationPoint
-    checkOut: ReservationPoint
+  stayInterval: {
+    provided: StayInterval
+    planned?: StayInterval
   }
 }
 
@@ -52,19 +52,19 @@ export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
       id: `${hotel.id}-checkin`,
       title: `Check-In: ${hotel.site.name}`,
       description: `${hotel.site.address.line}`,
-      datetime: hotel.reservation.checkIn.planned || hotel.reservation.checkIn.available,
+      datetime: hotel.stayInterval.planned?.in || hotel.stayInterval.provided.in,
       link: routes.trips.item(hotel.tripId, hotel.id),
       icon: 'hotel-checkIn',
-      status: isPast(hotel.reservation.checkIn.available) ? 'inactive' : 'active'
+      status: isPast(hotel.stayInterval.provided.in) ? 'inactive' : 'active'
     },
     {
       id: `${hotel.id}-checkout`,
       title: `Check-Out: ${hotel.site.name}`,
       description: `${hotel.site.address.line}`,
-      datetime: hotel.reservation.checkOut.planned || hotel.reservation.checkOut.available,
+      datetime: hotel.stayInterval.planned?.out || hotel.stayInterval.provided.out,
       link: routes.trips.item(hotel.tripId, hotel.id),
       icon: 'hotel-checkOut',
-      status: isPast(hotel.reservation.checkOut.available) ? 'inactive' : 'active',
+      status: isPast(hotel.stayInterval.provided.out) ? 'inactive' : 'active',
     }
   ]
 }

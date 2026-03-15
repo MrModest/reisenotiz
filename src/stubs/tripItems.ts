@@ -67,19 +67,20 @@ export const tripsItems: TripItem[] = [
         city: 'Leipzig',
         country: 'Germany'
       },
+      tzone: 'Europe/Berlin',
     },
     contact: '+49 177 1234567',
     reservedOn: 'Max Mustermann',
     guests: 3,
     rooms: 1,
-    reservation: {
-      checkIn: {
-        available: { instant: '2025-03-12T15:00:00.000Z', zone: 'Europe/Berlin' },
-        planned: { instant: '2025-03-12T18:30:00.000Z', zone: 'Europe/Berlin' }
+    stayInterval: {
+      provided: {
+        in: { instant: '2025-03-12T15:00:00.000Z', zone: 'Europe/Berlin' },
+        out: { instant: '2025-03-13T11:00:00.000Z', zone: 'Europe/Berlin' }
       },
-      checkOut: {
-        available: { instant: '2025-03-13T11:00:00.000Z', zone: 'Europe/Berlin' },
-        planned: { instant: '2025-03-13T10:00:00.000Z', zone: 'Europe/Berlin' }
+      planned: {
+        in: { instant: '2025-03-12T18:30:00.000Z', zone: 'Europe/Berlin' },
+        out: { instant: '2025-03-13T10:00:00.000Z', zone: 'Europe/Berlin' }
       }
     },
     note: 'notify hotel that we come late',

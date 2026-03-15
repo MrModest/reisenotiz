@@ -85,12 +85,10 @@ function createDraftAccommodation(base: { id: string; tripId: string; note: stri
     reservedOn: undefined,
     guests: 1,
     rooms: 1,
-    reservation: {
-      checkIn: {
-        available: defaultTime
-      },
-      checkOut: {
-        available: defaultTime
+    stayInterval: {
+      provided: {
+        in: defaultTime,
+        out: defaultTime
       }
     }
   }
