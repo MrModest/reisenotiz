@@ -72,8 +72,13 @@ function IntervalRow({ icon, color, dateField, timeField }: {
 
 function StayIntervalFields() {
   const plannedInterval = useWatch({ name: 'plannedInterval' })
-  const { setValue } = useFormContext()
+  const { setValue, getValues } = useFormContext()
   const [showPlanned, setShowPlanned] = useState(!!plannedInterval)
+
+  function addPlanned() {
+    setValue('plannedInterval', getValues('providedInterval'))
+    setShowPlanned(true)
+  }
 
   function removePlanned() {
     setValue('plannedInterval', undefined)
@@ -104,7 +109,7 @@ function StayIntervalFields() {
           variant='ghost'
           size='sm'
           className='self-start text-xs h-6 px-1.5'
-          onClick={() => setShowPlanned(true)}
+          onClick={addPlanned}
         >
           <Icon name='add' className='size-3' />
           Add planned times
