@@ -3,7 +3,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: reisenotiz:latest
+    image: ghcr.io/mrmodest/reisenotiz:sha-5d84e0b-arm64:edge-amd64 # change tag to `edge-arm64` for ARM64 builds
     ports:
       - "8080:8080"
     # Uncomment to run with custom UID/GID
