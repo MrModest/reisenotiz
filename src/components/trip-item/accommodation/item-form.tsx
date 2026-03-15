@@ -141,7 +141,7 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCre
 
   return (
     <FormProvider {...form}>
-      <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(handleSubmit)}>
+      <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(handleSubmit, (errors) => console.error('[form validation]', errors))}>
 
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
@@ -205,13 +205,15 @@ function AccommodationSiteSelector({ accommodations, selected, onSelectedChange 
 
   function handleSelect(record: AccommodationSiteRecord | null) {
     onSelectedChange(record)
-    setValue('siteId', record?.id)
     if (!record) return
-    setValue('siteName', record.name)
-    setValue('siteKind', record.kind)
-    setValue('siteAddress', record.address)
-    setValue('siteContact', record.contact || '')
-    setValue('siteTzone', record.tzone)
+    setValue('site', {
+      id: record.id,
+      name: record.name,
+      kind: record.kind,
+      address: record.address,
+      contact: record.contact || '',
+      tzone: record.tzone,
+    })
   }
 
   return (
@@ -260,36 +262,28 @@ function AccommodationSitePreview({ record }: { record: AccommodationSiteRecord 
 }
 
 function convert(data: AccommodationFormSchema, tripId: string, itemId: string): Accommodation {
+  const { site } = data
+  const tzone = site.tzone
+
   return {
     type: 'Accommodation',
     id: itemId,
     tripId,
     note: data.note || '',
     attachments: (data.attachments || []).map(a => ({ ...a, tripItemId: itemId, note: a.note || '' })),
-    site: {
-      id: data.siteId,
-      name: data.siteName,
-      kind: data.siteKind,
-      address: {
-        country: data.siteAddress.country,
-        city: data.siteAddress.city,
-        line: data.siteAddress.line,
-      },
-      contact: data.siteContact || '',
-      tzone: data.siteTzone,
-    },
+    site,
     reservedOn: data.reservedOn,
     guests: data.guests || 0,
     rooms: data.rooms || 0,
     stayInterval: {
       provided: {
-        in: convertTime(data.providedInterval.dateIn, data.providedInterval.timeIn, data.siteTzone),
-        out: convertTime(data.providedInterval.dateOut, data.providedInterval.timeOut, data.siteTzone)
+        in: convertTime(data.providedInterval.dateIn, data.providedInterval.timeIn, tzone),
+        out: convertTime(data.providedInterval.dateOut, data.providedInterval.timeOut, tzone)
       },
-      planned: (data.plannedInterval)
+      planned: data.plannedInterval
         ? {
-            in: convertTime(data.plannedInterval.dateIn, data.plannedInterval.timeIn, data.siteTzone),
-            out: convertTime(data.plannedInterval.dateOut, data.plannedInterval.timeOut, data.siteTzone)
+            in: convertTime(data.plannedInterval.dateIn, data.plannedInterval.timeIn, tzone),
+            out: convertTime(data.plannedInterval.dateOut, data.plannedInterval.timeOut, tzone)
           }
         : undefined
     },

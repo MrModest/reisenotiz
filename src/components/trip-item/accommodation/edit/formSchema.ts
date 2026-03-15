@@ -12,12 +12,14 @@ const stayIntervalSchema = z.object({
 })
 
 export const accommodationFormSchema = z.object({
-  siteId: z.string().optional(),
-  siteName: schemas.string('Name', 200),
-  siteKind: z.enum(ACCOMMODATION_SITE_KINDS),
-  siteAddress: schemas.address,
-  siteContact: z.string().optional(),
-  siteTzone: schemas.timezone,
+  site: z.object({
+    id: z.string().optional(),
+    name: schemas.string('Name', 200),
+    kind: z.enum(ACCOMMODATION_SITE_KINDS),
+    address: schemas.address,
+    contact: z.string().optional(),
+    tzone: schemas.timezone,
+  }),
   reservedOn: schemas.string('Reserved on', 100, false).optional(),
   guests: z.number().int().optional(),
   rooms: z.number().int().optional(),
@@ -35,12 +37,14 @@ export function defaultsFromAccommodation(accomodation: Accommodation): Accommod
   const { site, stayInterval } = accomodation
 
   return {
-    siteId: site.id,
-    siteName: site.name,
-    siteKind: site.kind,
-    siteAddress: site.address,
-    siteContact: site.contact,
-    siteTzone: site.tzone,
+    site: {
+      id: site.id,
+      name: site.name,
+      kind: site.kind,
+      address: site.address,
+      contact: site.contact,
+      tzone: site.tzone,
+    },
     reservedOn: accomodation.reservedOn,
     guests: accomodation.guests,
     rooms: accomodation.rooms,
