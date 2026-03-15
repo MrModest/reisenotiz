@@ -2,7 +2,7 @@ import { Attachment } from "./attachment"
 
 const tripItemTypes = [
   'Flight',
-  'LongLandTransfer',
+  'LongTransfer',
   'PublicTransport',
   'Accommodation',
   'POI'

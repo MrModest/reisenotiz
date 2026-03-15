@@ -48,6 +48,7 @@ export type IconName = 'arrow-right'
   | 'person'
   | 'attachment'
   | 'info'
+  | 'long-transfer'
   | 'unknown'
 
 export function Icon ({ name, className }: { name: IconName; className?: string }) {
@@ -150,6 +151,8 @@ export function Icon ({ name, className }: { name: IconName; className?: string 
       return <DynamicIcon name='paperclip' className={style} />
     case 'info':
       return <DynamicIcon name='info' className={style} />
+    case 'long-transfer':
+      return <DynamicIcon name='train-front' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />
