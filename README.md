@@ -4,6 +4,14 @@ A self-hosted, offline-first travel planning PWA for keeping track of trips, fli
 
 > **MVP Stage** — This project is in early development. Features are limited, data is stored in browser localStorage only (no backend sync yet), and breaking changes may occur. Use at your own risk and back up any important data.
 
+## Screenshots
+
+[Screen Recording](https://youtu.be/QkUDu_-Ed7w)
+
+![](docs/screenshots/TripTimeline.png)
+![](docs/screenshots/FlightView.png)
+![](docs/screenshots/HotelView.png)
+
 ## Features
 
 - **Trip Management** — Create and organize trips with timeline views
