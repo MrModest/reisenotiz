@@ -2,19 +2,18 @@ import { useState } from 'react'
 import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Accommodation } from '@/types'
-import { defaultsFromAccommodation, accommodationFormSchema, AccommodationFormSchema } from './edit/formSchema'
-import { Field, FieldLegend, FieldSet } from '@/components/ui/field'
+import { defaultsFromAccommodation, accommodationFormSchema, AccommodationFormSchema, AccommodationStayIntervalSchema } from './edit/formSchema'
+import { Field, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
 import { ItemHeader } from '@/components/trip-item/item-header'
 import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '@/components/trip-item/field-input'
-import { FieldTimezone } from '@/components/trip-item/field-timezone'
 import { FieldDatePicker } from '@/components/trip-item/field-date-picker'
 import { FieldTimePicker } from '@/components/trip-item/field-time-picker'
-import { formatTo } from '@/lib/datetime'
 import { convertTime } from '@/components/trip-item/utils'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
+import { formatTo } from '@/lib/datetime'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { CollapsibleSection } from '@/components/trip-item/collapsible-section'
 import { NoteSection } from '@/components/trip-item/section-note'
@@ -26,60 +25,92 @@ import type { AccommodationSiteRecord } from '@/store/user-records/accommodation
 import { Badge } from '@/components/ui/badge'
 
 
-function ReservationPointPreview({ point }: { point: 'checkIn' | 'checkOut' }) {
-  const availableDate: string = useWatch({ name: `${point}.availableDate` })
-  const availableTime: string = useWatch({ name: `${point}.availableTime` })
-  const plannedDate: string | undefined = useWatch({ name: `${point}.plannedDate` })
-  const plannedTime: string | undefined = useWatch({ name: `${point}.plannedTime` })
-  const tzone: string = useWatch({ name: `${point}.tzone` })
+function StayIntervalPreview({ tzone }: { tzone?: string }) {
+  const planned = useWatch({ name: 'plannedInterval' })
+  const provided = useWatch({ name: 'providedInterval' })
+  const interval: AccommodationStayIntervalSchema = planned || provided
 
-  if (!availableDate || !availableTime || !tzone) {
-    const label = point === 'checkIn' ? 'check-in' : 'check-out'
-    return <span className='text-muted-foreground text-sm'>No {label} info</span>
+  if (!interval.dateIn || !interval.timeIn || !tzone) {
+    return <span className='text-muted-foreground text-sm'>No stay interval</span>
   }
 
-  const available = convertTime(availableDate, availableTime, tzone)
-  const hasPlanned = plannedDate && plannedTime
-  const planned = hasPlanned ? convertTime(plannedDate, plannedTime, tzone) : undefined
+  const inTime = convertTime(interval.dateIn, interval.timeIn, tzone)
+  const outTime = interval.dateOut && interval.timeOut ? convertTime(interval.dateOut, interval.timeOut, tzone) : undefined
 
   return (
-    <div className='flex flex-col gap-1 text-sm'>
-      <div>
-        <span className='text-muted-foreground'>Available: </span>
-        <span className='font-medium'>{formatTo.date(available)} · {formatTo.time(available)}</span>
+    <div className='flex flex-col gap-y-0.5 gap-x-2 text-sm'>
+      <div className='flex flex-row items-center gap-1'>
+        <Icon name='hotel-checkIn' className='size-3.5 text-green-600/70' />
+        <span className='font-medium'>{formatTo.date(inTime)} · {formatTo.time(inTime)}</span>
       </div>
-      {planned && (
-        <div>
-          <span className='text-muted-foreground'>Planned: </span>
-          <span className='font-medium'>{formatTo.date(planned)} · {formatTo.time(planned)}</span>
+      {outTime && (
+        <div className='flex flex-row items-center gap-1'>
+          <Icon name='hotel-checkOut' className='size-3.5 text-red-600/70' />
+          <span className='font-medium'>{formatTo.date(outTime)} · {formatTo.time(outTime)}</span>
         </div>
       )}
-      <div className='text-muted-foreground text-xs'>{tzone}</div>
     </div>
   )
 }
 
-function ReservationPointFields({ point }: { point: 'checkIn' | 'checkOut' }) {
+function IntervalRow({ icon, color, dateField, timeField }: {
+  icon: 'hotel-checkIn' | 'hotel-checkOut'
+  color: string
+  dateField: string
+  timeField: string
+}) {
   return (
-    <>
-      <FieldSet className='flex-row items-end gap-2 mt-2'>
-        <FieldTimezone name={`${point}.tzone`} label='Timezone' required className='flex-1' />
+    <div className='flex flex-col gap-1.5'>
+      <FieldSet className='flex-row items-end gap-1.5'>
+        <Icon name={icon} className={cn(color)} />
+        <FieldDatePicker className='flex-1' required name={dateField} label='Date' />
+        <FieldTimePicker className='w-20' required name={timeField} label='Time' />
       </FieldSet>
-      <div className='grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-end gap-2 mt-4'>
-        <FieldSet className='flex-row justify-between gap-2'>
-          <FieldLegend>Available</FieldLegend>
-          <FieldDatePicker className='md:w-32' required name={`${point}.availableDate`} label='Date' />
-          <FieldTimePicker className='md:w-20' required name={`${point}.availableTime`} label='Time' />
-        </FieldSet>
-        <Separator orientation='vertical' className='self-stretch hidden md:block' />
-        <Separator orientation='horizontal' className='self-stretch my-2 block md:hidden' />
-        <FieldSet className='flex-row justify-between gap-2'>
-          <FieldLegend>Planned</FieldLegend>
-          <FieldDatePicker className='md:w-32' name={`${point}.plannedDate`} label='Date' />
-          <FieldTimePicker className='md:w-20' name={`${point}.plannedTime`} label='Time' />
-        </FieldSet>
-      </div>
-    </>
+    </div>
+  )
+}
+
+function StayIntervalFields() {
+  const plannedInterval = useWatch({ name: 'plannedInterval' })
+  const { setValue } = useFormContext()
+  const [showPlanned, setShowPlanned] = useState(!!plannedInterval)
+
+  function removePlanned() {
+    setValue('plannedInterval', undefined)
+    setShowPlanned(false)
+  }
+
+  return (
+    <div className='flex flex-col gap-2'>
+      <span className='text-xs text-muted-foreground'>Provided from Host</span>
+      <IntervalRow icon='hotel-checkIn' color='text-green-600/70' dateField='providedInterval.dateIn' timeField='providedInterval.timeIn' />
+      <IntervalRow icon='hotel-checkOut' color='text-red-600/70' dateField='providedInterval.dateOut' timeField='providedInterval.timeOut' />
+
+      {showPlanned ? (
+        <>
+          <Separator className='my-1' />
+          <div className='flex items-center justify-between'>
+            <span className='text-xs text-muted-foreground'>Planned by me</span>
+            <Button variant='ghost' className='text-muted-foreground/60 hover:text-foreground transition-colors' onClick={removePlanned}>
+              <Icon name='x' className='size-3' />
+            </Button>
+          </div>
+          <IntervalRow icon='hotel-checkIn' color='text-green-600/70' dateField='plannedInterval.dateIn' timeField='plannedInterval.timeIn' />
+          <IntervalRow icon='hotel-checkOut' color='text-red-600/70' dateField='plannedInterval.dateOut' timeField='plannedInterval.timeOut' />
+        </>
+      ) : (
+        <Button
+          type='button'
+          variant='ghost'
+          size='sm'
+          className='self-start text-xs h-6 px-1.5'
+          onClick={() => setShowPlanned(true)}
+        >
+          <Icon name='add' className='size-3' />
+          Add planned times
+        </Button>
+      )}
+    </div>
   )
 }
 
@@ -138,21 +169,12 @@ export function AccommodationItemForm({ accommodation, onSubmit, onCancel, isCre
         <Separator className='my-4' />
 
         <CollapsibleSection
-          label='Check-In'
-          icon='hotel-checkIn'
-          preview={<ReservationPointPreview point='checkIn' />}
-          className='mb-2 mt-6'
+          label='Stay Interval'
+          icon='accommodation'
+          preview={<StayIntervalPreview tzone={selectedRecord?.tzone} />}
+          className='mt-4'
         >
-          <ReservationPointFields point='checkIn' />
-        </CollapsibleSection>
-
-        <CollapsibleSection
-          label='Check-Out'
-          icon='hotel-checkOut'
-          preview={<ReservationPointPreview point='checkOut' />}
-          className='mb-2 mt-6'
-        >
-          <ReservationPointFields point='checkOut' />
+          <StayIntervalFields />
         </CollapsibleSection>
 
         <NoteSection name='note' placeholder='Add any notes about this accommodation...' />
@@ -189,6 +211,7 @@ function AccommodationSiteSelector({ accommodations, selected, onSelectedChange 
     setValue('siteKind', record.kind)
     setValue('siteAddress', record.address)
     setValue('siteContact', record.contact || '')
+    setValue('siteTzone', record.tzone)
   }
 
   return (
@@ -253,23 +276,22 @@ function convert(data: AccommodationFormSchema, tripId: string, itemId: string):
         line: data.siteAddress.line,
       },
       contact: data.siteContact || '',
+      tzone: data.siteTzone,
     },
     reservedOn: data.reservedOn,
     guests: data.guests || 0,
     rooms: data.rooms || 0,
-    reservation: {
-      checkIn: {
-        available: convertTime(data.checkIn.availableDate, data.checkIn.availableTime, data.checkIn.tzone),
-        planned: (data.checkIn.plannedDate && data.checkIn.plannedTime)
-          ? convertTime(data.checkIn.plannedDate, data.checkIn.plannedTime, data.checkIn.tzone)
-          : undefined,
+    stayInterval: {
+      provided: {
+        in: convertTime(data.providedInterval.dateIn, data.providedInterval.timeIn, data.siteTzone),
+        out: convertTime(data.providedInterval.dateOut, data.providedInterval.timeOut, data.siteTzone)
       },
-      checkOut: {
-        available: convertTime(data.checkOut.availableDate, data.checkOut.availableTime, data.checkOut.tzone),
-        planned: (data.checkOut.plannedDate && data.checkOut.plannedTime)
-          ? convertTime(data.checkOut.plannedDate, data.checkOut.plannedTime, data.checkOut.tzone)
-          : undefined,
-      }
-    }
+      planned: (data.plannedInterval)
+        ? {
+            in: convertTime(data.plannedInterval.dateIn, data.plannedInterval.timeIn, data.siteTzone),
+            out: convertTime(data.plannedInterval.dateOut, data.plannedInterval.timeOut, data.siteTzone)
+          }
+        : undefined
+    },
   }
 }

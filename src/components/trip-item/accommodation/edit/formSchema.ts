@@ -27,6 +27,8 @@ export const accommodationFormSchema = z.object({
   plannedInterval: stayIntervalSchema.optional(),
 })
 
+export type AccommodationStayIntervalSchema = z.infer<typeof stayIntervalSchema>
+
 export type AccommodationFormSchema = z.infer<typeof accommodationFormSchema>
 
 export function defaultsFromAccommodation(accomodation: Accommodation): AccommodationFormSchema {
