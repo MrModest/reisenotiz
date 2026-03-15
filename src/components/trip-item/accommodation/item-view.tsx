@@ -7,6 +7,7 @@ import { ItemHeader } from '../item-header'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { FieldChipsView } from '../field-chips-view'
 
 interface HotelItemViewProps {
   accommodation: Accommodation
@@ -58,13 +59,16 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
           )}
       </div>
       <SeparatorWithLabel label='Details' className='mt-2' />
-      <div className='flex gap-2'>
+      <div className='flex gap-2 mb-2'>
         <FieldView className='grow' label='Reserved On' value={accommodation.reservedOn || ''} />
         <FieldView className='w-18' valueVariant='align-right' label='Guests' value={accommodation.guests} />
         <FieldView className='w-18' valueVariant='align-right' label='Rooms' value={accommodation.rooms} />
       </div>
 
-      {accommodation.note && <FieldView label='Notes' value={accommodation.note} className='mt-4' />}
+      {accommodation.attachments.length > 0 && (
+        <FieldChipsView label='Attachments' icon='attachment' items={accommodation.attachments.map(a => ({ value: a.name, link: a.link }))} />
+      )}
+      {accommodation.note && <FieldView label='Notes' value={accommodation.note} className='mt-2' />}
 
       <ConfirmDialog
         open={deleteDialogOpen}
