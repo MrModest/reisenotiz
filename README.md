@@ -66,5 +66,5 @@ See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
 
 Right now it's BSL 1.1, but I might consider a change in the future. While I'm not decided, I want to secure myself via having more restrictive license. Relaxing the license later is easir than restricting it.
 
-While the code can't be considered trully open-sorsed, I think it still fits under "Fair Code" terms.
+While the code can't be considered trully open-sources, I think it still fits under "Fair Code" terms.
 See more here: https://fair.io/licenses/
