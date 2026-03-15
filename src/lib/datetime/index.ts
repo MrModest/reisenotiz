@@ -101,7 +101,4 @@ export const formatTo = {
   utcOffset: formatUtcOffset
 }
 
-export const TZ = {
-  local: () => Intl.DateTimeFormat().resolvedOptions().timeZone,
-  utc: 'Etc/Utc'
-}
+export { TzUtils as TZ } from './timezone'
