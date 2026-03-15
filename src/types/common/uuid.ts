@@ -1,10 +1,12 @@
-import { v4 as uuidv4, NIL as NIL_UUID, validate } from 'uuid'
+import { v7 as uuidv7, NIL as NIL_UUID, validate } from 'uuid'
 
-export function generateUUID(): string {
-  return uuidv4()
+export type UUID = ReturnType<typeof crypto.randomUUID>
+
+export function generateUUID(): UUID {
+  return uuidv7() as UUID
 }
 
-export const NoneId = NIL_UUID as string
+export const NoneId = NIL_UUID satisfies UUID
 
 export function validated(uuid: string): string {
   if (!validate(uuid)) {

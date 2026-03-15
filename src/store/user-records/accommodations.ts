@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import type { AccommodationSite } from '@/types'
+import { generateUUID, type AccommodationSite } from '@/types'
 
 export type AccommodationSiteRecord = AccommodationSite & { id: string }
 
@@ -21,7 +21,7 @@ export const useUserAccommodationsStore = create<UserAccommodationsState>()(
       getAccommodation: (id) => get().accommodations[id],
 
       addAccommodation: (site) => {
-        const record: AccommodationSiteRecord = { ...site, id: crypto.randomUUID() }
+        const record: AccommodationSiteRecord = { ...site, id: generateUUID() }
         set((state) => ({
           accommodations: { ...state.accommodations, [record.id]: record }
         }))

@@ -7,6 +7,7 @@ export const userAccommodationSchema = z.object({
   kind: z.enum(ACCOMMODATION_SITE_KINDS),
   address: schemas.address,
   contact: z.string().optional(),
+  tzone: schemas.timezone
 })
 
 export type UserAccommodationSchema = z.infer<typeof userAccommodationSchema>

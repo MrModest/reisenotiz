@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/dialog'
 import type { AccommodationSiteKind } from '@/types'
 import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
+import { FieldTimezone } from '../trip-item/field-timezone'
+import { TZ } from '@/lib/datetime'
 
 const SITE_KIND_OPTIONS: { value: AccommodationSiteKind; label: string }[] = [
   { value: 'Hotel', label: 'Hotel' },
@@ -42,6 +44,7 @@ function defaultValues(accommodation: AccommodationSiteRecord | null): UserAccom
       kind: 'Hotel',
       address: { country: '', city: '', line: '' },
       contact: '',
+      tzone: TZ.local(),
     }
   }
   return {
@@ -49,6 +52,7 @@ function defaultValues(accommodation: AccommodationSiteRecord | null): UserAccom
     kind: accommodation.kind,
     address: accommodation.address,
     contact: accommodation.contact || '',
+    tzone: accommodation.tzone,
   }
 }
 
@@ -108,6 +112,7 @@ export function AccommodationRecordDialog({ open, onClose, accommodation, onSave
                 <FieldInput name='address.city' label='City' />
                 <FieldInput name='address.country' label='Country' />
               </div>
+              <FieldTimezone name='tzone' label='Timezone' />
             </FieldSet>
 
             <FieldSet>

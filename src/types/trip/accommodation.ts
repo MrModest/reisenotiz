@@ -27,6 +27,7 @@ export interface AccommodationSite {
   kind: AccommodationSiteKind
   address: Address
   contact?: string
+  tzone: string
 }
 
 export interface Accommodation extends TripItem {

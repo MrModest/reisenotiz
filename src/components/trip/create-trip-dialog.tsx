@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate } from 'react-router'
 import { useTripsStore } from '@/store'
-import { DateTime } from '@/lib/datetime'
+import { DateTime, TZ } from '@/lib/datetime'
 import { routes } from '@/lib/routes'
 import { Button } from '@/components/ui/button'
 import { FieldInput } from '@/components/trip-item/field-input'
@@ -35,7 +35,7 @@ interface CreateTripDialogProps {
 
 function dateStringToZonedInstant(dateStr: string) {
   const [year, month, day] = dateStr.split('-').map(Number)
-  const zone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const zone = TZ.local()
   return DateTime.fromObject({ year, month, day }, zone).toZonedInstant()
 }
 
