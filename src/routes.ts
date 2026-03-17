@@ -11,11 +11,19 @@ import { RecordsPage } from "@/pages/records"
 import { AirportsRecordsPage } from "@/pages/records/airports"
 import { AccommodationsRecordsPage } from "@/pages/records/accommodations"
 import { routes } from "@/lib/routes"
+import { airportDictionary, accommodationDictionary } from "@/services"
 
 export const router = createBrowserRouter([
   {
     path: routes.root,
     Component: AppLayout,
+    loader: async () => {
+      await Promise.all([
+        airportDictionary.load(),
+        accommodationDictionary.load(),
+      ])
+      return null
+    },
     children: [
       {
         index: true,

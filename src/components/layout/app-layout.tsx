@@ -4,14 +4,10 @@ import { Navigation } from './navigation'
 import { Header } from './header'
 import { HeaderProvider, useHeader } from '@/contexts/header-context'
 import { cn } from '@/lib/utils'
-import { accommodationDictionary, airportDictionary } from '@/services'
 import ThemeSwitcher from '../theme-switcher'
 import { useTheme } from '@/hooks/use-theme'
 
 export function AppLayout() {
-  airportDictionary.load()
-  accommodationDictionary.load()
-
   return (
     <HeaderProvider>
       <AppLayoutContent />
