@@ -23,6 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 opencode.json
+.claude/task-tracker
 
 # PWA
 dev-dist
