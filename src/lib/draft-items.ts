@@ -15,7 +15,7 @@ export function createDraftItem(tripId: string, type: TripItemType): TripItem {
       return createDraftFlight(base)
     case 'Accommodation':
       return createDraftAccommodation(base)
-    case 'LongLandTransfer':
+    case 'LongTransfer':
     case 'PublicTransport':
     case 'POI':
       return { ...base, type } as TripItem
