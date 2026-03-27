@@ -1,6 +1,6 @@
 # Reisenotiz
 
-A self-hosted, offline-first travel planning PWA for keeping track of trips, flights, accommodations, and travel documents — all stored locally in your browser.
+A self-hosted, offline-first travel notes built as a PWA for keeping track of trips, flights, accommodations, and travel documents — all stored locally in your browser.
 
 > **MVP Stage** — This project is in early development. Features are limited, data is stored in browser localStorage only (no backend sync yet), and breaking changes may occur. Use at your own risk and back up any important data.
 
