@@ -64,7 +64,18 @@ See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
 
 ## License
 
-Right now it's BSL 1.1, but I might consider a change in the future. While I'm not decided, I want to secure myself via having more restrictive license. Relaxing the license later is easir than restricting it.
+### TLDR:
+- BSL 1.1
+- Free forever for private/non-commercial use.
+- Restricted for commercial use.
+
+### Why not fully Open Source?
+
+Because I simply want to protect myself from someone forking and monitizing my code. But Open-Source by its nature doesn't allow resticting commercial usage. This project will always be free for selfhosters and non-commercials. 
+
+If I ever add some paid functionality, it would be something related to additional costs from my side. For example, if I provide a paid API for auto-suggestions that involves me paying to a third-party metadata providers or hosting the API service for you. But even in this case the app will be fully functional without it, or you can just make your own API provided for auto-suggestions.
+
+I believe my license is fair enough since it's not some kind of library you need to inject into your own code. It's a final client application that ment to be used as is.
 
 While the code can't be considered trully open-sources, I think it still fits under "Fair Code" terms.
 See more here: https://fair.io/licenses/
