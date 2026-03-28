@@ -65,7 +65,7 @@ See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
 ## License
 
 ### TLDR:
-- BSL 1.1
+- BSL 1.1 (Source-available, fair code)
 - Free forever for private/non-commercial use.
 - Restricted for commercial use.
 
