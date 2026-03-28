@@ -16,12 +16,7 @@ export function FieldTextarea({ name, label, className, placeholder }: FieldText
   return (
     <Field className={cn('gap-0.5', className)}>
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
-      <Textarea
-        aria-invalid={!!error}
-        id={name}
-        placeholder={placeholder}
-        {...field}
-      />
+      <Textarea aria-invalid={!!error} id={name} placeholder={placeholder} {...field} />
       {error && <FieldError className='text-xs font-thin text-foreground'>{error.message?.toString()}</FieldError>}
     </Field>
   )

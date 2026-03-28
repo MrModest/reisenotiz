@@ -22,9 +22,7 @@ export function useHeaderTitle(
   ])
 }
 
-export function useHeaderAction(
-  actions: HeaderAction[]
-) {
+export function useHeaderAction(actions: HeaderAction[]) {
   const { setActions } = useHeader()
 
   useEffect(() => {

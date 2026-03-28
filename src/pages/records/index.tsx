@@ -2,14 +2,7 @@ import { Link } from 'react-router'
 import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
 import { Icon } from '@/components/icon'
 import { routes } from '@/lib/routes'
-import {
-  Item,
-  ItemContent,
-  ItemGroup,
-  ItemMedia,
-  ItemTitle,
-  ItemDescription,
-} from '@/components/ui/item'
+import { Item, ItemContent, ItemGroup, ItemMedia, ItemTitle, ItemDescription } from '@/components/ui/item'
 
 export function RecordsPage() {
   useHeaderTitle('Records')

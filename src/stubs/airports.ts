@@ -1,29 +1,29 @@
-import { Airport } from "@/types"
+import { Airport } from '@/types'
 
 export const airports: Airport[] = [
   {
-    code: "BER",
-    name: "Berlin Brandenburg Airport",
+    code: 'BER',
+    name: 'Berlin Brandenburg Airport',
     address: {
-      line: "Willy-Brandt-Platz 1, 12529 Schönefeld",
-      city: "Schönefeld",
-      country: "Germany",
+      line: 'Willy-Brandt-Platz 1, 12529 Schönefeld',
+      city: 'Schönefeld',
+      country: 'Germany',
       geoPoint: {
         latitude: 52.361738,
-        longitude: 13.502341
-      }
+        longitude: 13.502341,
+      },
     },
-    tzone: "Europe/Berlin"
+    tzone: 'Europe/Berlin',
   },
   {
-    code: "HND",
-    name: "Tokyo Haneda Airport",
+    code: 'HND',
+    name: 'Tokyo Haneda Airport',
     address: {
-      line: "Haneda Airport, 144-0041 Ota City, Tokyo",
-      city: "Tokyo",
-      country: "Japan"
+      line: 'Haneda Airport, 144-0041 Ota City, Tokyo',
+      city: 'Tokyo',
+      country: 'Japan',
     },
-    tzone: "Asia/Tokyo"
+    tzone: 'Asia/Tokyo',
   },
   {
     code: 'FRA',
@@ -57,6 +57,4 @@ export const airports: Airport[] = [
   },
 ]
 
-export const airportsByCode: Record<string, Airport> = Object.fromEntries(
-  airports.map(a => [a.code, a])
-)
+export const airportsByCode: Record<string, Airport> = Object.fromEntries(airports.map((a) => [a.code, a]))

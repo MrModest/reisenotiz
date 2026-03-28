@@ -24,10 +24,12 @@ function AppLayoutContent() {
   return (
     <div className='h-screen flex flex-col md:flex-row overflow-hidden'>
       {/* Desktop: Side navigation */}
-      <aside className={cn(
-        'hidden md:flex md:flex-col md:border-r md:border-border md:overflow-y-auto transition-all duration-300',
-        isCollapsed ? 'md:w-20' : 'md:w-64'
-      )}>
+      <aside
+        className={cn(
+          'hidden md:flex md:flex-col md:border-r md:border-border md:overflow-y-auto transition-all duration-300',
+          isCollapsed ? 'md:w-20' : 'md:w-64',
+        )}
+      >
         <ThemeSwitcher theme={theme} onSwitch={setTheme} collapsed={isCollapsed} />
         <Navigation variant='sidebar' onCollapsedChange={setIsCollapsed} />
       </aside>
@@ -35,16 +37,14 @@ function AppLayoutContent() {
       {/* Main content area */}
       <main className='flex-1 flex flex-col overflow-hidden'>
         <Header title={title} icon={icon} actions={actions} showBackButton={showBackButton} onBack={onBack} />
-        <div className={cn(
-          'flex-1',
-          'pb-16 md:pb-0',
-          'overflow-y-auto overflow-x-hidden' // vertical scroll only
-        )}>
-          <div className={cn(
-            'px-4 pt-2',
-            'flex justify-center',
-            'w-full'
-          )}>
+        <div
+          className={cn(
+            'flex-1',
+            'pb-16 md:pb-0',
+            'overflow-y-auto overflow-x-hidden', // vertical scroll only
+          )}
+        >
+          <div className={cn('px-4 pt-2', 'flex justify-center', 'w-full')}>
             <Outlet />
           </div>
         </div>

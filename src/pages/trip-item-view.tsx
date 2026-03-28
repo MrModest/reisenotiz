@@ -1,7 +1,7 @@
-import { TripItemView } from "@/components/trip-item"
-import { useTrip, useTripItem } from "@/store"
-import { useTripsStore } from "@/store/trips-store"
-import { useParams, useNavigate } from "react-router"
+import { TripItemView } from '@/components/trip-item'
+import { useTrip, useTripItem } from '@/store'
+import { useTripsStore } from '@/store/trips-store'
+import { useParams, useNavigate } from 'react-router'
 
 export function TripItemViewPage() {
   const { tripId, itemId } = useParams<{ tripId: string; itemId: string }>()
@@ -28,15 +28,13 @@ function TripItemViewContent({ tripId, itemId }: { tripId: string; itemId: strin
     navigate(-1)
   }
 
-  return (
-    <TripItemView className='mb-10' trip={trip} tripItem={tripItem} onDelete={handleDelete} />
-  )
+  return <TripItemView className='mb-10' trip={trip} tripItem={tripItem} onDelete={handleDelete} />
 }
 
 function NotFound() {
   return (
-    <div className="p-4 text-center">
-      <p className="text-muted-foreground">Trip item not found</p>
+    <div className='p-4 text-center'>
+      <p className='text-muted-foreground'>Trip item not found</p>
     </div>
   )
 }

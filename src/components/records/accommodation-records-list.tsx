@@ -3,14 +3,7 @@ import { userRecords } from '@/store'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { getCountryFlag } from '@/lib/utils/country-flag'
-import {
-  Item,
-  ItemContent,
-  ItemGroup,
-  ItemTitle,
-  ItemDescription,
-  ItemActions,
-} from '@/components/ui/item'
+import { Item, ItemContent, ItemGroup, ItemTitle, ItemDescription, ItemActions } from '@/components/ui/item'
 import { AccommodationRecordDialog } from './accommodation-record-dialog'
 import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
 
@@ -55,9 +48,7 @@ export function AccommodationRecordsList() {
       ) : (
         <ItemGroup>
           {accommodationList.map((accommodation) => {
-            const flag = accommodation.address?.country
-              ? getCountryFlag(accommodation.address.country)
-              : ''
+            const flag = accommodation.address?.country ? getCountryFlag(accommodation.address.country) : ''
 
             return (
               <Item key={accommodation.id} variant='outline'>
@@ -75,18 +66,10 @@ export function AccommodationRecordsList() {
                   </ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <Button
-                    variant='ghost'
-                    size='icon-sm'
-                    onClick={() => handleEdit(accommodation)}
-                  >
+                  <Button variant='ghost' size='icon-sm' onClick={() => handleEdit(accommodation)}>
                     <Icon name='edit' />
                   </Button>
-                  <Button
-                    variant='ghost'
-                    size='icon-sm'
-                    onClick={() => deleteAccommodation(accommodation.id)}
-                  >
+                  <Button variant='ghost' size='icon-sm' onClick={() => deleteAccommodation(accommodation.id)}>
                     <Icon name='trash' />
                   </Button>
                 </ItemActions>
@@ -96,11 +79,7 @@ export function AccommodationRecordsList() {
         </ItemGroup>
       )}
 
-      <AccommodationRecordDialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        accommodation={editingAccommodation}
-      />
+      <AccommodationRecordDialog open={dialogOpen} onClose={handleDialogClose} accommodation={editingAccommodation} />
     </div>
   )
 }

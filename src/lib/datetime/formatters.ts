@@ -45,7 +45,7 @@ export function formatTime(dt: ZonedInstant): string {
  * Formats as "Nov 23, 2025 at 20:30"
  */
 export function formatDateTime(dt: DateTime): string {
-  return dt.format('LLL dd, yyyy \'at\' HH:mm')
+  return dt.format("LLL dd, yyyy 'at' HH:mm")
 }
 
 /**

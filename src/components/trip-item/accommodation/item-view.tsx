@@ -32,31 +32,23 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
           icon='accommodation'
           buttons={[
             { icon: 'edit', onClick: () => navigate('edit') },
-            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) }
+            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) },
           ]}
         />
       </div>
       <div className='grid grid-cols-[1fr_auto_1fr] gap-3 bg-card py-2 px-3 rounded-xs'>
-        <ReservationPoint
-          label='Check In'
-          stayInterval={accommodation.stayInterval}
-        />
+        <ReservationPoint label='Check In' stayInterval={accommodation.stayInterval} />
         <Separator orientation='vertical' />
-        <ReservationPoint
-          label='Check Out'
-          stayInterval={accommodation.stayInterval}
-        />
+        <ReservationPoint label='Check Out' stayInterval={accommodation.stayInterval} />
       </div>
       <div className='mt-4 grid grid-cols-1 gap-2'>
-          <FieldView label={`Name (${accommodation.site.kind})`} value={accommodation.site.name} />
-          <FieldView
-            label='Address'
-            value={accommodation.site.address.line || 'Unknown'}
-            subValue={`${accommodation.site.address.country}, ${accommodation.site.address.city}`}
-          />
-          {accommodation.site.contact && (
-            <FieldView label='Contact' value={accommodation.site.contact} />
-          )}
+        <FieldView label={`Name (${accommodation.site.kind})`} value={accommodation.site.name} />
+        <FieldView
+          label='Address'
+          value={accommodation.site.address.line || 'Unknown'}
+          subValue={`${accommodation.site.address.country}, ${accommodation.site.address.city}`}
+        />
+        {accommodation.site.contact && <FieldView label='Contact' value={accommodation.site.contact} />}
       </div>
       <SeparatorWithLabel label='Details' className='mt-2' />
       <div className='flex gap-2 mb-2'>
@@ -66,7 +58,11 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
       </div>
 
       {accommodation.attachments.length > 0 && (
-        <FieldChipsView label='Attachments' icon='attachment' items={accommodation.attachments.map(a => ({ value: a.name, link: a.link }))} />
+        <FieldChipsView
+          label='Attachments'
+          icon='attachment'
+          items={accommodation.attachments.map((a) => ({ value: a.name, link: a.link }))}
+        />
       )}
       {accommodation.note && <FieldView label='Notes' value={accommodation.note} className='mt-2' />}
 
@@ -74,7 +70,12 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
         open={deleteDialogOpen}
         onOpenChange={setDeleteDialogOpen}
         title={`Delete ${accommodation.site.kind}`}
-        description={<>Are you sure you want to delete <b>{accommodation.site.name}</b>?<br/>This action cannot be undone.</>}
+        description={
+          <>
+            Are you sure you want to delete <b>{accommodation.site.name}</b>?<br />
+            This action cannot be undone.
+          </>
+        }
         onConfirm={handleDelete}
         confirmLabel='Delete'
       />
@@ -88,9 +89,10 @@ interface ReservationPointProps {
 }
 
 function ReservationPoint({ label, stayInterval }: ReservationPointProps) {
-  const time = label === 'Check In'
-    ? stayInterval.planned?.in || stayInterval.provided.in
-    : stayInterval.planned?.out || stayInterval.provided.out
+  const time =
+    label === 'Check In'
+      ? stayInterval.planned?.in || stayInterval.provided.in
+      : stayInterval.planned?.out || stayInterval.provided.out
 
   return (
     <div className={cn('flex flex-col', { 'items-end': label === 'Check Out' })}>

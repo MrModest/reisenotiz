@@ -6,24 +6,24 @@ export type TimelineStatus = 'active' | 'inactive'
 export type TimelineColor = 'primary' | 'secondary' | 'muted' | 'accent' | 'destructive'
 
 export interface TimelineElement {
-  id: string;
-  link: string;
-  datetime: ZonedInstant;
-  title: string;
-  description: string;
-  icon?: IconName;
-  status?: TimelineStatus;
-  color?: TimelineColor;
-  size?: TimelineSize;
-  loading?: boolean;
-  error?: string;
+  id: string
+  link: string
+  datetime: ZonedInstant
+  title: string
+  description: string
+  icon?: IconName
+  status?: TimelineStatus
+  color?: TimelineColor
+  size?: TimelineSize
+  loading?: boolean
+  error?: string
 }
 
 export interface TimelineProps {
-  items: TimelineElement[];
-  size?: TimelineSize;
-  animate?: boolean;
-  iconColor?: TimelineColor;
-  connectorColor?: TimelineColor;
-  className?: string;
+  items: TimelineElement[]
+  size?: TimelineSize
+  animate?: boolean
+  iconColor?: TimelineColor
+  connectorColor?: TimelineColor
+  className?: string
 }

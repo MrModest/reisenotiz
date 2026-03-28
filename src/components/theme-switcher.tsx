@@ -3,10 +3,15 @@ import { Icon } from '@/components/icon'
 import { Theme } from '@/hooks/use-theme'
 import { cn } from '@/lib/utils'
 
-export default function ThemeSwitcher({ theme, onSwitch, collapsed = false, className }: {
-  theme: Theme,
-  onSwitch: (theme: Theme) => void,
-  collapsed?: boolean,
+export default function ThemeSwitcher({
+  theme,
+  onSwitch,
+  collapsed = false,
+  className,
+}: {
+  theme: Theme
+  onSwitch: (theme: Theme) => void
+  collapsed?: boolean
   className?: string
 }) {
   const isDark = theme === 'dark'
@@ -18,7 +23,7 @@ export default function ThemeSwitcher({ theme, onSwitch, collapsed = false, clas
         className={cn(
           'flex items-center justify-center p-3 m-2 rounded-md transition-colors',
           'hover:bg-accent hover:text-accent-foreground text-muted-foreground',
-          className
+          className,
         )}
         aria-label='Toggle theme'
         title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}

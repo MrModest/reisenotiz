@@ -1,7 +1,7 @@
-import { Flight, Accommodation, TripItem, Trip } from "@/types"
-import { useHeaderTitle, useHeaderBackButton } from "@/hooks/use-header-title"
-import { FlightItemView } from "./flight/item-view"
-import { AccommodationItemView } from "./accommodation/item-view"
+import { Flight, Accommodation, TripItem, Trip } from '@/types'
+import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
+import { FlightItemView } from './flight/item-view'
+import { AccommodationItemView } from './accommodation/item-view'
 
 interface TripItemViewProps {
   trip: Trip
@@ -16,13 +16,15 @@ export function TripItemView({ trip, tripItem, className, onDelete }: TripItemVi
 
   switch (tripItem.type) {
     case 'Flight':
-      return (<FlightItemView flight={tripItem as Flight} className={className} onDelete={onDelete} />)
+      return <FlightItemView flight={tripItem as Flight} className={className} onDelete={onDelete} />
     case 'Accommodation':
-      return (<AccommodationItemView accommodation={tripItem as Accommodation} className={className} onDelete={onDelete} />)
+      return (
+        <AccommodationItemView accommodation={tripItem as Accommodation} className={className} onDelete={onDelete} />
+      )
     default:
       return (
         <div className={className}>
-          <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
+          <p className='text-muted-foreground'>Unsupported item type: {tripItem.type}</p>
         </div>
       )
   }

@@ -11,10 +11,18 @@ interface FieldInputProps {
   disabled?: boolean
   placeholder?: string
   className?: string
-  type?: Omit<React.HTMLInputTypeAttribute, 'checkbox' | 'date' | 'datetime-local' | 'radio' | 'submit' | 'time' > // Exclude types that require special handling
+  type?: Omit<React.HTMLInputTypeAttribute, 'checkbox' | 'date' | 'datetime-local' | 'radio' | 'submit' | 'time'> // Exclude types that require special handling
 }
 
-export function FieldInput({ name, label, required: isRequired = false, disabled, placeholder, className, type }: FieldInputProps) {
+export function FieldInput({
+  name,
+  label,
+  required: isRequired = false,
+  disabled,
+  placeholder,
+  className,
+  type,
+}: FieldInputProps) {
   const { field, error } = useFormField(name)
 
   const isNumber = type === 'number'
@@ -27,9 +35,18 @@ export function FieldInput({ name, label, required: isRequired = false, disabled
     <Field className={cn('gap-0.5', className)}>
       <FieldLabel className='gap-1 pr-10' htmlFor={name}>
         {label}
-        {isRequired && (<Required />)}
+        {isRequired && <Required />}
       </FieldLabel>
-      <Input aria-invalid={!!error} id={name} type={type as string} disabled={disabled} placeholder={placeholder} {...field} onChange={onChange} value={value} />
+      <Input
+        aria-invalid={!!error}
+        id={name}
+        type={type as string}
+        disabled={disabled}
+        placeholder={placeholder}
+        {...field}
+        onChange={onChange}
+        value={value}
+      />
       {error && <FieldError className='text-xs font-thin'>{error.message?.toString()}</FieldError>}
     </Field>
   )

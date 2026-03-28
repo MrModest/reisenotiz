@@ -23,14 +23,14 @@ export const useUserAccommodationsStore = create<UserAccommodationsState>()(
       addAccommodation: (site) => {
         const record: AccommodationSiteRecord = { ...site, id: generateUUID() }
         set((state) => ({
-          accommodations: { ...state.accommodations, [record.id]: record }
+          accommodations: { ...state.accommodations, [record.id]: record },
         }))
         return record
       },
 
       updateAccommodation: (id, site) => {
         set((state) => ({
-          accommodations: { ...state.accommodations, [id]: { ...site, id } }
+          accommodations: { ...state.accommodations, [id]: { ...site, id } },
         }))
       },
 
@@ -39,15 +39,15 @@ export const useUserAccommodationsStore = create<UserAccommodationsState>()(
           const { [id]: _, ...remaining } = state.accommodations
           return { accommodations: remaining }
         })
-      }
+      },
     }),
     {
       name: 'reisenotiz-user-accommodations',
       version: 1,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
-        accommodations: state.accommodations
-      })
-    }
-  )
+        accommodations: state.accommodations,
+      }),
+    },
+  ),
 )

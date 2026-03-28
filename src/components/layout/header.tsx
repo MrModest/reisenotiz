@@ -6,11 +6,11 @@ import { HeaderAction } from '@/contexts/header-context'
 import { Title } from '../ui/title'
 
 interface HeaderProps {
-  title?: string;
-  icon?: IconName;
-  actions?: HeaderAction[];
-  onBack?: () => void;
-  showBackButton?: boolean;
+  title?: string
+  icon?: IconName
+  actions?: HeaderAction[]
+  onBack?: () => void
+  showBackButton?: boolean
 }
 
 export function Header({ title = 'Reisenotiz', icon, actions = [], onBack, showBackButton = false }: HeaderProps) {
@@ -37,18 +37,14 @@ export function Header({ title = 'Reisenotiz', icon, actions = [], onBack, showB
       <div className='p-3 flex flex-row items-center justify-between'>
         <div className='flex flex-row items-center space-x-2'>
           {showBackButton && (
-            <Button
-              variant='ghost'
-              size='icon'
-              onClick={handleBack}
-            >
+            <Button variant='ghost' size='icon' onClick={handleBack}>
               <Icon name='back' />
             </Button>
           )}
           <Title title={title} icon={icon || 'logo'} />
         </div>
         <div className='flex flex-row items-center space-x-2'>
-          {(actions).map(action => (
+          {actions.map((action) => (
             <Button
               key={action.label || action.icon}
               variant='outline'

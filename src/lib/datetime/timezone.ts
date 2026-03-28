@@ -5,5 +5,5 @@ export interface Timezone {
 
 export const TzUtils = {
   local: () => Intl.DateTimeFormat().resolvedOptions().timeZone,
-  utc: 'Etc/Utc'
+  utc: 'Etc/Utc',
 }

@@ -71,7 +71,7 @@ export async function parseAirports(): Promise<Record<string, Airport>> {
         country: values[idx('country')],
         geoPoint: {
           latitude: lat,
-          longitude: lon
+          longitude: lon,
         },
       },
       tzone: values[idx('timezone')] ?? 'Etc/Utc',

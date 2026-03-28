@@ -1,10 +1,10 @@
-import { DictionaryConfig, StoredDict } from "./types"
+import { DictionaryConfig, StoredDict } from './types'
 
 export class Dictionary<T extends { name: string }> {
   private cache: Record<string, T> = {}
   private loaded = false
 
-  constructor(private readonly config: DictionaryConfig<T>) { }
+  constructor(private readonly config: DictionaryConfig<T>) {}
 
   async load(): Promise<void> {
     if (this.loaded) return
@@ -22,8 +22,8 @@ export class Dictionary<T extends { name: string }> {
           this.loaded = true
           return
         }
-      } catch(err) {
-        const errMsg = (err instanceof Error) ? err.message : String(err)
+      } catch (err) {
+        const errMsg = err instanceof Error ? err.message : String(err)
         console.warn(`Failed to parse dictionary cache for '${this.config.storageKey}': ${errMsg}`)
         // corrupted cache → refetch
       }
@@ -34,23 +34,18 @@ export class Dictionary<T extends { name: string }> {
 
     const payload: StoredDict<T> = {
       fetchedAt: new Date(now).toISOString(), // UTC by definition
-      data
+      data,
     }
 
     this.cache = data
-    localStorage.setItem(
-      this.config.storageKey,
-      JSON.stringify(payload)
-    )
+    localStorage.setItem(this.config.storageKey, JSON.stringify(payload))
 
     this.loaded = true
   }
 
   private ensureLoaded(): void {
     if (!this.loaded) {
-      throw new Error(
-        `Dictionary "${this.config.storageKey}" accessed before load()`
-      )
+      throw new Error(`Dictionary "${this.config.storageKey}" accessed before load()`)
     }
   }
 
@@ -71,7 +66,6 @@ export class Dictionary<T extends { name: string }> {
 
   findByName(name: string): T[] {
     this.ensureLoaded()
-    return Object.values(this.cache)
-      .filter(item => item.name.startsWith(name))
+    return Object.values(this.cache).filter((item) => item.name.startsWith(name))
   }
 }

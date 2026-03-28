@@ -1,5 +1,5 @@
-import { Icon, IconName } from "@/components/icon"
-import { Badge } from "@/components/ui/badge"
+import { Icon, IconName } from '@/components/icon'
+import { Badge } from '@/components/ui/badge'
 
 export interface FieldChipsViewProps {
   label: string

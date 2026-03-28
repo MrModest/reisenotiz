@@ -1,9 +1,9 @@
-import { DateTime, ZonedInstant } from "@/lib/datetime"
-import { Person } from "./person"
-import { TripItem } from "./trip-item"
-import { TimelineElement } from "@/components/ui/timeline"
-import { Address } from "./address"
-import { routes } from "@/lib/routes"
+import { DateTime, ZonedInstant } from '@/lib/datetime'
+import { Person } from './person'
+import { TripItem } from './trip-item'
+import { TimelineElement } from '@/components/ui/timeline'
+import { Address } from './address'
+import { routes } from '@/lib/routes'
 
 export interface Airport {
   code: string
@@ -43,7 +43,7 @@ export function getFlightTimelineItems(flight: Flight): TimelineElement[] {
       datetime: flight.departure.time,
       link: routes.trips.item(flight.tripId, flight.id),
       icon: 'flight-departure',
-      status: isPast(flight.departure.time) ? 'inactive' : 'active'
+      status: isPast(flight.departure.time) ? 'inactive' : 'active',
     },
     {
       id: `${flight.id}-arrival`,
@@ -52,7 +52,7 @@ export function getFlightTimelineItems(flight: Flight): TimelineElement[] {
       datetime: flight.arrival.time,
       link: routes.trips.item(flight.tripId, flight.id),
       icon: 'flight-arrival',
-      status: isPast(flight.arrival.time) ? 'inactive' : 'active'
-    }
+      status: isPast(flight.arrival.time) ? 'inactive' : 'active',
+    },
   ]
 }

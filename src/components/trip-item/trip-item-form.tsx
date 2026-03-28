@@ -20,7 +20,13 @@ export function TripItemForm({ trip, tripItem, onSave, onCancel, isCreate = fals
   return result
 }
 
-function getEdit({ tripItem, onSave, onCancel, isCreate, className }: {
+function getEdit({
+  tripItem,
+  onSave,
+  onCancel,
+  isCreate,
+  className,
+}: {
   tripItem: TripItem
   onSave: (item: TripItem) => void
   onCancel: () => void
@@ -51,7 +57,7 @@ function getEdit({ tripItem, onSave, onCancel, isCreate, className }: {
     default:
       return (
         <div className={className}>
-          <p className="text-muted-foreground">Unsupported item type: {tripItem.type}</p>
+          <p className='text-muted-foreground'>Unsupported item type: {tripItem.type}</p>
         </div>
       )
   }

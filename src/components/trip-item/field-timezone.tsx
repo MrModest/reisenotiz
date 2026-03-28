@@ -23,7 +23,7 @@ export function FieldTimezone({ name, label, required: isRequired = false, class
     <Field className={cn('gap-0.5', className)}>
       <FieldLabel className='gap-1 pr-10' htmlFor={name}>
         {label}
-        {isRequired && (<Required />)}
+        {isRequired && <Required />}
       </FieldLabel>
       <TimezoneSelector
         selected={preSelected}

@@ -1,4 +1,4 @@
-import { useController, useFormContext } from "react-hook-form"
+import { useController, useFormContext } from 'react-hook-form'
 
 export interface FormFieldState {
   field: ReturnType<typeof useController>['field']
@@ -12,7 +12,10 @@ export interface FormFieldState {
 
 export function useFormField(fieldName: string): FormFieldState {
   const { control } = useFormContext()
-  const { field, fieldState: { error, isDirty } } = useController({ name: fieldName, control })
+  const {
+    field,
+    fieldState: { error, isDirty },
+  } = useController({ name: fieldName, control })
 
   return { field, error, isDirty }
 }

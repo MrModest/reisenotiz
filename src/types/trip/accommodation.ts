@@ -1,11 +1,11 @@
-import { DateTime, ZonedInstant } from "@/lib/datetime"
-import { TripItem } from "./trip-item"
-import { TimelineElement } from "@/components/ui/timeline"
-import { Address } from "./address"
-import { routes } from "@/lib/routes"
+import { DateTime, ZonedInstant } from '@/lib/datetime'
+import { TripItem } from './trip-item'
+import { TimelineElement } from '@/components/ui/timeline'
+import { Address } from './address'
+import { routes } from '@/lib/routes'
 
 export interface StayInterval {
-  in: ZonedInstant;
+  in: ZonedInstant
   out: ZonedInstant
 }
 
@@ -16,10 +16,10 @@ export const ACCOMMODATION_SITE_KINDS = [
   'Guesthouse',
   'BnB',
   'Resort',
-  'Other'
+  'Other',
 ] as const
 
-export type AccommodationSiteKind = typeof ACCOMMODATION_SITE_KINDS[number]
+export type AccommodationSiteKind = (typeof ACCOMMODATION_SITE_KINDS)[number]
 
 export interface AccommodationSite {
   id?: string
@@ -55,7 +55,7 @@ export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
       datetime: hotel.stayInterval.planned?.in || hotel.stayInterval.provided.in,
       link: routes.trips.item(hotel.tripId, hotel.id),
       icon: 'hotel-checkIn',
-      status: isPast(hotel.stayInterval.provided.in) ? 'inactive' : 'active'
+      status: isPast(hotel.stayInterval.provided.in) ? 'inactive' : 'active',
     },
     {
       id: `${hotel.id}-checkout`,
@@ -65,6 +65,6 @@ export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
       link: routes.trips.item(hotel.tripId, hotel.id),
       icon: 'hotel-checkOut',
       status: isPast(hotel.stayInterval.provided.out) ? 'inactive' : 'active',
-    }
+    },
   ]
 }

@@ -2,10 +2,8 @@ import { defineConfig, minimal2023Preset as preset } from '@vite-pwa/assets-gene
 
 export default defineConfig({
   headLinkOptions: {
-    preset: '2023'
+    preset: '2023',
   },
   preset,
-  images: [
-    'public/logo.svg',
-  ]
+  images: ['public/logo.svg'],
 })

@@ -89,7 +89,12 @@ export function AccommodationRecordDialog({ open, onClose, accommodation, onSave
   }
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose() }}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) onClose()
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Edit Accommodation' : 'Add Accommodation'}</DialogTitle>
@@ -123,9 +128,7 @@ export function AccommodationRecordDialog({ open, onClose, accommodation, onSave
               <Button type='button' variant='outline' onClick={onClose}>
                 Cancel
               </Button>
-              <Button type='submit'>
-                {isEditing ? 'Update' : 'Add'}
-              </Button>
+              <Button type='submit'>{isEditing ? 'Update' : 'Add'}</Button>
             </DialogFooter>
           </form>
         </FormProvider>

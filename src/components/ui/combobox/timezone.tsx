@@ -1,13 +1,6 @@
-import { useMemo, useState } from "react"
-import { Item, ItemContent, ItemDescription, ItemTitle } from "../item"
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "./base"
+import { useMemo, useState } from 'react'
+import { Item, ItemContent, ItemDescription, ItemTitle } from '../item'
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './base'
 
 const MAX_RESULTS = 50
 
@@ -18,17 +11,17 @@ interface TimezoneOption {
 
 function getUtcOffset(iana: string): string {
   const now = new Date()
-  const fmt = new Intl.DateTimeFormat("en-US", {
+  const fmt = new Intl.DateTimeFormat('en-US', {
     timeZone: iana,
-    timeZoneName: "shortOffset",
+    timeZoneName: 'shortOffset',
   })
   const parts = fmt.formatToParts(now)
-  const tzPart = parts.find((p) => p.type === "timeZoneName")
-  return tzPart?.value ?? ""
+  const tzPart = parts.find((p) => p.type === 'timeZoneName')
+  return tzPart?.value ?? ''
 }
 
 function buildTimezoneOptions(): TimezoneOption[] {
-  const zones = (Intl as unknown as { supportedValuesOf(key: string): string[] }).supportedValuesOf("timeZone")
+  const zones = (Intl as unknown as { supportedValuesOf(key: string): string[] }).supportedValuesOf('timeZone')
   return zones.map((iana: string) => ({
     iana,
     offset: getUtcOffset(iana),
@@ -60,7 +53,7 @@ export interface TimezoneSelectorProps {
 }
 
 export function TimezoneSelector({ selected = null, onSelect }: TimezoneSelectorProps) {
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState('')
   const options = useMemo(() => buildTimezoneOptions(), [])
 
   const selectedOption = selected
@@ -85,20 +78,16 @@ export function TimezoneSelector({ selected = null, onSelect }: TimezoneSelector
         onSelect(val?.iana ?? null)
       }}
     >
-      <ComboboxInput className="rounded-xs" placeholder="Search timezones..." showClear />
-      <ComboboxContent className="rounded-xs">
+      <ComboboxInput className='rounded-xs' placeholder='Search timezones...' showClear />
+      <ComboboxContent className='rounded-xs'>
         <ComboboxEmpty>No timezones found.</ComboboxEmpty>
-        <ComboboxList className="rounded-xs">
+        <ComboboxList className='rounded-xs'>
           {(tz: TimezoneOption) => (
-            <ComboboxItem className="rounded-xs" key={tz.iana} value={tz}>
-              <Item size="xs" className="p-0">
+            <ComboboxItem className='rounded-xs' key={tz.iana} value={tz}>
+              <Item size='xs' className='p-0'>
                 <ItemContent>
-                  <ItemTitle className="whitespace-nowrap">
-                    {tz.iana}
-                  </ItemTitle>
-                  <ItemDescription>
-                    {tz.offset}
-                  </ItemDescription>
+                  <ItemTitle className='whitespace-nowrap'>{tz.iana}</ItemTitle>
+                  <ItemDescription>{tz.offset}</ItemDescription>
                 </ItemContent>
               </Item>
             </ComboboxItem>

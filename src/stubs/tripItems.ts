@@ -5,7 +5,7 @@ import { airportsByCode } from './airports'
 const persons = [
   { id: 'vvc32db4-d180-46a1-bc30-afa9dccc85b3', fullname: 'Max Mustermann', contacts: [] },
   { id: '8325281d-1901-4eda-9c4e-58f58b94893d', fullname: 'Maria Mustermann', contacts: [] },
-  { id: 'f12afa65-22c8-4545-8f34-0523d00c789d', fullname: 'Mark Smith', contacts: [] }
+  { id: 'f12afa65-22c8-4545-8f34-0523d00c789d', fullname: 'Mark Smith', contacts: [] },
 ]
 
 export const tripsItems: TripItem[] = [
@@ -19,18 +19,18 @@ export const tripsItems: TripItem[] = [
     seat: '12F, 36B',
     passengers: persons,
     departure: {
-      airport: airportsByCode["BER"],
+      airport: airportsByCode['BER'],
       terminal: '2',
       gate: 'A24',
-      time: { instant: '2025-12-01T18:00:00.000Z', zone: airportsByCode["BER"].tzone }
+      time: { instant: '2025-12-01T18:00:00.000Z', zone: airportsByCode['BER'].tzone },
     },
     arrival: {
-      airport: airportsByCode["HND"],
+      airport: airportsByCode['HND'],
       terminal: '1',
-      time: { instant: '2025-12-02T06:00:00.000Z', zone: airportsByCode["HND"].tzone }
+      time: { instant: '2025-12-02T06:00:00.000Z', zone: airportsByCode['HND'].tzone },
     },
     note: '',
-    attachments: []
+    attachments: [],
   } as Flight,
   {
     id: 'cbc32db4-d180-41a1-bc30-afa9dccc85b3',
@@ -42,18 +42,18 @@ export const tripsItems: TripItem[] = [
     seat: '12F, 36B',
     passengers: persons,
     departure: {
-      airport: airportsByCode["HND"],
+      airport: airportsByCode['HND'],
       terminal: '1',
       gate: 'B16',
-      time: { instant: '2025-12-10T10:00:00.000Z', zone: airportsByCode["HND"].tzone }
+      time: { instant: '2025-12-10T10:00:00.000Z', zone: airportsByCode['HND'].tzone },
     },
     arrival: {
-      airport: airportsByCode["BER"],
+      airport: airportsByCode['BER'],
       terminal: '2',
-      time: { instant: '2025-12-10T20:00:00.000Z', zone: airportsByCode["BER"].tzone }
+      time: { instant: '2025-12-10T20:00:00.000Z', zone: airportsByCode['BER'].tzone },
     },
     note: '',
-    attachments: []
+    attachments: [],
   },
   {
     id: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3',
@@ -65,7 +65,7 @@ export const tripsItems: TripItem[] = [
       address: {
         line: 'Dummy-hotel-straße 345, 12345 Leipzig',
         city: 'Leipzig',
-        country: 'Germany'
+        country: 'Germany',
       },
       tzone: 'Europe/Berlin',
     },
@@ -76,21 +76,39 @@ export const tripsItems: TripItem[] = [
     stayInterval: {
       provided: {
         in: { instant: '2025-03-12T15:00:00.000Z', zone: 'Europe/Berlin' },
-        out: { instant: '2025-03-13T11:00:00.000Z', zone: 'Europe/Berlin' }
+        out: { instant: '2025-03-13T11:00:00.000Z', zone: 'Europe/Berlin' },
       },
       planned: {
         in: { instant: '2025-03-12T18:30:00.000Z', zone: 'Europe/Berlin' },
-        out: { instant: '2025-03-13T10:00:00.000Z', zone: 'Europe/Berlin' }
-      }
+        out: { instant: '2025-03-13T10:00:00.000Z', zone: 'Europe/Berlin' },
+      },
     },
     note: 'notify hotel that we come late',
     attachments: [
-      { id: '1', name: 'Booking#1234.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking1234.pdf' },
-      { id: '2', name: 'Booking#2345.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking2345.pdf' },
-      { id: '3', name: 'Booking#3456.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking3456.pdf' },
-      { id: '4', name: 'Booking#4567.pdf', tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3', link: 'https://example.com/booking4567.pdf' }
-    ]
-  } as Accommodation
+      {
+        id: '1',
+        name: 'Booking#1234.pdf',
+        tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3',
+        link: 'https://example.com/booking1234.pdf',
+      },
+      {
+        id: '2',
+        name: 'Booking#2345.pdf',
+        tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3',
+        link: 'https://example.com/booking2345.pdf',
+      },
+      {
+        id: '3',
+        name: 'Booking#3456.pdf',
+        tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3',
+        link: 'https://example.com/booking3456.pdf',
+      },
+      {
+        id: '4',
+        name: 'Booking#4567.pdf',
+        tripItemId: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3',
+        link: 'https://example.com/booking4567.pdf',
+      },
+    ],
+  } as Accommodation,
 ]
-
-

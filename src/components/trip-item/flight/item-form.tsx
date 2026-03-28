@@ -58,11 +58,7 @@ function PassengersSection({ children }: { children: React.ReactNode }) {
   const label = count > 0 ? `Passengers (${count})` : 'Passengers'
 
   return (
-    <CollapsibleSection
-      label={label}
-      defaultOpen={false}
-      className='mb-2 mt-6'
-    >
+    <CollapsibleSection label={label} defaultOpen={false} className='mb-2 mt-6'>
       {children}
     </CollapsibleSection>
   )
@@ -80,7 +76,7 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
   const form = useForm<FlightFormSchema>({
     resolver: zodResolver(flightFormSchema),
     defaultValues: defaultsFromFlight(flight),
-    mode: 'onTouched'
+    mode: 'onTouched',
   })
 
   function handleSubmit(data: FlightFormSchema) {
@@ -97,7 +93,7 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
             icon='flight'
             buttons={[
               { icon: 'save', isSubmit: true },
-              { icon: 'cancel', onClick: onCancel }
+              { icon: 'cancel', onClick: onCancel },
             ]}
           />
         </Field>
@@ -135,8 +131,12 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
         <AttachmentsSection name='attachments' />
         <Separator className='mt-4 mb-6' />
         <Field>
-          <Button type='submit' variant='default'>Save</Button>
-          <Button type='button' onClick={onCancel} variant='secondary'>Cancel</Button>
+          <Button type='submit' variant='default'>
+            Save
+          </Button>
+          <Button type='button' onClick={onCancel} variant='secondary'>
+            Cancel
+          </Button>
         </Field>
       </form>
     </FormProvider>
@@ -150,7 +150,7 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
 
   const initialAirport = getValues(`${direction}.airport`)
   const [selected, setSelected] = useState<Airport | null>(() =>
-    initialAirport?.code ? initialAirport as Airport : null
+    initialAirport?.code ? (initialAirport as Airport) : null,
   )
 
   function handleAirportSelect(airport: Airport | null) {
@@ -169,17 +169,9 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
     <>
       <FieldSet className='flex-row items-end gap-2 my-2'>
         <div className='flex-1'>
-          <AirportSelector
-            items={airports}
-            selected={selected}
-            onSelect={handleAirportSelect}
-          />
+          <AirportSelector items={airports} selected={selected} onSelect={handleAirportSelect} />
         </div>
-        <Button
-          type='button'
-          variant='outline'
-          onClick={() => setDialogOpen(true)}
-        >
+        <Button type='button' variant='outline' onClick={() => setDialogOpen(true)}>
           <Icon name={selected ? 'edit' : 'add'} />
           {selected ? 'Edit' : 'Add New'}
         </Button>

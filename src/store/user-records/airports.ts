@@ -20,7 +20,7 @@ export const useUserAirportsStore = create<UserAirportsState>()(
 
       addAirport: (airport) => {
         set((state) => ({
-          airports: { ...state.airports, [airport.code]: airport }
+          airports: { ...state.airports, [airport.code]: airport },
         }))
       },
 
@@ -28,7 +28,7 @@ export const useUserAirportsStore = create<UserAirportsState>()(
         set((state) => {
           const { [code]: _, ...rest } = state.airports
           return {
-            airports: { ...rest, [airport.code]: airport }
+            airports: { ...rest, [airport.code]: airport },
           }
         })
       },
@@ -38,15 +38,15 @@ export const useUserAirportsStore = create<UserAirportsState>()(
           const { [code]: _, ...remaining } = state.airports
           return { airports: remaining }
         })
-      }
+      },
     }),
     {
       name: 'reisenotiz-user-airports',
       version: 1,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
-        airports: state.airports
-      })
-    }
-  )
+        airports: state.airports,
+      }),
+    },
+  ),
 )

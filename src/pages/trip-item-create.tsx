@@ -1,8 +1,8 @@
-import { TripItemForm } from "@/components/trip-item"
-import { useTrip, useTripsStore } from "@/store"
-import { TripItem, TripItemType } from "@/types"
-import { useParams, useNavigate, useSearchParams } from "react-router"
-import { createDraftItem } from "@/lib/draft-items"
+import { TripItemForm } from '@/components/trip-item'
+import { useTrip, useTripsStore } from '@/store'
+import { TripItem, TripItemType } from '@/types'
+import { useParams, useNavigate, useSearchParams } from 'react-router'
+import { createDraftItem } from '@/lib/draft-items'
 
 export function TripItemCreatePage() {
   const { tripId } = useParams<{ tripId: string }>()
@@ -19,7 +19,7 @@ export function TripItemCreatePage() {
 function TripItemCreateContent({ tripId, type }: { tripId: string; type: TripItemType }) {
   const navigate = useNavigate()
   const trip = useTrip(tripId)
-  const createTripItem = useTripsStore(state => state.createTripItem)
+  const createTripItem = useTripsStore((state) => state.createTripItem)
 
   if (!trip) {
     return <NotFound />
@@ -34,15 +34,7 @@ function TripItemCreateContent({ tripId, type }: { tripId: string; type: TripIte
 
   const handleCancel = () => navigate(-1)
 
-  return (
-    <TripItemForm
-      trip={trip}
-      tripItem={draftItem}
-      onSave={handleSave}
-      onCancel={handleCancel}
-      isCreate
-    />
-  )
+  return <TripItemForm trip={trip} tripItem={draftItem} onSave={handleSave} onCancel={handleCancel} isCreate />
 }
 
 function NotFound() {

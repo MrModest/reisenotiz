@@ -39,7 +39,7 @@ import {
   formatRelative,
   formatTime,
   formatUtcOffset,
-  formatWeekday
+  formatWeekday,
 } from './formatters'
 
 export { DateTime } from './datetime'
@@ -98,7 +98,7 @@ export const formatTo = {
   /**
    * Formats UTC offset as "+02:00"
    */
-  utcOffset: formatUtcOffset
+  utcOffset: formatUtcOffset,
 }
 
 export { TzUtils as TZ } from './timezone'

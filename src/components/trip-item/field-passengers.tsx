@@ -16,9 +16,7 @@ export function FieldPassengers({ name, className }: FieldPassengersProps) {
       onAdd={() => ({ id: generateUUID(), fullname: '', contacts: [] })}
       className={className}
     >
-      {(index, name) => (
-        <FieldInput required name={`${name}.${index}.fullname`} label='Full Name' />
-      )}
+      {(index, name) => <FieldInput required name={`${name}.${index}.fullname`} label='Full Name' />}
     </FieldArrayList>
   )
 }

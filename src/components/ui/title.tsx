@@ -1,17 +1,22 @@
-import { Icon, IconName } from "@/components/icon"
-import { cn } from "@/lib/utils"
+import { Icon, IconName } from '@/components/icon'
+import { cn } from '@/lib/utils'
 
 const textSize = {
   sm: 'text-lg',
   md: 'text-xl',
   lg: 'text-2xl',
-  xl: 'text-3xl'
+  xl: 'text-3xl',
 }
 
-export function Title({ title, size = 'xl', icon, className }: {
-  title: string;
-  size?: keyof typeof textSize;
-  icon?: IconName,
+export function Title({
+  title,
+  size = 'xl',
+  icon,
+  className,
+}: {
+  title: string
+  size?: keyof typeof textSize
+  icon?: IconName
   className?: string
 }) {
   return (

@@ -1,6 +1,6 @@
-import { Icon, IconName } from "@/components/icon"
-import { Button } from "@/components/ui/button"
-import { Title } from "@/components/ui/title"
+import { Icon, IconName } from '@/components/icon'
+import { Button } from '@/components/ui/button'
+import { Title } from '@/components/ui/title'
 
 export interface ItemHeaderProps {
   title: string
@@ -13,19 +13,17 @@ export function ItemHeader({ title, icon, buttons }: ItemHeaderProps) {
     <>
       <Title size='md' className='py-4' title={title} icon={icon} />
       <div className='flex gap-2 py-4'>
-        {
-          buttons.map(button => (
-            <Button
-              key={button.icon}
-              variant='outline'
-              size='icon'
-              type={button.isSubmit ? 'submit' : 'button'}
-              onClick={button.onClick}
-            >
-              <Icon name={button.icon} />
-            </Button>
-          ))
-        }
+        {buttons.map((button) => (
+          <Button
+            key={button.icon}
+            variant='outline'
+            size='icon'
+            type={button.isSubmit ? 'submit' : 'button'}
+            onClick={button.onClick}
+          >
+            <Icon name={button.icon} />
+          </Button>
+        ))}
       </div>
     </>
   )

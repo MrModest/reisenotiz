@@ -17,7 +17,7 @@ export function CollapsibleSection({
   preview,
   defaultOpen = false,
   className,
-  children
+  children,
 }: CollapsibleSectionProps) {
   return (
     <Collapsible
@@ -31,25 +31,13 @@ export function CollapsibleSection({
             <span className='font-medium text-sm'>{label}</span>
           </div>
           <div className='size-4 shrink-0'>
-            <Icon
-              name='edit'
-              className='size-4 group-data-open:hidden'
-            />
-            <Icon
-              name='check'
-              className='size-4 hidden group-data-open:block'
-            />
+            <Icon name='edit' className='size-4 group-data-open:hidden' />
+            <Icon name='check' className='size-4 hidden group-data-open:block' />
           </div>
         </div>
       </CollapsibleTrigger>
-      {preview && (
-        <div className='p-2 pt-0 mt-1.5 group-data-open:hidden'>
-          {preview}
-        </div>
-      )}
-      <CollapsibleContent className='p-2 pt-2'>
-        {children}
-      </CollapsibleContent>
+      {preview && <div className='p-2 pt-0 mt-1.5 group-data-open:hidden'>{preview}</div>}
+      <CollapsibleContent className='p-2 pt-2'>{children}</CollapsibleContent>
     </Collapsible>
   )
 }

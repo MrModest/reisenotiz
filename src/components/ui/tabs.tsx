@@ -18,7 +18,7 @@ function Tabs({
         'group/tabs flex data-[orientation=horizontal]:flex-col',
         variant === 'default' && 'gap-2',
         variant === 'contained' && 'border border-border rounded-xs overflow-hidden gap-0',
-        className
+        className,
       )}
       {...props}
     />
@@ -37,7 +37,7 @@ const tabsListVariants = cva(
     defaultVariants: {
       variant: 'default',
     },
-  }
+  },
 )
 
 function TabsList({
@@ -52,7 +52,7 @@ function TabsList({
       className={cn(
         tabsListVariants({ variant }),
         'group-data-[variant=contained]/tabs:w-full group-data-[variant=contained]/tabs:rounded-none group-data-[variant=contained]/tabs:border-b group-data-[variant=contained]/tabs:border-border',
-        className
+        className,
       )}
       {...props}
     />
@@ -68,7 +68,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
         'group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent dark:group-data-[variant=line]/tabs-list:data-active:border-transparent dark:group-data-[variant=line]/tabs-list:data-active:bg-transparent',
         'data-active:bg-background dark:data-active:text-foreground dark:data-active:border-input dark:data-active:bg-input/30 data-active:text-foreground',
         'after:bg-foreground after:absolute after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-right-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100',
-        className
+        className,
       )}
       {...props}
     />

@@ -28,20 +28,20 @@ interface AirportRecordDialogProps {
 
 function defaultValues(airport: Airport | null): UserAirportSchema {
   if (!airport) {
-    return ({
+    return {
       code: '',
       name: '',
       address: { country: '', city: '', line: '' },
       tzone: '',
-    })
+    }
   }
 
-  return ({
+  return {
     code: airport.code,
     name: airport.name,
     address: airport.address,
     tzone: airport.tzone,
-  })
+  }
 }
 
 export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportRecordDialogProps) {
@@ -61,9 +61,7 @@ export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportR
   }, [open, airport, form])
 
   const watchedCode = useWatch({ control: form.control, name: 'code' })
-  const dictEntry = watchedCode?.length >= 3
-    ? airportDictionary.get(watchedCode.toUpperCase())
-    : undefined
+  const dictEntry = watchedCode?.length >= 3 ? airportDictionary.get(watchedCode.toUpperCase()) : undefined
 
   function handleFormSubmit(e: React.FormEvent) {
     e.stopPropagation()
@@ -88,7 +86,12 @@ export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportR
   }
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose() }}>
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) onClose()
+      }}
+    >
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEditing ? 'Edit Airport' : 'Add Airport'}</DialogTitle>
@@ -128,9 +131,7 @@ export function AirportRecordDialog({ open, onClose, airport, onSave }: AirportR
               <Button type='button' variant='outline' onClick={onClose}>
                 Cancel
               </Button>
-              <Button type='submit'>
-                {isEditing ? 'Update' : 'Add'}
-              </Button>
+              <Button type='submit'>{isEditing ? 'Update' : 'Add'}</Button>
             </DialogFooter>
           </form>
         </FormProvider>

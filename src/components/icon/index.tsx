@@ -1,6 +1,7 @@
 import { DynamicIcon } from 'lucide-react/dynamic'
 
-export type IconName = 'arrow-right'
+export type IconName =
+  | 'arrow-right'
   | 'back'
   | 'home'
   | 'inbox'
@@ -51,7 +52,7 @@ export type IconName = 'arrow-right'
   | 'long-transfer'
   | 'unknown'
 
-export function Icon ({ name, className }: { name: IconName; className?: string }) {
+export function Icon({ name, className }: { name: IconName; className?: string }) {
   const style = className
 
   switch (name) {

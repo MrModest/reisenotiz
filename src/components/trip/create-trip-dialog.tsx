@@ -11,13 +11,7 @@ import { FieldInput } from '@/components/trip-item/field-input'
 import { FieldTextarea } from '@/components/trip-item/field-textarea'
 import { FieldDatePicker } from '@/components/trip-item/field-date-picker'
 import { FieldSet } from '@/components/ui/field'
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 const createTripSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -40,7 +34,7 @@ function dateStringToZonedInstant(dateStr: string) {
 }
 
 export function CreateTripDialog({ open, onOpenChange }: CreateTripDialogProps) {
-  const createTrip = useTripsStore(state => state.createTrip)
+  const createTrip = useTripsStore((state) => state.createTrip)
   const navigate = useNavigate()
 
   const form = useForm<CreateTripSchema>({
@@ -82,15 +76,15 @@ export function CreateTripDialog({ open, onOpenChange }: CreateTripDialogProps) 
           <DialogTitle>New Trip</DialogTitle>
         </DialogHeader>
         <FormProvider {...form}>
-          <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
-            <FieldInput name="name" label="Name" required placeholder="Trip name" />
-            <FieldTextarea name="description" label="Description" placeholder="Optional description" />
-            <FieldSet className="flex-row gap-2">
-              <FieldDatePicker name="startDate" label="Start" required />
-              <FieldDatePicker name="endDate" label="End" required />
+          <form onSubmit={handleFormSubmit} className='flex flex-col gap-4'>
+            <FieldInput name='name' label='Name' required placeholder='Trip name' />
+            <FieldTextarea name='description' label='Description' placeholder='Optional description' />
+            <FieldSet className='flex-row gap-2'>
+              <FieldDatePicker name='startDate' label='Start' required />
+              <FieldDatePicker name='endDate' label='End' required />
             </FieldSet>
             <DialogFooter>
-              <Button type="submit">Create</Button>
+              <Button type='submit'>Create</Button>
             </DialogFooter>
           </form>
         </FormProvider>

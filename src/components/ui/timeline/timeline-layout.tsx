@@ -7,20 +7,14 @@ import { IconName } from '@/components/icon'
 import { cn } from '@/lib/utils'
 
 interface TimelineLayoutProps {
-  items: TimelineElement[];
-  size?: 'sm' | 'md' | 'lg';
-  customIcon?: IconName;
-  animate?: boolean;
-  className?: string;
+  items: TimelineElement[]
+  size?: 'sm' | 'md' | 'lg'
+  customIcon?: IconName
+  animate?: boolean
+  className?: string
 }
 
-export const TimelineLayout = ({
-  items,
-  size = 'md',
-  customIcon,
-  animate = true,
-  className,
-}: TimelineLayoutProps) => {
+export const TimelineLayout = ({ items, size = 'md', customIcon, animate = true, className }: TimelineLayoutProps) => {
   return (
     <Timeline size={size} className={cn('w-default', className)}>
       {[...items].map((item, index) => (
@@ -34,10 +28,7 @@ export const TimelineLayout = ({
             ease: 'easeOut',
           }}
         >
-          <Link
-            to={item.link}
-            className='block card'
-          >
+          <Link to={item.link} className='block card'>
             <TimelineItem
               date={formatTo.dayShort(item.datetime)}
               time={formatTo.time(item.datetime)}

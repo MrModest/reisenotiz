@@ -25,7 +25,7 @@ export function FieldTimePicker({
   required: isRequired = false,
   disabled,
   placeholder = 'Pick a time',
-  className
+  className,
 }: FieldTimePickerProps) {
   const { field, error } = useFormField(name)
   const [open, setOpen] = useState(false)
@@ -50,7 +50,7 @@ export function FieldTimePicker({
               className={cn(
                 'justify-between items-center gap-2 text-left font-normal w-full h-auto py-1.5 md:py-1 text-sm',
                 !field.value && 'text-muted-foreground',
-                error && 'border-destructive'
+                error && 'border-destructive',
               )}
               disabled={disabled}
             />
@@ -61,12 +61,7 @@ export function FieldTimePicker({
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0'>
           <div className='flex gap-0'>
-            <TimeColumn
-              value={hours}
-              options={HOURS}
-              onChange={(h) => handleTimeChange(h, minutes)}
-              label='Hours'
-            />
+            <TimeColumn value={hours} options={HOURS} onChange={(h) => handleTimeChange(h, minutes)} label='Hours' />
             <div className='w-px bg-border' />
             <TimeColumn
               value={minutes}
@@ -86,7 +81,7 @@ function TimeColumn({
   value,
   options,
   onChange,
-  label
+  label,
 }: {
   value: string
   options: string[]
@@ -110,15 +105,13 @@ function TimeColumn({
 
   return (
     <div className='flex flex-col w-16'>
-      <div className='text-xs text-muted-foreground font-medium text-center py-2'>
-        {label}
-      </div>
+      <div className='text-xs text-muted-foreground font-medium text-center py-2'>{label}</div>
       <div
         ref={containerRef}
         className='h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent'
         style={{
           scrollbarWidth: 'thin',
-          scrollbarColor: 'hsl(var(--border)) transparent'
+          scrollbarColor: 'hsl(var(--border)) transparent',
         }}
       >
         {options.map((option) => (
@@ -129,7 +122,7 @@ function TimeColumn({
             onClick={() => onChange(option)}
             className={cn(
               'w-full px-2 py-2 text-center text-sm hover:bg-muted transition-colors',
-              option === value && 'bg-primary text-primary-foreground font-medium'
+              option === value && 'bg-primary text-primary-foreground font-medium',
             )}
           >
             {option}

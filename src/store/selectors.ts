@@ -7,12 +7,10 @@ import { TimelineElement } from '@/components/ui/timeline'
  * Get all trips as an array
  */
 export function useTrips() {
-  const tripsRecord = useTripsStore(state => state.trips)
+  const tripsRecord = useTripsStore((state) => state.trips)
   return useMemo(
-    () => Object.values(tripsRecord).sort((a, b) =>
-      b.startDate.instant.localeCompare(a.startDate.instant)
-    ),
-    [tripsRecord]
+    () => Object.values(tripsRecord).sort((a, b) => b.startDate.instant.localeCompare(a.startDate.instant)),
+    [tripsRecord],
   )
 }
 
@@ -20,23 +18,23 @@ export function useTrips() {
  * Get a single trip by ID
  */
 export function useTrip(tripId: string) {
-  return useTripsStore(state => state.getTripById(tripId))
+  return useTripsStore((state) => state.getTripById(tripId))
 }
 
 /**
  * Get a single trip item by ID
  */
 export function useTripItem(itemId: string) {
-  return useTripsStore(state => state.getTripItemById(itemId))
+  return useTripsStore((state) => state.getTripItemById(itemId))
 }
 
 /**
  * Get all trip items for a specific trip
  */
 export function useTripItems(tripId: string) {
-  const tripItemsRecord = useTripsStore(state => state.tripItems)
+  const tripItemsRecord = useTripsStore((state) => state.tripItems)
   return useMemo(() => {
-    return Object.values(tripItemsRecord).filter(item => item.tripId === tripId)
+    return Object.values(tripItemsRecord).filter((item) => item.tripId === tripId)
   }, [tripItemsRecord, tripId])
 }
 
@@ -67,9 +65,7 @@ function getTimelineElements(tripItems: TripItem[]): TimelineElement[] {
   }
 
   // Sort by datetime ascending (oldest first)
-  elements.sort((a, b) =>
-    a.datetime.instant.localeCompare(b.datetime.instant)
-  )
+  elements.sort((a, b) => a.datetime.instant.localeCompare(b.datetime.instant))
 
   return elements
 }

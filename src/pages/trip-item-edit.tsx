@@ -1,6 +1,6 @@
-import { TripItemForm } from "@/components/trip-item"
-import { useTrip, useTripItem, useTripsStore } from "@/store"
-import { useParams, useNavigate } from "react-router"
+import { TripItemForm } from '@/components/trip-item'
+import { useTrip, useTripItem, useTripsStore } from '@/store'
+import { useParams, useNavigate } from 'react-router'
 
 export function TripItemEditPage() {
   const { tripId, itemId } = useParams<{ tripId: string; itemId: string }>()
@@ -16,7 +16,7 @@ function TripItemEditContent({ tripId, itemId }: { tripId: string; itemId: strin
   const navigate = useNavigate()
   const trip = useTrip(tripId)
   const tripItem = useTripItem(itemId)
-  const updateTripItem = useTripsStore(state => state.updateTripItem)
+  const updateTripItem = useTripsStore((state) => state.updateTripItem)
 
   if (!trip || !tripItem) {
     return <NotFound />
@@ -29,15 +29,13 @@ function TripItemEditContent({ tripId, itemId }: { tripId: string; itemId: strin
 
   const handleCancel = () => navigate(-1)
 
-  return (
-    <TripItemForm trip={trip} tripItem={tripItem} onSave={handleSave} onCancel={handleCancel} />
-  )
+  return <TripItemForm trip={trip} tripItem={tripItem} onSave={handleSave} onCancel={handleCancel} />
 }
 
 function NotFound() {
   return (
-    <div className="p-4 text-center">
-      <p className="text-muted-foreground">Trip item not found</p>
+    <div className='p-4 text-center'>
+      <p className='text-muted-foreground'>Trip item not found</p>
     </div>
   )
 }

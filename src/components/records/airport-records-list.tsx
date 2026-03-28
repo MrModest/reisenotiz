@@ -3,14 +3,7 @@ import { userRecords } from '@/store'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { getCountryFlag } from '@/lib/utils/country-flag'
-import {
-  Item,
-  ItemContent,
-  ItemGroup,
-  ItemTitle,
-  ItemDescription,
-  ItemActions,
-} from '@/components/ui/item'
+import { Item, ItemContent, ItemGroup, ItemTitle, ItemDescription, ItemActions } from '@/components/ui/item'
 import { AirportRecordDialog } from './airport-record-dialog'
 import type { Airport } from '@/types'
 
@@ -55,9 +48,7 @@ export function AirportRecordsList() {
       ) : (
         <ItemGroup>
           {airportList.map((airport) => {
-            const flag = airport.address?.country
-              ? getCountryFlag(airport.address.country)
-              : ''
+            const flag = airport.address?.country ? getCountryFlag(airport.address.country) : ''
 
             return (
               <Item key={airport.code} variant='outline'>
@@ -67,24 +58,14 @@ export function AirportRecordsList() {
                     {airport.code} - {airport.name}
                   </ItemTitle>
                   <ItemDescription>
-                    {[airport.address?.city, airport.address?.country]
-                      .filter(Boolean)
-                      .join(', ')}
+                    {[airport.address?.city, airport.address?.country].filter(Boolean).join(', ')}
                   </ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <Button
-                    variant='ghost'
-                    size='icon-sm'
-                    onClick={() => handleEdit(airport)}
-                  >
+                  <Button variant='ghost' size='icon-sm' onClick={() => handleEdit(airport)}>
                     <Icon name='edit' />
                   </Button>
-                  <Button
-                    variant='ghost'
-                    size='icon-sm'
-                    onClick={() => deleteAirport(airport.code)}
-                  >
+                  <Button variant='ghost' size='icon-sm' onClick={() => deleteAirport(airport.code)}>
                     <Icon name='trash' />
                   </Button>
                 </ItemActions>
@@ -94,11 +75,7 @@ export function AirportRecordsList() {
         </ItemGroup>
       )}
 
-      <AirportRecordDialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        airport={editingAirport}
-      />
+      <AirportRecordDialog open={dialogOpen} onClose={handleDialogClose} airport={editingAirport} />
     </div>
   )
 }

@@ -57,12 +57,14 @@ export function defaultsFromAccommodation(accomodation: Accommodation): Accommod
       dateOut: formatTo.dateISO(stayInterval.provided.out),
       timeOut: formatTo.time(stayInterval.provided.out),
     },
-    plannedInterval: stayInterval.planned ? {
-      dateIn: formatTo.dateISO(stayInterval.planned.in),
-      timeIn: formatTo.time(stayInterval.planned.in),
+    plannedInterval: stayInterval.planned
+      ? {
+          dateIn: formatTo.dateISO(stayInterval.planned.in),
+          timeIn: formatTo.time(stayInterval.planned.in),
 
-      dateOut: formatTo.dateISO(stayInterval.planned.out),
-      timeOut: formatTo.time(stayInterval.planned.out),
-    } : undefined,
+          dateOut: formatTo.dateISO(stayInterval.planned.out),
+          timeOut: formatTo.time(stayInterval.planned.out),
+        }
+      : undefined,
   }
 }

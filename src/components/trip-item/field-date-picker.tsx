@@ -23,7 +23,7 @@ export function FieldDatePicker({
   required: isRequired = false,
   disabled,
   placeholder = 'Pick a date',
-  className
+  className,
 }: FieldDatePickerProps) {
   const { field, error } = useFormField(name)
   const [open, setOpen] = useState(false)
@@ -52,7 +52,7 @@ export function FieldDatePicker({
               className={cn(
                 'justify-between items-center gap-2 text-left font-normal w-full h-auto py-1.5 md:py-1 text-sm',
                 !field.value && 'text-muted-foreground',
-                error && 'border-destructive'
+                error && 'border-destructive',
               )}
               disabled={disabled}
             />
@@ -62,12 +62,7 @@ export function FieldDatePicker({
           <Icon name='calendar' />
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0'>
-          <Calendar
-            mode='single'
-            selected={selectedDate}
-            onSelect={handleSelect}
-            disabled={disabled}
-          />
+          <Calendar mode='single' selected={selectedDate} onSelect={handleSelect} disabled={disabled} />
         </PopoverContent>
       </Popover>
       {error && <FieldError className='text-xs font-thin'>{error.message?.toString()}</FieldError>}
@@ -95,6 +90,6 @@ function formatDateForDisplay(dateString: string): string {
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
   })
 }

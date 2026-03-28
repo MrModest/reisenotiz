@@ -25,7 +25,7 @@ const timelineVariants = cva('flex flex-col relative', {
  */
 interface TimelineProps extends React.HTMLAttributes<HTMLOListElement>, VariantProps<typeof timelineVariants> {
   /** Size of the timeline icons */
-  iconsize?: TimelineSize;
+  iconsize?: TimelineSize
 }
 
 /**
@@ -41,12 +41,8 @@ function Timeline({ className, iconsize, size, children, ...props }: TimelinePro
 
   return (
     <ol
-      aria-label="Timeline"
-      className={cn(
-        timelineVariants({ size }),
-        'relative max-w-2xl py-8',
-        className
-      )}
+      aria-label='Timeline'
+      className={cn(timelineVariants({ size }), 'relative max-w-2xl py-8', className)}
       {...props}
     >
       {React.Children.map(children, (child, index) => {
@@ -103,8 +99,7 @@ function TimelineItem({
   showConnector = true,
   iconsize,
   ...props
-} : TimelineItemProps) {
-
+}: TimelineItemProps) {
   // Filter out Framer Motion specific props
   const {
     style,
@@ -117,16 +112,16 @@ function TimelineItem({
 
   return (
     <li className={cn('relative w-full mb-8 last:mb-0 bg-card', className)} {...filteredProps}>
-      <div className="grid grid-cols-[auto_auto_1fr] gap-3 items-start">
+      <div className='grid grid-cols-[auto_auto_1fr] gap-3 items-start'>
         {/* Date */}
-        <div className="flex flex-col justify-start min-w-20">
-          <TimelineTime className="text-right pr-2 text-sm">{date}</TimelineTime>
-          <TimelineTime className="text-right pr-2 text-primary font-semibold text-xl">{time}</TimelineTime>
+        <div className='flex flex-col justify-start min-w-20'>
+          <TimelineTime className='text-right pr-2 text-sm'>{date}</TimelineTime>
+          <TimelineTime className='text-right pr-2 text-primary font-semibold text-xl'>{time}</TimelineTime>
         </div>
 
         {/* Timeline dot and connector */}
-        <div className="flex flex-col items-center">
-          <div className="relative z-10">
+        <div className='flex flex-col items-center'>
+          <div className='relative z-10'>
             <TimelineIcon icon={icon} iconSize={iconsize} status={status} />
           </div>
           {showConnector && <TimelineConnector />}
@@ -189,21 +184,18 @@ function TimelineTime({ className, date, format, children, ...props }: TimelineT
 TimelineTime.displayName = 'TimelineTime'
 
 function TimelineConnector() {
-  return (<div className="h-16 w-0.5 bg-border mt-2" />)
+  return <div className='h-16 w-0.5 bg-border mt-2' />
 }
 TimelineConnector.displayName = 'TimelineConnector'
 
 function TimelineHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (<div className={cn('flex items-center gap-4', className)} {...props} />)
+  return <div className={cn('flex items-center gap-4', className)} {...props} />
 }
 TimelineHeader.displayName = 'TimelineHeader'
 
-function TimelineTitle({ className, children, ...props }: React.HTMLAttributes<HTMLHeadingElement>){
+function TimelineTitle({ className, children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3
-      className={cn('font-semibold leading-none tracking-tight text-secondary-foreground', className)}
-      {...props}
-    >
+    <h3 className={cn('font-semibold leading-none tracking-tight text-secondary-foreground', className)} {...props}>
       {children}
     </h3>
   )
@@ -213,10 +205,10 @@ TimelineTitle.displayName = 'TimelineTitle'
 function TimelineIcon({
   icon,
   iconSize = 'md',
-  status = 'active'
+  status = 'active',
 }: {
   icon?: IconName
-  iconSize?: TimelineSize,
+  iconSize?: TimelineSize
   status?: TimelineStatus
 }) {
   const sizeClasses = {
@@ -254,27 +246,20 @@ function TimelineIcon({
 }
 
 function TimelineDescription({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) {
-  return (
-    <p className={cn('text-sm text-muted-foreground', className)} {...props} />
-  )
+  return <p className={cn('text-sm text-muted-foreground', className)} {...props} />
 }
 
 TimelineDescription.displayName = 'TimelineDescription'
 
 function TimelineContent({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div className={cn('flex flex-col gap-2 pl-2', className)} {...props} />
-  )
+  return <div className={cn('flex flex-col gap-2 pl-2', className)} {...props} />
 }
 TimelineContent.displayName = 'TimelineContent'
 
 function TimelineEmpty({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return(
-    <div
-      className={cn('flex flex-col items-center justify-center p-8 text-center', className)}
-      {...props}
-    >
-      <p className="text-sm text-muted-foreground">{children || 'No timeline items to display'}</p>
+  return (
+    <div className={cn('flex flex-col items-center justify-center p-8 text-center', className)} {...props}>
+      <p className='text-sm text-muted-foreground'>{children || 'No timeline items to display'}</p>
     </div>
   )
 }

@@ -74,7 +74,7 @@ export function Navigation({ variant, onCollapsedChange }: NavigationProps) {
             className={cn(
               'flex items-center gap-3 px-3 py-2 rounded-sm text-sm font-medium transition-colors w-full',
               'hover:bg-accent hover:text-accent-foreground text-muted-foreground',
-              isCollapsed && 'justify-center'
+              isCollapsed && 'justify-center',
             )}
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >

@@ -1,14 +1,7 @@
-import { useState } from "react"
-import { Item, ItemContent, ItemDescription, ItemTitle } from "../item"
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "./base"
-import type { Airport } from "@/types"
+import { useState } from 'react'
+import { Item, ItemContent, ItemDescription, ItemTitle } from '../item'
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './base'
+import type { Airport } from '@/types'
 
 const MAX_RESULTS = 50
 const MIN_QUERY_LENGTH = 2
@@ -50,7 +43,7 @@ function filterAirports(items: Airport[], query: string): Airport[] {
 }
 
 export function AirportSelector({ items, selected = null, onSelect }: AirportSelectorProps) {
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState('')
 
   const filtered = filterAirports(items, query)
   const displayItems = selected && !filtered.some((a) => a.code === selected.code)
@@ -70,21 +63,19 @@ export function AirportSelector({ items, selected = null, onSelect }: AirportSel
         onSelect(val)
       }}
     >
-      <ComboboxInput className='rounded-xs' placeholder="Search airports..." showClear />
+      <ComboboxInput className='rounded-xs' placeholder='Search airports...' showClear />
       <ComboboxContent className='rounded-xs'>
         <ComboboxEmpty>
           {query.trim().length < MIN_QUERY_LENGTH
-            ? "Type to search..."
-            : "No airports found."}
+            ? 'Type to search...'
+            : 'No airports found.'}
         </ComboboxEmpty>
         <ComboboxList className='rounded-xs'>
           {(airport: Airport) => (
             <ComboboxItem className='rounded-xs' key={airport.code} value={airport}>
-              <Item size="xs" className="p-0">
+              <Item size='xs' className='p-0'>
                 <ItemContent>
-                  <ItemTitle className="whitespace-nowrap">
-                    {airport.name}
-                  </ItemTitle>
+                  <ItemTitle className='whitespace-nowrap'>{airport.name}</ItemTitle>
                   <ItemDescription>
                     {airport.code} ({airport.address.city}, {airport.address.country})
                   </ItemDescription>

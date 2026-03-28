@@ -1,13 +1,6 @@
 import { useState } from 'react'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '../item'
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from './base'
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './base'
 import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
 
 const MAX_RESULTS = 50
@@ -58,9 +51,7 @@ export function AccommodationSelector({ items, selected = null, onSelect }: Acco
             <ComboboxItem className='rounded-xs' key={record.id} value={record}>
               <Item size='xs' className='p-0'>
                 <ItemContent>
-                  <ItemTitle className='whitespace-nowrap'>
-                    {record.name}
-                  </ItemTitle>
+                  <ItemTitle className='whitespace-nowrap'>{record.name}</ItemTitle>
                   <ItemDescription>
                     {record.kind} — {[record.address.city, record.address.country].filter(Boolean).join(', ')}
                   </ItemDescription>

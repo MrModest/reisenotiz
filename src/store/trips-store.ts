@@ -39,7 +39,7 @@ export const useTripsStore = create<TripsState>()(
         const id = generateUUID()
         const newTrip: Trip = { ...trip, id }
         set((state) => ({
-          trips: { ...state.trips, [id]: newTrip }
+          trips: { ...state.trips, [id]: newTrip },
         }))
         return id
       },
@@ -49,7 +49,7 @@ export const useTripsStore = create<TripsState>()(
           const trip = state.trips[id]
           if (!trip) return state
           return {
-            trips: { ...state.trips, [id]: { ...trip, ...updates } }
+            trips: { ...state.trips, [id]: { ...trip, ...updates } },
           }
         })
       },
@@ -59,11 +59,11 @@ export const useTripsStore = create<TripsState>()(
           const { [id]: _, ...remainingTrips } = state.trips
           // Cascade delete: remove all items belonging to this trip
           const remainingItems = Object.fromEntries(
-            Object.entries(state.tripItems).filter(([, item]) => item.tripId !== id)
+            Object.entries(state.tripItems).filter(([, item]) => item.tripId !== id),
           )
           return {
             trips: remainingTrips,
-            tripItems: remainingItems
+            tripItems: remainingItems,
           }
         })
       },
@@ -73,14 +73,14 @@ export const useTripsStore = create<TripsState>()(
         const id = generateUUID()
         const newItem = { ...item, id } as TripItem
         set((state) => ({
-          tripItems: { ...state.tripItems, [id]: newItem }
+          tripItems: { ...state.tripItems, [id]: newItem },
         }))
         return id
       },
 
       updateTripItem: (id, item) => {
         set((state) => ({
-          tripItems: { ...state.tripItems, [id]: item }
+          tripItems: { ...state.tripItems, [id]: item },
         }))
       },
 
@@ -89,7 +89,7 @@ export const useTripsStore = create<TripsState>()(
           const { [id]: _, ...remainingItems } = state.tripItems
           return { tripItems: remainingItems }
         })
-      }
+      },
     }),
     {
       name: 'reisenotiz-storage',
@@ -97,8 +97,8 @@ export const useTripsStore = create<TripsState>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         trips: state.trips,
-        tripItems: state.tripItems
-      })
-    }
-  )
+        tripItems: state.tripItems,
+      }),
+    },
+  ),
 )

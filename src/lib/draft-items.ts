@@ -1,13 +1,13 @@
-import { generateUUID } from "@/types/common/uuid"
-import { Flight, Accommodation, TripItem, TripItemType } from "@/types"
-import { DateTime, TZ } from "@/lib/datetime"
+import { generateUUID } from '@/types/common/uuid'
+import { Flight, Accommodation, TripItem, TripItemType } from '@/types'
+import { DateTime, TZ } from '@/lib/datetime'
 
 export function createDraftItem(tripId: string, type: TripItemType): TripItem {
   const base = {
     id: generateUUID(),
     tripId,
     note: '',
-    attachments: []
+    attachments: [],
   }
 
   switch (type) {
@@ -27,7 +27,7 @@ export function createDraftItem(tripId: string, type: TripItemType): TripItem {
 const AddressDraft = {
   country: '',
   city: '',
-  line: ''
+  line: '',
 }
 
 function createDraftFlight(base: { id: string; tripId: string; note: string; attachments: never[] }): Flight {
@@ -48,27 +48,32 @@ function createDraftFlight(base: { id: string; tripId: string; note: string; att
         code: '',
         name: '',
         address: AddressDraft,
-        tzone: localTimezone
+        tzone: localTimezone,
       },
       time: defaultTime,
       terminal: '',
-      gate: ''
+      gate: '',
     },
     arrival: {
       airport: {
         code: '',
         name: '',
         address: AddressDraft,
-        tzone: localTimezone
+        tzone: localTimezone,
       },
       time: defaultTime,
       terminal: '',
-      gate: ''
-    }
+      gate: '',
+    },
   }
 }
 
-function createDraftAccommodation(base: { id: string; tripId: string; note: string; attachments: never[] }): Accommodation {
+function createDraftAccommodation(base: {
+  id: string
+  tripId: string
+  note: string
+  attachments: never[]
+}): Accommodation {
   const now = DateTime.now()
   const defaultTime = now.toZonedInstant()
 
@@ -80,7 +85,7 @@ function createDraftAccommodation(base: { id: string; tripId: string; note: stri
       kind: 'Hotel',
       address: AddressDraft,
       contact: '',
-      tzone: TZ.local()
+      tzone: TZ.local(),
     },
     reservedOn: undefined,
     guests: 1,
@@ -88,8 +93,8 @@ function createDraftAccommodation(base: { id: string; tripId: string; note: stri
     stayInterval: {
       provided: {
         in: defaultTime,
-        out: defaultTime
-      }
-    }
+        out: defaultTime,
+      },
+    },
   }
 }

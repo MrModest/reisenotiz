@@ -1,9 +1,9 @@
-import { TimelineElement } from "@/components/ui/timeline"
-import { Person } from "./person"
-import { TripItem } from "./trip-item"
-import { ZonedInstant } from "@/lib/datetime"
-import { Address } from "./address"
-import { routes } from "@/lib/routes"
+import { TimelineElement } from '@/components/ui/timeline'
+import { Person } from './person'
+import { TripItem } from './trip-item'
+import { ZonedInstant } from '@/lib/datetime'
+import { Address } from './address'
+import { routes } from '@/lib/routes'
 
 export interface Station {
   name: string
@@ -38,7 +38,7 @@ export function getLongTransferTimelineItems(transfer: LongTransfer): TimelineEl
       datetime: transfer.from.time,
       link: routes.trips.item(transfer.tripId, transfer.id),
       icon: 'long-transfer',
-      status: 'active'
+      status: 'active',
     },
     {
       id: `${transfer.id}-to`,
@@ -47,7 +47,7 @@ export function getLongTransferTimelineItems(transfer: LongTransfer): TimelineEl
       datetime: transfer.to.time,
       link: routes.trips.item(transfer.tripId, transfer.id),
       icon: 'long-transfer',
-      status: 'active'
-    }
+      status: 'active',
+    },
   ]
 }

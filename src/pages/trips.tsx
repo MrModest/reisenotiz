@@ -7,7 +7,5 @@ export function TripsPage() {
 
   useHeaderTitle('Trips', 'trip')
 
-  return (
-    <Trips trips={trips} className='mt-2' />
-  )
+  return <Trips trips={trips} className='mt-2' />
 }

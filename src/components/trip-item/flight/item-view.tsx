@@ -36,7 +36,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
           icon='flight'
           buttons={[
             { icon: 'edit', onClick: () => navigate('edit') },
-            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) }
+            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) },
           ]}
         />
       </div>
@@ -53,14 +53,20 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
       </div>
       <div className='flex flex-col gap-2 mt-2'>
         {flight.passengers.length > 0 && (
-          <FieldChipsView label='Passengers' icon='person' items={flight.passengers.map(p => ({ value: p.fullname }))} />
+          <FieldChipsView
+            label='Passengers'
+            icon='person'
+            items={flight.passengers.map((p) => ({ value: p.fullname }))}
+          />
         )}
         {flight.attachments.length > 0 && (
-          <FieldChipsView label='Attachments' icon='attachment' items={flight.attachments.map(a => ({ value: a.name, link: a.link }))} />
+          <FieldChipsView
+            label='Attachments'
+            icon='attachment'
+            items={flight.attachments.map((a) => ({ value: a.name, link: a.link }))}
+          />
         )}
-        {flight.note && (
-          <FieldView label='Notes' value={flight.note} />
-        )}
+        {flight.note && <FieldView label='Notes' value={flight.note} />}
       </div>
       <SeparatorWithLabel className='my-2' label='Details' />
       <Tabs defaultValue='departure' variant='contained'>
@@ -88,7 +94,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
         title='Delete Flight'
         description={
           <>
-            Are you sure you want to delete <b>{flight.flightNumber}</b>?<br/>
+            Are you sure you want to delete <b>{flight.flightNumber}</b>?<br />
             This action cannot be undone.
           </>
         }
@@ -99,7 +105,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
   )
 }
 
-function FlightPoint( { point }: { point: FlightPoint }) {
+function FlightPoint({ point }: { point: FlightPoint }) {
   return (
     <DateRange.Point>
       <p className='flex flex-row justify-between'>
@@ -108,11 +114,15 @@ function FlightPoint( { point }: { point: FlightPoint }) {
       </p>
       <div className='flex flex-row justify-between items-start gap-2'>
         <div className='flex flex-col'>
-          <span className='-mb-1.5 pb-0 text-[0.6rem] text-right font-light text-muted-foreground'>{formatTo.utcOffset(point.time)}</span>
+          <span className='-mb-1.5 pb-0 text-[0.6rem] text-right font-light text-muted-foreground'>
+            {formatTo.utcOffset(point.time)}
+          </span>
           <span className='text-lg font-semibold'>{formatTo.time(point.time)}</span>
         </div>
         <div className='flex flex-col items-end'>
-          <span className='pb-0 -mb-1.5 font-light text-muted-foreground text-[0.6rem]'>{formatTo.weekday(point.time)}</span>
+          <span className='pb-0 -mb-1.5 font-light text-muted-foreground text-[0.6rem]'>
+            {formatTo.weekday(point.time)}
+          </span>
           <span className='text-lg '>{formatTo.dayMonth(point.time)}</span>
         </div>
       </div>

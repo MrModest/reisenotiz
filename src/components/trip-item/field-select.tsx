@@ -13,7 +13,14 @@ interface FieldSelectProps {
   className?: string
 }
 
-export function FieldSelect({ name, label, options, required: isRequired = false, disabled, className }: FieldSelectProps) {
+export function FieldSelect({
+  name,
+  label,
+  options,
+  required: isRequired = false,
+  disabled,
+  className,
+}: FieldSelectProps) {
   const { field, error } = useFormField(name)
 
   return (
@@ -22,15 +29,11 @@ export function FieldSelect({ name, label, options, required: isRequired = false
         {label}
         {isRequired && <Required />}
       </FieldLabel>
-      <select
-        aria-invalid={!!error}
-        id={name}
-        disabled={disabled}
-        className={cn(...inputStyles)}
-        {...field}
-      >
-        {options.map(opt => (
-          <option key={opt.value} value={opt.value}>{opt.label}</option>
+      <select aria-invalid={!!error} id={name} disabled={disabled} className={cn(...inputStyles)} {...field}>
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
         ))}
       </select>
       {error && <FieldError className='text-xs font-thin'>{error.message?.toString()}</FieldError>}

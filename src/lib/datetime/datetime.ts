@@ -42,7 +42,7 @@ export class DateTime {
    */
   static fromObject(
     obj: { year: number; month: number; day: number; hour?: number; minute?: number; second?: number },
-    zone: string
+    zone: string,
   ): DateTime {
     const dt = LuxonDateTime.fromObject({ ...obj }, { zone })
     return new DateTime(dt)
@@ -61,14 +61,14 @@ export class DateTime {
   toJSON(): ZonedInstant {
     return {
       instant: this.dt.toUTC().toISO()!,
-      zone: this.dt.zoneName!
+      zone: this.dt.zoneName!,
     }
   }
 
   toZonedInstant(): ZonedInstant {
     return {
       instant: this.dt.toUTC().toISO()!,
-      zone: this.dt.zoneName!
+      zone: this.dt.zoneName!,
     }
   }
 
