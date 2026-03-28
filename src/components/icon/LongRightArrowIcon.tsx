@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
-import { Icon } from "."
+import { cn } from '@/lib/utils'
+import { Icon } from '.'
 
 export function LongRightArrowIcon({ label }: { label?: string }) {
   return (
