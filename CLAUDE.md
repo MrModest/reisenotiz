@@ -18,8 +18,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Date/Time**: Luxon wrapped in custom DateTime class (`src/lib/datetime/`)
 - **Animations**: Motion (Framer Motion) library
 - **Component Patterns**:
+  - Reusing existing shadcn components whenever feasible
   - Class-variance-authority (CVA) for component variants
-  - Radix UI primitives (Slot, Tabs, Separator)
+  - Base UI primitives
   - Lucide React for icons
 - **PWA**: Progressive Web App with vite-plugin-pwa and Workbox
 - **React Compiler**: Enabled via babel-plugin-react-compiler targeting React 19
@@ -45,40 +46,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - TypeScript strict mode enabled
 
 ### Application Structure
-
-**Routing** (`src/routes.ts`):
-- Nested routes under `AppLayout` wrapper
-- Main routes: `/` (home), `/trips`, `/trips/:tripId`, `/trips/:tripId/items/:itemId`, `/settings`
-- Edit routes follow pattern: `.../:itemId/edit`
-
-**Domain Types** (`src/types/trip/`):
-- Core types: `Trip`, `TripItem`, `Flight`, `Accomodation`, `Person`, `Address`, `Attachment`
-- `TripItem` is the base interface for timeline elements with `TripItemType` discriminator
-
-**Services** (`src/services/`):
-- Dictionary pattern using class-based service (`Dictionary` class)
-- Dictionaries provide lookup data (airports, etc.)
-
-**Development Stubs** (`src/stubs/`):
-- Mock data for trips, trip items, airports, timeline elements
-- Used during development before backend integration
-
-**DateTime Utilities** (`src/lib/datetime/`):
-- Custom `DateTime` class wrapping Luxon
-- Formatters for consistent date/time display
+- Services (`src/services/`)
+- Development Stubs (`src/stubs/`)
+- DateTime Utilities (`src/lib/datetime/`)
 
 ### Component Architecture
 
 **Layout Components** (`src/components/layout/`):
 - `AppLayout` provides the main app shell with header context
-
-**Timeline Components** (`src/components/timeline/`):
-- Compound component pattern with multiple sub-components exported
-- `TimelineLayout` is a wrapper that handles data mapping and animations
-- Core `Timeline` component with sub-components: `TimelineItem`, `TimelineTime`, `TimelineIcon`, `TimelineConnector`, etc.
-- Supports loading and error states
-- Props are typed via `TimelineElement` interface in `types.ts`
-- Layout reverses items array for chronological display (oldest at bottom)
 
 **UI Components** (`src/components/ui/`):
 - `Button` - CVA-based with `asChild` pattern via Radix Slot
@@ -94,34 +69,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Header Context** (`src/contexts/header-context.tsx`):
 - Provides dynamic header title/actions
 - Use `useHeaderTitle` hook to set page headers
-
-### Build Configuration
-
-**Vite** (`vite.config.ts`):
-- React plugin with React Compiler enabled (target: '19')
-- Tailwind CSS via @tailwindcss/vite
-- PWA configuration with auto-update, offline support, and workbox strategies
-- CSS modules with camelCase convention
-
-**ESLint** (`eslint.config.ts`):
-- Flat config format
-- TypeScript ESLint parser
-- React Hooks rules (recommended-latest)
-- React Refresh warnings for HMR
-- Stylistic rules for semicolons (never)
-- Unused vars warnings disabled
-
-**TypeScript** (`tsconfig.json`):
-- Bundler module resolution
-- React JSX transform
-- Strict mode with additional checks (noUnusedLocals, noUnusedParameters)
-
-### PWA Configuration
-
-The app is configured as a Progressive Web App:
-- Auto-updates service worker on new deployments
-- Workbox caching for JS, CSS, HTML, SVG, PNG, ICO files
-- Manifest with app name "Reisenotiz", standalone display mode
 
 ## Custom Instructions
 
