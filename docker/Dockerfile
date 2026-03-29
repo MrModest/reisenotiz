@@ -3,7 +3,7 @@
 # =============================================================================
 # Stage 1: Build
 # =============================================================================
-FROM node:24.13.0-alpine3.23 AS builder
+FROM node:24.14.1-alpine3.23 AS builder
 
 WORKDIR /app
 
@@ -27,7 +27,7 @@ RUN pnpm build
 # =============================================================================
 # Stage 2: Runtime
 # =============================================================================
-FROM nginxinc/nginx-unprivileged:1.29.3-alpine3.22-perl AS runtime
+FROM nginxinc/nginx-unprivileged:1.29.5-alpine3.23 AS runtime
 
 # OCI labels for traceability
 LABEL org.opencontainers.image.title="Reisenotiz"
