@@ -65,17 +65,24 @@ See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
 ## License
 
 ### TLDR:
-- BSL 1.1 (Source-available, fair code)
+- BSL 1.1 (Source-available; fair code)
 - Free forever for private/non-commercial use.
 - Restricted for commercial use.
 
 ### Why not fully Open Source?
+I want to keep the option open to run a paid hosted version in the future without ending up competing against my own code.
 
-Because I simply want to protect myself from someone forking and monitizing my code. But Open-Source by its nature doesn't allow resticting commercial usage. This project will always be free for selfhosters and non-commercials. 
+I also don’t like the “open core” model. Splitting the product into free vs paid features always feels messy. If I give something away, I want it to be the full version — not a crippled one.
 
-If I ever add some paid functionality, it would be something related to additional costs from my side. For example, if I provide a paid API for auto-suggestions that involves me paying to a third-party metadata providers or hosting the API service for you. But even in this case the app will be fully functional without it, or you can just make your own API provided for auto-suggestions.
+That’s why I went with BSL.
+For me it’s a good middle ground:
 
-I believe my license is fair enough since it's not some kind of library you need to inject into your own code. It's a final client application that ment to be used as is.
+* free and complete for personal use
+* still leaves room to build a business later
 
-While the code can't be considered trully open-sources, I think it still fits under "Fair Code" terms.
-See more here: https://fair.io/licenses/
+Also, this isn’t a library you embed into your own product. It’s a standalone app meant to be used as-is. That’s another reason why this tradeoff feels reasonable to me.
+
+So yeah — it’s not truly open source.
+But I think it fits well into the idea of “fair code”.
+
+More on that: [https://fair.io/licenses/](https://fair.io/licenses/)
