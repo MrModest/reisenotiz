@@ -6,7 +6,8 @@ A self-hosted, offline-first travel notes built as a PWA for keeping track of tr
 
 ## Screenshots
 
-[Screen Recording](https://youtu.be/QkUDu_-Ed7w)
+
+<https://github.com/user-attachments/assets/1a491a52-49dc-49fb-a3d8-6cfdd83132aa>
 
 ![](docs/screenshots/TripTimeline.png)
 ![](docs/screenshots/FlightView.png)
