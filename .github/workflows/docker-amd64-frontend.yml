@@ -6,18 +6,18 @@ on:
     tags: ['v*.*.*']
     paths:
       - 'apps/frontend/**'
-      - '.github/workflows/_docker-build.yml'
-      - '.github/workflows/docker-amd64.yml'
+      - '.github/workflows/_docker-build-frontend.yml'
+      - '.github/workflows/docker-amd64-frontend.yml'
   pull_request:
     branches: [main]
     paths:
       - 'apps/frontend/**'
-      - '.github/workflows/_docker-build.yml'
-      - '.github/workflows/docker-amd64.yml'
+      - '.github/workflows/_docker-build-frontend.yml'
+      - '.github/workflows/docker-amd64-frontend.yml'
 
 jobs:
   build:
-    uses: ./.github/workflows/_docker-build.yml
+    uses: ./.github/workflows/_docker-build-frontend.yml
     permissions:
       contents: read
       packages: write
