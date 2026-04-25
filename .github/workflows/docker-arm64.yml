@@ -4,8 +4,16 @@ on:
   push:
     branches: [main]
     tags: ['v*.*.*']
+    paths:
+      - 'apps/frontend/**'
+      - '.github/workflows/_docker-build.yml'
+      - '.github/workflows/docker-arm64.yml'
   pull_request:
     branches: [main]
+    paths:
+      - 'apps/frontend/**'
+      - '.github/workflows/_docker-build.yml'
+      - '.github/workflows/docker-arm64.yml'
 
 jobs:
   build:
