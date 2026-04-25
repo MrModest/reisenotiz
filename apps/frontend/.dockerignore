@@ -18,7 +18,6 @@ dev-dist
 *.swo
 
 # Docker
-docker/docker-compose.yml
 Dockerfile*
 .dockerignore
 
