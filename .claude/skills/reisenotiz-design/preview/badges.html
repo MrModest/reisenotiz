@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap">
+<style>
+  body { margin: 0; padding: 14px; background: oklch(0.9383 0.0042 236.50); font-family: Inter, sans-serif; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .label { font-size: 9px; text-transform: uppercase; font-weight: 600; letter-spacing: .05em; color: oklch(0.551 0.0234 264.36); margin-bottom: 5px; }
+  .badge { height: 1.25rem; border-radius: 9999px; font-size: 0.625rem; font-weight: 500; padding: 0.125rem 0.5rem; display: inline-flex; align-items: center; gap: 3px; font-family: Inter, sans-serif; }
+  .badge-default { background: oklch(0.6397 0.172 36.44); color: white; }
+  .badge-secondary { background: oklch(0.967 0.0029 264.54); color: oklch(0.4461 0.0263 256.80); }
+  .badge-destructive { background: oklch(0.6368 0.2078 25.33 / 0.1); color: oklch(0.6368 0.2078 25.33); }
+  .badge-outline { background: oklch(0.885 0.0052 247.88 / 0.3); color: oklch(0.3211 0 0); border: 1px solid oklch(0.885 0.0052 247.88); }
+  svg { width: 10px; height: 10px; }
+</style>
+</head>
+<body>
+<div class="label">Variants</div>
+<div class="row">
+  <span class="badge badge-default">Default</span>
+  <span class="badge badge-secondary">Secondary</span>
+  <span class="badge badge-destructive">Destructive</span>
+  <span class="badge badge-outline">Outline</span>
+</div>
+<div class="label">In Context</div>
+<div class="row">
+  <span class="badge badge-default">Flight</span>
+  <span class="badge badge-default">Hotel</span>
+  <span class="badge badge-secondary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    2 passengers
+  </span>
+  <span class="badge badge-destructive">Cancelled</span>
+  <span class="badge badge-outline">FC3030</span>
+</div>
+</body>
+</html>

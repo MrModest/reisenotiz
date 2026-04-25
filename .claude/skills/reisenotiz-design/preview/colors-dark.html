@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+  body { margin: 0; padding: 12px; background: oklch(0.2598 0.0306 262.67); font-family: Inter, sans-serif; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+  .swatch { border-radius:4px; overflow: hidden; box-shadow: 0 1px 3px hsl(0 0% 0% / 0.3); }
+  .swatch-color { height: 48px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .swatch-label { background: oklch(0.3106 0.0301 268.64); padding: 5px 7px; }
+  .name { font-size: 10px; font-weight: 500; color: oklch(0.9219 0 0); }
+  .val { font-size: 9px; color: oklch(0.7155 0 0); margin-top: 1px; font-family: monospace; }
+  .section-title { font-size: 10px; font-weight: 600; color: oklch(0.7155 0 0); margin: 10px 0 5px; letter-spacing: .04em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="section-title">Backgrounds</div>
+<div class="grid">
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.2598 0.0306 262.67)"></div><div class="swatch-label"><div class="name">background</div><div class="val">0.26 0.031 263</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.3106 0.0301 268.64)"></div><div class="swatch-label"><div class="name">card</div><div class="val">0.31 0.030 269</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.29 0.0249 268.40)"></div><div class="swatch-label"><div class="name">popover</div><div class="val">0.29 0.025 268</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.31 0.0283 267.74)"></div><div class="swatch-label"><div class="name">sidebar</div><div class="val">0.31 0.028 268</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.338 0.0589 267.59)"></div><div class="swatch-label"><div class="name">accent</div><div class="val">0.34 0.059 268</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.3095 0.0266 266.71)"></div><div class="swatch-label"><div class="name">muted</div><div class="val">0.31 0.027 267</div></div></div>
+</div>
+<div class="section-title">Brand & Interactive</div>
+<div class="grid">
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.6397 0.172 36.44)"></div><div class="swatch-label"><div class="name">primary</div><div class="val">0.64 0.172 36</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.6368 0.2078 25.33)"></div><div class="swatch-label"><div class="name">destructive</div><div class="val">0.64 0.208 25</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.3843 0.0301 269.73)"></div><div class="swatch-label"><div class="name">border</div><div class="val">0.38 0.030 270</div></div></div>
+</div>
+<div class="section-title">Text</div>
+<div class="grid">
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.9219 0 0)"></div><div class="swatch-label"><div class="name">foreground</div><div class="val">0.92 0 0</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.7155 0 0)"></div><div class="swatch-label"><div class="name">muted-fg</div><div class="val">0.72 0 0</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.8823 0.0571 254.13)"></div><div class="swatch-label"><div class="name">accent-fg</div><div class="val">0.88 0.057 254</div></div></div>
+</div>
+</body>
+</html>

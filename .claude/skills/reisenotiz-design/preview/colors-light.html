@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+  body { margin: 0; padding: 12px; background: oklch(0.9383 0.0042 236.50); font-family: Inter, sans-serif; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+  .swatch { border-radius:4px; overflow: hidden; box-shadow: 0 1px 3px hsl(0 0% 0% / 0.1); }
+  .swatch-color { height: 48px; }
+  .swatch-label { background: white; padding: 5px 7px; }
+  .name { font-size: 10px; font-weight: 500; color: #333; }
+  .val { font-size: 9px; color: #888; margin-top: 1px; font-family: monospace; }
+  .section-title { font-size: 10px; font-weight: 600; color: #555; margin: 10px 0 5px; letter-spacing: .04em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="section-title">Backgrounds</div>
+<div class="grid">
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.9383 0.0042 236.50)"></div><div class="swatch-label"><div class="name">background</div><div class="val">0.94 0.004 236</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(1 0 0)"></div><div class="swatch-label"><div class="name">card</div><div class="val">1 0 0</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.903 0.0046 258.33)"></div><div class="swatch-label"><div class="name">sidebar</div><div class="val">0.90 0.005 258</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.9846 0.0017 247.84)"></div><div class="swatch-label"><div class="name">muted</div><div class="val">0.98 0.002 248</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.9119 0.0222 243.82)"></div><div class="swatch-label"><div class="name">accent</div><div class="val">0.91 0.022 244</div></div></div>
+</div>
+<div class="section-title">Brand & Interactive</div>
+<div class="grid">
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.6397 0.172 36.44)"></div><div class="swatch-label"><div class="name">primary</div><div class="val">0.64 0.172 36</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.6368 0.2078 25.33)"></div><div class="swatch-label"><div class="name">destructive</div><div class="val">0.64 0.208 25</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.967 0.0029 264.54)"></div><div class="swatch-label"><div class="name">secondary</div><div class="val">0.97 0.003 265</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.885 0.0052 247.88)"></div><div class="swatch-label"><div class="name">border</div><div class="val">0.89 0.005 248</div></div></div>
+</div>
+<div class="section-title">Text</div>
+<div class="grid">
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.3211 0 0)"></div><div class="swatch-label"><div class="name">foreground</div><div class="val">0.32 0 0</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.551 0.0234 264.36)"></div><div class="swatch-label"><div class="name">muted-fg</div><div class="val">0.55 0.023 264</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:oklch(0.4461 0.0263 256.80)"></div><div class="swatch-label"><div class="name">secondary-fg</div><div class="val">0.45 0.026 257</div></div></div>
+</div>
+</body>
+</html>

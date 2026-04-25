@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  body { margin: 0; padding: 0; background: oklch(0.2598 0.0306 262.67); font-family: Inter, sans-serif; height: 280px; overflow: hidden; }
+  .label { font-size: 9px; text-transform: uppercase; font-weight: 600; letter-spacing: .05em; color: oklch(0.7155 0 0); padding: 10px 14px 4px; }
+  /* Timeline */
+  .timeline { padding: 8px 12px 0; }
+  .t-item { display: grid; grid-template-columns: 60px auto 1fr; gap: 10px; margin-bottom: 18px; align-items: start; }
+  .t-time { text-align: right; padding-right: 6px; }
+  .t-date { font-size: 0.6875rem; color: oklch(0.7155 0 0); }
+  .t-hour { font-size: 1.1rem; font-weight: 600; color: oklch(0.6397 0.172 36.44); line-height: 1; }
+  .t-line { display: flex; flex-direction: column; align-items: center; }
+  .t-dot { width: 32px; height: 32px; border-radius: 50%; background: oklch(0.6397 0.172 36.44); border: 2px solid oklch(0.6397 0.172 36.44 / 0.4); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .t-connector { width: 2px; background: oklch(0.3843 0.0301 269.73); flex: 1; min-height: 20px; margin-top: 4px; }
+  .t-content { background: oklch(0.3106 0.0301 268.64); border-radius:0.25rem; padding: 10px 12px; }
+  .t-title { font-size: 0.8rem; font-weight: 600; color: oklch(0.9219 0 0); }
+  .t-desc { font-size: 0.7rem; color: oklch(0.7155 0 0); margin-top: 2px; }
+  svg { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+<div class="label">Timeline — Dark mode</div>
+<div class="timeline">
+  <div class="t-item">
+    <div class="t-time">
+      <div class="t-date">Wed, 12 Mar</div>
+      <div class="t-hour">20:00</div>
+    </div>
+    <div class="t-line">
+      <div class="t-dot"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+      <div class="t-connector"></div>
+    </div>
+    <div class="t-content">
+      <div class="t-title">Check-In: NH Leipzig Messe</div>
+      <div class="t-desc">Dummy-hotel-straße 345, 12345 Leipzig</div>
+    </div>
+  </div>
+  <div class="t-item">
+    <div class="t-time">
+      <div class="t-date">Mon, 01 Dec</div>
+      <div class="t-hour">19:00</div>
+    </div>
+    <div class="t-line">
+      <div class="t-dot"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22 11 13 2 9l20-7z"/></svg></div>
+      <div class="t-connector"></div>
+    </div>
+    <div class="t-content">
+      <div class="t-title">Departure: FC3030</div>
+      <div class="t-desc">Berlin Brandenburg Airport (BER)</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

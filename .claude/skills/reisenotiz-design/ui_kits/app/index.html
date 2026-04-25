@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reisenotiz — UI Kit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body, #root { height: 100%; }
+  body { font-family: Inter, sans-serif; }
+
+  /* ─ Dark theme (default) ─ */
+  .theme-dark {
+    --bg:           oklch(0.2598 0.0306 262.67);
+    --card:         oklch(0.3106 0.0301 268.64);
+    --popover:      oklch(0.29 0.0249 268.40);
+    --sidebar:      oklch(0.31 0.0283 267.74);
+    --fg:           oklch(0.9219 0 0);
+    --muted-fg:     oklch(0.7155 0 0);
+    --primary:      oklch(0.6397 0.172 36.44);
+    --primary-fg:   oklch(1 0 0);
+    --secondary:    oklch(0.3095 0.0266 266.71);
+    --secondary-fg: oklch(0.9219 0 0);
+    --accent:       oklch(0.338 0.0589 267.59);
+    --accent-fg:    oklch(0.8823 0.0571 254.13);
+    --border:       oklch(0.3843 0.0301 269.73);
+    --destructive:  oklch(0.6368 0.2078 25.33);
+    --destructive-bg: oklch(0.6368 0.2078 25.33 / 0.12);
+    --ring:         oklch(0.6397 0.172 36.44);
+    --r-none: 0; --r-sm: 0.125rem; --r-md: 0.25rem; --r-lg: 0.375rem; --r-xl: 0.5rem; --r-2xl: 0.75rem;
+  }
+
+  /* ─ Light theme ─ */
+  .theme-light {
+    --bg:           oklch(0.9383 0.0042 236.50);
+    --card:         oklch(1 0 0);
+    --popover:      oklch(1 0 0);
+    --sidebar:      oklch(0.903 0.0046 258.33);
+    --fg:           oklch(0.3211 0 0);
+    --muted-fg:     oklch(0.551 0.0234 264.36);
+    --primary:      oklch(0.6397 0.172 36.44);
+    --primary-fg:   oklch(1 0 0);
+    --secondary:    oklch(0.967 0.0029 264.54);
+    --secondary-fg: oklch(0.4461 0.0263 256.80);
+    --accent:       oklch(0.9119 0.0222 243.82);
+    --accent-fg:    oklch(0.3791 0.1378 265.52);
+    --border:       oklch(0.885 0.0052 247.88);
+    --destructive:  oklch(0.6368 0.2078 25.33);
+    --destructive-bg: oklch(0.6368 0.2078 25.33 / 0.1);
+    --ring:         oklch(0.6397 0.172 36.44);
+    --r-none: 0; --r-sm: 0.125rem; --r-md: 0.25rem; --r-lg: 0.375rem; --r-xl: 0.5rem; --r-2xl: 0.75rem;
+  }
+
+  #root { background: var(--bg); color: var(--fg); }
+  * { font-family: Inter, sans-serif; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="AppShell.jsx"></script>
+<script type="text/babel" src="TripList.jsx"></script>
+<script type="text/babel" src="TripTimeline.jsx"></script>
+<script type="text/babel" src="TripItemView.jsx"></script>
+<script type="text/babel" src="Dialogs.jsx"></script>
+<script type="text/babel" src="Forms.jsx"></script>
+
+<script type="text/babel">
+// ─── Sample data ───────────────────────────────────────────────────────────
+const SAMPLE_TRIPS = [
+  {
+    id: '1',
+    name: 'Trip to Japan',
+    dates: '01 Dec – 15 Dec 2025',
+    items: [
+      {
+        id: 'f1', type: 'flight', date: 'Mon, 01 Dec', time: '19:00',
+        title: 'Departure: FC3030', desc: 'Berlin Brandenburg Airport (BER)',
+        airline: 'Fictional Air', flightNo: 'FC3030', booking: 'XY99ZZ', seat: '14A', duration: '11h 40m',
+        departure: { code:'BER', city:'Berlin', time:'19:00', date:'Mon, 01 Dec', airport:'Berlin Brandenburg Airport', terminal:'T1' },
+        arrival:   { code:'HND', city:'Tokyo',  time:'14:40', date:'Tue, 02 Dec', airport:'Tokyo Haneda Airport', terminal:'T3' },
+        passengers: ['Alice Smith', 'Bob Smith'],
+      },
+      {
+        id: 'h1', type: 'hotel', date: 'Wed, 03 Dec', time: '15:00',
+        title: 'Check-In: Shinjuku Grand Hotel', desc: '2-5-2 Nishi-Shinjuku, Tokyo',
+        kind: 'Hotel', name: 'Shinjuku Grand Hotel',
+        address: '2-5-2 Nishi-Shinjuku', location: 'Japan, Tokyo',
+        contact: '+81-3-3344-0111', reservedOn: '2025-08-15', guests: 2, rooms: 1,
+        checkIn:  { day: 'Wed, 03 Dec', time: '15:00' },
+        checkOut: { day: 'Tue, 09 Dec', time: '11:00' },
+      },
+      {
+        id: 'f2', type: 'flight', date: 'Wed, 10 Dec', time: '10:30',
+        title: 'Departure: JL2109', desc: 'Tokyo Haneda Airport (HND)',
+        airline: 'Japan Airlines', flightNo: 'JL2109', booking: 'JL-8823', seat: '22C', duration: '12h 15m',
+        departure: { code:'HND', city:'Tokyo',  time:'10:30', date:'Wed, 10 Dec', airport:'Tokyo Haneda Airport', terminal:'T2' },
+        arrival:   { code:'BER', city:'Berlin', time:'16:45', date:'Wed, 10 Dec', airport:'Berlin Brandenburg Airport', terminal:'T1' },
+        passengers: ['Alice Smith', 'Bob Smith'],
+      },
+    ],
+  },
+  {
+    id: '2',
+    name: 'Leipzig Business Trip',
+    dates: '12 Mar – 14 Mar 2025',
+    items: [
+      {
+        id: 'h2', type: 'hotel', date: 'Wed, 12 Mar', time: '20:00',
+        title: 'Check-In: NH Leipzig Messe', desc: 'Dummy-hotel-straße 345, 12345 Leipzig',
+        kind: 'Hotel', name: 'NH Leipzig Messe',
+        address: 'Dummy-hotel-straße 345', location: 'Germany, Leipzig',
+        contact: '+49-341-678-0', reservedOn: '2025-01-20', guests: 1, rooms: 1,
+        checkIn:  { day: 'Wed, 12 Mar', time: '20:00' },
+        checkOut: { day: 'Thu, 13 Mar', time: '10:00' },
+      },
+    ],
+  },
+]
+
+// ─── Root App ──────────────────────────────────────────────────────────────
+function App() {
+  const [theme, setTheme] = React.useState('dark')
+  const [screen, setScreen] = React.useState('trips')
+  const [trips, setTrips] = React.useState(SAMPLE_TRIPS)
+  const [selectedTrip, setSelectedTrip] = React.useState(null)
+  const [selectedItem, setSelectedItem] = React.useState(null)
+  const [createOpen, setCreateOpen] = React.useState(false)
+  const [addItemOpen, setAddItemOpen] = React.useState(false)
+
+  const handleCreateTrip = (data) => {
+    const newTrip = {
+      id: Date.now().toString(),
+      name: data.name,
+      dates: `${data.start} – ${data.end}`,
+      items: [],
+    }
+    setTrips(prev => [newTrip, ...prev])
+  }
+
+  // Sync theme class on root
+  React.useEffect(() => {
+    const root = document.getElementById('root')
+    root.className = `theme-${theme}`
+    // Re-render lucide icons
+    if (window.lucide) window.lucide.createIcons()
+  }, [theme, screen])
+
+  React.useEffect(() => {
+    if (window.lucide) window.lucide.createIcons()
+  })
+
+  const renderScreen = () => {
+    if (screen === 'trips' || screen === 'home') {
+      return <TripList setScreen={setScreen} trips={trips} setSelectedTrip={setSelectedTrip} onCreateTrip={() => setCreateOpen(true)} />
+    }
+    if (screen === 'timeline') {
+      return <TripTimeline setScreen={setScreen} setSelectedItem={setSelectedItem} trip={selectedTrip} onAddItem={() => setAddItemOpen(true)} />
+    }
+    if (screen === 'flight') {
+      return <FlightView item={selectedItem} setScreen={setScreen} />
+    }
+    if (screen === 'hotel') {
+      return <HotelView item={selectedItem} setScreen={setScreen} />
+    }
+    if (screen === 'flight-create') {
+      return <FlightForm isCreate={true} setScreen={setScreen} />
+    }
+    if (screen === 'hotel-create') {
+      return <HotelForm isCreate={true} setScreen={setScreen} />
+    }
+    if (screen === 'flight-edit') {
+      return <FlightForm item={selectedItem} isCreate={false} setScreen={setScreen} />
+    }
+    if (screen === 'hotel-edit') {
+      return <HotelForm item={selectedItem} isCreate={false} setScreen={setScreen} />
+    }
+    if (screen === 'settings') {
+      return <SettingsScreen theme={theme} setTheme={setTheme} />
+    }
+    return null
+  }
+
+  return (
+    <>
+      <AppShell screen={screen} setScreen={setScreen}>
+        {renderScreen()}
+      </AppShell>
+      <CreateTripDialog open={createOpen} onClose={() => setCreateOpen(false)} onCreate={handleCreateTrip} />
+      <AddItemDialog open={addItemOpen} onClose={() => setAddItemOpen(false)} setScreen={setScreen} />
+    </>
+  )
+}
+
+function AddItemDialog({ open, onClose, setScreen }) {
+  if (!open) return null
+  return (
+    <div style={{position:'fixed', inset:0, zIndex:100, display:'flex', alignItems:'flex-end', justifyContent:'center', padding:'0 0 72px'}}>
+      <div onClick={onClose} style={{position:'absolute', inset:0, background:'rgba(0,0,0,0.4)', backdropFilter:'blur(2px)'}}></div>
+      <div style={{position:'relative', background:'var(--popover)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', padding:'16px', width:'100%', maxWidth:480, boxShadow:'0 -4px 24px rgba(0,0,0,0.3)'}}>
+        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:10}}>Add Trip Item</div>
+        <div style={{display:'flex', flexDirection:'column', gap:6}}>
+          {[['plane','Flight','Log a flight with departure and arrival details','flight-create'],['hotel','Accommodation','Hotel, hostel, Airbnb check-in/out','hotel-create']].map(([icon,label,desc,target]) => (
+            <button key={target} onClick={() => { setScreen(target); onClose() }}
+              style={{display:'flex', alignItems:'center', gap:10, padding:'10px 12px', borderRadius:'var(--r-md)', border:'1px solid var(--border)', background:'var(--card)', cursor:'pointer', fontFamily:'Inter,sans-serif', textAlign:'left', transition:'all 100ms'}}
+              onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)'}}
+              onMouseLeave={e=>{e.currentTarget.style.background='var(--card)'}}>
+              <div style={{width:32,height:32,borderRadius:'var(--r-md)',background:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                <i data-lucide={icon} style={{width:15,height:15,color:'white'}}></i>
+              </div>
+              <div>
+                <div style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>{label}</div>
+                <div style={{fontSize:'0.65rem', color:'var(--muted-fg)'}}>{desc}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function SettingsScreen({ theme, setTheme }) {
+  return (
+    <div style={{paddingTop:8, display:'flex', flexDirection:'column', gap:12}}>
+      <div style={{background:'var(--card)', borderRadius:'var(--r-lg)', padding:'12px 14px'}}>
+        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:10}}>Appearance</div>
+        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+          <div>
+            <div style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>Dark Mode</div>
+            <div style={{fontSize:'0.65rem', color:'var(--muted-fg)'}}>Switch between light and dark theme</div>
+          </div>
+          <button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+            style={{width:40, height:22, borderRadius:4, border:'none', cursor:'pointer', position:'relative', background: theme==='dark' ? 'var(--primary)' : 'var(--border)', transition:'background 200ms'}}>
+            <div style={{width:16,height:16,borderRadius:2,background:'white',position:'absolute',top:3,left: theme==='dark' ? 21 : 3,transition:'left 200ms'}}></div>
+          </button>
+        </div>
+      </div>
+      <div style={{background:'var(--card)', borderRadius:'var(--r-lg)', padding:'12px 14px'}}>
+        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:10}}>Data</div>
+        {[['Export to JSON', 'backup', false],['Clear All Data', 'trash-2', true]].map(([label, icon, danger]) => (
+          <div key={label} style={{display:'flex', alignItems:'center', gap:10, padding:'8px 0', borderBottom:'1px solid var(--border)'}}>
+            <i data-lucide={icon} style={{width:15,height:15,color: danger ? 'var(--destructive)' : 'var(--muted-fg)'}}></i>
+            <span style={{fontSize:'0.75rem', fontWeight:500, color: danger ? 'var(--destructive)' : 'var(--fg)'}}>{label}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{background:'var(--card)', borderRadius:'var(--r-lg)', padding:'12px 14px'}}>
+        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:8}}>About</div>
+        <div style={{fontSize:'0.7rem', color:'var(--muted-fg)'}}>Reisenotiz v0.0.1 · Self-hosted travel notes PWA</div>
+      </div>
+    </div>
+  )
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'))
+root.render(<App />)
+</script>
+</body>
+</html>

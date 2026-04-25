@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  body { margin: 0; padding: 12px; background: oklch(0.9383 0.0042 236.50); font-family: Inter, sans-serif; }
+  .label { font-size: 9px; text-transform: uppercase; font-weight: 600; letter-spacing: .05em; color: oklch(0.551 0.0234 264.36); margin: 8px 0 5px; }
+  .item-group { display: flex; flex-direction: column; gap: 6px; }
+  .item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius:0.25rem; font-size: 0.75rem; width: 100%; box-sizing: border-box; transition: all 100ms; cursor: pointer; background: white; border: 1px solid oklch(0.885 0.0052 247.88); }
+  .item:hover { background: oklch(0.9119 0.0222 243.82); }
+  .item.muted { background: oklch(0.9846 0.0017 247.84); border-color: transparent; }
+  .item-icon { width: 32px; height: 32px; border-radius:0.25rem; background: oklch(0.6397 0.172 36.44); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .item-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .item-title { font-weight: 500; color: oklch(0.3211 0 0); }
+  .item-desc { font-size: 0.7rem; color: oklch(0.551 0.0234 264.36); }
+  .item-actions { display: flex; gap: 4px; }
+  .action-btn { width: 1.5rem; height: 1.5rem; border-radius:0.25rem; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; color: oklch(0.551 0.0234 264.36); }
+  .action-btn:hover { background: oklch(0.9846 0.0017 247.84); }
+  .add-item { border-style: dashed; }
+  svg { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+<div class="label">Default List Items</div>
+<div class="item-group">
+  <div class="item add-item">
+    <div style="color:oklch(0.551 0.0234 264.36);display:flex;align-items:center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="item-content"><div class="item-title">New Trip</div></div>
+  </div>
+  <div class="item">
+    <div class="item-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M9 21V9h6v12"/></svg>
+    </div>
+    <div class="item-content">
+      <div class="item-title">Trip to Japan</div>
+      <div class="item-desc">01 Dec – 15 Dec 2025</div>
+    </div>
+    <div class="item-actions">
+      <button class="action-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="item">
+    <div class="item-icon" style="background:oklch(0.9119 0.0222 243.82)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="oklch(0.3791 0.1378 265.52)" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81"/></svg>
+    </div>
+    <div class="item-content">
+      <div class="item-title">Berlin Schönefeld</div>
+      <div class="item-desc">SXF · Europe/Berlin</div>
+    </div>
+    <div class="item-actions">
+      <button class="action-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button class="action-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+</body>
+</html>

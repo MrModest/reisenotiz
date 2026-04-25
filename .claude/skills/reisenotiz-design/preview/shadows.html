@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+  body { margin: 0; padding: 16px; background: oklch(0.9383 0.0042 236.50); font-family: Inter, sans-serif; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .card { background: white; border-radius:4px; width: 90px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .label { font-size: 10px; font-weight: 500; color: oklch(0.3211 0 0); font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="row">
+  <div class="card" style="box-shadow:0px 1px 3px 0px hsl(0 0% 0% / 0.05)"><div class="label">2xs / xs</div></div>
+  <div class="card" style="box-shadow:0px 1px 3px 0px hsl(0 0% 0% / 0.1),0px 1px 2px -1px hsl(0 0% 0% / 0.1)"><div class="label">sm (card)</div></div>
+  <div class="card" style="box-shadow:0px 1px 3px 0px hsl(0 0% 0% / 0.1),0px 2px 4px -1px hsl(0 0% 0% / 0.1)"><div class="label">md (hover)</div></div>
+  <div class="card" style="box-shadow:0px 1px 3px 0px hsl(0 0% 0% / 0.1),0px 4px 6px -1px hsl(0 0% 0% / 0.1)"><div class="label">lg</div></div>
+  <div class="card" style="box-shadow:0px 1px 3px 0px hsl(0 0% 0% / 0.1),0px 8px 10px -1px hsl(0 0% 0% / 0.1)"><div class="label">xl</div></div>
+  <div class="card" style="box-shadow:0px 1px 3px 0px hsl(0 0% 0% / 0.25)"><div class="label">2xl</div></div>
+</div>
+</body>
+</html>

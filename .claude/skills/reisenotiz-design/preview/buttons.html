@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  body { margin: 0; padding: 12px; background: oklch(0.9383 0.0042 236.50); font-family: Inter, sans-serif; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+  .label { font-size: 9px; text-transform: uppercase; font-weight: 600; letter-spacing: .05em; color: oklch(0.551 0.0234 264.36); margin-bottom: 5px; }
+  button { font-family: Inter, sans-serif; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; border: none; font-size: 0.75rem; font-weight: 500; transition: all 150ms; }
+  .btn-default { background: oklch(0.6397 0.172 36.44); color: white; border-radius:0.25rem; padding: 0 0.5rem; height: 1.75rem; }
+  .btn-default:hover { opacity: 0.82; }
+  .btn-outline { background: transparent; color: oklch(0.3211 0 0); border: 1px solid oklch(0.885 0.0052 247.88); border-radius:0.25rem; padding: 0 0.5rem; height: 1.75rem; }
+  .btn-outline:hover { background: oklch(0.9846 0.0017 247.84); }
+  .btn-secondary { background: oklch(0.967 0.0029 264.54); color: oklch(0.4461 0.0263 256.80); border-radius:0.25rem; padding: 0 0.5rem; height: 1.75rem; }
+  .btn-ghost { background: transparent; color: oklch(0.3211 0 0); border-radius:0.25rem; padding: 0 0.5rem; height: 1.75rem; }
+  .btn-ghost:hover { background: oklch(0.9846 0.0017 247.84); }
+  .btn-destructive { background: oklch(0.6368 0.2078 25.33 / 0.1); color: oklch(0.6368 0.2078 25.33); border-radius:0.25rem; padding: 0 0.5rem; height: 1.75rem; }
+  .btn-destructive:hover { background: oklch(0.6368 0.2078 25.33 / 0.2); }
+  /* sizes */
+  .btn-xs { height: 1.25rem; font-size: 0.625rem; border-radius:0.25rem; padding: 0 0.5rem; }
+  .btn-sm { height: 1.5rem; font-size: 0.75rem; padding: 0 0.5rem; }
+  .btn-lg { height: 2rem; padding: 0 0.625rem; }
+  .btn-icon { width: 1.75rem; height: 1.75rem; padding: 0; justify-content: center; border-radius:0.25rem; }
+  .disabled { opacity: 0.5; pointer-events: none; }
+  svg { width: 14px; height: 14px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="label">Variants</div>
+<div class="row">
+  <button class="btn-default">Default</button>
+  <button class="btn-outline">Outline</button>
+  <button class="btn-secondary">Secondary</button>
+  <button class="btn-ghost">Ghost</button>
+  <button class="btn-destructive">Destructive</button>
+</div>
+<div class="label">Sizes</div>
+<div class="row">
+  <button class="btn-default btn-xs">XSmall</button>
+  <button class="btn-default btn-sm">Small</button>
+  <button class="btn-default">Default</button>
+  <button class="btn-default btn-lg">Large</button>
+  <button class="btn-default btn-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+</div>
+<div class="label">With Icon</div>
+<div class="row">
+  <button class="btn-default">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    New Trip
+  </button>
+  <button class="btn-outline">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+    Delete
+  </button>
+  <button class="btn-ghost disabled">Disabled</button>
+</div>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  body { margin: 0; background: oklch(0.9383 0.0042 236.50); font-family: Inter, sans-serif; font-size: 0.75rem; }
+  .label { font-size: 9px; font-weight: 600; letter-spacing:.05em; text-transform:uppercase; color: oklch(0.551 0.0234 264.36); padding: 8px 12px 4px; }
+  .divider { height: 1px; background: oklch(0.885 0.0052 247.88); margin: 8px 0; }
+
+  /* Layout preview */
+  .layout { display: flex; gap: 0; height: 220px; border: 1px solid oklch(0.885 0.0052 247.88); border-radius: 4px; overflow: hidden; }
+
+  /* Desktop sidebar */
+  .sidebar { width: 160px; border-right: 1px solid oklch(0.885 0.0052 247.88); background: oklch(0.903 0.0046 258.33); display: flex; flex-direction: column; flex-shrink: 0; }
+  .sidebar-header { padding: 10px 10px 8px; border-bottom: 1px solid oklch(0.885 0.0052 247.88); display: flex; align-items: center; gap: 6px; }
+  .sidebar-logo { width: 20px; height: 20px; border-radius: 3px; }
+  .sidebar-title { font-weight: 600; font-size: 0.8rem; color: oklch(0.3211 0 0); }
+  .sidebar-nav { padding: 6px; display: flex; flex-direction: column; gap: 3px; }
+  .sidebar-item { display: flex; align-items: center; gap: 7px; padding: 7px 8px; border-radius: 4px; color: oklch(0.551 0.0234 264.36); font-size: 0.7rem; font-weight: 500; cursor: pointer; transition: all 100ms; }
+  .sidebar-item.active { background: oklch(0.9119 0.0222 243.82); color: oklch(0.3791 0.1378 265.52); }
+  .sidebar-item:hover:not(.active) { background: oklch(0.9119 0.0222 243.82 / 0.6); }
+  .sidebar-footer { margin-top: auto; padding: 6px; }
+  .sidebar-collapse { display: flex; align-items: center; gap: 7px; padding: 7px 8px; border-radius: 4px; color: oklch(0.551 0.0234 264.36); font-size: 0.7rem; font-weight: 500; cursor: pointer; width: 100%; background: none; border: none; font-family: Inter, sans-serif; }
+  .sidebar-collapse:hover { background: oklch(0.9119 0.0222 243.82 / 0.6); }
+
+  /* Main area */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  .header { border-bottom: 1px solid oklch(0.885 0.0052 247.88); background: oklch(0.9383 0.0042 236.50); padding: 0 10px; height: 40px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .header-title { font-weight: 600; font-size: 0.8rem; color: oklch(0.3211 0 0); }
+  .content-area { flex: 1; background: oklch(0.9383 0.0042 236.50); padding: 10px; }
+  .content-placeholder { background: oklch(0.9846 0.0017 247.84); border-radius: 4px; height: 100%; display: flex; align-items: center; justify-content: center; color: oklch(0.551 0.0234 264.36); font-size: 0.65rem; }
+
+  /* Mobile bottom nav */
+  .bottom-nav { border-top: 1px solid oklch(0.885 0.0052 247.88); background: oklch(0.9383 0.0042 236.50); display: flex; justify-content: space-around; padding: 0 16px; height: 48px; align-items: center; }
+  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 5px 12px; border-radius: 4px; cursor: pointer; color: oklch(0.551 0.0234 264.36); font-size: 0.6rem; font-weight: 500; }
+  .nav-item.active { color: oklch(0.6397 0.172 36.44); }
+  svg { width: 15px; height: 15px; }
+</style>
+</head>
+<body>
+
+<div class="label">Desktop — Sidebar Navigation</div>
+<div style="padding: 0 12px 8px">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img class="sidebar-logo" src="../assets/pwa-192x192.png" alt="logo">
+        <span class="sidebar-title">Reisenotiz</span>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+          Home
+        </div>
+        <div class="sidebar-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Trips
+        </div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+          Settings
+        </div>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="sidebar-collapse">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Collapse
+        </button>
+      </div>
+    </aside>
+    <div class="main">
+      <header class="header">
+        <span class="header-title">Trips</span>
+        <button style="width:24px;height:24px;border-radius:4px;border:1px solid oklch(0.885 0.0052 247.88);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </header>
+      <div class="content-area">
+        <div class="content-placeholder">page content</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+<div class="label">Mobile — Bottom Navigation</div>
+<div style="padding: 0 12px 12px">
+  <div style="border: 1px solid oklch(0.885 0.0052 247.88); border-radius: 4px; overflow: hidden; max-width: 320px;">
+    <div style="height: 80px; background: oklch(0.9846 0.0017 247.84); display:flex;align-items:center;justify-content:center;color:oklch(0.551 0.0234 264.36);font-size:0.65rem">page content</div>
+    <div class="bottom-nav">
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Home
+      </div>
+      <div class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        Trips
+      </div>
+      <div class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+        Settings
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

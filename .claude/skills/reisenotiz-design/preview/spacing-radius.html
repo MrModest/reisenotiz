@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+  body { margin: 0; padding: 12px; background: #f5f5f5; font-family: Inter, sans-serif; color: oklch(0.3211 0 0); }
+  .section { margin-bottom: 14px; }
+  .section-title { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: oklch(0.551 0.0234 264.36); margin-bottom: 7px; }
+  .radius-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+  .radius-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .radius-box { background: oklch(0.6397 0.172 36.44); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 56px; height: 44px; }
+  .radius-box.default-box { outline: 2px solid oklch(0.3211 0 0); outline-offset: 2px; }
+  .radius-label { font-size: 9px; font-family: 'JetBrains Mono', monospace; color: white; font-weight: 500; }
+  .radius-val { font-size: 8px; color: rgba(255,255,255,0.8); margin-top: 1px; }
+  .token-label { font-size: 8px; font-family: 'JetBrains Mono', monospace; color: oklch(0.551 0.0234 264.36); }
+  .default-tag { font-size: 8px; font-weight: 600; color: oklch(0.6397 0.172 36.44); background: oklch(0.6397 0.172 36.44 / 0.12); border-radius: 3px; padding: 1px 4px; }
+  .tw-tag { font-size: 7.5px; font-family: 'JetBrains Mono', monospace; color: oklch(0.4461 0.0263 256.80); background: oklch(0.967 0.0029 264.54); border-radius: 3px; padding: 1px 4px; margin-top: 1px; }
+  .spacing-row { display: flex; gap: 4px; align-items: flex-end; flex-wrap: wrap; }
+  .spacing-item { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+  .spacing-bar { background: oklch(0.9119 0.0222 243.82); border: 1px solid oklch(0.885 0.0052 247.88); width: 44px; }
+</style>
+</head>
+<body>
+<div class="section">
+  <div class="section-title">Border Radius — centered on md = 4px (almost square default)</div>
+  <div class="radius-row">
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:0rem"><div class="radius-label">none</div><div class="radius-val">0px</div></div>
+      <div class="token-label">--radius-none</div>
+      <div class="tw-tag">rounded-none</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:0.125rem"><div class="radius-label">sm</div><div class="radius-val">2px</div></div>
+      <div class="token-label">--radius-sm</div>
+      <div class="tw-tag">rounded-sm</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box default-box" style="border-radius:0.25rem"><div class="radius-label">md ★</div><div class="radius-val">4px</div></div>
+      <div class="token-label">--radius-md</div>
+      <div class="default-tag">default</div>
+      <div class="tw-tag">rounded-md</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:0.375rem"><div class="radius-label">lg</div><div class="radius-val">6px</div></div>
+      <div class="token-label">--radius-lg</div>
+      <div class="tw-tag">rounded-lg</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:0.5rem"><div class="radius-label">xl</div><div class="radius-val">8px</div></div>
+      <div class="token-label">--radius-xl</div>
+      <div class="tw-tag">rounded-xl</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:0.75rem"><div class="radius-label">2xl</div><div class="radius-val">12px</div></div>
+      <div class="token-label">--radius-2xl</div>
+      <div class="tw-tag">rounded-2xl</div>
+    </div>
+    <div class="radius-item">
+      <div class="radius-box" style="border-radius:9999px; width:72px"><div class="radius-label">full</div><div class="radius-val">badges</div></div>
+      <div class="token-label">--radius-full</div>
+      <div class="tw-tag">rounded-full</div>
+    </div>
+  </div>
+</div>
+<div class="section">
+  <div class="section-title">Spacing Scale</div>
+  <div class="spacing-row">
+    <div class="spacing-item"><div class="spacing-bar" style="height:6px"></div><div class="token-label">xs·6px</div><div class="tw-tag">gap-1.5</div></div>
+    <div class="spacing-item"><div class="spacing-bar" style="height:8px"></div><div class="token-label">sm·8px</div><div class="tw-tag">gap-2</div></div>
+    <div class="spacing-item"><div class="spacing-bar" style="height:12px"></div><div class="token-label">md·12px</div><div class="tw-tag">gap-3</div></div>
+    <div class="spacing-item"><div class="spacing-bar" style="height:16px"></div><div class="token-label">lg·16px</div><div class="tw-tag">gap-4</div></div>
+    <div class="spacing-item"><div class="spacing-bar" style="height:20px"></div><div class="token-label">xl·20px</div><div class="tw-tag">gap-5</div></div>
+  </div>
+</div>
+</body>
+</html>

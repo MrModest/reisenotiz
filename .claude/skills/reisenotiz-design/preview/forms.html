@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --bg: oklch(0.2598 0.0306 262.67);
+    --card: oklch(0.3106 0.0301 268.64);
+    --popover: oklch(0.29 0.0249 268.40);
+    --fg: oklch(0.9219 0 0);
+    --muted-fg: oklch(0.7155 0 0);
+    --primary: oklch(0.6397 0.172 36.44);
+    --secondary: oklch(0.3095 0.0266 266.71);
+    --secondary-fg: oklch(0.9219 0 0);
+    --border: oklch(0.3843 0.0301 269.73);
+    --ring: oklch(0.6397 0.172 36.44);
+    --r-md: 0.25rem;
+    --r-lg: 0.375rem;
+  }
+  body { margin: 0; padding: 12px; background: var(--bg); font-family: Inter, sans-serif; color: var(--fg); font-size: 0.75rem; display: flex; flex-direction: column; gap: 10px; }
+  .label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted-fg); margin-bottom: 4px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .row3 { display: grid; grid-template-columns: 1fr 64px 64px; gap: 8px; }
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  .field-label { font-size: 0.7rem; font-weight: 500; color: var(--muted-fg); }
+  input { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); font: 500 0.75rem/1.4 Inter,sans-serif; color: var(--fg); padding: 0.375rem 0.625rem; height: 2rem; width: 100%; box-sizing: border-box; outline: none; }
+  input:focus { border-color: var(--ring); }
+  /* Section card */
+  .section-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 9px 12px; cursor: pointer; }
+  .section-title { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 0.75rem; color: var(--fg); }
+  .section-preview { padding: 0 12px 10px; }
+  .preview-row { display: flex; align-items: flex-start; gap: 8px; }
+  .preview-text { font-size: 0.75rem; font-weight: 500; color: var(--fg); }
+  .preview-sub { font-size: 0.7rem; color: var(--muted-fg); margin-top: 1px; }
+  /* Combobox */
+  .combo-wrap { position: relative; }
+  .combo-input-row { display: flex; gap: 6px; }
+  .combo-input { flex: 1; padding-left: 28px !important; }
+  .combo-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--muted-fg); }
+  .combo-dropdown { border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-top: 4px; background: var(--popover); }
+  .combo-item { display: flex; align-items: center; gap: 10px; padding: 7px 12px; cursor: pointer; border-bottom: 1px solid var(--border); }
+  .combo-item:last-child { border-bottom: none; }
+  .combo-item:hover { background: oklch(0.338 0.0589 267.59); }
+  .combo-name { font-size: 0.75rem; font-weight: 500; color: var(--fg); }
+  .combo-sub { font-size: 0.65rem; color: var(--muted-fg); }
+  /* Buttons */
+  .btn-add { display: flex; align-items: center; gap: 5px; padding: 0 10px; height: 32px; border-radius: var(--r-md); border: 1px solid var(--border); background: transparent; color: var(--fg); font: 500 0.75rem/1 Inter,sans-serif; cursor: pointer; white-space: nowrap; }
+  .btn-full { width: 100%; height: 38px; border-radius: var(--r-md); font: 500 0.875rem/1 Inter,sans-serif; cursor: pointer; border: none; }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-secondary { background: transparent; color: var(--fg); border: 1px solid var(--border) !important; margin-top: 6px; }
+  svg { width: 13px; height: 13px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<!-- Plain fields -->
+<div>
+  <div class="label">Text Inputs</div>
+  <div class="row2">
+    <div class="field"><div class="field-label">Flight Number</div><input value="FC3030"></div>
+    <div class="field"><div class="field-label">Airline</div><input value="Fictional Air"></div>
+  </div>
+</div>
+
+<!-- Section card — collapsed with preview -->
+<div>
+  <div class="label">Section Card (collapsed)</div>
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted-fg)" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 2c-2-2-4-2-5.5-.5L10 5 1.8 3.2l-1 1L7 10l-2 2-2.5-.5L1 13l3 3-1 2 2 1 2-1 3 3 1.5-1.5L10.8 17l6 6.2 1-1z"/></svg>
+        Departure
+      </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted-fg)" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </div>
+    <div class="section-preview">
+      <div class="preview-row">
+        <span style="font-size:1.1rem;line-height:1">🇩🇪</span>
+        <div><div class="preview-text">Berlin Brandenburg Airport (BER)</div><div class="preview-sub">Dec 01, 2025 · 19:00 · Europe/Berlin</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Section card — expanded with combobox -->
+<div>
+  <div class="label">Section Card (expanded) + Airport Combobox</div>
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted-fg)" stroke-width="2"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19 2c-2-2-4-2-5.5-.5L10 5 1.8 3.2l-1 1L7 10l-2 2-2.5-.5L1 13l3 3-1 2 2 1 2-1 3 3 1.5-1.5L10.8 17l6 6.2 1-1z"/></svg>
+        Arrival
+      </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--muted-fg)" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+    </div>
+    <div style="padding:10px 12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:8px">
+      <div class="combo-wrap">
+        <div class="combo-input-row">
+          <div style="flex:1;position:relative">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="combo-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input class="combo-input" value="Tokyo Haneda Airport">
+          </div>
+          <button class="btn-add">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            Add New
+          </button>
+        </div>
+        <div class="combo-dropdown">
+          <div class="combo-item"><span style="font-size:1rem">🇯🇵</span><div><div class="combo-name">Tokyo Haneda Airport (HND)</div><div class="combo-sub">HND · Asia/Tokyo</div></div></div>
+          <div class="combo-item"><span style="font-size:1rem">🇯🇵</span><div><div class="combo-name">Tokyo Narita Airport</div><div class="combo-sub">NRT · Asia/Tokyo</div></div></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 80px 60px 60px;gap:8px">
+        <div class="field"><div class="field-label">Date</div><input type="date" value="2025-12-02"></div>
+        <div class="field"><div class="field-label">Time</div><input type="time" value="15:00"></div>
+        <div class="field"><div class="field-label">Terminal</div><input value="T3"></div>
+        <div class="field"><div class="field-label">Gate</div><input placeholder="—"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Full-width buttons -->
+<div>
+  <div class="label">Form Actions</div>
+  <button class="btn-full btn-primary">Save</button>
+  <button class="btn-full btn-secondary">Cancel</button>
+</div>
+
+</body>
+</html>

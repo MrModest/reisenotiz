@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+<style>
+  body { margin: 0; padding: 16px; background: oklch(0.9383 0.0042 236.50); font-family: Inter, sans-serif; display: flex; flex-direction: column; gap: 16px; }
+  .row { display: flex; gap: 16px; align-items: center; }
+  .logo-box { background: white; border: 1px solid oklch(0.885 0.0052 247.88); border-radius: 4px; padding: 14px; display: flex; align-items: center; justify-content: center; }
+  .logo-box-dark { background: oklch(0.2598 0.0306 262.67); border-radius: 4px; padding: 14px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .logo-box-dark img { filter: invert(1); }
+  .label { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: oklch(0.551 0.0234 264.36); margin-bottom: 5px; }
+  .app-name { font-size: 0.875rem; font-weight: 600; color: oklch(0.3211 0 0); }
+  .pwa-row { display: flex; gap: 10px; align-items: center; }
+</style>
+</head>
+<body>
+<div>
+  <div class="label">App Logo</div>
+  <div class="row">
+    <div class="logo-box"><img src="../assets/pwa-192x192.png" width="48" height="48" alt="logo light bg"></div>
+    <div class="logo-box-dark"><img src="../assets/pwa-192x192.png" width="48" height="48" alt="logo dark bg"></div>
+    <div style="display:flex; align-items:center; gap:8px">
+      <img src="../assets/pwa-192x192.png" width="28" height="28" style="border-radius:3px;background:white;padding:2px" alt="sm">
+      <span class="app-name">Reisenotiz</span>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="label">PWA Icons</div>
+  <div class="pwa-row">
+    <div style="text-align:center"><img src="../assets/pwa-192x192.png" width="32" height="32" style="border-radius:4px;display:block;margin:0 auto 3px;background:white;padding:2px" alt="192"><div style="font-size:9px;color:oklch(0.551 0.0234 264.36)">192px</div></div>
+    <div style="text-align:center"><img src="../assets/pwa-512x512.png" width="48" height="48" style="border-radius:4px;display:block;margin:0 auto 3px;background:white;padding:3px" alt="512"><div style="font-size:9px;color:oklch(0.551 0.0234 264.36)">512px</div></div>
+    <div style="text-align:center;margin-left:8px"><div style="width:60px;height:60px;background:oklch(0.2598 0.0306 262.67);border-radius:4px;display:flex;align-items:center;justify-content:center;margin:0 auto 3px"><img src="../assets/pwa-192x192.png" width="44" height="44" style="filter:invert(1)" alt="dark"></div><div style="font-size:9px;color:oklch(0.551 0.0234 264.36)">on dark</div></div>
+  </div>
+</div>
+</body>
+</html>
