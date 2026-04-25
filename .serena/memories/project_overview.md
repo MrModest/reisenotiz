@@ -1,5 +1,7 @@
 # Project Overview: Reisenotiz
 
+The Reisenotiz frontend lives at `apps/frontend/`. The repository root has no `package.json`; all build, lint, and dev commands run from inside `apps/frontend/`.
+
 ## Purpose
 Reisenotiz is a travel notes/trip planning Progressive Web App (PWA). It allows users to manage trips with timeline items such as flights, accommodations, and other travel-related entries. Users can also manage personal records (e.g., custom airport entries).
 
@@ -26,5 +28,5 @@ Reisenotiz is a travel notes/trip planning Progressive Web App (PWA). It allows 
 - **Draft vs Persisted state**: Drafts are local form state, only validated entities enter global store
 - **Reusable forms**: Same form component for Create & Edit, pages orchestrate
 - **forwardRef deprecated**: React 19 pattern — pass `ref` as a regular prop
-- **Path aliases**: `@/` maps to `src/`
+- **Path aliases**: `@/` maps to `apps/frontend/src/`
 - **User records**: Users can manage their own data records (e.g., custom airports) stored in a separate Zustand store

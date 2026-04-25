@@ -13,7 +13,7 @@
 - `noUnusedLocals` and `noUnusedParameters` enforced
 - Bundler module resolution
 - ES2020 target
-- Path alias: `@/*` → `./src/*`
+- Path alias: `@/*` → `./apps/frontend/src/*`
 
 ## React Patterns
 - **React 19**: Do NOT use `forwardRef`. Pass `ref` as a regular prop when needed.
@@ -24,7 +24,7 @@
 
 ## Icon Usage
 - All icons come from Lucide React
-- Always wrap with the custom `Icon` component from `@/components/icon/icon.tsx`
+- Always wrap with the custom `Icon` component from `apps/frontend/src/components/icon/icon.tsx`
 - When passing icons as variables, use `IconName` type and the generic `Icon` component with `name={icon}` prop
 
 ## Design System
@@ -48,15 +48,15 @@
 
 ## UI Primitives
 - Base UI (`@base-ui/react`) for low-level primitives (Tabs, Switch, etc.)
-- Custom combobox components in `src/components/ui/combobox/` (base + airport-specific)
-- Dialog and ConfirmDialog components in `src/components/ui/`
+- Custom combobox components in `apps/frontend/src/components/ui/combobox/` (base + airport-specific)
+- Dialog and ConfirmDialog components in `apps/frontend/src/components/ui/`
 
 ## File Organization
-- Components in `src/components/` (grouped by domain: ui, layout, trip-timeline, trip, trip-item, records, etc.)
-- Pages in `src/pages/` (with `records/` subdirectory)
-- Types in `src/types/`
-- Hooks in `src/hooks/`
-- Store in `src/store/` (with `user-records/` subdirectory)
-- Utilities in `src/lib/`
-- Services in `src/services/`
-- Mock data in `src/stubs/`
+- Components in `apps/frontend/src/components/` (grouped by domain: ui, layout, trip-timeline, trip, trip-item, records, etc.)
+- Pages in `apps/frontend/src/pages/` (with `records/` subdirectory)
+- Types in `apps/frontend/src/types/`
+- Hooks in `apps/frontend/src/hooks/`
+- Store in `apps/frontend/src/store/` (with `user-records/` subdirectory)
+- Utilities in `apps/frontend/src/lib/`
+- Services in `apps/frontend/src/services/`
+- Mock data in `apps/frontend/src/stubs/`
