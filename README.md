@@ -31,7 +31,7 @@ A self-hosted, offline-first travel notes built as a PWA for keeping track of tr
 ```yaml
 services:
   app:
-    image: ghcr.io/mrmodest/reisenotiz:edge-amd64 # change tag to `edge-arm64` for ARM64 builds
+    image: ghcr.io/mrmodest/reisenotiz-client:edge-amd64 # change tag to `edge-arm64` for ARM64 builds
     ports:
       - "8080:8080"
     # Uncomment to run with custom UID/GID

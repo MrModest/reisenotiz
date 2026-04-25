@@ -3,7 +3,7 @@ services:
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile
-    image: ghcr.io/mrmodest/reisenotiz:edge-amd64 # change to `edge-arm64` for ARM64
+    image: ghcr.io/mrmodest/reisenotiz-client:edge-amd64 # change to `edge-arm64` for ARM64
     ports:
       - '8080:8080'
     # Uncomment to run with custom UID/GID
