@@ -44,9 +44,29 @@ The client replaces its Zustand localStorage stores with a **per-trip Automerge 
 ### Backend Service
 
 - **Runtime**: Node.js 24 + TypeScript (matches frontend build image)
-- **Core libraries**: `@automerge/automerge-repo`, `@automerge/automerge-repo-network-websocket`, `@automerge/automerge-repo-storage-nodefs`
+- **Core libraries**: `@automerge/automerge-repo`, `@automerge/automerge-repo-network-websocket`
 - **Transport**: WebSocket (`ws` library via `NodeWSServerAdapter`)
-- **Persistence**: Filesystem storage via `NodeFSStorageAdapter` (volume-mounted in Docker)
+- **Persistence**: Custom `StorageAdapter` backed by a relational DB (Postgres or SQLite, configurable via env var). No official Postgres/SQLite adapter exists in automerge-repo — a small custom adapter (~100 lines) implements the interface:
+  ```typescript
+  type StorageKey = string[];
+  abstract class StorageAdapter {
+    abstract load(key: StorageKey): Promise<Uint8Array | undefined>;
+    abstract save(key: StorageKey, data: Uint8Array): Promise<void>;
+    abstract remove(key: StorageKey): Promise<void>;
+    abstract loadRange(
+      keyPrefix: StorageKey,
+    ): Promise<{ key: StorageKey; data: Uint8Array }[]>;
+    abstract removeRange(keyPrefix: StorageKey): Promise<void>;
+  }
+  ```
+  Keys are hierarchical path segments (`[docId, chunkType, chunkId?]`), joined as `"docId/chunkType/chunkId"` in the DB. `loadRange` maps to a single `WHERE key LIKE 'prefix/%'` query — efficient bulk fetch of all chunks for a document. Storage table:
+  ```sql
+  CREATE TABLE automerge_chunks (
+    key  TEXT PRIMARY KEY,
+    data BYTEA NOT NULL
+  );
+  ```
+- **Shared DB**: Auth tables (`users`, `sessions`, `permissions`) and `automerge_chunks` live in the same DB instance. Single connection pool, single backup, single Docker service.
 - **Authentication**: None in v1 — the WebSocket handler is structured so an auth middleware can be inserted before the `NodeWSServerAdapter` handshake without touching anything else
 - **Domain knowledge**: Zero — the server stores and forwards opaque binary blobs. No Trip or TripItem types are imported or referenced server-side, ever.
 - **Port**: Configurable via env var (default `4000`), exposed in docker-compose
@@ -92,10 +112,12 @@ Each trip is a fully independent Automerge document. The root doc acts only as a
 
 **Document bootstrap**: On first load, the app creates a new root doc and empty trip docs. If existing Zustand localStorage data is found, it is migrated: one trip doc is created per trip, and the root doc index is populated. Old localStorage keys are cleared after migration.
 
-**Store replacement**:
-- `src/store/trips-store.ts` — replaced with hooks that use the root doc and per-trip doc handles. `createTrip` creates a new `TripDoc` and registers its URL in the root doc index. `deleteTrip` removes the index entry (the doc itself becomes unreferenced). All CRUD methods keep the same public signature.
+**Zustand removed entirely**: All three Zustand stores (`useTripsStore`, `useUserAirportsStore`, `useUserAccommodationsStore`) and the `persist` middleware are deleted. Automerge documents are the sole source of truth and reactive state container. No Zustand dependency remains for synced data.
+
+**Store replacement** — custom hooks wrapping `useDocument()`:
+- `src/store/trips-store.ts` — replaced with hooks over root doc + per-trip doc handles. `createTrip` creates a new `TripDoc` and registers its URL in the root doc index. `deleteTrip` removes the index entry (the doc itself becomes unreferenced). All CRUD methods keep the same public signature.
 - `src/store/user-records/airports.ts` and `accommodations.ts` — replaced with hooks that mutate the root doc directly (airports/accommodations live in the root doc).
-- `src/store/selectors.ts` — updated to read from the new hook shape; trip list comes from the root doc index, individual trip data from each trip doc handle.
+- `src/store/selectors.ts` — updated to read from the new hook shape; trip list from root doc index, individual trip data from each trip doc handle. Derived/filtered state (e.g. `useTimelineElements`) is implemented as `useMemo` over `useDocument()` output — same pattern as current memos over Zustand selectors.
 
 **Sync URL configuration**: Read from `VITE_SYNC_SERVER_URL` environment variable. If absent, the app runs local-only with IndexedDB persistence.
 
@@ -128,6 +150,7 @@ Existing TypeScript types (`Trip`, `TripItem`, subtypes) require no changes. Aut
 ## Out of Scope
 
 - User authentication and multi-user access control
+- Root doc URL recovery mechanism (if localStorage cleared, root doc URL is lost; server-side userId → rootDocUrl mapping will resolve this naturally at the auth phase — deferred intentionally)
 - Shared trips between different users
 - Conflict UI (e.g., showing a "conflict detected" dialog) — Automerge resolves automatically
 - Server-side validation of document contents
@@ -141,6 +164,8 @@ Existing TypeScript types (`Trip`, `TripItem`, subtypes) require no changes. Aut
 ## Further Notes
 
 - **Automerge version**: Use `@automerge/automerge-repo` v2.x (the `automerge-repo` umbrella, not the legacy `automerge` v1 API).
+- **WASM bundle size**: `@automerge/automerge` includes a WASM binary (~800KB+ gzipped). For a PWA this is acceptable — Workbox caches the bundle after first load, subsequent app launches serve it from CacheStorage with no network round-trip. Comparable to mobile app installation overhead, paid once.
+- **Custom StorageAdapter write batching**: The `save` interface is per-chunk. For high-frequency burst writes (e.g. large offline session syncing on reconnect), the adapter can debounce and flush pending writes in a single batched `INSERT ... ON CONFLICT` transaction. Not required on day 1 — implement if profiling shows DB write pressure.
 - **IndexedDB on client**: Use `@automerge/automerge-repo-storage-indexeddb` instead of the `nodefs` adapter for browser-side persistence. This replaces localStorage and survives page reloads without depending on the sync server being online.
 - **Graceful degradation**: If the WebSocket connection fails or the env var is unset, the app continues working with the local IndexedDB-backed document. Sync resumes automatically when the server becomes reachable.
 - **Auth is a middleware insertion, not a redesign**: Adding authentication means inserting a token-validation middleware before the `NodeWSServerAdapter` handshake and a `permissions(userId, docId, role)` table behind a `/invite` endpoint. The document model, client code, and sync protocol are untouched.
