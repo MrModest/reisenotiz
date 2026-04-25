@@ -1,15 +1,14 @@
 services:
   app:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
-    image: ghcr.io/mrmodest/reisenotiz:sha-5d84e0b-arm64:edge-amd64 # change tag to `edge-arm64` for ARM64 builds
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    image: ghcr.io/mrmodest/reisenotiz:edge-amd64 # change to `edge-arm64` for ARM64
     ports:
       - '8080:8080'
     # Uncomment to run with custom UID/GID
     # user: "1000:1000"
     restart: unless-stopped
-    # Read-only filesystem for extra security
     read_only: true
     tmpfs:
       - /tmp
