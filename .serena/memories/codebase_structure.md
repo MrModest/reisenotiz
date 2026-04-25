@@ -1,7 +1,24 @@
 # Codebase Structure
 
+## Repository Root
+
 ```
 reisenotiz/
+├── apps/
+│   └── frontend/              # React 19 PWA — see "Frontend" below
+├── docker-compose.yml         # orchestrates frontend container
+├── .github/workflows/         # frontend build pipelines
+├── docs/
+├── Plans/
+├── CLAUDE.md                  # root index (points to apps/frontend/CLAUDE.md)
+├── README.md / ROADMAP.md / LICENSE / CLA.md / CONTRIBUTING.md
+└── .serena/ .claude/ .vscode/ .gitignore .editorconfig
+```
+
+## Frontend (`apps/frontend/`)
+
+```
+apps/frontend/
 ├── src/
 │   ├── main.tsx                    # App entry point
 │   ├── index.css                   # Global styles, Tailwind config, CSS variables, theming
@@ -135,23 +152,21 @@ reisenotiz/
 │       ├── airports.ts
 │       └── timelineElements.ts
 │
-├── docs/
-│   └── agents/
-│       ├── DESIGN_SYSTEM.md        # Border radius, spacing, and design guidelines
-│       └── CRUD_FLOW_BEST_PRACTISE.md  # Create/View/Edit flow patterns
-│
-├── public/                         # Static assets
-├── docker/                         # Docker configuration
-├── CLAUDE.md                       # Project instructions for Claude Code
-├── package.json                    # Dependencies and scripts (pnpm)
-├── components.json                 # UI component config
-├── tsconfig.json                   # TypeScript configuration
-├── tsconfig.node.json              # TypeScript node config
-├── vite.config.ts                  # Vite build configuration
-├── eslint.config.ts                # ESLint flat config
-├── .prettierrc                     # Prettier configuration
-├── .editorconfig                   # Editor configuration
-└── pwa-assets.config.ts            # PWA asset generation config
+├── public/
+├── package.json
+├── pnpm-lock.yaml
+├── tsconfig.json
+├── tsconfig.node.json
+├── vite.config.ts
+├── eslint.config.ts
+├── .prettierrc
+├── components.json
+├── pwa-assets.config.ts
+├── index.html
+├── Dockerfile
+├── nginx.conf
+├── .dockerignore
+└── CLAUDE.md
 ```
 
 ## Routes

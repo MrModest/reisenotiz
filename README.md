@@ -46,6 +46,7 @@ services:
 Requires Node.js 24+ and pnpm.
 
 ```bash
+cd apps/frontend
 pnpm install
 pnpm build
 pnpm preview

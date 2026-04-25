@@ -1,0 +1,28 @@
+name: Build and Push Docker Image (arm64)
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*.*.*']
+    paths:
+      - 'apps/frontend/**'
+      - '.github/workflows/_docker-build-frontend.yml'
+      - '.github/workflows/docker-arm64-frontend.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/frontend/**'
+      - '.github/workflows/_docker-build-frontend.yml'
+      - '.github/workflows/docker-arm64-frontend.yml'
+
+jobs:
+  build:
+    uses: ./.github/workflows/_docker-build-frontend.yml
+    permissions:
+      contents: read
+      packages: write
+    with:
+      platform: linux/arm64
+      runner: ubuntu-24.04-arm
+      image: ghcr.io/${{ github.repository }}
+      tag-suffix: -arm64
