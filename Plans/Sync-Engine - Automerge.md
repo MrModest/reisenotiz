@@ -72,18 +72,18 @@ The client replaces its Zustand localStorage stores with a **per-trip Automerge 
 - **Port**: Configurable via env var (default `4000`), exposed in docker-compose
 - **File structure**:
   ```
-  sync/
-    src/
-      server.ts     # all logic in v1; auth.ts, permissions.ts slot in here later
-    package.json
-    tsconfig.json
-    Dockerfile      # co-located with the code it builds
-  docker/
-    docker-compose.yml   # references ../sync as build context for the sync service
-    Dockerfile           # existing frontend, untouched
-    nginx.conf           # untouched
+  apps/
+    sync/
+      src/
+        server.ts     # all logic in v1; auth.ts, permissions.ts slot in here later
+      package.json
+      tsconfig.json
+      Dockerfile      # co-located with the code it builds
+    frontend/         # existing frontend, untouched
+      ...
+  docker-compose.yml  # repo root; references ./apps/sync as build context for the sync service
   ```
-- **Separate repo path**: Because the server is fully data-agnostic, it is a strong candidate for extraction into its own repository once auth and multi-user support are added. At that point it becomes a reusable hosted service, not a reisenotiz component. The `sync/` directory structure above makes that extraction a clean cut with no shared code to untangle.
+- **Separate repo path**: Because the server is fully data-agnostic, it is a strong candidate for extraction into its own repository once auth and multi-user support are added. At that point it becomes a reusable hosted service, not a reisenotiz component. The `apps/sync/` directory structure above makes that extraction a clean cut — no shared types, no shared code with the frontend.
 
 ### Frontend Changes
 
