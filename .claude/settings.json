@@ -1,0 +1,8 @@
+{
+  "enabledPlugins": {
+    "kotlin-lsp@claude-plugins-official": false,
+    "skill-creator@claude-plugins-official": false,
+    "swift-lsp@claude-plugins-official": false,
+    "gopls-lsp@claude-plugins-official": false
+  }
+}
