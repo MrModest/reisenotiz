@@ -11,6 +11,7 @@
     "generate-pwa-assets": "pwa-assets-generator"
   },
   "dependencies": {
+    "@automerge/react": "^2.5.5",
     "@base-ui/react": "^1.1.0",
     "@hookform/resolvers": "^5.2.2",
     "class-variance-authority": "^0.7.1",
@@ -29,9 +30,12 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
     "@eslint/js": "^10.0.1",
+    "@rolldown/plugin-babel": "^0.2.3",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@tailwindcss/vite": "^4.2.2",
+    "@types/babel__core": "^7.20.5",
     "@types/luxon": "^3.7.1",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
@@ -40,6 +44,7 @@
     "@vite-pwa/assets-generator": "^1.0.2",
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
+    "esbuild": "^0.28.0",
     "eslint": "^10.1.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
@@ -48,6 +53,8 @@
     "typescript": "^6.0.2",
     "typescript-eslint": "^8.57.2",
     "vite": "^8.0.3",
-    "vite-plugin-pwa": "^1.2.0"
+    "vite-plugin-pwa": "^1.2.0",
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.6.0"
   }
 }

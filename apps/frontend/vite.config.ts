@@ -1,17 +1,20 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import wasm from 'vite-plugin-wasm'
+import topLevelAwait from 'vite-plugin-top-level-await'
 import path from 'path'
 
 export default defineConfig({
   plugins: [
-    react({
-      babel: {
-        plugins: [
-          ['babel-plugin-react-compiler', { target: '19' }]
-        ]
-      }
+    wasm(),
+    topLevelAwait(),
+    react(),
+    babel({
+      presets: [reactCompilerPreset({ target: '19' })],
+      include: /\.[tj]sx?$/,
     }),
     tailwindcss(),
     VitePWA({
@@ -52,7 +55,8 @@ export default defineConfig({
         ]
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,svg,png,ico}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,ico,wasm}'],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
@@ -67,5 +71,11 @@ export default defineConfig({
     modules: {
       localsConvention: 'camelCase'
     }
+  },
+  build: {
+    target: 'esnext'
+  },
+  optimizeDeps: {
+    exclude: ['@automerge/automerge-wasm']
   },
 })
