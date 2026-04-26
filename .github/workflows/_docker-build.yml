@@ -3,6 +3,9 @@ name: Docker build (reusable)
 on:
   workflow_call:
     inputs:
+      app:
+        type: string
+        required: true
       platform:
         type: string
         required: true
@@ -59,8 +62,8 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
-          context: ./apps/frontend
-          file: ./apps/frontend/Dockerfile
+          context: ./apps/${{ inputs.app }}
+          file: ./apps/${{ inputs.app }}/Dockerfile
           platforms: ${{ inputs.platform }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}

@@ -1,19 +1,19 @@
-name: Build and Push Docker Image (arm64)
+name: Build and Push Docker Image - Sync (arm64)
 
 on:
   push:
     branches: [main]
     tags: ['v*.*.*']
     paths:
-      - 'apps/frontend/**'
+      - 'apps/sync/**'
       - '.github/workflows/_docker-build.yml'
-      - '.github/workflows/docker-arm64-frontend.yml'
+      - '.github/workflows/docker-arm64-sync.yml'
   pull_request:
     branches: [main]
     paths:
-      - 'apps/frontend/**'
+      - 'apps/sync/**'
       - '.github/workflows/_docker-build.yml'
-      - '.github/workflows/docker-arm64-frontend.yml'
+      - '.github/workflows/docker-arm64-sync.yml'
 
 jobs:
   build:
@@ -22,8 +22,8 @@ jobs:
       contents: read
       packages: write
     with:
-      app: frontend
+      app: sync
       platform: linux/arm64
       runner: ubuntu-24.04-arm
-      image: ghcr.io/${{ github.repository_owner }}/reisenotiz-client
+      image: ghcr.io/${{ github.repository_owner }}/reisenotiz-sync
       tag-suffix: -arm64
