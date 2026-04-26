@@ -1,3 +1,4 @@
 allowBuilds:
+  better-sqlite3: true
   cbor-extract: true
   esbuild: true

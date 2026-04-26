@@ -3,10 +3,12 @@ import { serve } from '@hono/node-server'
 import { createNodeWebSocket } from '@hono/node-ws'
 import { Repo } from '@automerge/automerge-repo'
 import { NodeWSServerAdapter } from '@automerge/automerge-repo-network-websocket'
+import { createStorageAdapter, readStorageConfigFromEnv, type StorageConfig } from './storage/index.js'
 
 export interface SyncServerOptions {
   port: number
   host: string
+  storage: StorageConfig
 }
 
 export interface SyncServerHandle {
@@ -28,12 +30,15 @@ export async function startSyncServer(options: SyncServerOptions): Promise<SyncS
     })),
   )
 
+  const { adapter: storageAdapter, close: closeStorage } = await createStorageAdapter(options.storage)
+
   const repo = new Repo({
     // `wss` is a `ws.WebSocketServer` (from @hono/node-ws). NodeWSServerAdapter
     // typed it via `isomorphic-ws`, whose `export = WebSocket` defaults the
     // generic param to the ws *namespace* instead of the class. Same runtime
     // class, incompatible inferred generics — cast to the adapter's own param.
     network: [new NodeWSServerAdapter(wss as unknown as ConstructorParameters<typeof NodeWSServerAdapter>[0])],
+    storage: storageAdapter,
     sharePolicy: async () => true,
   })
 
@@ -51,6 +56,9 @@ export async function startSyncServer(options: SyncServerOptions): Promise<SyncS
     await new Promise<void>((resolve, reject) => {
       server.close((err) => (err ? reject(err) : resolve()))
     })
+    await repo.flush()
+    await repo.shutdown()
+    await closeStorage()
   }
 
   return { port: options.port, repo, close }
@@ -60,13 +68,14 @@ const isMain = import.meta.url === `file://${process.argv[1]}`
 if (isMain) {
   startSyncServer({
     port: Number(process.env.SYNC_PORT ?? 4000),
-    host: process.env.SYNC_HOST ?? '0.0.0.0'
+    host: process.env.SYNC_HOST ?? '0.0.0.0',
+    storage: readStorageConfigFromEnv(),
   })
     .then(({ port }) => {
-      console.log(`[sync] listening on :${port}`);
+      console.log(`[sync] listening on :${port}`)
     })
     .catch((err) => {
-      console.error('[sync] failed to start', err);
-      process.exit(1);
-    });
+      console.error('[sync] failed to start', err)
+      process.exit(1)
+    })
 }

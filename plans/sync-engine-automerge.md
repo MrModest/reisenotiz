@@ -71,11 +71,11 @@ Custom `StorageAdapter` (~100 LoC) implementing `load` / `save` / `remove` / `lo
 
 ### Acceptance criteria
 
-- [ ] Adapter unit tests cover `save` → `load` round-trip, `loadRange` prefix fetch, `remove`, `removeRange`.
-- [ ] Server boots against SQLite by default; switching env var boots against Postgres without code changes.
-- [ ] Restart test: change made via Repo A is still readable by a fresh Repo B after the server process restarts.
-- [ ] Schema is created/migrated on server startup if absent.
-- [ ] Server still imports zero domain types.
+- [x] Adapter unit tests cover `save` → `load` round-trip, `loadRange` prefix fetch, `remove`, `removeRange`.
+- [x] Server boots against SQLite by default; switching env var boots against Postgres without code changes.
+- [x] Restart test: change made via Repo A is still readable by a fresh Repo B after the server process restarts.
+- [x] Schema is created/migrated on server startup if absent.
+- [x] Server still imports zero domain types.
 
 ---
 

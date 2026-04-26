@@ -23,11 +23,21 @@ services:
     environment:
       - SYNC_PORT=4000
       - SYNC_HOST=0.0.0.0
+      - SYNC_DB_KIND=sqlite
+      - SYNC_SQLITE_PATH=/data/sync.db
+      # Switch to Postgres by setting:
+      # - SYNC_DB_KIND=postgres
+      # - SYNC_PG_URL=postgres://user:pass@host:5432/db
     ports:
       - '4000:4000'
+    volumes:
+      - sync-data:/data
     restart: unless-stopped
     read_only: true
     tmpfs:
       - /tmp
     security_opt:
       - no-new-privileges:true
+
+volumes:
+  sync-data:
