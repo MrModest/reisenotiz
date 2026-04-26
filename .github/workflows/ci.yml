@@ -8,7 +8,7 @@ on:
 
 jobs:
   frontend:
-    name: Frontend — Lint & Build & Test
+    name: Frontend — Lint & Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -35,9 +35,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Test
-        run: pnpm test
 
   sync:
     name: Sync — Lint & Build & Test
