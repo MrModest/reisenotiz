@@ -14,3 +14,20 @@ services:
       - /tmp
     security_opt:
       - no-new-privileges:true
+
+  sync:
+    build:
+      context: ./apps/sync
+      dockerfile: Dockerfile
+    image: ghcr.io/mrmodest/reisenotiz-sync:edge-amd64 # change to `edge-arm64` for ARM64
+    environment:
+      - SYNC_PORT=4000
+      - SYNC_HOST=0.0.0.0
+    ports:
+      - '4000:4000'
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
