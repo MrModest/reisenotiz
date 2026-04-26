@@ -8,6 +8,7 @@
     "start": "node --import tsx src/server.ts",
     "build": "tsc",
     "test": "vitest run",
+    "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -21,12 +22,19 @@
     "ws": "^8.20.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^25.6.0",
     "@types/pg": "^8.20.0",
     "@types/ws": "^8.5.13",
+    "@typescript-eslint/parser": "^8.59.0",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
+    "jiti": "^2.6.1",
     "tsx": "^4.19.2",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.0",
     "vite": "^8.0.10",
     "vitest": "^4.1.5"
   },

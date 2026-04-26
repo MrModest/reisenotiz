@@ -12,7 +12,7 @@ export interface ManagedStorageAdapter {
 }
 
 export function readStorageConfigFromEnv(): StorageConfig {
-  const kind = (process.env.SYNC_DB_KIND ?? "sqlite").toLowerCase();
+  const kind = (process.env.SYNC_DB_KIND ?? "sqlite").toLowerCase()
 
   if (kind === 'sqlite') {
     return { kind: 'sqlite', sqlitePath: process.env.SYNC_SQLITE_PATH ?? './data/sync.db' }
@@ -30,12 +30,13 @@ export function readStorageConfigFromEnv(): StorageConfig {
 
 export async function createStorageAdapter(config: StorageConfig): Promise<ManagedStorageAdapter> {
   switch (config.kind) {
-    case 'sqlite':
+    case 'sqlite': {
       const sqliteAdapter = createSqliteStorageAdapter({ path: config.sqlitePath })
       return {
         adapter: sqliteAdapter,
         close: () => sqliteAdapter.close(),
-      };
+      }
+    }
     case 'postgres': {
       const postgresAdapter = await createPostgresStorageAdapter({ connectionString: config.postgresUrl })
       return {
