@@ -28,8 +28,8 @@ function FlightForm({ item, isCreate, setScreen }) {
             <div style={{display:'flex', alignItems:'flex-start', gap:8}}>
               <span style={{fontSize:'1.1rem', lineHeight:1}}>🇩🇪</span>
               <div>
-                <div style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>Berlin Brandenburg Airport (BER)</div>
-                <div style={{fontSize:'0.7rem', color:'var(--muted-fg)', marginTop:2}}>Dec 01, 2025 · 19:00 · Europe/Berlin</div>
+                <div style={{font:'var(--text-ui)', color:'var(--fg)'}}>Berlin Brandenburg Airport (BER)</div>
+                <div style={{font:'var(--text-micro)', color:'var(--muted-fg)', marginTop:2}}>Dec 01, 2025 · 19:00 · Europe/Berlin</div>
               </div>
             </div>
           </div>
@@ -48,8 +48,8 @@ function FlightForm({ item, isCreate, setScreen }) {
             <div style={{display:'flex', alignItems:'flex-start', gap:8}}>
               <span style={{fontSize:'1.1rem', lineHeight:1}}>🇯🇵</span>
               <div>
-                <div style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>Tokyo Haneda Airport (HND)</div>
-                <div style={{fontSize:'0.7rem', color:'var(--muted-fg)', marginTop:2}}>Dec 02, 2025 · 15:00 · Asia/Tokyo</div>
+                <div style={{font:'var(--text-ui)', color:'var(--fg)'}}>Tokyo Haneda Airport (HND)</div>
+                <div style={{font:'var(--text-micro)', color:'var(--muted-fg)', marginTop:2}}>Dec 02, 2025 · 15:00 · Asia/Tokyo</div>
               </div>
             </div>
           </div>
@@ -70,7 +70,7 @@ function FlightForm({ item, isCreate, setScreen }) {
       {/* Note section card */}
       <SectionCard icon="file-text" label="Note" open={true} onToggle={()=>{}} noToggle>
         <div style={{padding:'10px 12px'}}>
-          <p style={{margin:0, fontSize:'0.75rem', color:'var(--fg)'}}>{note}</p>
+          <p style={{margin:0, font:'var(--text-ui)', color:'var(--fg)'}}>{note}</p>
         </div>
       </SectionCard>
 
@@ -103,7 +103,7 @@ function HotelForm({ item, isCreate, setScreen }) {
       <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14}}>
         <div style={{display:'flex', alignItems:'center', gap:7}}>
           <i data-lucide="bed" style={{width:18,height:18,color:'var(--primary)'}}></i>
-          <span style={{fontWeight:700, fontSize:'1rem', color:'var(--fg)'}}>{isCreate ? 'New Accommodation' : 'Edit Accommodation'}</span>
+          <span style={{font:'var(--text-title)', color:'var(--fg)'}}>{isCreate ? 'New Accommodation' : 'Edit Accommodation'}</span>
         </div>
         <div style={{display:'flex', gap:5}}>
           <IconBtn icon="save" />
@@ -114,10 +114,10 @@ function HotelForm({ item, isCreate, setScreen }) {
       {/* Site combobox */}
       <div style={{display:'flex', gap:6, marginBottom:8, alignItems:'center'}}>
         <div style={{flex:1, display:'flex', alignItems:'center', background:'var(--card)', border:'1px solid var(--border)', borderRadius:'var(--r-md)', padding:'0 10px', height:36}}>
-          <span style={{flex:1, fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>NH Leipzig Messe</span>
+          <span style={{flex:1, font:'var(--text-ui)', color:'var(--fg)'}}>NH Leipzig Messe</span>
           <i data-lucide="x" style={{width:14,height:14,color:'var(--muted-fg)',cursor:'pointer'}}></i>
         </div>
-        <button style={{display:'flex', alignItems:'center', gap:5, padding:'0 10px', height:36, borderRadius:'var(--r-md)', border:'1px solid var(--border)', background:'transparent', color:'var(--fg)', fontSize:'0.75rem', fontWeight:500, fontFamily:'Inter,sans-serif', cursor:'pointer', whiteSpace:'nowrap'}}>
+        <button style={{display:'flex', alignItems:'center', gap:5, padding:'0 10px', height:36, borderRadius:'var(--r-md)', border:'1px solid var(--border)', background:'transparent', color:'var(--fg)', font:'var(--text-ui)', cursor:'pointer', whiteSpace:'nowrap'}}>
           <i data-lucide="square-pen" style={{width:13,height:13}}></i>
           Edit
         </button>
@@ -128,10 +128,10 @@ function HotelForm({ item, isCreate, setScreen }) {
         <span style={{fontSize:'1.1rem', lineHeight:1, marginTop:1}}>🇩🇪</span>
         <div>
           <div style={{display:'flex', alignItems:'center', gap:6}}>
-            <span style={{fontSize:'0.65rem', fontWeight:500, color:'var(--muted-fg)', background:'var(--secondary)', borderRadius:'var(--r-sm)', padding:'1px 5px'}}>Hotel</span>
-            <span style={{fontSize:'0.75rem', fontWeight:600, color:'var(--fg)'}}>NH Leipzig Messe</span>
+            <span style={{font:'var(--text-overline)', color:'var(--muted-fg)', background:'var(--secondary)', borderRadius:'var(--r-sm)', padding:'1px 5px'}}>Hotel</span>
+            <span style={{font:'var(--text-subtitle)', color:'var(--fg)'}}>NH Leipzig Messe</span>
           </div>
-          <div style={{fontSize:'0.7rem', color:'var(--muted-fg)', marginTop:2}}>Dummy-hotel-straße 345, 12345 Leipzig · Germany</div>
+          <div style={{font:'var(--text-micro)', color:'var(--muted-fg)', marginTop:2}}>Dummy-hotel-straße 345, 12345 Leipzig · Germany</div>
         </div>
       </div>
 
@@ -151,12 +151,12 @@ function HotelForm({ item, isCreate, setScreen }) {
         preview={
           <div style={{padding:'10px 12px', display:'flex', flexDirection:'column', gap:4}}>
             <div style={{display:'flex', alignItems:'center', gap:8}}>
-              <i data-lucide="log-in" style={{width:14,height:14,color:'oklch(0.6 0.15 145)'}}></i>
-              <span style={{fontSize:'0.75rem', color:'var(--fg)'}}>Mar 12, 2025 · 20:00</span>
+            <i data-lucide="log-in" style={{width:14,height:14,color:'var(--success)'}}></i>
+              <span style={{font:'var(--text-ui)', color:'var(--fg)'}}>Mar 12, 2025 · 20:00</span>
             </div>
             <div style={{display:'flex', alignItems:'center', gap:8}}>
-              <i data-lucide="log-out" style={{width:14,height:14,color:'oklch(0.6 0.2 25)'}}></i>
-              <span style={{fontSize:'0.75rem', color:'var(--fg)'}}>Mar 13, 2025 · 10:00</span>
+              <i data-lucide="log-out" style={{width:14,height:14,color:'var(--destructive)'}}></i>
+              <span style={{font:'var(--text-ui)', color:'var(--fg)'}}>Mar 13, 2025 · 10:00</span>
             </div>
           </div>
         }>
@@ -171,7 +171,7 @@ function HotelForm({ item, isCreate, setScreen }) {
       {/* Note section */}
       <SectionCard icon="file-text" label="Note" open={true} onToggle={()=>{}} noToggle>
         <div style={{padding:'10px 12px'}}>
-          <p style={{margin:0, fontSize:'0.75rem', color:'var(--fg)'}}>notify hotel that we come late 123</p>
+          <p style={{margin:0, font:'var(--text-ui)', color:'var(--fg)'}}>notify hotel that we come late 123</p>
         </div>
       </SectionCard>
 
@@ -195,7 +195,7 @@ function SectionCard({ icon, label, open, onToggle, noToggle, preview, children 
         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', padding:'9px 12px', cursor: noToggle ? 'default' : 'pointer'}} onClick={noToggle ? undefined : onToggle}>
           <div style={{display:'flex', alignItems:'center', gap:8}}>
             {icon && <i data-lucide={icon} style={{width:14,height:14,color:'var(--muted-fg)'}}></i>}
-            <span style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>{label}</span>
+            <span style={{font:'var(--text-ui)', color:'var(--fg)'}}>{label}</span>
           </div>
           {!noToggle && <i data-lucide="square-pen" style={{width:14,height:14,color:'var(--muted-fg)'}}></i>}
         </div>
@@ -213,9 +213,9 @@ function SectionCard({ icon, label, open, onToggle, noToggle, preview, children 
 function FlatField({ label, value, onChange, placeholder, type='text', style }) {
   return (
     <div style={{display:'flex', flexDirection:'column', gap:3, ...style}}>
-      <label style={{fontSize:'0.7rem', fontWeight:500, color:'var(--muted-fg)'}}>{label}</label>
+      <label style={{font:'var(--text-micro)', color:'var(--muted-fg)'}}>{label}</label>
       <input type={type} value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder}
-        style={{background:'var(--card)',border:'1px solid var(--border)',borderRadius:'var(--r-md)',font:'500 0.75rem/1.4 Inter,sans-serif',color:'var(--fg)',padding:'0.375rem 0.625rem',height:'2rem',width:'100%',boxSizing:'border-box',outline:'none',fontFamily:'Inter,sans-serif'}}
+        style={{background:'var(--card)',border:'1px solid var(--border)',borderRadius:'var(--r-md)',font:'var(--text-ui)',color:'var(--fg)',padding:'0.375rem 0.625rem',height:'2rem',width:'100%',boxSizing:'border-box',outline:'none'}}
         onFocus={e=>{e.target.style.borderColor='var(--ring)'}}
         onBlur={e=>{e.target.style.borderColor='var(--border)'}} />
     </div>
@@ -249,10 +249,10 @@ function AirportPointForm({ point, flag }) {
             <input value={query} onChange={e=>{setQuery(e.target.value); setShowSuggestions(true)}}
               onFocus={()=>setShowSuggestions(true)} onBlur={()=>setTimeout(()=>setShowSuggestions(false),150)}
               placeholder="Search airports..."
-              style={{background:'var(--card)',border:'1px solid var(--border)',borderRadius:'var(--r-md)',font:'500 0.75rem/1.4 Inter,sans-serif',color:'var(--fg)',padding:'0.375rem 0.625rem 0.375rem 28px',height:'2rem',width:'100%',boxSizing:'border-box',outline:'none',fontFamily:'Inter,sans-serif'}}
+              style={{background:'var(--card)',border:'1px solid var(--border)',borderRadius:'var(--r-md)',font:'var(--text-ui)',color:'var(--fg)',padding:'0.375rem 0.625rem 0.375rem 28px',height:'2rem',width:'100%',boxSizing:'border-box',outline:'none'}}
               onMouseDown={e=>setShowSuggestions(true)} />
           </div>
-          <button style={{display:'flex',alignItems:'center',gap:5,padding:'0 10px',height:32,borderRadius:'var(--r-md)',border:'1px solid var(--border)',background:'transparent',color:'var(--fg)',fontSize:'0.75rem',fontWeight:500,fontFamily:'Inter,sans-serif',cursor:'pointer',whiteSpace:'nowrap'}}>
+          <button style={{display:'flex',alignItems:'center',gap:5,padding:'0 10px',height:32,borderRadius:'var(--r-md)',border:'1px solid var(--border)',background:'transparent',color:'var(--fg)',font:'var(--text-ui)',cursor:'pointer',whiteSpace:'nowrap'}}>
             <i data-lucide="circle-plus" style={{width:13,height:13}}></i>
             Add New
           </button>
@@ -262,13 +262,13 @@ function AirportPointForm({ point, flag }) {
             {filtered.slice(0,5).map(s => (
               <div key={s.code}
                 onMouseDown={()=>{ setQuery(s.name); setShowSuggestions(false) }}
-                style={{display:'flex',alignItems:'center',gap:10,padding:'8px 12px',cursor:'pointer',borderBottom:'1px solid var(--border)',fontSize:'0.75rem'}}
+                style={{display:'flex',alignItems:'center',gap:10,padding:'8px 12px',cursor:'pointer',borderBottom:'1px solid var(--border)',font:'var(--text-ui)'}}
                 onMouseEnter={e=>e.currentTarget.style.background='var(--accent)'}
                 onMouseLeave={e=>e.currentTarget.style.background='transparent'}>
                 <span style={{fontSize:'1rem'}}>{s.country}</span>
                 <div>
-                  <div style={{fontWeight:500, color:'var(--fg)'}}>{s.name}</div>
-                  <div style={{fontSize:'0.65rem', color:'var(--muted-fg)'}}>{s.code} · {s.tz}</div>
+                  <div style={{font:'var(--text-ui)', color:'var(--fg)'}}>{s.name}</div>
+                  <div style={{font:'var(--text-micro)', color:'var(--muted-fg)'}}>{s.code} · {s.tz}</div>
                 </div>
               </div>
             ))}
@@ -294,7 +294,7 @@ function FullWidthBtn({ variant, children, onClick, style }) {
   }
   return (
     <button onClick={onClick}
-      style={{width:'100%', height:40, borderRadius:'var(--r-md)', fontSize:'0.875rem', fontWeight:500, fontFamily:'Inter,sans-serif', cursor:'pointer', transition:'opacity 150ms', ...styles[variant], ...style}}
+      style={{width:'100%', height:40, borderRadius:'var(--r-md)', font:'var(--text-body)', fontWeight:500, cursor:'pointer', transition:'opacity 150ms', ...styles[variant], ...style}}
       onMouseEnter={e=>e.currentTarget.style.opacity='0.85'}
       onMouseLeave={e=>e.currentTarget.style.opacity='1'}>
       {children}
@@ -312,7 +312,7 @@ function IconBtn({ icon, onClick }) {
 }
 
 function RnButton({ variant='default', icon, children, onClick, style }) {
-  const base = {display:'inline-flex', alignItems:'center', gap:5, padding:'0 10px', height:'1.75rem', borderRadius:'var(--r-md)', border:'none', fontSize:'0.75rem', fontWeight:500, fontFamily:'Inter,sans-serif', cursor:'pointer', transition:'all 120ms', flexShrink:0, ...style}
+  const base = {display:'inline-flex', alignItems:'center', gap:5, padding:'0 10px', height:'1.75rem', borderRadius:'var(--r-md)', border:'none', font:'var(--text-ui)', cursor:'pointer', transition:'all 120ms', flexShrink:0, ...style}
   const vars = {
     default: {background:'var(--primary)', color:'white'},
     secondary: {background:'var(--secondary)', color:'var(--secondary-fg)'},
@@ -333,7 +333,7 @@ function RnSeparator({ style }) {
 function FormField({ label, required, children, style }) {
   return (
     <div style={{display:'flex', flexDirection:'column', gap:2, ...style}}>
-      <label style={{fontSize:'0.7rem', fontWeight:500, color:'var(--fg)'}}>
+      <label style={{font:'var(--text-micro)', color:'var(--fg)'}}>
         {label}{required && <span style={{color:'var(--destructive)', marginLeft:2}}>*</span>}
       </label>
       {children}
@@ -344,7 +344,7 @@ function FormField({ label, required, children, style }) {
 function RnInput({ type='text', value, onChange, placeholder, min, style }) {
   return (
     <input type={type} value={value} onChange={onChange} placeholder={placeholder} min={min}
-      style={{background:'var(--card)',border:'1px solid var(--border)',borderRadius:'var(--r-md)',font:'500 0.75rem/1.4 Inter,sans-serif',color:'var(--fg)',padding:'0.375rem 0.625rem',height:'2rem',width:'100%',boxSizing:'border-box',outline:'none',fontFamily:'Inter,sans-serif', ...style}}
+      style={{background:'var(--card)',border:'1px solid var(--border)',borderRadius:'var(--r-md)',font:'var(--text-ui)',color:'var(--fg)',padding:'0.375rem 0.625rem',height:'2rem',width:'100%',boxSizing:'border-box',outline:'none', ...style}}
       onFocus={e=>{e.target.style.borderColor='var(--ring)'}}
       onBlur={e=>{e.target.style.borderColor='var(--border)'}} />
   )

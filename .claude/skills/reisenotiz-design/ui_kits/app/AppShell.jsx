@@ -2,24 +2,24 @@
 
 function AppShell({ screen, setScreen, children }) {
   const navItems = [
-    { id: 'home', label: 'Home', icon: 'home' },
-    { id: 'trips', label: 'Trips', icon: 'map' },
+    { id: 'home', label: 'Home', icon: 'house' },
+    { id: 'trips', label: 'Trips', icon: 'tickets-plane' },
     { id: 'settings', label: 'Settings', icon: 'settings' },
   ]
   const activeNav = ['home'].includes(screen) ? 'home' : ['settings'].includes(screen) ? 'settings' : 'trips'
 
   return (
-    <div style={{display:'flex', height:'100%', background:'var(--bg)', fontFamily:'Inter,sans-serif', color:'var(--fg)', fontSize:'0.75rem', overflow:'hidden'}}>
-      {/* Desktop sidebar */}
+    <div style={{display:'flex', height:'100%', background:'var(--bg)', font:'var(--text-ui)', color:'var(--fg)', overflow:'hidden'}}>
+      {/* Desktop sidebar — shown at ≥768px via injected media query */}
       <aside style={{display:'none', flexDirection:'column', width:200, borderRight:'1px solid var(--border)', background:'var(--sidebar)', flexShrink:0, overflowY:'auto'}} className="desktop-sidebar">
         <div style={{padding:'12px 12px 8px', borderBottom:'1px solid var(--border)', display:'flex', alignItems:'center', gap:8}}>
           <img src="../../assets/pwa-192x192.png" style={{width:24,height:24,borderRadius:4}} alt="logo" />
-          <span style={{fontWeight:600, fontSize:'0.875rem'}}>Reisenotiz</span>
+          <span style={{font:'var(--text-subtitle)'}}>Reisenotiz</span>
         </div>
         <nav style={{padding:8, display:'flex', flexDirection:'column', gap:4}}>
           {navItems.map(item => (
             <button key={item.id} onClick={() => setScreen(item.id)}
-              style={{display:'flex', alignItems:'center', gap:8, padding:'8px 10px', borderRadius:'var(--r-md)', border:'none', background: activeNav===item.id ? 'var(--accent)' : 'transparent', color: activeNav===item.id ? 'var(--accent-fg)' : 'var(--muted-fg)', cursor:'pointer', fontSize:'0.75rem', fontWeight:500, fontFamily:'Inter,sans-serif', transition:'all 100ms', width:'100%', textAlign:'left'}}>
+              style={{display:'flex', alignItems:'center', gap:8, padding:'8px 10px', borderRadius:'var(--r-md)', border:'none', background: activeNav===item.id ? 'var(--accent)' : 'transparent', color: activeNav===item.id ? 'var(--accent-fg)' : 'var(--muted-fg)', cursor:'pointer', font:'var(--text-ui)', transition:'all 100ms', width:'100%', textAlign:'left'}}>
               <i data-lucide={item.icon} style={{width:16,height:16}}></i>
               {item.label}
             </button>
@@ -39,7 +39,7 @@ function AppShell({ screen, setScreen, children }) {
         <nav style={{position:'fixed', bottom:0, left:0, right:0, height:56, borderTop:'1px solid var(--border)', background:'var(--bg)', display:'flex', justifyContent:'space-around', alignItems:'center', padding:'0 16px', zIndex:50}} className="mobile-nav">
           {navItems.map(item => (
             <button key={item.id} onClick={() => setScreen(item.id)}
-              style={{display:'flex', flexDirection:'column', alignItems:'center', gap:3, padding:'6px 12px', borderRadius:'var(--r-md)', border:'none', background:'transparent', color: activeNav===item.id ? 'var(--primary)' : 'var(--muted-fg)', cursor:'pointer', fontSize:'0.65rem', fontWeight:500, fontFamily:'Inter,sans-serif', transition:'all 100ms'}}>
+              style={{display:'flex', flexDirection:'column', alignItems:'center', gap:3, padding:'6px 12px', borderRadius:'var(--r-md)', border:'none', background:'transparent', color: activeNav===item.id ? 'var(--primary)' : 'var(--muted-fg)', cursor:'pointer', font:'var(--text-micro)', transition:'all 100ms'}}>
               <i data-lucide={item.icon} style={{width:18,height:18}}></i>
               {item.label}
             </button>
@@ -79,7 +79,7 @@ function AppHeader({ screen, setScreen }) {
         ) : (
           <img src="../../assets/pwa-192x192.png" style={{width:22,height:22,borderRadius:4}} alt="logo" />
         )}
-        <span style={{fontWeight:600, fontSize:'0.875rem'}}>{title}</span>
+        <span style={{font:'var(--text-subtitle)'}}>{title}</span>
       </div>
       <div style={{display:'flex', gap:6}}>
         {screen === 'settings' && (

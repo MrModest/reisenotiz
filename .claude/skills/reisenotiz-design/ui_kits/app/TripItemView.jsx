@@ -132,7 +132,7 @@ function HotelView({ item, setScreen }) {
       {/* Separator */}
       <div style={{display:'flex',alignItems:'center',gap:8,margin:'12px 0'}}>
         <div style={{flex:1,height:1,background:'var(--border)'}}></div>
-        <span style={{fontSize:'0.65rem',color:'var(--muted-fg)',fontWeight:500}}>Details</span>
+        <span style={{font:'var(--text-overline)',color:'var(--muted-fg)',textTransform:'uppercase',letterSpacing:'0.06em'}}>Details</span>
         <div style={{flex:1,height:1,background:'var(--border)'}}></div>
       </div>
       <div style={{display:'flex',gap:8}}>
@@ -147,9 +147,9 @@ function HotelView({ item, setScreen }) {
 function FieldView({ label, value, subValue, style }) {
   return (
     <div style={{display:'flex', flexDirection:'column', gap:2, ...style}}>
-      <span style={{fontSize:'0.6rem', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.06em', color:'var(--muted-fg)'}}>{label}</span>
-      <span style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>{value || '—'}</span>
-      {subValue && <span style={{fontSize:'0.65rem', color:'var(--muted-fg)'}}>{subValue}</span>}
+      <span className="rn-overline">{label}</span>
+      <span style={{font:'var(--text-ui)', color:'var(--fg)'}}>{value || '—'}</span>
+      {subValue && <span style={{font:'var(--text-micro)', color:'var(--muted-fg)'}}>{subValue}</span>}
     </div>
   )
 }
@@ -157,10 +157,10 @@ function FieldView({ label, value, subValue, style }) {
 function ChipsField({ label, items }) {
   return (
     <div style={{marginBottom:8}}>
-      <div style={{fontSize:'0.6rem', fontWeight:600, textTransform:'uppercase', letterSpacing:'0.06em', color:'var(--muted-fg)', marginBottom:4}}>{label}</div>
+      <div className="rn-overline" style={{marginBottom:4}}>{label}</div>
       <div style={{display:'flex', gap:4, flexWrap:'wrap'}}>
         {items.map((p,i) => (
-          <span key={i} style={{background:'var(--secondary)', color:'var(--secondary-fg)', borderRadius:9999, padding:'2px 8px', fontSize:'0.65rem', fontWeight:500}}>{p}</span>
+          <span key={i} style={{background:'var(--secondary)', color:'var(--secondary-fg)', borderRadius:9999, padding:'2px 8px', font:'var(--text-micro)'}}>{p}</span>
         ))}
       </div>
     </div>

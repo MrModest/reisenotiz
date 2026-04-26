@@ -23,7 +23,7 @@
 - **Practical, no-nonsense**: copy is minimal and functional. No marketing fluff.
 - **Second-person ("you")**: actions are framed from the user's perspective.
 - **Lowercase labels**: nav items and button labels use sentence case, not title case (e.g. "New Trip", "Check-in").
-- **No emoji** in the app UI; icons (Lucide) handle visual communication.
+- **No emoji** in the app UI; icons (Lucide) handle visual communication. **Exception:** country flag emoji (🇩🇪, 🇯🇵, etc.) are permitted in airport/location pickers where Lucide has no equivalent.
 - **German-origin name** but the UI is English throughout.
 - **Concise descriptions**: item descriptions are short one-liners (e.g. "Dummy-hotel-straße 345, 12345 Leipzig").
 - **Time formats**: 24-hour clock (e.g. "19:00"), short date format (e.g. "Mon, 01 Dec").
@@ -66,19 +66,35 @@ The palette uses **OKLCH color space** throughout. Two themes: light and dark.
 
 ### Typography
 - **Sans (primary)**: Inter — used for all UI text
-- **Serif**: Source Serif 4 — available but not heavily used in current UI
-- **Mono**: JetBrains Mono — code/technical display
-- **Font sizes**: mostly `text-xs` (0.75rem) for dense UI; `text-sm` for descriptions; primary time display is `text-xl font-semibold` in orange
-- **Font weights**: `font-medium` for labels, `font-semibold` for headings, `font-normal` for descriptions
+- **Serif**: Source Serif 4 — available but not used in current UI
+- **Mono**: JetBrains Mono — code / IDs
+
+**Use the semantic type tokens**, never inline `fontSize` / `fontWeight`. Apply via `font: var(--text-X)`:
+
+| Token | Spec | Use for |
+|---|---|---|
+| `--text-display`  | 24px / 600 | Page headers |
+| `--text-title`    | 18px / 600 | Section titles |
+| `--text-time`     | 20px / 600 | Time, airport codes (often in `--primary`) |
+| `--text-subtitle` | 14px / 600 | Card titles, header titles, dialog titles |
+| `--text-itemtitle`| ~13px / 600 | Timeline item titles |
+| `--text-body`     | 14px / 400 | Default body |
+| `--text-ui`       | 12px / 500 | Buttons, inputs, labels, nav items |
+| `--text-caption`  | 12px / 400 | Muted descriptions |
+| `--text-micro`    | 11px / 500 | Small metadata, dates |
+| `--text-overline` | ~10px / 600 | ALL-CAPS field labels (pair with `text-transform:uppercase; letter-spacing:0.06em`) |
+| `--text-mono`     | 12px / 400 | Code / IDs |
 
 ### Border Radius (subtle, almost square)
+The dominant rounding philosophy is **almost-square**: most UI elements use 4–6px, never big pill or card curves.
+
 - `--radius-none`: 0px — sharp corners
-- `--radius-sm`: 0.125rem (2px) — minimal rounding
-- `--radius-md`: 0.25rem (4px) — **default**, almost square
-- `--radius-lg`: 0.375rem (6px) — inputs, subtle elements
-- `--radius-xl`: 0.5rem (8px) — buttons, popovers
-- `--radius-2xl`: 0.75rem (12px) — cards, dialogs, containers
-- `--radius-full`: 9999px — badges (pill shape)
+- `--radius-sm`: 0.125rem (2px) — minimal rounding (e.g. badges, toggles)
+- `--radius-md`: 0.25rem (4px) — **default**; buttons, inputs, chips, action menus
+- `--radius-lg`: 0.375rem (6px) — cards, list items, dialogs, section cards
+- `--radius-xl`: 0.5rem (8px) — FAB, popovers, dropdowns
+- `--radius-2xl`: 0.75rem (12px) — reserved; do not use in the app UI
+- `--radius-full`: 9999px — badges (pill shape only)
 
 ### Spacing (compact)
 - `--spacing-xs`: 0.375rem (6px)
@@ -89,11 +105,16 @@ The palette uses **OKLCH color space** throughout. Two themes: light and dark.
 - Cards use `p-3` (12px) internal padding
 - Form field gaps: `gap-0.5` (2px) tight label-to-input
 
-### Shadows (very subtle)
-- All shadows are very subtle black with low opacity (5–25%)
-- `--shadow-sm`: 1px y-offset, 3px blur — default card
-- `--shadow-md`: 2px spread — hover card
-- Hover cards scale up slightly: `hover:scale-[1.02]`; active: `active:scale-[0.98]`
+### Shadows (monotonic progression)
+Each tier is visibly larger than the previous — use the smallest one that reads.
+- `--shadow-xs` — hairline (1px y, 2px blur) — inputs, dividers
+- `--shadow-sm` — default card rest state
+- `--shadow-md` — card hover
+- `--shadow-lg` — popovers, dropdowns
+- `--shadow-xl` — modals
+- `--shadow-2xl` — dialog overlay, FAB lift
+
+Hover cards scale up slightly: `hover:scale-[1.02]`; active: `active:scale-[0.98]`
 
 ### Backgrounds & Surfaces
 - No gradients in the app UI
@@ -124,7 +145,7 @@ The palette uses **OKLCH color space** throughout. Two themes: light and dark.
 
 ### Cards
 - Background: `--card`
-- Rounded: `rounded-lg` (0.75rem)
+- Rounded: `--radius-lg` (6px) — subtle, not pill-like
 - Shadow: `shadow-sm`, upgrades to `shadow-md` on hover
 - Padding: `p-3`
 - Scale on hover: `hover:scale-[1.02]`
@@ -157,6 +178,8 @@ The palette uses **OKLCH color space** throughout. Two themes: light and dark.
 | `logo` | `map` | App logo fallback in header |
 | `home` | `house` | Nav: Home |
 | `trip` | `tickets-plane` | Nav: Trips, trip list items |
+
+> **Note:** The UI kit prototype uses `map` as the Trips nav icon for brevity; production code should use `tickets-plane`.
 | `settings` | `settings` | Nav: Settings |
 | `timeline` | `calendar-fold` | Trip timeline |
 | `flight` | `plane` | Flight items |

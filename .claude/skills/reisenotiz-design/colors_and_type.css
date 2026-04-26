@@ -48,6 +48,10 @@
   --destructive:           oklch(0.6368 0.2078 25.33);
   --destructive-foreground: oklch(1 0 0);
 
+  /* === Color: Success (check-in / confirmed states) === */
+  --success:               oklch(0.60 0.15 145);
+  --success-foreground:    oklch(1 0 0);
+
   /* === Color: Borders & Inputs === */
   --border:                oklch(0.885 0.0052 247.88);
   --input:                 oklch(0.885 0.0052 247.88);
@@ -82,14 +86,14 @@
   --spacing-xl:  1.25rem;   /* 20px */
 
   /* ─── Shadows ───────────────────────────────────────────────────────────────── */
-  --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-xs:  0px 1px 3px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm:  0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow:     0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
-  --shadow-md:  0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 2px 4px -1px hsl(0 0% 0% / 0.1);
-  --shadow-lg:  0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 4px 6px -1px hsl(0 0% 0% / 0.1);
-  --shadow-xl:  0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
-  --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
+  /* Monotonic progression: each tier is visibly larger than the previous. */
+  --shadow-xs:  0 1px 2px 0 hsl(0 0% 0% / 0.05);
+  --shadow-sm:  0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 1px 2px -1px hsl(0 0% 0% / 0.06);
+  --shadow:     var(--shadow-sm);
+  --shadow-md:  0 2px 4px -1px hsl(0 0% 0% / 0.10), 0 4px 6px -2px hsl(0 0% 0% / 0.06);
+  --shadow-lg:  0 4px 6px -2px hsl(0 0% 0% / 0.10), 0 10px 15px -3px hsl(0 0% 0% / 0.08);
+  --shadow-xl:  0 10px 15px -3px hsl(0 0% 0% / 0.10), 0 20px 25px -5px hsl(0 0% 0% / 0.08);
+  --shadow-2xl: 0 10px 20px -5px hsl(0 0% 0% / 0.10), 0 25px 50px -12px hsl(0 0% 0% / 0.20);
 }
 
 /* ─── Dark Mode ─────────────────────────────────────────────────────────────── */
@@ -158,13 +162,18 @@
   --border-input:   var(--input);
 
   /* ── Semantic type scale ───────────────────────────────────────────── */
-  --text-display: 600 1.5rem/1.2 var(--font-sans);   /* Page headers */
-  --text-title:   600 1.125rem/1.3 var(--font-sans);  /* Section titles */
-  --text-body:    400 0.875rem/1.5 var(--font-sans);  /* Default body */
-  --text-ui:      500 0.75rem/1.4 var(--font-sans);   /* UI labels, buttons */
-  --text-caption: 400 0.75rem/1.4 var(--font-sans);   /* Muted descriptions */
-  --text-mono:    400 0.75rem/1.4 var(--font-mono);   /* Code / IDs */
-  --text-time:    600 1.25rem/1 var(--font-sans);     /* Time display (timeline) */
+  /* All sizes adopted ubiquitously across the app. Use these — never inline. */
+  --text-display:  600 1.5rem/1.2    var(--font-sans);  /* 24px — page header */
+  --text-title:    600 1.125rem/1.3  var(--font-sans);  /* 18px — section title */
+  --text-time:     600 1.25rem/1     var(--font-sans);  /* 20px — time / airport code */
+  --text-subtitle: 600 0.875rem/1.3  var(--font-sans);  /* 14px — card titles, header titles */
+  --text-itemtitle:600 0.8rem/1.3    var(--font-sans);  /* ~13px — timeline item titles */
+  --text-body:     400 0.875rem/1.5  var(--font-sans);  /* 14px — default body */
+  --text-ui:       500 0.75rem/1.4   var(--font-sans);  /* 12px — buttons, inputs, labels */
+  --text-caption:  400 0.75rem/1.4   var(--font-sans);  /* 12px — muted descriptions */
+  --text-micro:    500 0.6875rem/1.3 var(--font-sans);  /* 11px — small metadata, dates */
+  --text-overline: 600 0.6rem/1.4    var(--font-sans);  /* ~10px — ALL-CAPS field labels */
+  --text-mono:     400 0.75rem/1.4   var(--font-mono);  /* 12px — code / IDs */
 }
 
 /* ─── Helper classes ─────────────────────────────────────────────────────── */

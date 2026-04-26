@@ -31,6 +31,7 @@
     --border:       oklch(0.3843 0.0301 269.73);
     --destructive:  oklch(0.6368 0.2078 25.33);
     --destructive-bg: oklch(0.6368 0.2078 25.33 / 0.12);
+    --success:      oklch(0.60 0.15 145);
     --ring:         oklch(0.6397 0.172 36.44);
     --r-none: 0; --r-sm: 0.125rem; --r-md: 0.25rem; --r-lg: 0.375rem; --r-xl: 0.5rem; --r-2xl: 0.75rem;
   }
@@ -52,12 +53,43 @@
     --border:       oklch(0.885 0.0052 247.88);
     --destructive:  oklch(0.6368 0.2078 25.33);
     --destructive-bg: oklch(0.6368 0.2078 25.33 / 0.1);
+    --success:      oklch(0.60 0.15 145);
     --ring:         oklch(0.6397 0.172 36.44);
     --r-none: 0; --r-sm: 0.125rem; --r-md: 0.25rem; --r-lg: 0.375rem; --r-xl: 0.5rem; --r-2xl: 0.75rem;
   }
 
   #root { background: var(--bg); color: var(--fg); }
   * { font-family: Inter, sans-serif; }
+
+  /* ── Type scale (mirrors colors_and_type.css) ─────────────────────── */
+  :root {
+    --font-sans: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --text-display:  600 1.5rem/1.2    var(--font-sans);
+    --text-title:    600 1.125rem/1.3  var(--font-sans);
+    --text-time:     600 1.25rem/1     var(--font-sans);
+    --text-subtitle: 600 0.875rem/1.3  var(--font-sans);
+    --text-itemtitle:600 0.8rem/1.3    var(--font-sans);
+    --text-body:     400 0.875rem/1.5  var(--font-sans);
+    --text-ui:       500 0.75rem/1.4   var(--font-sans);
+    --text-caption:  400 0.75rem/1.4   var(--font-sans);
+    --text-micro:    500 0.6875rem/1.3 var(--font-sans);
+    --text-overline: 600 0.6rem/1.4    var(--font-sans);
+    --text-mono:     400 0.75rem/1.4   var(--font-mono);
+    --shadow-sm:  0 1px 3px 0 hsl(0 0% 0% / 0.08), 0 1px 2px -1px hsl(0 0% 0% / 0.06);
+    --shadow-md:  0 2px 4px -1px hsl(0 0% 0% / 0.10), 0 4px 6px -2px hsl(0 0% 0% / 0.06);
+    --shadow-lg:  0 4px 6px -2px hsl(0 0% 0% / 0.10), 0 10px 15px -3px hsl(0 0% 0% / 0.08);
+    --shadow-xl:  0 10px 15px -3px hsl(0 0% 0% / 0.10), 0 20px 25px -5px hsl(0 0% 0% / 0.08);
+  }
+
+  /* Overline pattern: ALL-CAPS field labels with letter-spacing */
+  .rn-overline { font: var(--text-overline); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted-fg); }
+
+  /* Desktop layout: show sidebar, hide bottom nav */
+  @media (min-width: 768px) {
+    .desktop-sidebar { display: flex !important; }
+    .mobile-nav { display: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -147,13 +179,12 @@ function App() {
   React.useEffect(() => {
     const root = document.getElementById('root')
     root.className = `theme-${theme}`
-    // Re-render lucide icons
-    if (window.lucide) window.lucide.createIcons()
-  }, [theme, screen])
+  }, [theme])
 
+  // Re-render Lucide icons whenever screen changes (they get re-mounted)
   React.useEffect(() => {
     if (window.lucide) window.lucide.createIcons()
-  })
+  }, [screen, theme])
 
   const renderScreen = () => {
     if (screen === 'trips' || screen === 'home') {
@@ -203,19 +234,19 @@ function AddItemDialog({ open, onClose, setScreen }) {
     <div style={{position:'fixed', inset:0, zIndex:100, display:'flex', alignItems:'flex-end', justifyContent:'center', padding:'0 0 72px'}}>
       <div onClick={onClose} style={{position:'absolute', inset:0, background:'rgba(0,0,0,0.4)', backdropFilter:'blur(2px)'}}></div>
       <div style={{position:'relative', background:'var(--popover)', borderRadius:'var(--r-lg) var(--r-lg) 0 0', padding:'16px', width:'100%', maxWidth:480, boxShadow:'0 -4px 24px rgba(0,0,0,0.3)'}}>
-        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:10}}>Add Trip Item</div>
+        <div style={{font:'var(--text-overline)', color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:10}}>Add Trip Item</div>
         <div style={{display:'flex', flexDirection:'column', gap:6}}>
           {[['plane','Flight','Log a flight with departure and arrival details','flight-create'],['hotel','Accommodation','Hotel, hostel, Airbnb check-in/out','hotel-create']].map(([icon,label,desc,target]) => (
             <button key={target} onClick={() => { setScreen(target); onClose() }}
-              style={{display:'flex', alignItems:'center', gap:10, padding:'10px 12px', borderRadius:'var(--r-md)', border:'1px solid var(--border)', background:'var(--card)', cursor:'pointer', fontFamily:'Inter,sans-serif', textAlign:'left', transition:'all 100ms'}}
+              style={{display:'flex', alignItems:'center', gap:10, padding:'10px 12px', borderRadius:'var(--r-md)', border:'1px solid var(--border)', background:'var(--card)', cursor:'pointer', textAlign:'left', transition:'all 100ms'}}
               onMouseEnter={e=>{e.currentTarget.style.background='var(--accent)'}}
               onMouseLeave={e=>{e.currentTarget.style.background='var(--card)'}}>
               <div style={{width:32,height:32,borderRadius:'var(--r-md)',background:'var(--primary)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
                 <i data-lucide={icon} style={{width:15,height:15,color:'white'}}></i>
               </div>
               <div>
-                <div style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>{label}</div>
-                <div style={{fontSize:'0.65rem', color:'var(--muted-fg)'}}>{desc}</div>
+                <div style={{font:'var(--text-ui)', color:'var(--fg)'}}>{label}</div>
+                <div style={{font:'var(--text-micro)', color:'var(--muted-fg)'}}>{desc}</div>
               </div>
             </button>
           ))}
@@ -229,11 +260,11 @@ function SettingsScreen({ theme, setTheme }) {
   return (
     <div style={{paddingTop:8, display:'flex', flexDirection:'column', gap:12}}>
       <div style={{background:'var(--card)', borderRadius:'var(--r-lg)', padding:'12px 14px'}}>
-        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:10}}>Appearance</div>
+        <div style={{font:'var(--text-overline)', color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:10}}>Appearance</div>
         <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
           <div>
-            <div style={{fontSize:'0.75rem', fontWeight:500, color:'var(--fg)'}}>Dark Mode</div>
-            <div style={{fontSize:'0.65rem', color:'var(--muted-fg)'}}>Switch between light and dark theme</div>
+            <div style={{font:'var(--text-ui)', color:'var(--fg)'}}>Dark Mode</div>
+            <div style={{font:'var(--text-micro)', color:'var(--muted-fg)'}}>Switch between light and dark theme</div>
           </div>
           <button onClick={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
             style={{width:40, height:22, borderRadius:4, border:'none', cursor:'pointer', position:'relative', background: theme==='dark' ? 'var(--primary)' : 'var(--border)', transition:'background 200ms'}}>
@@ -242,17 +273,17 @@ function SettingsScreen({ theme, setTheme }) {
         </div>
       </div>
       <div style={{background:'var(--card)', borderRadius:'var(--r-lg)', padding:'12px 14px'}}>
-        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:10}}>Data</div>
+        <div style={{font:'var(--text-overline)', color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:10}}>Data</div>
         {[['Export to JSON', 'backup', false],['Clear All Data', 'trash-2', true]].map(([label, icon, danger]) => (
           <div key={label} style={{display:'flex', alignItems:'center', gap:10, padding:'8px 0', borderBottom:'1px solid var(--border)'}}>
             <i data-lucide={icon} style={{width:15,height:15,color: danger ? 'var(--destructive)' : 'var(--muted-fg)'}}></i>
-            <span style={{fontSize:'0.75rem', fontWeight:500, color: danger ? 'var(--destructive)' : 'var(--fg)'}}>{label}</span>
+            <span style={{font:'var(--text-ui)', color: danger ? 'var(--destructive)' : 'var(--fg)'}}>{label}</span>
           </div>
         ))}
       </div>
       <div style={{background:'var(--card)', borderRadius:'var(--r-lg)', padding:'12px 14px'}}>
-        <div style={{fontSize:'0.7rem', fontWeight:600, color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.05em', marginBottom:8}}>About</div>
-        <div style={{fontSize:'0.7rem', color:'var(--muted-fg)'}}>Reisenotiz v0.0.1 · Self-hosted travel notes PWA</div>
+        <div style={{font:'var(--text-overline)', color:'var(--muted-fg)', textTransform:'uppercase', letterSpacing:'0.06em', marginBottom:8}}>About</div>
+        <div style={{font:'var(--text-caption)', color:'var(--muted-fg)'}}>Reisenotiz v0.0.1 · Self-hosted travel notes PWA</div>
       </div>
     </div>
   )
