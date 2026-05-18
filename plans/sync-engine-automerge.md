@@ -53,11 +53,11 @@ Minimal sync server in `apps/sync/` using `@automerge/automerge-repo` + `NodeWSS
 
 ### Acceptance criteria
 
-- [ ] `apps/sync/` Node 24 + TS project boots with `pnpm dev` and listens on default port `4000`.
-- [ ] `apps/sync/Dockerfile` builds; `sync` service in `docker-compose.yml` runs alongside `app`.
-- [ ] Integration test: two `Repo` instances connect to the in-process server, a change on one is observed on the other.
-- [ ] Server source contains no `Trip` / `TripItem` / domain references.
-- [ ] Frontend `RepoProvider` wraps app root; absent env var = no WS connection, no error.
+- [x] `apps/sync/` Node 24 + TS project boots with `pnpm dev` and listens on default port `4000`.
+- [x] `apps/sync/Dockerfile` builds; `sync` service in `docker-compose.yml` runs alongside `app`.
+- [x] Integration test: two `Repo` instances connect to the in-process server, a change on one is observed on the other.
+- [x] Server source contains no `Trip` / `TripItem` / domain references.
+- [x] Frontend `RepoProvider` wraps app root; absent env var = no WS connection, no error.
 
 ---
 
@@ -89,13 +89,13 @@ Swap `useTripsStore` (Zustand + `persist`) for the per-trip Automerge doc model 
 
 ### Acceptance criteria
 
-- [ ] All Zustand trip store code removed. `zustand` dependency stays only if user-records still use it (will be removed in Phase 5).
-- [ ] App boots with no sync URL configured, creates a root doc, stores URL in `localStorage`.
-- [ ] CRUD against trips and trip items survives page reload (IndexedDB persistence).
-- [ ] Existing UI screens for trip list, trip detail, timeline render correctly without component changes.
-- [ ] Hook signatures match the previous Zustand-based selectors — caller code untouched.
-- [ ] Each trip lives in its own `TripDoc`; root doc holds only the index + (still-empty) user records.
-- [ ] Tests with `automerge-repo` in-memory storage adapter cover create/update/delete trip and trip item, asserting doc state.
+- [x] All Zustand trip store code removed. `zustand` dependency stays only if user-records still use it (will be removed in Phase 5).
+- [x] App boots with no sync URL configured, creates a root doc, stores URL in `localStorage`.
+- [x] CRUD against trips and trip items survives page reload (IndexedDB persistence).
+- [x] Existing UI screens for trip list, trip detail, timeline render correctly without component changes.
+- [x] Hook signatures match the previous Zustand-based selectors — caller code untouched.
+- [x] Each trip lives in its own `TripDoc`; root doc holds only the index + (still-empty) user records.
+- [x] Tests with `automerge-repo` in-memory storage adapter cover create/update/delete trip and trip item, asserting doc state.
 
 ---
 
