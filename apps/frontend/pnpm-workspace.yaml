@@ -1,5 +1,5 @@
-onlyBuiltDependencies:
-  - '@swc/core'
-  - cbor-extract
-  - esbuild
-  - sharp
+allowBuilds:
+  '@swc/core': true
+  cbor-extract: true
+  esbuild: true
+  sharp: true
