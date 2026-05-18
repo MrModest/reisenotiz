@@ -62,13 +62,5 @@
     "vite-plugin-top-level-await": "^1.6.0",
     "vite-plugin-wasm": "^3.6.0",
     "vitest": "^4.1.5"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@swc/core",
-      "cbor-extract",
-      "esbuild",
-      "sharp"
-    ]
   }
 }
