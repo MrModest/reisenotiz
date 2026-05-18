@@ -3,7 +3,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useNavigate } from 'react-router'
-import { useTripsStore } from '@/store'
+import { useCreateTrip } from '@/store'
 import { DateTime, TZ } from '@/lib/datetime'
 import { routes } from '@/lib/routes'
 import { Button } from '@/components/ui/button'
@@ -34,7 +34,7 @@ function dateStringToZonedInstant(dateStr: string) {
 }
 
 export function CreateTripDialog({ open, onOpenChange }: CreateTripDialogProps) {
-  const createTrip = useTripsStore((state) => state.createTrip)
+  const createTrip = useCreateTrip()
   const navigate = useNavigate()
 
   const form = useForm<CreateTripSchema>({

@@ -1,5 +1,6 @@
+import { Suspense } from 'react'
 import { TripItemForm } from '@/components/trip-item'
-import { useTrip, useTripsStore } from '@/store'
+import { useTrip, useTripExists, useCreateTripItem } from '@/store'
 import { TripItem, TripItemType } from '@/types'
 import { useParams, useNavigate, useSearchParams } from 'react-router'
 import { createDraftItem } from '@/lib/draft-items'
@@ -9,21 +10,23 @@ export function TripItemCreatePage() {
   const [searchParams] = useSearchParams()
   const type = searchParams.get('type') as TripItemType | null
 
-  if (!tripId || !type) {
-    return <NotFound />
-  }
+  if (!tripId || !type) return <NotFound />
+  return <TripItemCreateGate tripId={tripId} type={type} />
+}
 
-  return <TripItemCreateContent tripId={tripId} type={type} />
+function TripItemCreateGate({ tripId, type }: { tripId: string; type: TripItemType }) {
+  if (!useTripExists(tripId)) return <NotFound />
+  return (
+    <Suspense fallback={null}>
+      <TripItemCreateContent tripId={tripId} type={type} />
+    </Suspense>
+  )
 }
 
 function TripItemCreateContent({ tripId, type }: { tripId: string; type: TripItemType }) {
   const navigate = useNavigate()
   const trip = useTrip(tripId)
-  const createTripItem = useTripsStore((state) => state.createTripItem)
-
-  if (!trip) {
-    return <NotFound />
-  }
+  const createTripItem = useCreateTripItem(tripId)
 
   const draftItem = createDraftItem(tripId, type)
 
