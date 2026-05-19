@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { TripItemForm } from '@/components/trip-item'
+import { Loader } from '@/components/ui/loader'
 import { useTrip, useTripExists, useCreateTripItem } from '@/store'
 import { TripItem, TripItemType } from '@/types'
 import { useParams, useNavigate, useSearchParams } from 'react-router'
@@ -17,7 +18,7 @@ export function TripItemCreatePage() {
 function TripItemCreateGate({ tripId, type }: { tripId: string; type: TripItemType }) {
   if (!useTripExists(tripId)) return <NotFound />
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Loader />}>
       <TripItemCreateContent tripId={tripId} type={type} />
     </Suspense>
   )

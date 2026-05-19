@@ -11,7 +11,3 @@ export const repo = new Repo({
 })
 
 export const rootDocUrl = ensureRootDocUrl(repo)
-
-// Eagerly register the root handle so `repo.handles` is populated before any mutation runs.
-// `find` registers synchronously; the returned promise resolves once hydration completes.
-void repo.find(rootDocUrl)
