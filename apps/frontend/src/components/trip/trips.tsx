@@ -7,7 +7,7 @@ import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { cn } from '@/lib/utils'
 import { formatTo } from '@/lib/datetime'
 import type { Trip } from '@/types'
-import { useTripsStore } from '@/store'
+import { useDeleteTrip } from '@/store'
 import { routes } from '@/lib/routes'
 import { CreateTripDialog } from './create-trip-dialog'
 
@@ -44,7 +44,7 @@ export function Trips({ trips, className }: TripsProps) {
 
 function TripItem({ trip }: { trip: Trip }) {
   const navigate = useNavigate()
-  const deleteTrip = useTripsStore((state) => state.deleteTrip)
+  const deleteTrip = useDeleteTrip()
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   return (
