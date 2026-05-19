@@ -36,10 +36,9 @@ export function useTrips(): Trip[] {
   const tripUrls = Object.values(rootDoc.tripIndex)
   const [tripDocs] = useDocuments<TripDoc>(tripUrls, { suspense: true })
 
-  const trips: Trip[] = []
-  for (const doc of tripDocs.values()) trips.push(doc.trip)
-  trips.sort((a, b) => b.startDate.instant.localeCompare(a.startDate.instant))
-  return trips
+  return Array.from(tripDocs.values())
+    .map((doc) => doc.trip)
+    .sort((a, b) => b.startDate.instant.localeCompare(a.startDate.instant))
 }
 
 export function useTrip(tripId: string): Trip {
@@ -105,11 +104,14 @@ export function useUpdateTrip(tripId: string) {
 }
 
 export function useDeleteTrip() {
-  const [, changeRoot] = useRootDoc()
+  const repo = useRepo()
+  const [rootDoc, changeRoot] = useRootDoc()
   return (id: string): void => {
+    const url = rootDoc.tripIndex[id]
     changeRoot((d) => {
       delete d.tripIndex[id]
     })
+    if (url) repo.delete(url)
   }
 }
 
@@ -128,7 +130,7 @@ export function useUpdateTripItem(tripId: string) {
   const [, changeTripDoc] = useTripDoc(tripId)
   return (itemId: string, item: TripItem): void => {
     changeTripDoc((d) => {
-      d.tripItems[itemId] = item
+      Object.assign(d.tripItems[itemId], item)
     })
   }
 }

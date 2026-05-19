@@ -1,5 +1,6 @@
 import { Suspense } from 'react'
 import { TripItemForm } from '@/components/trip-item'
+import { Loader } from '@/components/ui/loader'
 import {
   useTrip,
   useTripItem,
@@ -18,7 +19,7 @@ export function TripItemEditPage() {
 function TripItemEditTripGate({ tripId, itemId }: { tripId: string; itemId: string }) {
   if (!useTripExists(tripId)) return <NotFound />
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Loader />}>
       <TripItemEditItemGate tripId={tripId} itemId={itemId} />
     </Suspense>
   )
