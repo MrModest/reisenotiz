@@ -1,0 +1,8 @@
+packages:
+  - apps/*
+allowBuilds:
+  '@swc/core': true
+  better-sqlite3: true
+  cbor-extract: true
+  esbuild: true
+  sharp: true
