@@ -6,3 +6,13 @@ allowBuilds:
   cbor-extract: true
   esbuild: true
   sharp: true
+catalog:
+  '@eslint/js': ^10.0.1
+  '@stylistic/eslint-plugin': ^5.10.0
+  '@types/node': ^25.6.0
+  '@typescript-eslint/parser': ^8.59.0
+  eslint: ^10.2.1
+  globals: ^17.5.0
+  typescript: ^6.0.3
+  typescript-eslint: ^8.59.0
+  vite: ^8.0.10
