@@ -19,7 +19,7 @@
     "better-sqlite3": "^12.9.0",
     "hono": "^4.12.15",
     "pg": "^8.20.0",
-    "ws": "^8.20.0"
+    "ws": "^8.20.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
