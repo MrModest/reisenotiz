@@ -4,36 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@eslint/js':
-      specifier: ^10.0.1
-      version: 10.0.1
-    '@stylistic/eslint-plugin':
-      specifier: ^5.10.0
-      version: 5.10.0
-    '@types/node':
-      specifier: ^25.6.0
-      version: 25.9.1
-    '@typescript-eslint/parser':
-      specifier: ^8.59.0
-      version: 8.60.0
-    eslint:
-      specifier: ^10.2.1
-      version: 10.4.1
-    globals:
-      specifier: ^17.5.0
-      version: 17.6.0
-    typescript:
-      specifier: ^6.0.3
-      version: 6.0.3
-    typescript-eslint:
-      specifier: ^8.59.0
-      version: 8.60.0
-    vite:
-      specifier: ^8.0.10
-      version: 8.0.14
-
 importers:
 
   .: {}
@@ -96,13 +66,13 @@ importers:
         specifier: ^7.29.0
         version: 7.29.7
       '@eslint/js':
-        specifier: 'catalog:'
+        specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.1(jiti@2.7.0))
       '@rolldown/plugin-babel':
         specifier: ^0.2.3
         version: 0.2.3(@babel/core@7.29.7)(@babel/runtime@7.29.7)(rolldown@1.0.2)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.3))
       '@stylistic/eslint-plugin':
-        specifier: 'catalog:'
+        specifier: ^5.10.0
         version: 5.10.0(eslint@10.4.1(jiti@2.7.0))
       '@tailwindcss/vite':
         specifier: ^4.2.2
@@ -114,7 +84,7 @@ importers:
         specifier: ^3.7.1
         version: 3.7.1
       '@types/node':
-        specifier: 'catalog:'
+        specifier: ^25.5.0
         version: 25.9.1
       '@types/react':
         specifier: ^19.2.14
@@ -123,7 +93,7 @@ importers:
         specifier: ^19.2.3
         version: 19.2.3(@types/react@19.2.15)
       '@typescript-eslint/parser':
-        specifier: 'catalog:'
+        specifier: ^8.57.2
         version: 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       '@vite-pwa/assets-generator':
         specifier: ^1.0.2
@@ -138,7 +108,7 @@ importers:
         specifier: ^0.28.0
         version: 0.28.0
       eslint:
-        specifier: 'catalog:'
+        specifier: ^10.1.0
         version: 10.4.1(jiti@2.7.0)
       eslint-plugin-react-hooks:
         specifier: ^7.0.1
@@ -147,19 +117,19 @@ importers:
         specifier: ^0.5.2
         version: 0.5.2(eslint@10.4.1(jiti@2.7.0))
       globals:
-        specifier: 'catalog:'
+        specifier: ^17.4.0
         version: 17.6.0
       tailwindcss:
         specifier: ^4.2.2
         version: 4.3.0
       typescript:
-        specifier: 'catalog:'
+        specifier: ^6.0.2
         version: 6.0.3
       typescript-eslint:
-        specifier: 'catalog:'
+        specifier: ^8.57.2
         version: 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       vite:
-        specifier: 'catalog:'
+        specifier: ^8.0.3
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.3)
       vite-plugin-pwa:
         specifier: ^1.2.0
@@ -199,16 +169,16 @@ importers:
         version: 8.21.0
     devDependencies:
       '@eslint/js':
-        specifier: 'catalog:'
+        specifier: ^10.0.1
         version: 10.0.1(eslint@10.4.1(jiti@2.7.0))
       '@stylistic/eslint-plugin':
-        specifier: 'catalog:'
+        specifier: ^5.10.0
         version: 5.10.0(eslint@10.4.1(jiti@2.7.0))
       '@types/better-sqlite3':
         specifier: ^7.6.13
         version: 7.6.13
       '@types/node':
-        specifier: 'catalog:'
+        specifier: ^25.6.0
         version: 25.9.1
       '@types/pg':
         specifier: ^8.20.0
@@ -217,13 +187,13 @@ importers:
         specifier: ^8.5.13
         version: 8.18.1
       '@typescript-eslint/parser':
-        specifier: 'catalog:'
+        specifier: ^8.59.0
         version: 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       eslint:
-        specifier: 'catalog:'
+        specifier: ^10.2.1
         version: 10.4.1(jiti@2.7.0)
       globals:
-        specifier: 'catalog:'
+        specifier: ^17.5.0
         version: 17.6.0
       jiti:
         specifier: ^2.6.1
@@ -232,13 +202,13 @@ importers:
         specifier: ^4.19.2
         version: 4.22.3
       typescript:
-        specifier: 'catalog:'
+        specifier: ^6.0.3
         version: 6.0.3
       typescript-eslint:
-        specifier: 'catalog:'
+        specifier: ^8.59.0
         version: 8.60.0(eslint@10.4.1(jiti@2.7.0))(typescript@6.0.3)
       vite:
-        specifier: 'catalog:'
+        specifier: ^8.0.10
         version: 8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.48.0)(tsx@4.22.3)
       vitest:
         specifier: ^4.1.5
