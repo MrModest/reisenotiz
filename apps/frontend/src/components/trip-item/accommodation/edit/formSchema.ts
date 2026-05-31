@@ -11,15 +11,31 @@ const stayIntervalSchema = z.object({
   timeOut: schemas.time,
 })
 
-export const accommodationFormSchema = z.object({
-  site: z.object({
+// The site is picked as a whole (selector / dialog), never field-by-field,
+// so validate it as a single unit with one message instead of per-subfield errors.
+const siteSchema = z
+  .object({
     id: z.string().optional(),
-    name: schemas.string('Name', 200),
+    name: z.string(),
     kind: z.enum(ACCOMMODATION_SITE_KINDS),
-    address: schemas.address,
+    address: z.object({
+      country: z.string(),
+      city: z.string(),
+      line: z.string().optional(),
+    }),
     contact: z.string().optional(),
     tzone: schemas.timezone,
-  }),
+  })
+  .refine(
+    (site) =>
+      site.name.trim().length > 0 &&
+      site.address.country.trim().length > 0 &&
+      site.address.city.trim().length > 0,
+    { message: 'Accommodation is required' },
+  )
+
+export const accommodationFormSchema = z.object({
+  site: siteSchema,
   reservedOn: schemas.string('Reserved on', 100, false).optional(),
   guests: z.number().int().optional(),
   rooms: z.number().int().optional(),

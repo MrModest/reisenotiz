@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
+import { FieldErrors, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Accommodation } from '@/types'
 import {
@@ -21,6 +21,7 @@ import { Icon } from '@/components/icon'
 import { formatTo } from '@/lib/datetime'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { CollapsibleSection } from '@/components/trip-item/collapsible-section'
+import { FieldErrorAt } from '@/components/trip-item/field-errors'
 import { NoteSection } from '@/components/trip-item/section-note'
 import { AttachmentsSection } from '@/components/trip-item/section-attachments'
 import { AccommodationSelector } from '@/components/ui/combobox/accommodation'
@@ -177,16 +178,24 @@ export function AccommodationItemForm({
     mode: 'onTouched',
   })
 
+  const [stayIntervalOpen, setStayIntervalOpen] = useState(false)
+
   function handleSubmit(data: AccommodationFormSchema) {
     const updated = convert(data, accommodation.tripId, accommodation.id)
     onSubmit(updated)
+  }
+
+  function handleInvalid(errors: FieldErrors<AccommodationFormSchema>) {
+    if (errors.providedInterval || errors.plannedInterval) {
+      setStayIntervalOpen(true)
+    }
   }
 
   return (
     <FormProvider {...form}>
       <form
         className={cn('w-default mb-10', className)}
-        onSubmit={form.handleSubmit(handleSubmit, (errors) => console.error('[form validation]', errors))}
+        onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}
       >
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
@@ -204,6 +213,7 @@ export function AccommodationItemForm({
           selected={selectedRecord}
           onSelectedChange={setSelectedRecord}
         />
+        <FieldErrorAt name='site' className='text-xs font-thin' />
 
         {selectedRecord && <AccommodationSitePreview record={selectedRecord} />}
 
@@ -221,6 +231,8 @@ export function AccommodationItemForm({
           label='Stay Interval'
           icon='accommodation'
           preview={<StayIntervalPreview tzone={selectedRecord?.tzone} />}
+          open={stayIntervalOpen}
+          onOpenChange={setStayIntervalOpen}
           className='mt-4'
         >
           <StayIntervalFields />
@@ -258,14 +270,18 @@ function AccommodationSiteSelector({ accommodations, selected, onSelectedChange 
   function handleSelect(record: AccommodationSiteRecord | null) {
     onSelectedChange(record)
     if (!record) return
-    setValue('site', {
-      id: record.id,
-      name: record.name,
-      kind: record.kind,
-      address: record.address,
-      contact: record.contact || '',
-      tzone: record.tzone,
-    })
+    setValue(
+      'site',
+      {
+        id: record.id,
+        name: record.name,
+        kind: record.kind,
+        address: record.address,
+        contact: record.contact || '',
+        tzone: record.tzone,
+      },
+      { shouldValidate: true },
+    )
   }
 
   return (
