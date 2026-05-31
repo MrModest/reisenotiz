@@ -7,6 +7,8 @@ interface CollapsibleSectionProps {
   icon?: IconName
   preview?: React.ReactNode
   defaultOpen?: boolean
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
   className?: string
   children: React.ReactNode
 }
@@ -16,12 +18,16 @@ export function CollapsibleSection({
   icon,
   preview,
   defaultOpen = false,
+  open,
+  onOpenChange,
   className,
   children,
 }: CollapsibleSectionProps) {
   return (
     <Collapsible
       defaultOpen={defaultOpen}
+      open={open}
+      onOpenChange={onOpenChange}
       className={cn('group w-full border border-border rounded-sm p-0 brightness-125', className)}
     >
       <CollapsibleTrigger className='w-full p-2 bg-background rounded-sm group-data-open:rounded-b-none'>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
+import { FieldErrors, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Airport, Flight } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
@@ -18,6 +18,7 @@ import { Icon } from '@/components/icon'
 import { CollapsibleSection } from '../collapsible-section'
 import { NoteSection } from '../section-note'
 import { AttachmentsSection } from '../section-attachments'
+import { FieldErrorAt } from '../field-errors'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { AirportSelector } from '@/components/ui/combobox/airport'
 import { useAirports } from '@/hooks/use-airports'
@@ -79,14 +80,23 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
     mode: 'onTouched',
   })
 
+  const [openSections, setOpenSections] = useState({ departure: false, arrival: false })
+
   function handleSubmit(data: FlightFormSchema) {
     const updatedFlight = convert(data, flight.tripId, flight.id)
     onSubmit(updatedFlight)
   }
 
+  function handleInvalid(errors: FieldErrors<FlightFormSchema>) {
+    setOpenSections((prev) => ({
+      departure: prev.departure || !!errors.departure,
+      arrival: prev.arrival || !!errors.arrival,
+    }))
+  }
+
   return (
     <FormProvider {...form}>
-      <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(handleSubmit)}>
+      <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}>
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
             title={isCreate ? 'New Flight' : 'Edit Flight'}
@@ -105,7 +115,8 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
           label='Departure'
           icon='flight-departure'
           preview={<AirportPreview direction='departure' />}
-          defaultOpen={false}
+          open={openSections.departure}
+          onOpenChange={(open) => setOpenSections((prev) => ({ ...prev, departure: open }))}
           className='mb-2 mt-6'
         >
           <AirportPoint direction='departure' />
@@ -114,7 +125,8 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
           label='Arrival'
           icon='flight-arrival'
           preview={<AirportPreview direction='arrival' />}
-          defaultOpen={false}
+          open={openSections.arrival}
+          onOpenChange={(open) => setOpenSections((prev) => ({ ...prev, arrival: open }))}
           className='mb-2 mt-6'
         >
           <AirportPoint direction='arrival' />
@@ -158,11 +170,12 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
     if (!airport) {
       setValue(
         `${direction}.airport`,
-        { code: '', name: '', tzone: 'Etc/Utc', address: { country: '', city: '' } }
+        { code: '', name: '', tzone: 'Etc/Utc', address: { country: '', city: '' } },
+        { shouldValidate: true },
       )
       return
     }
-    setValue(`${direction}.airport`, airport)
+    setValue(`${direction}.airport`, airport, { shouldValidate: true })
   }
 
   return (
@@ -176,6 +189,7 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
           {selected ? 'Edit' : 'Add New'}
         </Button>
       </FieldSet>
+      <FieldErrorAt name={`${direction}.airport`} className='text-xs font-thin' />
       <AirportPreview direction={direction} />
       <FieldSet className='grid grid-cols-2 md:flex md:flex-row items-end gap-2 mt-4'>
         <FieldDatePicker className='md:w-32' required name={`${direction}.date`} label='Date' />

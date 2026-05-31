@@ -3,12 +3,22 @@ import { schemas } from '@/lib/validations/commons'
 import { Flight } from '@/types'
 import { formatTo } from '@/lib/datetime'
 
-const airportSchema = z.object({
-  code: schemas.airportCode,
-  name: z.string().min(1, 'Airport name is required'),
-  address: schemas.address,
-  tzone: schemas.timezone,
-})
+// The airport is picked as a whole (selector / dialog), never field-by-field,
+// so validate it as a single unit with one message instead of per-subfield errors.
+const airportSchema = z
+  .object({
+    code: z.string(),
+    name: z.string(),
+    address: z.object({
+      country: z.string(),
+      city: z.string(),
+      line: z.string().optional(),
+    }),
+    tzone: schemas.timezone,
+  })
+  .refine((airport) => airport.code.trim().length >= 3 && airport.name.trim().length > 0, {
+    message: 'Airport is required',
+  })
 
 const flightPointSchema = z.object({
   airport: airportSchema,
