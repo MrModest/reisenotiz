@@ -8,7 +8,7 @@ FROM node:24.14.1-alpine3.23 AS builder
 WORKDIR /app
 
 # Enable pnpm via corepack
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@11.1.3 --activate
 
 # Copy dependency files first (layer caching)
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./

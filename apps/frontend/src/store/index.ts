@@ -1,9 +1,16 @@
-export { useTripsStore } from './trips-store'
 export {
+  useTripExists,
+  useTripItemExists,
   useTrips,
   useTrip,
-  useTripItem,
   useTripItems,
-  useTimelineElements
-} from './selectors'
+  useTripItem,
+  useTimelineElements,
+  useCreateTrip,
+  useUpdateTrip,
+  useDeleteTrip,
+  useCreateTripItem,
+  useUpdateTripItem,
+  useDeleteTripItem,
+} from './trips'
 export { userRecords } from './user-records'
