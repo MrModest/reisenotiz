@@ -1,20 +1,20 @@
 import { Icon, type IconName } from '@/components/icon'
 import { cn } from '@/lib/utils'
-import { useSyncStatus } from '@/hooks/use-sync-status'
+import { useSyncStatus, type SyncStatus } from '@/hooks/use-sync-status'
 
-const STATUS_CONFIG: Record<
-  'offline' | 'syncing' | 'synced',
-  { icon: IconName; label: string; className?: string; spin?: boolean }
-> = {
-  offline: { icon: 'circle-alert', label: 'Offline', className: 'text-amber-600 dark:text-amber-400' },
+const WARNING_CLASS = 'text-amber-600 dark:text-amber-400'
+
+const STATUS_CONFIG: Record<SyncStatus, { icon: IconName; label: string; className?: string; spin?: boolean }> = {
+  // no sync server configured — offline-first works fine, but the user should
+  // still know their data isn't going anywhere else.
+  disabled: { icon: 'circle-alert', label: 'Sync not configured', className: WARNING_CLASS },
+  offline: { icon: 'circle-alert', label: 'Offline', className: WARNING_CLASS },
   syncing: { icon: 'refresh', label: 'Syncing…', spin: true },
   synced: { icon: 'check-circle', label: 'Synced' },
 }
 
 export function SyncStatusIndicator() {
   const status = useSyncStatus()
-  if (status === 'disabled') return null
-
   const { icon, label, className, spin } = STATUS_CONFIG[status]
 
   return (

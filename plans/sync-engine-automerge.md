@@ -149,4 +149,4 @@ Surface connection and sync state in the app shell: an indicator that distinguis
 - [x] Indicator visible in the app shell on every screen.
 - [x] Goes to "offline" within a few seconds of losing the WebSocket.
 - [x] Goes to "syncing" briefly when changes are propagating, then back to "synced".
-- [x] When `VITE_SYNC_SERVER_URL` is unset, indicator is hidden (no sync configured).
+- [x] When `VITE_SYNC_SERVER_URL` is unset, indicator shows a warning ("Sync not configured") rather than hiding — offline-first use is intentionally supported, but the user should still know their data isn't syncing anywhere. (Amended from the original "hidden" criterion per review feedback on PR #24.)

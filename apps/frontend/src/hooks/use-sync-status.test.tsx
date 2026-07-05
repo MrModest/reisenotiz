@@ -57,4 +57,27 @@ describe('useSyncStatus', () => {
 
     await waitFor(() => expect(result.current).toBe('synced'), { timeout: 3000 })
   })
+
+  it('goes back to offline when the peer disconnects', async () => {
+    // regression: Repo.peerMetadataByPeerId is populated on 'peer' but never
+    // cleared on 'peer-disconnected' (it's kept around to look up a departed
+    // peer's storageId). Relying on it directly would get the indicator stuck
+    // showing "synced" forever after the very first disconnect.
+    const { port1, port2 } = new MessageChannel()
+    const repoA = new Repo({ network: [new MessageChannelNetworkAdapter(port1)], sharePolicy: async () => true })
+    const repoB = new Repo({ network: [new MessageChannelNetworkAdapter(port2)], sharePolicy: async () => true })
+
+    const { result } = renderHook(() => useSyncStatus(), { wrapper: wrapperFor(repoA) })
+    await waitFor(() => expect(result.current).toBe('synced'))
+
+    // Simulate a disconnect the way the production WebSocketClientAdapter reports
+    // one: a bare 'peer-disconnected' event, adapter still present. (Calling
+    // MessageChannelNetworkAdapter's own disconnect() also emits 'close', which
+    // removes the adapter from the repo entirely — WebSocketClientAdapter never
+    // emits 'close', so that's not representative of the real disconnect path.)
+    const [adapter] = repoA.networkSubsystem.adapters
+    adapter.emit('peer-disconnected', { peerId: repoB.networkSubsystem.peerId })
+
+    await waitFor(() => expect(result.current).toBe('offline'))
+  })
 })
