@@ -146,7 +146,7 @@ Surface connection and sync state in the app shell: an indicator that distinguis
 
 ### Acceptance criteria
 
-- [ ] Indicator visible in the app shell on every screen.
-- [ ] Goes to "offline" within a few seconds of losing the WebSocket.
-- [ ] Goes to "syncing" briefly when changes are propagating, then back to "synced".
-- [ ] When `VITE_SYNC_SERVER_URL` is unset, indicator is hidden (no sync configured).
+- [x] Indicator visible in the app shell on every screen.
+- [x] Goes to "offline" within a few seconds of losing the WebSocket.
+- [x] Goes to "syncing" briefly when changes are propagating, then back to "synced".
+- [x] When `VITE_SYNC_SERVER_URL` is unset, indicator is hidden (no sync configured).

@@ -51,6 +51,8 @@ export type IconName =
   | 'info'
   | 'long-transfer'
   | 'unknown'
+  | 'cloud-off'
+  | 'cloud-check'
 
 export function Icon({ name, className }: { name: IconName; className?: string }) {
   const style = className
@@ -154,6 +156,10 @@ export function Icon({ name, className }: { name: IconName; className?: string }
       return <DynamicIcon name='info' className={style} />
     case 'long-transfer':
       return <DynamicIcon name='train-front' className={style} />
+    case 'cloud-off':
+      return <DynamicIcon name='cloud-off' className={style} />
+    case 'cloud-check':
+      return <DynamicIcon name='cloud-check' className={style} />
     case 'unknown':
     default:
       return <DynamicIcon name='shield-question-mark' className={style} />
