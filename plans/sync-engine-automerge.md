@@ -128,11 +128,11 @@ Move `useUserAirportsStore` and `useUserAccommodationsStore` data into `RootDoc.
 
 ### Acceptance criteria
 
-- [ ] User airport added on device A appears on device B after sync.
-- [ ] User accommodation record edited on one device updates on the other.
-- [ ] `zustand` and `zustand/middleware` removed from `package.json`.
-- [ ] All `src/store/user-records/*` files use the Automerge hook pattern.
-- [ ] Existing screens that consume user records render unchanged.
+- [x] User airport added on device A appears on device B after sync.
+- [x] User accommodation record edited on one device updates on the other.
+- [x] `zustand` and `zustand/middleware` removed from `package.json`.
+- [x] All `src/store/user-records/*` files use the Automerge hook pattern.
+- [x] Existing screens that consume user records render unchanged.
 
 ---
 

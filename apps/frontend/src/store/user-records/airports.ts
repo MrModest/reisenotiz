@@ -1,5 +1,6 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { useDocument } from '@automerge/react'
+import { useRootDocUrl } from '@/contexts/root-doc-context'
+import type { RootDoc } from '@/store/automerge/types'
 import type { Airport } from '@/types'
 
 interface UserAirportsState {
@@ -11,42 +12,33 @@ interface UserAirportsState {
   deleteAirport: (code: string) => void
 }
 
-export const useUserAirportsStore = create<UserAirportsState>()(
-  persist(
-    (set, get) => ({
-      airports: {},
+export function useUserAirportsStore<T>(selector: (state: UserAirportsState) => T): T {
+  const [doc, changeDoc] = useDocument<RootDoc>(useRootDocUrl(), { suspense: true })
 
-      getAirport: (code) => get().airports[code],
+  const state: UserAirportsState = {
+    airports: doc.userAirports,
 
-      addAirport: (airport) => {
-        set((state) => ({
-          airports: { ...state.airports, [airport.code]: airport },
-        }))
-      },
+    getAirport: (code) => doc.userAirports[code],
 
-      updateAirport: (code, airport) => {
-        set((state) => {
-          const { [code]: _, ...rest } = state.airports
-          return {
-            airports: { ...rest, [airport.code]: airport },
-          }
-        })
-      },
-
-      deleteAirport: (code) => {
-        set((state) => {
-          const { [code]: _, ...remaining } = state.airports
-          return { airports: remaining }
-        })
-      },
-    }),
-    {
-      name: 'reisenotiz-user-airports',
-      version: 1,
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        airports: state.airports,
-      }),
+    addAirport: (airport) => {
+      changeDoc((d) => {
+        d.userAirports[airport.code] = airport
+      })
     },
-  ),
-)
+
+    updateAirport: (code, airport) => {
+      changeDoc((d) => {
+        delete d.userAirports[code]
+        d.userAirports[airport.code] = airport
+      })
+    },
+
+    deleteAirport: (code) => {
+      changeDoc((d) => {
+        delete d.userAirports[code]
+      })
+    },
+  }
+
+  return selector(state)
+}

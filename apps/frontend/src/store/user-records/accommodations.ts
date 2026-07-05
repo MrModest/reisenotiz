@@ -1,5 +1,6 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
+import { useDocument } from '@automerge/react'
+import { useRootDocUrl } from '@/contexts/root-doc-context'
+import type { RootDoc } from '@/store/automerge/types'
 import { generateUUID, type AccommodationSite } from '@/types'
 
 export type AccommodationSiteRecord = AccommodationSite & { id: string }
@@ -13,41 +14,34 @@ interface UserAccommodationsState {
   deleteAccommodation: (id: string) => void
 }
 
-export const useUserAccommodationsStore = create<UserAccommodationsState>()(
-  persist(
-    (set, get) => ({
-      accommodations: {},
+export function useUserAccommodationsStore<T>(selector: (state: UserAccommodationsState) => T): T {
+  const [doc, changeDoc] = useDocument<RootDoc>(useRootDocUrl(), { suspense: true })
 
-      getAccommodation: (id) => get().accommodations[id],
+  const state: UserAccommodationsState = {
+    accommodations: doc.userAccommodations,
 
-      addAccommodation: (site) => {
-        const record: AccommodationSiteRecord = { ...site, id: generateUUID() }
-        set((state) => ({
-          accommodations: { ...state.accommodations, [record.id]: record },
-        }))
-        return record
-      },
+    getAccommodation: (id) => doc.userAccommodations[id],
 
-      updateAccommodation: (id, site) => {
-        set((state) => ({
-          accommodations: { ...state.accommodations, [id]: { ...site, id } },
-        }))
-      },
-
-      deleteAccommodation: (id) => {
-        set((state) => {
-          const { [id]: _, ...remaining } = state.accommodations
-          return { accommodations: remaining }
-        })
-      },
-    }),
-    {
-      name: 'reisenotiz-user-accommodations',
-      version: 1,
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        accommodations: state.accommodations,
-      }),
+    addAccommodation: (site) => {
+      const record: AccommodationSiteRecord = { ...site, id: generateUUID() }
+      changeDoc((d) => {
+        d.userAccommodations[record.id] = record
+      })
+      return record
     },
-  ),
-)
+
+    updateAccommodation: (id, site) => {
+      changeDoc((d) => {
+        d.userAccommodations[id] = { ...site, id }
+      })
+    },
+
+    deleteAccommodation: (id) => {
+      changeDoc((d) => {
+        delete d.userAccommodations[id]
+      })
+    },
+  }
+
+  return selector(state)
+}
