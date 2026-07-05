@@ -4,6 +4,7 @@ import { Icon, IconName } from '@/components/icon'
 import { Button } from '@/components/ui/button'
 import { HeaderAction } from '@/contexts/header-context'
 import { Title } from '../ui/title'
+import { SyncStatusIndicator } from './sync-status-indicator'
 
 interface HeaderProps {
   title?: string
@@ -44,6 +45,7 @@ export function Header({ title = 'Reisenotiz', icon, actions = [], onBack, showB
           <Title title={title} icon={icon || 'logo'} />
         </div>
         <div className='flex flex-row items-center space-x-2'>
+          <SyncStatusIndicator />
           {actions.map((action) => (
             <Button
               key={action.label || action.icon}
