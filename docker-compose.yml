@@ -3,6 +3,9 @@ services:
     build:
       context: ./apps/frontend
       dockerfile: Dockerfile
+      args:
+        # Set in a root .env file, then `docker compose build app`. Baked in at build time (Vite).
+        VITE_SYNC_SERVER_URL: ${VITE_SYNC_SERVER_URL:-}
     image: ghcr.io/mrmodest/reisenotiz-client:edge-amd64 # change to `edge-arm64` for ARM64
     ports:
       - '8080:8080'

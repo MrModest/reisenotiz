@@ -21,6 +21,10 @@ COPY src ./src
 COPY public ./public
 COPY index.html tsconfig.json tsconfig.node.json vite.config.ts ./
 
+# Sync server URL is baked in at build time (Vite inlines import.meta.env.VITE_* at build)
+ARG VITE_SYNC_SERVER_URL
+ENV VITE_SYNC_SERVER_URL=${VITE_SYNC_SERVER_URL}
+
 # Build the app
 RUN pnpm build
 
