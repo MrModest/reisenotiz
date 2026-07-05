@@ -109,12 +109,12 @@ Wire `BrowserWebSocketClientAdapter` to `VITE_SYNC_SERVER_URL`. Trip and trip-it
 
 ### Acceptance criteria
 
-- [ ] With server reachable, a trip created on device A appears on device B within a few seconds of B coming online.
-- [ ] Edits made on device B while disconnected are visible on A after B reconnects.
-- [ ] Deleting a trip on one device removes it everywhere; the deleted trip does not reappear.
-- [ ] Concurrent edits to different trip items on two devices merge without data loss.
-- [ ] If `VITE_SYNC_SERVER_URL` is unset, app behaves identically to Phase 3 (local-only).
-- [ ] If sync URL is set but unreachable, app keeps working from IndexedDB; sync resumes when server returns.
+- [x] With server reachable, a trip created on device A appears on device B within a few seconds of B coming online.
+- [x] Edits made on device B while disconnected are visible on A after B reconnects.
+- [x] Deleting a trip on one device removes it everywhere; the deleted trip does not reappear.
+- [x] Concurrent edits to different trip items on two devices merge without data loss.
+- [x] If `VITE_SYNC_SERVER_URL` is unset, app behaves identically to Phase 3 (local-only).
+- [x] If sync URL is set but unreachable, app keeps working from IndexedDB; sync resumes when server returns.
 
 ---
 
