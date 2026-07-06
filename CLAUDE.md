@@ -13,7 +13,7 @@ Guidance for Claude Code (claude.ai/code) at the **repo root**.
 
 ## Cross-Cutting Reference Documents
 
-- `docs/agents/DESIGN_SYSTEM.md` — UI design system.
+- For UI design system, please refer to the `reisenotiz-design` skill.
 - `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` — Create/View/Edit flow patterns.
 
 ## Tooling
