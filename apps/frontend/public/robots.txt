@@ -1,0 +1,3 @@
+# Reisenotiz is a self-hosted personal travel journal. It is never meant to be indexed.
+User-agent: *
+Disallow: /

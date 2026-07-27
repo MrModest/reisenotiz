@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { Item, ItemContent, ItemGroup, ItemTitle, ItemDescription, ItemActions } from '@/components/ui/item'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { AirportRecordDialog } from './airport-record-dialog'
 import type { Airport } from '@/types'
 
@@ -12,6 +13,7 @@ export function AirportRecordsList() {
   const deleteAirport = userRecords.useAirports((s) => s.deleteAirport)
   const [editingAirport, setEditingAirport] = useState<Airport | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [pendingDeletion, setPendingDeletion] = useState<Airport | null>(null)
 
   const airportList = Object.values(airports)
 
@@ -34,7 +36,7 @@ export function AirportRecordsList() {
     <div className='flex flex-col gap-4'>
       <div className='flex justify-end'>
         <Button variant='outline' size='sm' onClick={handleAdd}>
-          <Icon name='add' />
+          <Icon name='add' data-icon='inline-start' />
           Add Airport
         </Button>
       </div>
@@ -62,10 +64,20 @@ export function AirportRecordsList() {
                   </ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <Button variant='ghost' size='icon-sm' onClick={() => handleEdit(airport)}>
+                  <Button
+                    variant='ghost'
+                    size='icon-sm'
+                    onClick={() => handleEdit(airport)}
+                    aria-label={`Edit ${airport.code}`}
+                  >
                     <Icon name='edit' />
                   </Button>
-                  <Button variant='ghost' size='icon-sm' onClick={() => deleteAirport(airport.code)}>
+                  <Button
+                    variant='ghost'
+                    size='icon-sm'
+                    onClick={() => setPendingDeletion(airport)}
+                    aria-label={`Delete ${airport.code}`}
+                  >
                     <Icon name='trash' />
                   </Button>
                 </ItemActions>
@@ -76,6 +88,18 @@ export function AirportRecordsList() {
       )}
 
       <AirportRecordDialog open={dialogOpen} onClose={handleDialogClose} airport={editingAirport} />
+
+      <ConfirmDialog
+        open={!!pendingDeletion}
+        onOpenChange={(open) => !open && setPendingDeletion(null)}
+        title='Delete airport?'
+        description={`"${pendingDeletion?.code}" will be removed from your records. This cannot be undone.`}
+        confirmLabel='Delete'
+        onConfirm={() => {
+          if (pendingDeletion) deleteAirport(pendingDeletion.code)
+          setPendingDeletion(null)
+        }}
+      />
     </div>
   )
 }

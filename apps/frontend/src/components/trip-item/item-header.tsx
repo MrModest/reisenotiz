@@ -5,7 +5,7 @@ import { Title } from '@/components/ui/title'
 export interface ItemHeaderProps {
   title: string
   icon: IconName
-  buttons: { icon: IconName; isSubmit?: boolean; onClick?: () => void }[]
+  buttons: { icon: IconName; label: string; isSubmit?: boolean; onClick?: () => void }[]
 }
 
 export function ItemHeader({ title, icon, buttons }: ItemHeaderProps) {
@@ -20,6 +20,7 @@ export function ItemHeader({ title, icon, buttons }: ItemHeaderProps) {
             size='icon'
             type={button.isSubmit ? 'submit' : 'button'}
             onClick={button.onClick}
+            aria-label={button.label}
           >
             <Icon name={button.icon} />
           </Button>

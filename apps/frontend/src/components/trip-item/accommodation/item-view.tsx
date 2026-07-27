@@ -31,8 +31,8 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
           title={`${accommodation.site.kind} Details`}
           icon='accommodation'
           buttons={[
-            { icon: 'edit', onClick: () => navigate('edit') },
-            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) },
+            { icon: 'edit', label: 'Edit accommodation', onClick: () => navigate('edit') },
+            { icon: 'trash', label: 'Delete accommodation', onClick: () => setDeleteDialogOpen(true) },
           ]}
         />
       </div>

@@ -18,6 +18,8 @@ interface HeaderContextValue {
 export interface HeaderAction {
   label?: string
   icon?: IconName
+  /** Accessible name for icon-only actions. Falls back to the icon name. */
+  ariaLabel?: string
   onClick: () => void
 }
 

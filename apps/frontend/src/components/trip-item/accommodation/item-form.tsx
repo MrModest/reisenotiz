@@ -125,6 +125,7 @@ function StayIntervalFields() {
               variant='ghost'
               className='text-muted-foreground/60 hover:text-foreground transition-colors'
               onClick={removePlanned}
+              aria-label='Remove planned times'
             >
               <Icon name='x' className='size-3' />
             </Button>
@@ -144,7 +145,7 @@ function StayIntervalFields() {
         </>
       ) : (
         <Button type='button' variant='ghost' size='sm' className='self-start text-xs h-6 px-1.5' onClick={addPlanned}>
-          <Icon name='add' className='size-3' />
+          <Icon name='add' className='size-3' data-icon='inline-start' />
           Add planned times
         </Button>
       )}
@@ -202,8 +203,8 @@ export function AccommodationItemForm({
             title={isCreate ? 'New Accommodation' : 'Edit Accommodation'}
             icon='accommodation'
             buttons={[
-              { icon: 'save', isSubmit: true },
-              { icon: 'cancel', onClick: onCancel },
+              { icon: 'save', label: 'Save accommodation', isSubmit: true },
+              { icon: 'cancel', label: 'Cancel', onClick: onCancel },
             ]}
           />
         </Field>
@@ -290,7 +291,7 @@ function AccommodationSiteSelector({ accommodations, selected, onSelectedChange 
         <AccommodationSelector items={accommodations} selected={selected} onSelect={handleSelect} />
       </div>
       <Button type='button' variant='outline' onClick={() => setDialogOpen(true)}>
-        <Icon name={selected ? 'edit' : 'add'} />
+        <Icon name={selected ? 'edit' : 'add'} data-icon='inline-start' />
         {selected ? 'Edit' : 'Add New'}
       </Button>
       <AccommodationRecordDialog
