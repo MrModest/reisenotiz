@@ -26,3 +26,17 @@ Guidance for Claude Code (claude.ai/code) at the **repo root**.
 
 - The frontend builds from `./apps/frontend` via its own `Dockerfile`.
 - `docker-compose.yml` at the root orchestrates the frontend service (`app`).
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in this repo's GitHub Issues (`MrModest/reisenotiz`), managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five canonical triage roles, each label string equal to its name (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Multi-context: a root `CONTEXT-MAP.md` pointing at per-app `CONTEXT.md` files, with root and per-app `docs/adr/`. See `docs/agents/domain.md`.
