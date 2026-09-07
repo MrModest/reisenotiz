@@ -21,8 +21,16 @@ pnpm workspace (`apps/*`) with two packages:
 - **`docs/adr/`** — system-wide decisions and why they were made. `apps/frontend/docs/adr/` holds frontend-only ones.
 - **`CLAUDE.md`** (here, and one per app) — how to work here: commands, tooling, conventions.
 - **`docs/agents/`** — configuration the engineering skills read. Not project documentation.
-- **`apps/frontend/docs/design-system.md`** — implemented radius/spacing tokens.
+- **`apps/frontend/docs/design/handoff-2026-09/`** — the design: radius, spacing, colour, type and
+  every screen. Start at its `MANIFEST.md`. Read before writing UI.
 - **`plans/archived/`** — history, not current state. See `plans/README.md`.
+
+**Write documentation as a snapshot of the current state.** No migration notes, no "previously X,
+now Y", no deprecation banners, no version history — git holds that. When something changes,
+rewrite the affected docs so they read as if the new state had always been true, and delete what
+no longer applies rather than marking it superseded. `docs/adr/` is the one exception: an ADR
+records why a decision was made, so it keeps its context. This applies to every `CLAUDE.md`,
+`CONTEXT.md` and doc under `docs/`.
 
 For anything touching the Automerge store or sync, read the `automerge` skill first.
 

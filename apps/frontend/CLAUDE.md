@@ -50,10 +50,18 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
 - CSS variables for light/dark mode theming
 - Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
-- **Design System**: `docs/design-system.md` documents the radius/spacing tokens as implemented here
-  - ALWAYS consult it when creating or modifying UI components
-  - Default to `rounded-xs` (4px); the UI is deliberately almost-square and compact
-  - It describes the current UI rather than a target design; a redesign is planned
+- **Design System**: `docs/design/handoff-2026-09/` defines radius, spacing, colour, type and every
+  screen. ALWAYS consult it when creating or modifying UI components; start at its `MANIFEST.md`
+  - Token values live in `docs/design/handoff-2026-09/shadcn-preset-app.css` (shadcn preset
+    `b1GdgzGvQ`). Write Tailwind classes, never the literal values
+  - Radius is **derived** from `--radius: 0.45rem`: `rounded-sm` 4.32px, `rounded-md` 5.76px,
+    `rounded-lg` 7.2px, `rounded-xl` 10.08px. There is no `xs` step — the smallest radius the
+    design uses is `rounded-sm`
+  - Two text tiers only: `text-foreground` and `text-muted-foreground`
+  - Times, codes, counts and all-caps labels are `font-mono`. Numbers set in Inter need
+    `tabular-nums`
+  - The UI is under redesign, tracked by [#28](https://github.com/MrModest/reisenotiz/issues/28);
+    existing components may not match the design yet
 
 **Code Style**:
 - No semicolons (enforced by ESLint @stylistic/semi rule and Prettier)
