@@ -15,6 +15,29 @@ The map that consumes this is [#28](https://github.com/MrModest/reisenotiz/issue
 | `travel-planner-screens.pdf` | Skimming everything at once | Single vector page, 2595×4589pt, real text. Best fidelity, but one page — an agent reading it gets the whole canvas scaled to illegibility. **Carries no annotations.** |
 | `frames/*.png` | Looking at one screen | 21 individual frames at 2× with correct type. What an agent should read. |
 | `component-architecture.dc.html` | The reasoning | Token audit, buildability check per custom piece, Base UI deltas, the seven resolved inconsistencies. |
+| `shadcn-preset-app.css` | **The authoritative token values** | The `app.css` the preset `b1GdgzGvQ` generates. Every colour and radius the design refers to resolves here. Reference only — do not import it; `src/index.css` is the file we ship. |
+
+## Token alignment against the preset
+
+`shadcn-preset-app.css` settles what the handoff prose could only assert. Verified, not assumed:
+
+- **The radius mapping is exact.** The preset sets `--radius: 0.45rem` (7.2px) and *derives* the
+  scale: `sm` ×0.6 = **4.32px**, `md` ×0.8 = **5.76px**, `xl` ×1.4 = **10.08px**. The handoff's
+  "4 / 6 / 10 px → `rounded-sm` / `rounded-md` / `rounded-xl`" is correct to within rounding.
+- **There is no `--radius-xs` in the preset.** Our UI uses `rounded-xs` as its working default
+  (`button.tsx`, `input-styles.ts`, `tabs.tsx`, combobox). Adopt the preset and every one of those
+  falls through to Tailwind's stock `rounded-xs` = **2px**, not the 4px they mean today. This is the
+  single largest silent-breakage risk in the token reset. See
+  [#30](https://github.com/MrModest/reisenotiz/issues/30).
+- **Light mode ships with the preset.** `:root` carries a full light palette. Nothing needs
+  inventing — the earlier plan to author light values by hand is unnecessary.
+- **The preset has no `--spacing-*` custom properties.** Ours are a local invention.
+- **The preset has no `--font-mono`.** Confirms the handoff's "addition 1"; `src/index.css` already
+  declares it.
+- **`.dark` does not re-declare `--radius`.** Ours duplicates the radius and spacing blocks in both
+  `:root` and `.dark` for no reason.
+- **Two imports we do not have**: `tw-animate-css` and `shadcn/tailwind.css`. Decide in
+  [#30](https://github.com/MrModest/reisenotiz/issues/30) whether either is actually required.
 
 ## Frames
 
