@@ -7,20 +7,24 @@ Guidance for Claude Code (claude.ai/code) at the **repo root**.
 pnpm workspace (`apps/*`) with two packages:
 
 - `apps/frontend/` — React 19 PWA. See `apps/frontend/CLAUDE.md` for app-specific guidance.
-- `apps/sync/` — Node + TypeScript Automerge sync server (WebSocket, SQLite by default, Postgres opt-in). No `CLAUDE.md` of its own yet. It holds **zero domain knowledge** — no `Trip` / `TripItem` types server-side, ever.
+- `apps/sync/` — Node + TypeScript Automerge sync server (WebSocket, SQLite by default, Postgres opt-in). See `apps/sync/CLAUDE.md`.
 
 ## When to Work in Which Directory
 
 - Touching React UI, components, hooks, stores, PWA config → `cd apps/frontend` first, then read `apps/frontend/CLAUDE.md`.
-- Touching the sync server, its storage adapters or its Dockerfile → `cd apps/sync`.
+- Touching the sync server, its storage adapters or its Dockerfile → `cd apps/sync`, then read `apps/sync/CLAUDE.md`.
 - Touching `docker-compose.yml`, GitHub workflows, `docs/`, `plans/`, root README/ROADMAP → stay at the root.
 
-## Cross-Cutting Reference Documents
+## Documentation Structure
 
-- `docs/agents/DESIGN_SYSTEM.md` — the radius/spacing tokens as actually implemented in `src/index.css`, and the conventions components follow. Describes the current UI, not a target design; a redesign is planned.
-- `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` — Create/View/Edit flow patterns.
-- For anything touching the Automerge store or sync, read the `automerge` skill first.
-- `plans/archived/` is **history, not current state** — see `plans/README.md`.
+- **`CONTEXT-MAP.md`** → `apps/frontend/CONTEXT.md`, `apps/sync/CONTEXT.md` — the domain glossary. What the words mean. Read before naming anything.
+- **`docs/adr/`** — system-wide decisions and why they were made. `apps/frontend/docs/adr/` holds frontend-only ones.
+- **`CLAUDE.md`** (here, and one per app) — how to work here: commands, tooling, conventions.
+- **`docs/agents/`** — configuration the engineering skills read. Not project documentation.
+- **`apps/frontend/docs/design-system.md`** — implemented radius/spacing tokens.
+- **`plans/archived/`** — history, not current state. See `plans/README.md`.
+
+For anything touching the Automerge store or sync, read the `automerge` skill first.
 
 ## Tooling
 

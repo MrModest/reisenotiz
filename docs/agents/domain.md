@@ -7,30 +7,45 @@ This repo is **multi-context**: a pnpm workspace (`apps/*`) with two contexts, `
 ## Before exploring, read these
 
 - **`CONTEXT-MAP.md`** at the repo root: it points at one `CONTEXT.md` per context. Read each one relevant to the topic.
-- **`<context>/CONTEXT.md`** (e.g. `apps/frontend/CONTEXT.md`, `apps/sync/CONTEXT.md`) for the context you're working in.
+- **`<context>/CONTEXT.md`** (`apps/frontend/CONTEXT.md`, `apps/sync/CONTEXT.md`) for the context you're working in.
 - **`docs/adr/`** at the root: system-wide decisions. Read ADRs that touch the area you're about to work in.
 - **`apps/<context>/docs/adr/`**: context-scoped decisions for that app.
 
-If any of these files don't exist, **proceed silently**. Don't flag their absence; don't suggest creating them upfront. The `/domain-modeling` skill (reached via `/grill-with-docs` and `/improve-codebase-architecture`) creates them lazily when terms or decisions actually get resolved.
+These exist. Extend them lazily via `/domain-modeling` — a term goes in when it's resolved, an ADR when a decision meets the bar (hard to reverse, surprising, a real trade-off).
 
 ## File structure
 
 ```
 /
 ├── CONTEXT-MAP.md                     ← points at each context's CONTEXT.md
-├── docs/adr/                          ← system-wide decisions
+├── CLAUDE.md                          ← how to work here (not domain)
+├── docs/
+│   ├── adr/                           ← system-wide decisions
+│   └── agents/                        ← skill config only, not project docs
 └── apps/
     ├── frontend/
     │   ├── CONTEXT.md
-    │   ├── docs/adr/                  ← frontend-specific decisions
+    │   ├── CLAUDE.md
+    │   ├── docs/
+    │   │   ├── adr/                   ← frontend-specific decisions
+    │   │   └── design-system.md
     │   └── src/
     └── sync/
         ├── CONTEXT.md
-        ├── docs/adr/                  ← sync-specific decisions
-        └── src/
+        ├── CLAUDE.md
+        └── src/                       ← docs/adr/ here when the first one is needed
 ```
 
-Domain docs are separate from the existing agent guidance files, and answer a different question. `CLAUDE.md` (root and `apps/frontend/CLAUDE.md`) covers **how to work here** — commands, tooling, code style, conventions. `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` and `DESIGN_SYSTEM.md` cover recurring patterns. Domain docs cover **what the words mean** — vocabulary, invariants, and the decisions behind them. A `CONTEXT.md` never documents build commands, and a `CLAUDE.md` never defines domain terms.
+Each file answers one question, and only that one:
+
+| File | Answers | Never contains |
+| --- | --- | --- |
+| `CONTEXT.md` | What do the words mean? | Build commands, file paths, implementation detail |
+| `docs/adr/*.md` | Why is it built this way? | Glossary entries, how-to instructions |
+| `CLAUDE.md` | How do I work here? | Domain definitions, decision rationale |
+| `docs/agents/*.md` | How do the skills operate here? | Anything about this project's code |
+
+When something doesn't fit one of these, it doesn't belong in the documentation structure.
 
 ## Use the glossary's vocabulary
 

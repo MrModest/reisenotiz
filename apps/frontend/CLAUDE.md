@@ -10,6 +10,9 @@ All paths in this document are relative to `apps/frontend/`. The `@/` alias poin
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline Element — read
+`CONTEXT.md` in this directory. Use its vocabulary in names, tests and issue titles.
+
 ## Development Commands
 
 - `pnpm dev` - Start Vite development server
@@ -47,8 +50,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - CSS variables for light/dark mode theming
 - Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
-- **Design System**: `docs/agents/DESIGN_SYSTEM.md` documents the radius/spacing tokens as implemented here
-  - ALWAYS consult it when creating or modifying UI components — it is the ground truth for token names and pixel values
+- **Design System**: `docs/design-system.md` documents the radius/spacing tokens as implemented here
+  - ALWAYS consult it when creating or modifying UI components
   - Default to `rounded-xs` (4px); the UI is deliberately almost-square and compact
   - It describes the current UI rather than a target design; a redesign is planned
 
@@ -75,14 +78,29 @@ in this app.
 - Components use the hooks exported from `@/store`: `useTrips`, `useTrip`, `useTripItems`,
   `useTripItem`, `useTimelineElements`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
   and the `TripItem` equivalents. `userRecords` covers saved airports and accommodations.
-- **Document model**: one `RootDoc` per user (`tripIndex`, `userAirports`, `userAccommodations`),
-  and one `TripDoc` per trip (`trip`, `tripItems`). The root doc URL is persisted in
-  `localStorage`; trip URLs are discovered through the root index.
+- **Document model**: `RootDoc` per user, `TripDoc` per trip — see
+  `/docs/adr/0004-automerge-document-model.md` for the shape and why.
 - **Storage**: IndexedDB locally. When `VITE_SYNC_SERVER_URL` is set the repo also connects to
   `apps/sync/` over WebSocket; absent, the app runs local-only with no error.
-- **Conflicts** are resolved by Automerge's CRDT merge. Never write custom merge logic.
+- **Conflicts** are resolved by Automerge's CRDT merge. Never write custom merge logic
+  (`/docs/adr/0002-automerge-crdt-for-sync.md`).
 - Never mutate a document object returned from a hook — mutate inside the change callback.
-- See `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` for how drafts stay local until save.
+
+### Create / View / Edit Flows
+
+Drafts stay in local form state until saved; only valid, complete entities reach the store.
+The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice:
+
+- **Routes are explicit**, never a `mode` flag: `.../new` to create, `.../:id` to view,
+  `.../:id/edit` to edit.
+- **One form component serves create and edit**, driven by `defaultValues`. The form renders
+  inputs, holds draft state and validates; it never fetches, never navigates, and never knows
+  which flow it is in.
+- **Pages orchestrate**: read route params, read from the store, supply defaults, call the
+  mutation hook, then navigate.
+- **Views are read-only** — no form, no draft state.
+- **Validate twice**: the form for UX (required, lengths), the store mutation hook for
+  invariants.
 
 ### Component Architecture
 
