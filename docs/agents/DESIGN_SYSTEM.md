@@ -3,11 +3,12 @@
 Token-level reference for Reisenotiz UI work: the radius and spacing scales **as they exist in
 `apps/frontend/src/index.css` today**, and the values components actually use.
 
-**Scope.** This file is the ground truth for *token names and pixel values*. For brand, colour,
-typography, voice, iconography and composition, use the **`reisenotiz-design` skill** — it is the
-design authority. This file exists because the skill documents a *differently named* radius scale
-(see [Known discrepancy](#known-discrepancy) at the bottom); when you are writing Tailwind classes
-against this codebase, the names below are the ones that compile.
+**Scope.** This is a description of what is implemented, not a target design. It covers radius,
+spacing and the conventions components follow today — enough to keep new UI consistent with
+existing UI. It is deliberately not a brand or visual identity document.
+
+> A redesign is planned. Until it lands, match what is here; when it lands, this file is replaced
+> by whatever that effort produces.
 
 ## Border Radius Scale
 
@@ -77,14 +78,3 @@ Tailwind's own `gap-*` / `p-*` scale is based on `--spacing: 0.25rem`, so `gap-2
 - **Compact** — tight gaps, minimal padding, dense information
 - **Hierarchy through size and weight**, not rounding
 
-## Known discrepancy
-
-The `reisenotiz-design` skill documents a radius scale with the **same names but different
-values** (`--radius-md` = 4px there, 8px here; it also defines `--radius-2xl`, which this
-codebase does not). Both agree on the *philosophy* — a 4px almost-square default — but an agent
-following the skill's table and writing `rounded-md` on a button would get 8px instead of the
-intended 4px.
-
-**Until that is reconciled, the table in this file is what compiles.** Reconciling means either
-renaming the scale in `src/index.css` and updating every `rounded-*` call site (a real visual
-change, needs review) or correcting the skill's table. Neither has been done.

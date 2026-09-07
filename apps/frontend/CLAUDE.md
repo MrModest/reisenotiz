@@ -49,8 +49,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
 - **Design System**: `docs/agents/DESIGN_SYSTEM.md` documents the radius/spacing tokens as implemented here
   - ALWAYS consult it when creating or modifying UI components — it is the ground truth for token names and pixel values
-  - For brand, colour, typography and composition, use the `reisenotiz-design` skill
   - Default to `rounded-xs` (4px); the UI is deliberately almost-square and compact
+  - It describes the current UI rather than a target design; a redesign is planned
 
 **Code Style**:
 - No semicolons (enforced by ESLint @stylistic/semi rule and Prettier)

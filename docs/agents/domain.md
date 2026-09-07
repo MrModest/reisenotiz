@@ -30,7 +30,7 @@ If any of these files don't exist, **proceed silently**. Don't flag their absenc
         └── src/
 ```
 
-Domain docs are separate from the existing agent guidance files: `CLAUDE.md` (root and `apps/frontend/CLAUDE.md`) covers tooling and workflow, `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` covers Create/View/Edit flow patterns, and the `reisenotiz-design` skill covers the UI design system. Domain docs cover vocabulary and decisions.
+Domain docs are separate from the existing agent guidance files, and answer a different question. `CLAUDE.md` (root and `apps/frontend/CLAUDE.md`) covers **how to work here** — commands, tooling, code style, conventions. `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` and `DESIGN_SYSTEM.md` cover recurring patterns. Domain docs cover **what the words mean** — vocabulary, invariants, and the decisions behind them. A `CONTEXT.md` never documents build commands, and a `CLAUDE.md` never defines domain terms.
 
 ## Use the glossary's vocabulary
 

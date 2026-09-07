@@ -17,8 +17,7 @@ pnpm workspace (`apps/*`) with two packages:
 
 ## Cross-Cutting Reference Documents
 
-- For brand, colour, typography and composition, refer to the `reisenotiz-design` skill.
-- `docs/agents/DESIGN_SYSTEM.md` — the radius/spacing tokens as actually implemented in `src/index.css`. Use it for token names and pixel values; it records a known naming discrepancy with the skill.
+- `docs/agents/DESIGN_SYSTEM.md` — the radius/spacing tokens as actually implemented in `src/index.css`, and the conventions components follow. Describes the current UI, not a target design; a redesign is planned.
 - `docs/agents/CRUD_FLOW_BEST_PRACTISE.md` — Create/View/Edit flow patterns.
 - For anything touching the Automerge store or sync, read the `automerge` skill first.
 - `plans/archived/` is **history, not current state** — see `plans/README.md`.
