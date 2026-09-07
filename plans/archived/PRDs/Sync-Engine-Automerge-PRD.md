@@ -1,5 +1,9 @@
 # PRD: Offline-First Sync Backend (Automerge)
 
+> **Status: delivered.** Implemented in `apps/sync/` and `apps/frontend/src/store/automerge/`.
+> Kept for historical context. **The "Context" section below describes the pre-Automerge world
+> (Zustand + localStorage) and no longer reflects the codebase** — read it as history, not current state.
+
 ## Context
 
 Reisenotiz is currently a fully client-side PWA. All data (trips, trip items, user-saved airports and accommodations) lives only in each device's localStorage via Zustand stores. There is no way for a user's desktop and mobile to stay in sync, and any data created on one device is invisible to the other.

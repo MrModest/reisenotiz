@@ -1,6 +1,9 @@
 # Plan: Offline-First Sync Backend (Automerge)
 
-> Source PRD: `plans/PRDs/Sync-Engine - Automerge.md`
+> **Status: delivered.** All six phases shipped; every acceptance criterion below is checked.
+> Kept as a record of the decisions behind `apps/sync/` and the Automerge store. Not a live plan.
+>
+> Source PRD: `plans/archived/PRDs/Sync-Engine-Automerge-PRD.md`
 
 ## Architectural decisions
 

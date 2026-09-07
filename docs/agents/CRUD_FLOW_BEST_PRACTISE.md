@@ -4,7 +4,9 @@
 > The same patterns apply to *any entity* (e.g. users, projects, bookings, documents, messages).
 > When applying this guidance, substitute `Task` with the actual domain entity instead of literally creating a task model.
 
-This note documents a **clean, scalable pattern** for implementing Create / View / Edit flows in a React application. It applies both to **server-backed apps** and **offline‑first apps using Zustand + LocalStorage**.
+This note documents a **clean, scalable pattern** for implementing Create / View / Edit flows in a React application. It is written for this repo's **offline-first Automerge store**, and the same shape applies to server-backed apps.
+
+> **Persistence in this repo is Automerge**, not Zustand. Reads and writes go through the hooks exported from `@/store` (`useTrips`, `useTrip`, `useCreateTrip`, `useUpdateTrip`, `useDeleteTrip`, and the `TripItem` equivalents). Before writing store code, read the `automerge` skill — it covers `useDocument`/`changeDoc` semantics, `updateText` for collaborative text, and the testing patterns.
 
 The core idea: **draft state is local; persisted state is global**.
 
@@ -146,21 +148,23 @@ Again: draft stays local until save.
 * Cache: TanStack Query
 * Errors: server validation
 
-### Offline‑First (Zustand + LocalStorage)
+### Offline‑First (this repo: Automerge)
 
-* Persistence: Zustand store actions
-* Storage: LocalStorage / IndexedDB
+* Persistence: mutation hooks from `@/store` that wrap `changeDoc`
+* Storage: IndexedDB locally, synced to `apps/sync/` over WebSocket when `VITE_SYNC_SERVER_URL` is set
 * Errors: domain validation
+* Conflicts: resolved by Automerge's CRDT merge — never hand-rolled
 
 **Architecture does not change. Only the persistence layer does.**
 
 ---
 
-## Zustand Store Rules (Offline‑First)
+## Store Rules (Automerge, Offline‑First)
 
 * Store **only valid, complete entities**
-* Never store drafts
-* Validate invariants inside store actions
+* Never put drafts into a document — a draft written to the doc syncs to every device
+* Validate invariants inside the mutation hook, before `changeDoc`
+* Mutate inside the change callback; never mutate a doc object read from a hook
 
 Example rules:
 
@@ -168,14 +172,14 @@ Example rules:
 * Description required
 * ID must exist
 
-This prevents corrupted state surviving reloads.
+This prevents corrupted state surviving reloads — and, with sync on, propagating to the user's other devices.
 
 ---
 
 ## Validation Strategy
 
 * **Form:** UX validation (required fields, lengths)
-* **Store / API:** invariant validation (last line of defense)
+* **Store mutation hook / API:** invariant validation (last line of defense)
 
 Never rely on only one layer.
 
