@@ -25,13 +25,16 @@ The map that consumes this is [#28](https://github.com/MrModest/reisenotiz/issue
   scale: `sm` ×0.6 = **4.32px**, `md` ×0.8 = **5.76px**, `xl` ×1.4 = **10.08px**. The handoff's
   "4 / 6 / 10 px → `rounded-sm` / `rounded-md` / `rounded-xl`" is correct to within rounding.
 - **There is no `--radius-xs` in the preset.** Our UI uses `rounded-xs` as its working default
-  (`button.tsx`, `input-styles.ts`, `tabs.tsx`, combobox). Adopt the preset and every one of those
-  falls through to Tailwind's stock `rounded-xs` = **2px**, not the 4px they mean today. This is the
-  single largest silent-breakage risk in the token reset. See
+  (`button.tsx`, `input-styles.ts`, `tabs.tsx`, combobox) — 21 usages across 10 files. Adopt the
+  preset and every one falls through to Tailwind's stock `rounded-xs` = **2px**, not the 4px they
+  mean today. Nothing errors; corners quietly halve. The fix is to rewrite them, **not** to
+  reintroduce an `xs` step: the old 4px default came from the superseded `docs/design-system.md`,
+  and the design's smallest radius is 4px, which is `rounded-sm` here. See
   [#30](https://github.com/MrModest/reisenotiz/issues/30).
 - **Light mode ships with the preset.** `:root` carries a full light palette. Nothing needs
   inventing — the earlier plan to author light values by hand is unnecessary.
-- **The preset has no `--spacing-*` custom properties.** Ours are a local invention.
+- **The preset has no `--spacing-*` custom properties.** Ours are a local invention, documented
+  only by the superseded `docs/design-system.md`. They go.
 - **The preset has no `--font-mono`.** Confirms the handoff's "addition 1"; `src/index.css` already
   declares it.
 - **`.dark` does not re-declare `--radius`.** Ours duplicates the radius and spacing blocks in both

@@ -1,14 +1,31 @@
 # Design System — Implemented Tokens
 
-Token-level reference for Reisenotiz UI work: the radius and spacing scales **as they exist in
-`apps/frontend/src/index.css` today**, and the values components actually use.
+> # ⚠️ SUPERSEDED — do not follow this file
+>
+> This documented how the UI was styled **before** the Claude Design handoff. The redesign
+> replaces it wholesale: **radius, spacing and colours from the new design overwrite everything
+> below.** Nothing here is a constraint on new work.
+>
+> **Use instead:** `docs/design/handoff-2026-09/` — start at its `MANIFEST.md`.
+> The authoritative token values are `docs/design/handoff-2026-09/shadcn-preset-app.css`.
+>
+> Specifically **no longer true**:
+>
+> - "Default to `rounded-xs` (4px)" — the preset has no `xs` step. The design's smallest radius
+>   is 4px, which is `rounded-sm` under the preset's derived scale (`--radius: 0.45rem`, `sm` ×0.6).
+> - The `--radius-xs/sm/md/lg` literal scale — replaced by the preset's derived scale.
+> - The `--spacing-xs … --spacing-xl` custom properties — the preset has none; they were a local
+>   invention.
+> - "Almost-square and compact" as a philosophy — the design decides shape now.
+>
+> This file is kept only so the pre-redesign state stays readable while the migration is in
+> progress. It is deleted once the token reset lands
+> ([#30](https://github.com/MrModest/reisenotiz/issues/30)).
 
-**Scope.** This is a description of what is implemented, not a target design. It covers radius,
-spacing and the conventions components follow today — enough to keep new UI consistent with
-existing UI. It is deliberately not a brand or visual identity document.
+Token-level reference for Reisenotiz UI work: the radius and spacing scales **as they existed in
+`apps/frontend/src/index.css`** before the redesign, and the values components used.
 
-> A redesign is planned. Until it lands, match what is here; when it lands, this file is replaced
-> by whatever that effort produces.
+**Scope.** This was a description of what was implemented, not a target design.
 
 ## Border Radius Scale
 

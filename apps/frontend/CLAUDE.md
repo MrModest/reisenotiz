@@ -50,10 +50,15 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
 - CSS variables for light/dark mode theming
 - Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
-- **Design System**: `docs/design-system.md` documents the radius/spacing tokens as implemented here
-  - ALWAYS consult it when creating or modifying UI components
-  - Default to `rounded-xs` (4px); the UI is deliberately almost-square and compact
-  - It describes the current UI rather than a target design; a redesign is planned
+- **Design System**: `docs/design/handoff-2026-09/` — the Claude Design handoff, the source of
+  truth for radius, spacing, colour and type
+  - ALWAYS consult it when creating or modifying UI components. Start at its `MANIFEST.md`
+  - Authoritative token values: `docs/design/handoff-2026-09/shadcn-preset-app.css` (shadcn preset
+    `b1GdgzGvQ`). Radius is **derived** from `--radius: 0.45rem` — there is no `xs` step, and the
+    design's smallest radius (4px) is `rounded-sm`
+  - `docs/design-system.md` is **superseded**. It describes the pre-redesign UI; the new design
+    overwrites its radius, spacing and colour decisions. Do not follow it
+  - Redesign in progress, tracked by [#28](https://github.com/MrModest/reisenotiz/issues/28)
 
 **Code Style**:
 - No semicolons (enforced by ESLint @stylistic/semi rule and Prettier)

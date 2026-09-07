@@ -21,7 +21,9 @@ pnpm workspace (`apps/*`) with two packages:
 - **`docs/adr/`** — system-wide decisions and why they were made. `apps/frontend/docs/adr/` holds frontend-only ones.
 - **`CLAUDE.md`** (here, and one per app) — how to work here: commands, tooling, conventions.
 - **`docs/agents/`** — configuration the engineering skills read. Not project documentation.
-- **`apps/frontend/docs/design-system.md`** — implemented radius/spacing tokens.
+- **`apps/frontend/docs/design/handoff-2026-09/`** — the Claude Design handoff: the source of truth
+  for radius, spacing, colour and type. Start at its `MANIFEST.md`.
+  (`apps/frontend/docs/design-system.md` is superseded by it — do not follow that file.)
 - **`plans/archived/`** — history, not current state. See `plans/README.md`.
 
 For anything touching the Automerge store or sync, read the `automerge` skill first.
