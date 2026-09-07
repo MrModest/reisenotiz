@@ -15,8 +15,12 @@ Something that happens during a trip — a flight, a stay, a transfer, a point o
 _Avoid_: Event, entry, booking, activity
 
 **Timeline Element**:
-One dated marker on a trip's timeline, derived from a trip item for display. A single trip item usually produces two — a flight yields a departure and an arrival; a stay yields a check-in and a check-out.
-_Avoid_: Timeline item, timeline event
+One dated marker on a trip's timeline, derived from a trip item for display. Most trip items produce two — a flight yields a departure and an arrival, a stay yields a check-in and a check-out — and a POI produces one. Every element of a trip item leads back to that same item.
+_Avoid_: Timeline item, timeline event, timeline row
+
+**Timeline Day**:
+One day of a trip, holding the timeline elements that fall on it. A trip has as many days as one fixed clock passes through, so moving between timezones never adds or removes a day.
+_Avoid_: Day group, timeline section
 
 ### Trip item types
 
