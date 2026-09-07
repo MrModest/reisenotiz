@@ -19,28 +19,27 @@ The map that consumes this is [#28](https://github.com/MrModest/reisenotiz/issue
 
 ## Token alignment against the preset
 
-`shadcn-preset-app.css` settles what the handoff prose could only assert. Verified, not assumed:
+`shadcn-preset-app.css` is where every colour and radius the design refers to resolves. Verified
+against the frames:
 
-- **The radius mapping is exact.** The preset sets `--radius: 0.45rem` (7.2px) and *derives* the
-  scale: `sm` ×0.6 = **4.32px**, `md` ×0.8 = **5.76px**, `xl` ×1.4 = **10.08px**. The handoff's
+- **Radius is derived, not enumerated.** `--radius: 0.45rem` (7.2px), then `sm` ×0.6 =
+  **4.32px**, `md` ×0.8 = **5.76px**, `lg` ×1 = **7.2px**, `xl` ×1.4 = **10.08px**. The handoff's
   "4 / 6 / 10 px → `rounded-sm` / `rounded-md` / `rounded-xl`" is correct to within rounding.
-- **There is no `--radius-xs` in the preset.** Our UI uses `rounded-xs` as its working default
-  (`button.tsx`, `input-styles.ts`, `tabs.tsx`, combobox) — 21 usages across 10 files. Adopt the
-  preset and every one falls through to Tailwind's stock `rounded-xs` = **2px**, not the 4px they
-  mean today. Nothing errors; corners quietly halve. The fix is to rewrite them, **not** to
-  reintroduce an `xs` step: the old 4px default came from the superseded `docs/design-system.md`,
-  and the design's smallest radius is 4px, which is `rounded-sm` here. See
+- **There is no `--radius-xs` step.** `rounded-xs` therefore resolves to Tailwind's stock **2px**,
+  which the design never uses — its smallest radius is 4px, i.e. `rounded-sm`. 21 usages across 10
+  files still say `rounded-xs` (`button.tsx`, `input-styles.ts`, `tabs.tsx`, the three comboboxes,
+  four `trip-item` components); they get rewritten, not protected by adding an `xs` step. See
   [#30](https://github.com/MrModest/reisenotiz/issues/30).
-- **Light mode ships with the preset.** `:root` carries a full light palette. Nothing needs
-  inventing — the earlier plan to author light values by hand is unnecessary.
-- **The preset has no `--spacing-*` custom properties.** Ours are a local invention, documented
-  only by the superseded `docs/design-system.md`. They go.
-- **The preset has no `--font-mono`.** Confirms the handoff's "addition 1"; `src/index.css` already
-  declares it.
-- **`.dark` does not re-declare `--radius`.** Ours duplicates the radius and spacing blocks in both
-  `:root` and `.dark` for no reason.
-- **Two imports we do not have**: `tw-animate-css` and `shadcn/tailwind.css`. Decide in
-  [#30](https://github.com/MrModest/reisenotiz/issues/30) whether either is actually required.
+- **Light mode is covered.** `:root` carries a full light palette; the same Tailwind classes
+  resolve against it with no component changes.
+- **There are no `--spacing-*` custom properties.** Use Tailwind's own scale; `@theme inline`
+  already exposes it.
+- **`--font-mono` is not part of the preset.** `src/index.css` declares it
+  (`JetBrains Mono`); the design needs it for times, codes and all-caps labels.
+- **`.dark` re-declares colours only.** Radius is shared, declared once on `:root`.
+- **The preset imports `tw-animate-css` and `shadcn/tailwind.css`**, neither of which is in
+  `package.json`. `Sheet` / `Dialog` / `AlertDialog` animations likely need the first. Resolved in
+  [#30](https://github.com/MrModest/reisenotiz/issues/30).
 
 ## Frames
 

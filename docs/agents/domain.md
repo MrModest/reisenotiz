@@ -28,7 +28,7 @@ These exist. Extend them lazily via `/domain-modeling` — a term goes in when i
     │   ├── CLAUDE.md
     │   ├── docs/
     │   │   ├── adr/                   ← frontend-specific decisions
-    │   │   └── design-system.md
+    │   │   └── design/                ← the design handoff
     │   └── src/
     └── sync/
         ├── CONTEXT.md

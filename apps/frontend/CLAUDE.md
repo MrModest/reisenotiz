@@ -50,15 +50,18 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
 - CSS variables for light/dark mode theming
 - Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
-- **Design System**: `docs/design/handoff-2026-09/` — the Claude Design handoff, the source of
-  truth for radius, spacing, colour and type
-  - ALWAYS consult it when creating or modifying UI components. Start at its `MANIFEST.md`
-  - Authoritative token values: `docs/design/handoff-2026-09/shadcn-preset-app.css` (shadcn preset
-    `b1GdgzGvQ`). Radius is **derived** from `--radius: 0.45rem` — there is no `xs` step, and the
-    design's smallest radius (4px) is `rounded-sm`
-  - `docs/design-system.md` is **superseded**. It describes the pre-redesign UI; the new design
-    overwrites its radius, spacing and colour decisions. Do not follow it
-  - Redesign in progress, tracked by [#28](https://github.com/MrModest/reisenotiz/issues/28)
+- **Design System**: `docs/design/handoff-2026-09/` defines radius, spacing, colour, type and every
+  screen. ALWAYS consult it when creating or modifying UI components; start at its `MANIFEST.md`
+  - Token values live in `docs/design/handoff-2026-09/shadcn-preset-app.css` (shadcn preset
+    `b1GdgzGvQ`). Write Tailwind classes, never the literal values
+  - Radius is **derived** from `--radius: 0.45rem`: `rounded-sm` 4.32px, `rounded-md` 5.76px,
+    `rounded-lg` 7.2px, `rounded-xl` 10.08px. There is no `xs` step — the smallest radius the
+    design uses is `rounded-sm`
+  - Two text tiers only: `text-foreground` and `text-muted-foreground`
+  - Times, codes, counts and all-caps labels are `font-mono`. Numbers set in Inter need
+    `tabular-nums`
+  - The UI is under redesign, tracked by [#28](https://github.com/MrModest/reisenotiz/issues/28);
+    existing components may not match the design yet
 
 **Code Style**:
 - No semicolons (enforced by ESLint @stylistic/semi rule and Prettier)
