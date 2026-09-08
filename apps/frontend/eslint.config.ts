@@ -18,7 +18,8 @@ export default defineConfig([
     ignores: [
       'dist/**',
       'dev-dist/**',
-      'node_modules/**'
+      'node_modules/**',
+      '**/docs/**'
     ]
   },
   {

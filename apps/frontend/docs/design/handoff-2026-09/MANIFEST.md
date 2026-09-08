@@ -16,6 +16,7 @@ The map that consumes this is [#28](https://github.com/MrModest/reisenotiz/issue
 | `frames/*.png` | Looking at one screen | 21 individual frames at 2× with correct type. What an agent should read. |
 | `component-architecture.dc.html` | The reasoning | Token audit, buildability check per custom piece, Base UI deltas, the seven resolved inconsistencies. |
 | `shadcn-preset-app.css` | **The authoritative token values** | The `app.css` the preset `b1GdgzGvQ` generates. Every colour and radius the design refers to resolves here. Reference only — do not import it; `src/index.css` is the file we ship. |
+| `render-design-frames.mjs` | Regenerating `frames/` and the standalone file | Node script; run it from `apps/frontend`. See "Regenerating the frames" below. |
 
 ## Token alignment against the preset
 
@@ -75,7 +76,7 @@ individual frames tiled and are not committed.
 
 ```
 pnpm add -D @fontsource/inter @fontsource/jetbrains-mono
-node scripts/render-design-frames.mjs
+node docs/design/handoff-2026-09/render-design-frames.mjs
 ```
 
 Rewrites `travel-planner.standalone.html` and every file in `frames/` from
