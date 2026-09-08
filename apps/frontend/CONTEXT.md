@@ -10,6 +10,10 @@ What a traveller plans and records: trips, the things that happen during them, a
 A single journey with a name, a description and a start and end date. The top-level thing a user creates.
 _Avoid_: Journey, vacation, holiday
 
+**Trip Status**:
+Where a trip sits relative to now — *upcoming*, *ongoing* or *completed*. Derived from the trip's start and end dates, never stored, so a trip changes status on its own as time passes.
+_Avoid_: Draft, published, state, phase
+
 **Trip Item**:
 Something that happens during a trip — a flight, a stay, a transfer, a point of interest. Every item belongs to exactly one trip and has a type.
 _Avoid_: Event, entry, booking, activity
@@ -29,7 +33,7 @@ A trip item for one flight segment, with a departure and an arrival.
 _Avoid_: Leg, segment
 
 **Accommodation**:
-A trip item for one stay: which site, which rooms, how many guests, and over what interval.
+A trip item for one stay: which site, which rooms, who is staying, and over what interval.
 _Avoid_: Hotel, booking, reservation, lodging
 
 **Accommodation Site**:
@@ -57,7 +61,7 @@ _Avoid_: Endpoint, stop
 An airport identified by its code, with a name, address and timezone.
 
 **Person**:
-A named human with contacts, used as a flight passenger. Not an account or a user of the app.
+A named human with contacts — who is on a flight, on a transfer, or staying at an accommodation. Not an account or a user of the app.
 _Avoid_: User, traveller, guest, passenger
 
 **Attachment**:
