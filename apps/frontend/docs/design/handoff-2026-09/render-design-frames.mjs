@@ -10,7 +10,7 @@
 // reaching fonts.googleapis.com. Install them first:
 //   pnpm add -D @fontsource/inter @fontsource/jetbrains-mono
 //
-// Usage: node scripts/render-design-frames.mjs
+// Usage: node docs/design/handoff-2026-09/render-design-frames.mjs
 // Requires: playwright, and a Chromium at PLAYWRIGHT_BROWSERS_PATH or CHROMIUM_PATH.
 
 import { chromium } from 'playwright'
@@ -19,8 +19,8 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
-const root = path.resolve(here, '..')
-const dir = path.join(root, 'docs/design/handoff-2026-09')
+const root = path.resolve(here, '../../..')
+const dir = here
 const source = path.join(dir, 'travel-planner.dc.html')
 const flattened = path.join(dir, 'travel-planner.standalone.html')
 const out = path.join(dir, 'frames')
