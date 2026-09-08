@@ -44,9 +44,15 @@ _Avoid_: Hotel, venue, property
 A trip item for a place the traveller intends to visit that is neither transport nor a stay.
 _Avoid_: Attraction, sight, activity
 
-**Long Transfer**, **Public Transport**:
-Trip items for movement between places — the former between cities or regions, the latter within one.
-_Avoid_: Transit, transportation
+**Long Transfer**:
+A trip item for a movement the traveller is committed to: a ticket for a named service leaving at a fixed time, lost if missed. Its kind is a train, a bus, a ferry or a shuttle — a shuttle being a booked door-to-door leg where the operator, not the traveller, chooses the vehicle.
+_Avoid_: Transit, transportation, intercity
+
+**Local Ride**:
+A trip item for a movement the traveller is not committed to — a city bus, a metro hop, a taxi, a rented bike, a walk. Ad-hoc by nature, so it records roughly where it starts and ends and roughly when, and describes the movement itself in free text.
+_Avoid_: Public transport, transit, commute, leg
+
+The line between the two is commitment, not distance. A regional train boarded on a travel pass is a Local Ride; a booked express on the same route is a Long Transfer.
 
 ### Details
 
