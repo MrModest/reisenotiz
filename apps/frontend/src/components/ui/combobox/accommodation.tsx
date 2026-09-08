@@ -39,16 +39,16 @@ export function AccommodationSelector({ items, selected = null, onSelect }: Acco
         onSelect(val)
       }}
     >
-      <ComboboxInput className='rounded-xs' placeholder='Search accommodations...' showClear />
-      <ComboboxContent className='rounded-xs'>
+      <ComboboxInput className='rounded-md' placeholder='Search accommodations...' showClear />
+      <ComboboxContent className='rounded-xl'>
         <ComboboxEmpty>
           {query.trim().length < MIN_QUERY_LENGTH
             ? 'Type to search...'
             : 'No accommodations found.'}
         </ComboboxEmpty>
-        <ComboboxList className='rounded-xs'>
+        <ComboboxList>
           {(record: AccommodationSiteRecord) => (
-            <ComboboxItem className='rounded-xs' key={record.id} value={record}>
+            <ComboboxItem key={record.id} value={record}>
               <Item size='xs' className='p-0'>
                 <ItemContent>
                   <ItemTitle className='whitespace-nowrap'>{record.name}</ItemTitle>

@@ -78,12 +78,12 @@ export function TimezoneSelector({ selected = null, onSelect }: TimezoneSelector
         onSelect(val?.iana ?? null)
       }}
     >
-      <ComboboxInput className='rounded-xs' placeholder='Search timezones...' showClear />
-      <ComboboxContent className='rounded-xs'>
+      <ComboboxInput className='rounded-md' placeholder='Search timezones...' showClear />
+      <ComboboxContent className='rounded-xl'>
         <ComboboxEmpty>No timezones found.</ComboboxEmpty>
-        <ComboboxList className='rounded-xs'>
+        <ComboboxList>
           {(tz: TimezoneOption) => (
-            <ComboboxItem className='rounded-xs' key={tz.iana} value={tz}>
+            <ComboboxItem key={tz.iana} value={tz}>
               <Item size='xs' className='p-0'>
                 <ItemContent>
                   <ItemTitle className='whitespace-nowrap'>{tz.iana}</ItemTitle>
