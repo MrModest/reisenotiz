@@ -36,7 +36,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
           ]}
         />
       </div>
-      <div className='grid grid-cols-[1fr_auto_1fr] gap-3 bg-card py-2 px-3 rounded-xs'>
+      <div className='grid grid-cols-[1fr_auto_1fr] gap-3 bg-card py-2 px-3 rounded-xl'>
         <ReservationPoint label='Check In' stayInterval={accommodation.stayInterval} />
         <Separator orientation='vertical' />
         <ReservationPoint label='Check Out' stayInterval={accommodation.stayInterval} />

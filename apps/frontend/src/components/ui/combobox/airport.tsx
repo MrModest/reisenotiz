@@ -63,16 +63,16 @@ export function AirportSelector({ items, selected = null, onSelect }: AirportSel
         onSelect(val)
       }}
     >
-      <ComboboxInput className='rounded-xs' placeholder='Search airports...' showClear />
-      <ComboboxContent className='rounded-xs'>
+      <ComboboxInput className='rounded-md' placeholder='Search airports...' showClear />
+      <ComboboxContent className='rounded-xl'>
         <ComboboxEmpty>
           {query.trim().length < MIN_QUERY_LENGTH
             ? 'Type to search...'
             : 'No airports found.'}
         </ComboboxEmpty>
-        <ComboboxList className='rounded-xs'>
+        <ComboboxList>
           {(airport: Airport) => (
-            <ComboboxItem className='rounded-xs' key={airport.code} value={airport}>
+            <ComboboxItem key={airport.code} value={airport}>
               <Item size='xs' className='p-0'>
                 <ItemContent>
                   <ItemTitle className='whitespace-nowrap'>{airport.name}</ItemTitle>

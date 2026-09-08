@@ -310,7 +310,7 @@ function AccommodationSitePreview({ record }: { record: AccommodationSiteRecord 
       <span className='text-xl'>{flag}</span>
       <div>
         <div className='font-medium flex items-center gap-1'>
-          <Badge className='rounded-xs' variant='secondary'>
+          <Badge className='rounded-sm' variant='secondary'>
             {record.kind}
           </Badge>
           {record.name}

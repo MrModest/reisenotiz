@@ -28,7 +28,7 @@ export const TimelineLayout = ({ items, size = 'md', customIcon, animate = true,
             ease: 'easeOut',
           }}
         >
-          <Link to={item.link} className='block card'>
+          <Link to={item.link} className='block cursor-pointer rounded-xl bg-card p-3 transition-colors duration-150 hover:bg-accent/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none'>
             <TimelineItem
               date={formatTo.dayShort(item.datetime)}
               time={formatTo.time(item.datetime)}
