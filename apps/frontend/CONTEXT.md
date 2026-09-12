@@ -36,10 +36,6 @@ _Avoid_: Leg, segment
 A trip item for one stay: which site, which rooms, who is staying, and over what interval.
 _Avoid_: Hotel, booking, reservation, lodging
 
-**Accommodation Site**:
-The physical place a stay happens at — its name, kind, address and timezone. Distinct from the Accommodation, which is one traveller's stay at it. The same site can be stayed at on many trips.
-_Avoid_: Hotel, venue, property
-
 **POI**:
 A trip item for a place the traveller intends to visit that is neither transport nor a stay.
 _Avoid_: Attraction, sight, activity
@@ -63,9 +59,6 @@ The check-in and check-out pair for an accommodation. An accommodation carries a
 One end of a flight — the airport, the time, and optionally terminal and gate.
 _Avoid_: Endpoint, stop
 
-**Airport**:
-An airport identified by its code, with a name, address and timezone.
-
 **Person**:
 A named human with contacts — who is on a flight, on a transfer, or staying at an accommodation. Not an account or a user of the app.
 _Avoid_: User, traveller, guest, passenger
@@ -78,8 +71,24 @@ _Avoid_: Document, file
 A moment in time together with the timezone it should be read in. Travel crosses timezones, so a bare timestamp is never sufficient.
 _Avoid_: Timestamp, datetime
 
-### Saved records
+### Places
 
-**User Record**:
-Something the user has saved for reuse across trips — currently airports and accommodation sites. Distinct from trip data: deleting a trip never removes user records.
-_Avoid_: Favourite, saved item, dictionary
+**Place**:
+A location in the world — its name, its address, and the timezone its clocks run on. Airports and accommodation sites are both places.
+_Avoid_: Location, venue, spot
+
+**Saved Place**:
+A place the traveller keeps for reuse across trips. A trip item refers to a saved place rather than holding a copy of it, so correcting one corrects every trip that uses it — including trips already taken. Distinct from trip data: deleting a trip never removes a saved place. A saved place something still refers to can be archived but not deleted.
+_Avoid_: User record, favourite, saved item, dictionary
+
+**Place Type**:
+Which kind of place a place is — an airport, or an accommodation site. Distinct from an accommodation site's own kind, which says whether it is a hotel, a hostel, an apartment and so on.
+_Avoid_: Category, class, kind
+
+**Airport**:
+A place identified by its code, where flights depart and arrive.
+_Avoid_: Aerodrome, terminal
+
+**Accommodation Site**:
+The place a stay happens at, together with the kind of property it is and how to contact it. Distinct from the Accommodation, which is one traveller's stay at it. The same site can be stayed at on many trips.
+_Avoid_: Hotel, venue, property
