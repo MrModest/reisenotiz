@@ -53,7 +53,7 @@ The line between the two is commitment, not distance. A regional train boarded o
 ### Details
 
 **Stay Interval**:
-The check-in and check-out pair for an accommodation. An accommodation carries a *provided* interval (what the booking says) and optionally a *planned* one (what the traveller intends); the planned interval wins for display when present.
+The check-in and check-out pair for an accommodation. An accommodation carries a *provided* interval (what the booking says) and optionally a *planned* one (what the traveller intends); the planned interval wins for display when present. The planned interval lies within the provided one: arriving a day after check-in is allowed and wastes a paid night, but arriving before check-in opens or leaving after check-out is not a stay the booking covers.
 
 **Flight Point**:
 One end of a flight — the airport, the time, and optionally terminal and gate.
