@@ -1,3 +1,4 @@
+import { cloneElement } from 'react'
 import { DynamicIcon } from 'lucide-react/dynamic'
 
 export type IconName =
@@ -53,7 +54,19 @@ export type IconName =
   | 'unknown'
   | 'refresh'
 
-export function Icon({ name, className }: { name: IconName; className?: string }) {
+export interface IconProps {
+  name: IconName
+  className?: string
+  /** Opts the icon into the Button inline-spacing hooks (`has-data-[icon=…]`). */
+  'data-icon'?: 'inline-start' | 'inline-end'
+}
+
+export function Icon({ name, className, 'data-icon': dataIcon }: IconProps) {
+  const glyph = renderGlyph(name, className)
+  return dataIcon ? cloneElement(glyph, { 'data-icon': dataIcon }) : glyph
+}
+
+function renderGlyph(name: IconName, className?: string) {
   const style = className
 
   switch (name) {

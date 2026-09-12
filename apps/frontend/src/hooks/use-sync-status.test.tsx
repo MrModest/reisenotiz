@@ -4,6 +4,15 @@ import { renderHook, waitFor, act } from '@testing-library/react'
 import { Repo, RepoContext, MessageChannelNetworkAdapter } from '@automerge/react'
 import { useSyncStatus } from './use-sync-status'
 
+// These tests wait on real timers driven by real MessageChannel traffic, so the budgets
+// have to cover a loaded CI runner, not just a warm laptop. The settle wait in particular
+// needs the sync exchange to go fully quiet *and then* the hook's 1000ms SYNCING_RESET_MS
+// debounce to elapse — every message pushes that window out again. Locally it lands in
+// ~1.05s; the old 3000ms budget left almost no headroom and flaked on CI.
+const CONNECT_TIMEOUT_MS = 5000
+const SETTLE_TIMEOUT_MS = 8000
+const TEST_TIMEOUT_MS = 15000
+
 function wrapperFor(repo: Repo) {
   return function wrapper({ children }: { children: ReactNode }) {
     return <RepoContext.Provider value={repo}>{children}</RepoContext.Provider>
@@ -32,7 +41,9 @@ describe('useSyncStatus', () => {
     const repoA = new Repo({ network: [new MessageChannelNetworkAdapter(port1)], sharePolicy: async () => true })
     new Repo({ network: [new MessageChannelNetworkAdapter(port2)], sharePolicy: async () => true })
 
-    await waitFor(() => expect(Object.keys(repoA.peerMetadataByPeerId).length).toBeGreaterThan(0))
+    await waitFor(() => expect(Object.keys(repoA.peerMetadataByPeerId).length).toBeGreaterThan(0), {
+      timeout: CONNECT_TIMEOUT_MS,
+    })
 
     const { result } = renderHook(() => useSyncStatus(), { wrapper: wrapperFor(repoA) })
     expect(result.current).toBe('synced')
@@ -44,7 +55,7 @@ describe('useSyncStatus', () => {
     const repoB = new Repo({ network: [new MessageChannelNetworkAdapter(port2)], sharePolicy: async () => true })
 
     const { result } = renderHook(() => useSyncStatus(), { wrapper: wrapperFor(repoA) })
-    await waitFor(() => expect(result.current).toBe('synced'))
+    await waitFor(() => expect(result.current).toBe('synced'), { timeout: CONNECT_TIMEOUT_MS })
 
     const handleA = repoA.create<{ count: number }>({ count: 0 })
     const handleB = await repoB.find<{ count: number }>(handleA.url)
@@ -55,8 +66,8 @@ describe('useSyncStatus', () => {
       })
     })
 
-    await waitFor(() => expect(result.current).toBe('synced'), { timeout: 3000 })
-  })
+    await waitFor(() => expect(result.current).toBe('synced'), { timeout: SETTLE_TIMEOUT_MS })
+  }, TEST_TIMEOUT_MS)
 
   it('goes back to offline when the peer disconnects', async () => {
     // regression: Repo.peerMetadataByPeerId is populated on 'peer' but never
@@ -68,7 +79,7 @@ describe('useSyncStatus', () => {
     const repoB = new Repo({ network: [new MessageChannelNetworkAdapter(port2)], sharePolicy: async () => true })
 
     const { result } = renderHook(() => useSyncStatus(), { wrapper: wrapperFor(repoA) })
-    await waitFor(() => expect(result.current).toBe('synced'))
+    await waitFor(() => expect(result.current).toBe('synced'), { timeout: CONNECT_TIMEOUT_MS })
 
     // Simulate a disconnect the way the production WebSocketClientAdapter reports
     // one: a bare 'peer-disconnected' event, adapter still present. (Calling

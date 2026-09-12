@@ -33,6 +33,21 @@ describe('RouteErrorBoundary', () => {
     expect(screen.getByText(/Document automerge:abc123 is unavailable/)).toBeDefined()
   })
 
+  it('offers a retry control that re-runs the failed route', () => {
+    const reload = vi.fn()
+    Object.defineProperty(window, 'location', {
+      value: { ...window.location, reload },
+      writable: true,
+    })
+
+    renderWithError()
+    fireEvent.click(screen.getByRole('button', { name: /^reload$/i }))
+
+    expect(reload).toHaveBeenCalled()
+    // retry must not destroy local data — that is the separate, explicit reset action
+    expect(localStorage.getItem(ROOT_DOC_KEY)).toBe('automerge:existing')
+  })
+
   it('clears the stored root doc URL and reloads on "Reset local data"', () => {
     const reload = vi.fn()
     Object.defineProperty(window, 'location', {
