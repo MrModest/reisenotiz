@@ -50,9 +50,9 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
 - CSS variables for light/dark mode theming
 - Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
-- **Design System**: `docs/design/handoff-2026-09/` defines radius, spacing, colour, type and every
+- **Design System**: `docs/design/handoff-2026-09-07/` defines radius, spacing, colour, type and every
   screen. ALWAYS consult it when creating or modifying UI components; start at its `MANIFEST.md`
-  - Token values live in `docs/design/handoff-2026-09/shadcn-preset-app.css` (shadcn preset
+  - Token values live in `docs/design/handoff-2026-09-07/shadcn-preset-app.css` (shadcn preset
     `b1GdgzGvQ`). Write Tailwind classes, never the literal values
   - Radius is **derived** from `--radius: 0.45rem`: `rounded-sm` 4.32px, `rounded-md` 5.76px,
     `rounded-lg` 7.2px, `rounded-xl` 10.08px. There is no `xs` step — the smallest radius the

@@ -76,7 +76,7 @@ individual frames tiled and are not committed.
 
 ```
 pnpm add -D @fontsource/inter @fontsource/jetbrains-mono
-node docs/design/handoff-2026-09/render-design-frames.mjs
+node docs/design/handoff-2026-09-07/render-design-frames.mjs
 ```
 
 Rewrites `travel-planner.standalone.html` and every file in `frames/` from
