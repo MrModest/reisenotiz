@@ -1,4 +1,4 @@
-// Renders each screen of the design handoff to apps/frontend/docs/design/handoff-2026-09/frames/.
+// Renders each screen of the design handoff to apps/frontend/docs/design/handoff-2026-09-07/frames/.
 //
 // Why this exists: the .dc.html files wrap their content in <x-dc> and load support.js,
 // which fetches React from unpkg. Where unpkg is unreachable (agent sandboxes, offline,
@@ -10,7 +10,7 @@
 // reaching fonts.googleapis.com. Install them first:
 //   pnpm add -D @fontsource/inter @fontsource/jetbrains-mono
 //
-// Usage: node docs/design/handoff-2026-09/render-design-frames.mjs
+// Usage: node docs/design/handoff-2026-09-07/render-design-frames.mjs
 // Requires: playwright, and a Chromium at PLAYWRIGHT_BROWSERS_PATH or CHROMIUM_PATH.
 
 import { chromium } from 'playwright'
