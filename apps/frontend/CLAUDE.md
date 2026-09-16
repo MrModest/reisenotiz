@@ -130,6 +130,53 @@ one — most needs are already covered.
 - Provides dynamic header title/actions
 - `HeaderProvider` wraps the app; use the `useHeader` hook to set page headers
 
+## Testing
+
+`pnpm test` runs the suite and CI runs it on every pull request, so a change that breaks a test
+breaks the build.
+
+**Test a decision, never a rendering.** A pure function or a calculation is always tested, on its
+own, with no rendering and no providers — hand it values and check what comes back. A component
+earns a test when it *chooses* something: which state it shows, whether a control is enabled, what
+a filter does to a list, what a dialog writes. A component that only paints the props it was given
+gets no test; asserting that a row renders the name it was passed restates the JSX and fails only
+when someone changes it deliberately.
+
+**Not owed, and not an oversight.** Anything visual — spacing, colour, truncation, clamping,
+reserved widths — and the 900px breakpoint. jsdom computes no layout, so a test cannot see any of
+it. Both presentations of the shell are verified by looking at them, not by asserting on them.
+
+**No snapshots, no visual or end-to-end testing.** A snapshot's only failure mode here is "accept
+the new one", which trains people to approve diffs unread.
+
+**Prefer a seam to a mock; mock only what the environment cannot provide.**
+
+- Automerge is always real: an in-memory `Repo` (`new Repo({ network: [] })`), never a fake store
+  or a stubbed hook. Two repos connected over `MessageChannelNetworkAdapter` cover sync, as
+  `src/store/trips-sync.test.tsx` does. Mocking a CRDT tests your model of merge, not merge.
+- Time enters as an argument. The functions in `src/lib/trip/` take `now`; pass a date rather than
+  freezing a clock.
+- `Dictionary` takes its `fetcher` in config, so a test supplies rows instead of HTTP.
+- `window.location.reload` is the one thing that must be stubbed, because jsdom does not implement
+  it.
+
+Reaching for a mock usually means an argument is missing. Add the argument — but only once
+something real needs it, not on the chance that a test might.
+
+**Components take props; pages call the store hooks.** Most components then need no repo, no
+wrapper and no stub at all, because props are data rather than fakes.
+
+**Clear `localStorage` between cases.** The theme, the root document URL, the rail's collapse state
+and the dictionary caches all live there.
+
+**Both navigations are in the DOM at once.** The shell renders the rail and the tab bar on every
+page and hides one with CSS, which jsdom does not apply, so every navigation link appears twice.
+Scope the query to the one you mean — `within(screen.getByRole('navigation', { name: 'Primary' }))`
+— or query inside `main`. Never `getAllByRole(...)[0]`: it depends on DOM order and keeps passing
+while pointing at the wrong element.
+
+**Tests land with the code they cover**, in the same change, not in a later pass.
+
 ## Custom Instructions
 
 ### Creating React Components with Refs

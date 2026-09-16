@@ -2,11 +2,9 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { Suspense, type ReactNode } from 'react'
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react'
 import { Repo, RepoContext } from '@automerge/react'
-import { MemoryRouter } from 'react-router'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
-import { HeaderProvider } from '@/contexts/header-context'
 import { ROOT_DOC_KEY } from '@/store/automerge/root-doc'
-import { SettingsPage } from './settings'
+import { SyncSettings } from './settings'
 
 function setup() {
   const repo = new Repo({ network: [] })
@@ -19,22 +17,18 @@ function setup() {
 
   function wrapper({ children }: { children: ReactNode }) {
     return (
-      <MemoryRouter>
-        <HeaderProvider>
-          <RepoContext.Provider value={repo}>
-            <RootDocUrlContext.Provider value={rootHandle.url}>
-              <Suspense fallback={null}>{children}</Suspense>
-            </RootDocUrlContext.Provider>
-          </RepoContext.Provider>
-        </HeaderProvider>
-      </MemoryRouter>
+      <RepoContext.Provider value={repo}>
+        <RootDocUrlContext.Provider value={rootHandle.url}>
+          <Suspense fallback={null}>{children}</Suspense>
+        </RootDocUrlContext.Provider>
+      </RepoContext.Provider>
     )
   }
 
   return { repo, rootHandle, unreachableUrl, wrapper }
 }
 
-describe('SettingsPage sync document ID', () => {
+describe('SyncSettings', () => {
   afterEach(() => {
     cleanup()
     localStorage.clear()
@@ -44,16 +38,13 @@ describe('SettingsPage sync document ID', () => {
   it('shows an error and does not persist when the pasted document is unreachable', async () => {
     const { wrapper, rootHandle, unreachableUrl } = setup()
     const Wrapper = wrapper
-    render(<Wrapper><SettingsPage /></Wrapper>)
+    render(<Wrapper><SyncSettings /></Wrapper>)
 
     const input = await screen.findByLabelText('Sync Document ID')
     fireEvent.change(input, { target: { value: unreachableUrl } })
     fireEvent.click(screen.getByRole('button', { name: /save/i }))
 
-    await waitFor(
-      () => expect(screen.getByText(/could not reach this document/i)).toBeDefined(),
-      { timeout: 10000 },
-    )
+    await waitFor(() => expect(screen.getByText(/could not reach this document/i)).toBeDefined())
     expect(localStorage.getItem(ROOT_DOC_KEY)).toBe(rootHandle.url)
-  }, 15000)
+  })
 })

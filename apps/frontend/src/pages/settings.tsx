@@ -13,7 +13,7 @@ import { ROOT_DOC_KEY } from '@/store/automerge/root-doc'
 
 const FIND_TIMEOUT_MS = 8000
 
-function SyncSettings() {
+export function SyncSettings() {
   const repo = useRepo()
   const rootDocUrl = useRootDocUrl()
   const [value, setValue] = useState<string>(rootDocUrl)
