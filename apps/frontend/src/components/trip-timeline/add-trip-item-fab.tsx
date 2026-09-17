@@ -97,7 +97,7 @@ export function AddTripItemFab({ tripId }: AddTripItemFabProps) {
                   onClick={() => handleTypeSelect(item.type)}
                   role='menuitem'
                 >
-                  <Icon name={item.icon} />
+                  <Icon name={item.icon} data-icon='inline-start' />
                   <span>{item.label}</span>
                 </Button>
               </motion.div>

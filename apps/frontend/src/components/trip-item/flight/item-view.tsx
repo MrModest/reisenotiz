@@ -35,8 +35,8 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
           title='Flight Details'
           icon='flight'
           buttons={[
-            { icon: 'edit', onClick: () => navigate('edit') },
-            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) },
+            { icon: 'edit', label: 'Edit flight', onClick: () => navigate('edit') },
+            { icon: 'trash', label: 'Delete flight', onClick: () => setDeleteDialogOpen(true) },
           ]}
         />
       </div>

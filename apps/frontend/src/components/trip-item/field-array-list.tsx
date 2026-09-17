@@ -34,7 +34,7 @@ export function FieldArrayList<T extends FieldValues>({
         onClick={() => append(onAdd())}
         className='w-full'
       >
-        <Icon name='add' className='h-4 w-4 mr-2' />
+        <Icon name='add' className='h-4 w-4 mr-2' data-icon='inline-start' />
         {addButtonLabel}
       </Button>
       <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
@@ -50,6 +50,7 @@ export function FieldArrayList<T extends FieldValues>({
                 size='sm'
                 onClick={() => remove(index)}
                 className='h-7 w-7 p-0'
+                aria-label={`Remove ${itemLabel} ${index + 1}`}
               >
                 <Icon name='close' className='h-4 w-4' />
               </Button>

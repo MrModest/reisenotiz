@@ -102,8 +102,8 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
             title={isCreate ? 'New Flight' : 'Edit Flight'}
             icon='flight'
             buttons={[
-              { icon: 'save', isSubmit: true },
-              { icon: 'cancel', onClick: onCancel },
+              { icon: 'save', label: 'Save flight', isSubmit: true },
+              { icon: 'cancel', label: 'Cancel', onClick: onCancel },
             ]}
           />
         </Field>
@@ -185,7 +185,7 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
           <AirportSelector items={airports} selected={selected} onSelect={handleAirportSelect} />
         </div>
         <Button type='button' variant='outline' onClick={() => setDialogOpen(true)}>
-          <Icon name={selected ? 'edit' : 'add'} />
+          <Icon name={selected ? 'edit' : 'add'} data-icon='inline-start' />
           {selected ? 'Edit' : 'Add New'}
         </Button>
       </FieldSet>

@@ -22,6 +22,7 @@ export function FieldSelect({
   className,
 }: FieldSelectProps) {
   const { field, error } = useFormField(name)
+  const errorId = `${name}-error`
 
   return (
     <Field className={cn('gap-0.5', className)}>
@@ -29,14 +30,25 @@ export function FieldSelect({
         {label}
         {isRequired && <Required />}
       </FieldLabel>
-      <select aria-invalid={!!error} id={name} disabled={disabled} className={cn(...inputStyles)} {...field}>
+      <select
+        aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
+        id={name}
+        disabled={disabled}
+        className={cn(...inputStyles)}
+        {...field}
+      >
         {options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>
         ))}
       </select>
-      {error && <FieldError className='text-xs font-thin'>{error.message?.toString()}</FieldError>}
+      {error && (
+        <FieldError id={errorId} className='text-xs font-thin'>
+          {error.message?.toString()}
+        </FieldError>
+      )}
     </Field>
   )
 }

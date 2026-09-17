@@ -24,6 +24,7 @@ export function FieldInput({
   type,
 }: FieldInputProps) {
   const { field, error } = useFormField(name)
+  const errorId = `${name}-error`
 
   const isNumber = type === 'number'
   const onChange = isNumber
@@ -39,6 +40,7 @@ export function FieldInput({
       </FieldLabel>
       <Input
         aria-invalid={!!error}
+        aria-describedby={error ? errorId : undefined}
         id={name}
         type={type as string}
         disabled={disabled}
@@ -47,7 +49,11 @@ export function FieldInput({
         onChange={onChange}
         value={value}
       />
-      {error && <FieldError className='text-xs font-thin'>{error.message?.toString()}</FieldError>}
+      {error && (
+        <FieldError id={errorId} className='text-xs font-thin'>
+          {error.message?.toString()}
+        </FieldError>
+      )}
     </Field>
   )
 }

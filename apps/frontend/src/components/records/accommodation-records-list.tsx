@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { Item, ItemContent, ItemGroup, ItemTitle, ItemDescription, ItemActions } from '@/components/ui/item'
+import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { AccommodationRecordDialog } from './accommodation-record-dialog'
 import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
 
@@ -12,6 +13,7 @@ export function AccommodationRecordsList() {
   const deleteAccommodation = userRecords.useAccommodations((s) => s.deleteAccommodation)
   const [editingAccommodation, setEditingAccommodation] = useState<AccommodationSiteRecord | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [pendingDeletion, setPendingDeletion] = useState<AccommodationSiteRecord | null>(null)
 
   const accommodationList = Object.values(accommodations)
 
@@ -34,7 +36,7 @@ export function AccommodationRecordsList() {
     <div className='flex flex-col gap-4'>
       <div className='flex justify-end'>
         <Button variant='outline' size='sm' onClick={handleAdd}>
-          <Icon name='add' />
+          <Icon name='add' data-icon='inline-start' />
           Add Accommodation
         </Button>
       </div>
@@ -66,10 +68,20 @@ export function AccommodationRecordsList() {
                   </ItemDescription>
                 </ItemContent>
                 <ItemActions>
-                  <Button variant='ghost' size='icon-sm' onClick={() => handleEdit(accommodation)}>
+                  <Button
+                    variant='ghost'
+                    size='icon-sm'
+                    onClick={() => handleEdit(accommodation)}
+                    aria-label={`Edit ${accommodation.name}`}
+                  >
                     <Icon name='edit' />
                   </Button>
-                  <Button variant='ghost' size='icon-sm' onClick={() => deleteAccommodation(accommodation.id)}>
+                  <Button
+                    variant='ghost'
+                    size='icon-sm'
+                    onClick={() => setPendingDeletion(accommodation)}
+                    aria-label={`Delete ${accommodation.name}`}
+                  >
                     <Icon name='trash' />
                   </Button>
                 </ItemActions>
@@ -80,6 +92,18 @@ export function AccommodationRecordsList() {
       )}
 
       <AccommodationRecordDialog open={dialogOpen} onClose={handleDialogClose} accommodation={editingAccommodation} />
+
+      <ConfirmDialog
+        open={!!pendingDeletion}
+        onOpenChange={(open) => !open && setPendingDeletion(null)}
+        title='Delete accommodation?'
+        description={`"${pendingDeletion?.name}" will be removed from your records. This cannot be undone.`}
+        confirmLabel='Delete'
+        onConfirm={() => {
+          if (pendingDeletion) deleteAccommodation(pendingDeletion.id)
+          setPendingDeletion(null)
+        }}
+      />
     </div>
   )
 }

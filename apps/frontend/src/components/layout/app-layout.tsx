@@ -6,17 +6,20 @@ import { HeaderProvider, useHeader } from '@/contexts/header-context'
 import { cn } from '@/lib/utils'
 import ThemeSwitcher from '../theme-switcher'
 import { useTheme } from '@/hooks/use-theme'
+import { CommandMenu } from '@/components/command-menu'
 
 export function AppLayout() {
   return (
     <HeaderProvider>
-      <AppLayoutContent />
+      <CommandMenu>
+        <AppLayoutContent />
+      </CommandMenu>
     </HeaderProvider>
   )
 }
 
 function AppLayoutContent() {
-  const [theme, setTheme] = useTheme()
+  const { theme, setTheme } = useTheme()
 
   const { title, icon, actions, showBackButton, onBack } = useHeader()
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -27,6 +30,7 @@ function AppLayoutContent() {
       <aside
         className={cn(
           'hidden md:flex md:flex-col md:border-r md:border-border md:overflow-y-auto transition-all duration-300',
+          'motion-reduce:transition-none',
           isCollapsed ? 'md:w-20' : 'md:w-64',
         )}
       >
@@ -51,7 +55,10 @@ function AppLayoutContent() {
       </main>
 
       {/* Mobile: Bottom navigation */}
-      <nav className='fixed bottom-0 left-0 right-0 md:hidden border-t border-border bg-background z-50'>
+      <nav
+        aria-label='Main'
+        className='fixed bottom-0 left-0 right-0 md:hidden border-t border-border bg-background z-50'
+      >
         <Navigation variant='bottom' />
       </nav>
     </div>

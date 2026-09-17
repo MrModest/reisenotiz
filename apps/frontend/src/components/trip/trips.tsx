@@ -72,6 +72,7 @@ function TripItem({ trip }: { trip: Trip }) {
               e.stopPropagation()
               setConfirmOpen(true)
             }}
+            aria-label={`Delete ${trip.name}`}
           >
             <Icon name='trash' />
           </Button>
