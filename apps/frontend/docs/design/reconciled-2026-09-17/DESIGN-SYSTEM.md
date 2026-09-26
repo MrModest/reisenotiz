@@ -14,7 +14,7 @@ session building this app should open.
 | `DESIGN-SYSTEM.md` | This file. Tokens, type, icons, interaction, layout constants. |
 | `SCREENS.md` | One section per screen: route, composition, states. |
 | `app.css` | The stylesheet the shadcn preset `b1GdgzGvQ` generates, exactly as the preset emits it. **Reference only.** |
-| `frames/` | The drawn screens. Arrives with [#59](https://github.com/MrModest/reisenotiz/issues/59). |
+| `frames/` | The drawn screens: `NN-name-dark.png` and `NN-name-light.png` per frame, `mockups.html` to read them all in a browser with a theme toggle, and `mockups.mjs` + `build.mjs` that produce both. |
 
 **`app.css` is not imported by anything and must not be.** `src/index.css` is the file the app
 ships, and it carries the same palette plus the two font faces and `--font-mono` the preset does
@@ -92,7 +92,7 @@ uses.
 | `rounded-sm` | 4.32px | chips, badges, tab triggers |
 | `rounded-md` | 5.76px | inputs, buttons, tab containers, combobox inputs, dropdown rows |
 | `rounded-lg` | 7.2px | — |
-| `rounded-xl` | 10.08px | cards, popovers, dashed drop targets, the 48px floating button |
+| `rounded-xl` | 10.08px | cards, popovers, the 48px floating button |
 
 Read off the drawing's own `border-radius` values on
 [#30](https://github.com/MrModest/reisenotiz/issues/30): inputs and buttons 6px, badges and chips
@@ -374,14 +374,25 @@ Measured, not derived.
 
 ## Reading and regenerating the drawing
 
-- **The frames are crops.** Each is a fixed 390×844 or 1440×900 box with `overflow: hidden` and a
-  14px bezel. **The bezel is not part of the app**, and the content is tuned to fill the crop.
-  Everything scrolls in the real app — never fix a height or compress spacing to make content fit.
+- **The frames are crops.** Each is a fixed 390×844 or 1440×900 viewport with `overflow: hidden`.
+  Content runs past the bottom edge where a screen is long; everything scrolls in the real app, so
+  never fix a height or compress spacing to make content fit.
+- **Frame numbers are what tickets cite**, never filenames. Numbers with no frame were retired with
+  the trip item types they drew. Two frames are drawn twice: `06` with and without a planned
+  interval, and `22` with the rail expanded and collapsed.
+- **Each frame states its `now`** in `mockups.html`. Home, the trip list and the countdowns depend on
+  it, and frame `01` is drawn a week before the trip while `02`, `22` and `24` are drawn on its
+  ninth day.
 - **Sticky and static look identical in a drawing.** What sticks is listed under *The shell* above,
   and it is one thing.
-- **Fact lists draw a divider under the last row** because it was easier to draw. Use
-  `last:border-0`.
-- **Render at the fixed sizes** — 390×844 mobile, 1440×900 desktop — so frames stay comparable.
-- **Resolve Inter and JetBrains Mono from `node_modules/@fontsource*`**, not from Google Fonts,
-  which is unreachable from an agent sandbox. A silent fallback to a system font makes every
+- **The sample data is illustrative.** A string in a frame is an example of its shape, not copy to
+  reproduce.
+- **Regenerate with `pnpm design:frames`** from `apps/frontend`. The drawing is styled by
+  `src/index.css` itself, compiled by the app's own Tailwind, so a token change reaches the frames
+  on the next render. It writes `mockups.html` and every PNG in both themes. Capturing needs
+  Playwright's Chromium, which is not a dependency of the app.
+- **Every colour in the drawing is a Tailwind class.** The theme toggle flips the whole drawing
+  because of it; a frame that does not flip cleanly has a literal colour in it, which is a bug.
+- **Fonts are inlined from `node_modules/@fontsource-variable/*`**, never fetched. The build fails if
+  Inter or JetBrains Mono did not load, because a silent fallback to a system font makes every
   measurement in the drawing wrong.

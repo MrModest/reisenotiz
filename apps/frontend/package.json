@@ -10,6 +10,7 @@
     "lint": "BROWSERSLIST_IGNORE_OLD_DATA=1 eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "generate-pwa-assets": "pwa-assets-generator",
+    "design:frames": "node docs/design/reconciled-2026-09-17/frames/build.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

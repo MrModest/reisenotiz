@@ -29,8 +29,9 @@ timeline's detail slot ([#33](https://github.com/MrModest/reisenotiz/issues/33))
 slot is a 400px column beside the timeline; below it, a full-screen layer over the still-mounted
 timeline, so going back restores the scroll position.
 
-**There is no frame for Saved places, Settings, the trip form or the place dialog.** The handoff
-drew none of them. They inherit the drawn vocabulary — `Item` rows, mono meta, `PageHeader`, the
+**There is no frame for Saved places, Settings, the trip form or the place dialog**, and drawing
+one is designing rather than reconciling ([#58](https://github.com/MrModest/reisenotiz/issues/58)).
+They inherit the drawn vocabulary — `Item` rows, mono meta, `PageHeader`, the
 chip row — rather than a specific layout.
 
 ## Navigation
@@ -45,8 +46,7 @@ Home  ·  Trips  ·  Saved places  ·  Settings
 - **Rail** (≥900px): label beside icon, `aria-label='Primary'`. At its foot, the collapse toggle,
   then `SyncStatusBadge variant='rail'`. Nothing else — no recent trips, no `New trip`, no search.
   232px expanded, 64px collapsed to icons only with the name on `title`. The collapsed state
-  persists in `localStorage` and defaults to expanded. **No frame draws the collapse toggle or the
-  collapsed rail.**
+  persists in `localStorage` and defaults to expanded. Frame `22` is drawn in both states.
 - **Tab bar** (<900px): label below icon, `aria-label='Main'`, `Saved places` shortened to
   `Places` for its 52px slot. Four items evenly spread, **no centre `+`**. Bottom padding is
   `env(safe-area-inset-bottom)` with a 22px fallback.
@@ -117,13 +117,12 @@ highlights, so the two can never disagree.
 Top to bottom:
 
 1. **Eyebrow** — `ONGOING TRIP` or `UPCOMING TRIP`, mono caps in `text-chart-2`. The glossary's
-   words, not the drawn `CURRENT TRIP`.
+   words.
 2. **Trip name** — 27px/600 mobile, 38px/600 desktop. **Clamps to two lines**, then truncates
    ([#55](https://github.com/MrModest/reisenotiz/issues/55)).
-3. **One meta line**, mono — `5 – 16 SEP 2026 · 12 DAYS · 18 ITEMS`. The item count joins this line
-   rather than sitting in a bordered box; frame `22`'s four-up mini-stat grid is gone entirely,
-   because `BOOKED`, `TRAVELLERS` and `UNSYNCED` were cut and a lone box in a four-up grid reads as
-   a mistake ([#31](https://github.com/MrModest/reisenotiz/issues/31),
+3. **One meta line**, mono — `5 – 16 SEP 2026 · 12 DAYS · 5 ITEMS`. The item count sits on this
+   line, not in a bordered stat box: there is no mini-stat grid on the card, because `BOOKED`,
+   `TRAVELLERS` and `UNSYNCED` were cut and a lone box in a four-up grid reads as a mistake ([#31](https://github.com/MrModest/reisenotiz/issues/31),
    [#32](https://github.com/MrModest/reisenotiz/issues/32)).
 4. **`Separator`.**
 5. **Countdown** — a 36px number in `text-chart-2` with a mono caption beneath. One shape for both
@@ -132,8 +131,8 @@ Top to bottom:
    `3` / `OF 12 DAYS` once ongoing. Day one is `1` / `OF 12 DAYS`, no special case.
 6. **One button** — `Open timeline`.
 
-**Cut from the drawing**: the `· 4 COUNTRIES` suffix, the `BER → MUC → INN → LJU → VCE` route line,
-the next-item preview row, and the `Calendar` button
+**Not rendered**: a `· 4 COUNTRIES` suffix, a route line such as `BER → MUC → INN → LJU → VCE`,
+a next-item preview row, and a `Calendar` button
 ([#31](https://github.com/MrModest/reisenotiz/issues/31),
 [#38](https://github.com/MrModest/reisenotiz/issues/38)).
 
@@ -152,8 +151,8 @@ desktop, mono caption): countries, nights away, trips, flights. Then `NIGHTS PER
 columns, current year in `bg-chart-2` and the rest `bg-muted`, 46px tall mobile / 90px desktop, mono
 year labels. Then `HOW YOU MOVED`, a stacked bar with a legend, and `LONGEST TRIP`.
 
-- **It renders identically on both viewports.** Mobile gains `HOW YOU MOVED` and `LONGEST TRIP`,
-  which frame `01` omits. The year labels are the only thing that varies — two digits below 900px,
+- **It renders identically on both viewports**, `HOW YOU MOVED` and `LONGEST TRIP` included. The
+  year labels are the only thing that varies — two digits below 900px,
   four above, in CSS inside the component.
 - **`Mockup` is in the name deliberately.** A comment saying the values are fake is invisible from
   the call site and from a file listing; the page reads `<AllTimeStatsMockup />`.
@@ -170,19 +169,18 @@ year labels. Then `HOW YOU MOVED`, a stacked bar with a legend, and `LONGEST TRI
 `/trips` · frames `02` (mobile), `24` (desktop) ·
 [#47](https://github.com/MrModest/reisenotiz/issues/47)
 
-**One presentation on both viewports.** Frame `24`'s table does not ship — no columns, no column
-headers, no `Table` component. Frame `02`'s grouped rows render above and below 900px, full width in
-the main column with no maximum measure.
+**One presentation on both viewports.** There is no table — no columns, no column headers, no
+`Table` component. The grouped rows render above and below 900px, full width in the main column with
+no maximum measure.
 
 **Header**: title `Trips`. No back, no subtitle, **no chip row**, no actions, no search field.
 
-**Order** — neither frame draws reverse-chronological, and `HANDOFF.md` was wrong about its own
-drawing. The rule both frames are consistent with:
+**Order** — not reverse-chronological:
 
 > Partition on whether the trip has finished. Trips not yet over come first, soonest first;
 > completed trips follow, most recent first.
 
-**Groups**, with the counts frame `24` put on tabs:
+**Groups**, each header carrying its count:
 
 ```
 ONGOING
@@ -192,8 +190,8 @@ UPCOMING 1
 ```
 
 `ONGOING` holds at most one trip, and exists so the list can say the one thing the headers could
-not otherwise say. **No row carries a status badge** — every badge the frames draw restated its own
-header, and frame `24` printed `COMPLETED` on 38 rows to say what the year already said.
+not otherwise say. **No row carries a status badge** — it would restate its own header, printing
+`COMPLETED` on every row to say what the year already says.
 
 ### The row
 
@@ -204,8 +202,7 @@ header, and frame `24` printed `COMPLETED` on 38 rows to say what the year alrea
 | Stack, right, top-aligned | items chip; countdown chip **beneath it** when the trip has not finished |
 | End | `···` overflow — `Edit`, `Delete` |
 
-- **The items chip renders on every row.** Frame `02` badges two of six; frame `24`'s `ITEMS`
-  column fills all of them, and that reading is right.
+- **The items chip renders on every row.**
 - **The countdown reads in words, and every unfinished trip carries one** — largest non-zero
   calendar unit, floored: `In 1 day`, `In 7 days`, `In 29 days`, `In 1 month`, `In 3 months`,
   `In 1 year`, and `Day 9 of 12` while ongoing. No threshold and no magic constant, so nothing
@@ -216,12 +213,12 @@ header, and frame `24` printed `COMPLETED` on 38 rows to say what the year alrea
   lines grows the row downward without moving the chips.
 - **Highlight**: `bg-accent` plus a 2px accent left border on the trip `selectHomeTrip(trips, now)`
   picks — home's function, not a second rule.
-- **`Edit` and `Delete` live in the row's `···`**, drawn on neither frame, because the timeline's
-  overflow menu was cut and both had to land somewhere. Delete goes through `ConfirmDialog`.
+- **`Edit` and `Delete` live in the row's `···`**, because the timeline has no overflow menu and
+  both had to land somewhere. Delete goes through `ConfirmDialog`.
   Destroying a trip and every item in it should cost two taps.
 
 **`New trip`** is the floating 48×48 `+`, bottom-right inside the scroller, on **both** viewports —
-not frame `24`'s header button ([#49](https://github.com/MrModest/reisenotiz/issues/49)).
+never a header button ([#49](https://github.com/MrModest/reisenotiz/issues/49)).
 
 **Empty**: `No trips yet`, one line, no button — the `+` is more findable on an empty screen than a
 full one. **Loading**: `SkeletonRows`, held invisible for 200ms.
@@ -257,15 +254,13 @@ the `<form>`, Save disabled until dirty. **Open**: nothing fixes its field order
 [#52](https://github.com/MrModest/reisenotiz/issues/52),
 [#42](https://github.com/MrModest/reisenotiz/issues/42)
 
-**Header**: `←` to `/trips`, title the trip name, subtitle `5 – 16 SEP 2026 · 18 ITEMS`, chip row as
-`children`, **no actions at all** — frame `03`'s and `23`'s `···` is cut, and trip editing moved to
-the trip list ([#49](https://github.com/MrModest/reisenotiz/issues/49)).
+**Header**: `←` to `/trips`, title the trip name, subtitle `5 – 16 SEP 2026 · 5 ITEMS`, chip row as
+`children`, **no actions at all** — no `···`; trip editing lives on the trip list ([#49](https://github.com/MrModest/reisenotiz/issues/49)).
 
 **Chip row**: `ALL` plus one chip per type **present in this trip**, derived as
 `unique(items.map(i => i.type))` — no stored category, nothing to keep in step with the type union
 ([#32](https://github.com/MrModest/reisenotiz/issues/32)). Single-select with `ALL` as a member, not
-multi-select: the frames draw exactly one chip active and include an `ALL`, which is contradictory
-inside a multi-select. Labels are the glossary's words — `FLIGHT`, `ACCOMMODATION`. Horizontal
+multi-select: an `ALL` chip is contradictory inside a multi-select. Labels are the glossary's words — `FLIGHT`, `ACCOMMODATION`. Horizontal
 scroll, chips never wrap, `ALL` pinned left. `UNSYNCED` is not a chip; per-item sync state does not
 exist.
 
@@ -275,9 +270,9 @@ exist.
 and rows as siblings. Sticky is then bounded by the section, so an outgoing header is pushed out by
 the next day rather than covered by it ([#52](https://github.com/MrModest/reisenotiz/issues/52)).
 
-**Day header** — `Sat, 05 Sep`, Inter at foreground weight on the drawn `bg-card` band, sticky at
-`top-0` of the scroller. **That is the whole header.** Both things the frames draw beside it are
-cut: the place line (`DAY 1 · BERLIN → INNSBRUCK`) and `DAY n`. The rows pass underneath it.
+**Day header** — `Sat, 05 Sep`, Inter at foreground weight on a `bg-card` band, sticky at
+`top-0` of the scroller. **That is the whole header** — no place line such as
+`DAY 1 · BERLIN → INNSBRUCK`, and no `DAY n`. The rows pass underneath it.
 
 **Row** — `time column | 1px rule | icon | title | summary`:
 
@@ -287,11 +282,10 @@ cut: the place line (`DAY 1 · BERLIN → INNSBRUCK`) and `DAY n`. The rows pass
 | Date prefix | second line, `5 SEP`, 10px mono, `text-destructive` — **only** when the element's own local date differs from its day bucket's date |
 | Icon | 16px, from the registry |
 | Title | the item's own name — `LH 1953`, `Hotel Weisses Kreuz` — one line, truncating |
-| Summary | one mono line, role first: `DEPARTURE · BER T1 · SEAT 14A`, `ARRIVAL · MUC T2`, `CHECK-IN · ALTSTADT 31`, `CHECK-OUT · ALTSTADT 31` |
+| Summary | one mono line, role first: `DEPARTURE · BER T1 · SEAT 14A`, `ARRIVAL · MUC T2`, `CHECK-IN · HERZOG-FRIEDRICH-STRASSE 31` |
 
 - **One row per timeline element, and one element per data point.** A flight is **two** rows,
-  departure and arrival; a stay is two rows, days apart. The frames draw each of these as one row
-  with two times, which is wrong: **frame `03`'s day 1 goes from 4 drawn rows to 6**
+  departure and arrival; a stay is two rows, days apart. Never one row with two times
   ([#29](https://github.com/MrModest/reisenotiz/issues/29)).
 - **No row shows an end time.** The second line of the time column is the date prefix instead.
 - **The summary says what the element is and where, never how long.** `1h 20m` does not render on a
@@ -299,9 +293,9 @@ cut: the place line (`DAY 1 · BERLIN → INNSBRUCK`) and `DAY n`. The rows pass
   ([#42](https://github.com/MrModest/reisenotiz/issues/42)).
 - **The role goes in the summary, never in the title**, so an item's two rows read identically at
   the title and the mono line tells them apart.
-- **No accent dot.** Per-item sync state is out of scope, so the dot drawn on `Hotel Weisses Kreuz`
-  has no source ([#32](https://github.com/MrModest/reisenotiz/issues/32)).
-- **Selected row**: `bg-accent` plus an accent left border.
+- **No accent dot on a row.** Per-item sync state is out of scope, so such a dot has no source ([#32](https://github.com/MrModest/reisenotiz/issues/32)).
+- **Selected row**: `bg-accent` plus an accent left border. Frame `23` marks **both** rows of the
+  open item, since both match `/trips/:id/items/:itemId`.
 - **Day bucketing is a local date in the trip's origin zone** — the zone of the trip's earliest
   element — fixed for the life of the trip, so buckets never shift under anyone. An element's *time*
   renders in its own place's zone. Sorting is always by instant, never by displayed time.
@@ -331,18 +325,18 @@ and not rebuilt ([#33](https://github.com/MrModest/reisenotiz/issues/33)).
 
 **Header**: `←` to the timeline, title `Add item`.
 
-**Body**: a 2-column grid of `Item` tiles, fed by the registry's `icon` and `label`. Frame `13`
-draws **eight** tiles; **two ship** — `Flight` and `Stay` — because only those two types exist
+**Body**: a 2-column grid of `Item` tiles, fed by the registry's `icon` and `label` — two tiles,
+`Flight` and `Stay`, because only those two types exist
 ([#36](https://github.com/MrModest/reisenotiz/issues/36)). The screen grows for free when types
 return.
 
 A tile links to the same route carrying the chosen type — `…/items/new?type=Flight` — which is the
 shape `src/lib/routes.ts` already uses. The type picker is that route with no type on it.
 
-Below the grid, the `Drop a PDF or paste booking text` dashed `Empty` target. It is a slot, not an
-engine: parsing is out of scope. **Open**: what it does when something is dropped on it is not
-decided, and shipping it inert contradicts the rule that an inert control is a promise the app
-cannot keep — so either it is wired to something or it does not render.
+**Nothing renders below the grid.** A `Drop a PDF or paste booking text` target does not ship:
+parsing is out of scope, and an inert control is a promise the app cannot keep — the rule that cut
+`Export` ([#38](https://github.com/MrModest/reisenotiz/issues/38),
+[#59](https://github.com/MrModest/reisenotiz/issues/59)).
 
 ---
 
@@ -352,8 +346,8 @@ cannot keep — so either it is wired to something or it does not render.
 [#39](https://github.com/MrModest/reisenotiz/issues/39),
 [#53](https://github.com/MrModest/reisenotiz/issues/53)
 
-**Header**: `←`, `Plane` icon, title **`Flight`** — the type, never the item. Frame `23` draws
-`LH 1953` there, which duplicates the 26px title directly beneath it. `actions` is the `···`,
+**Header**: `←`, `Plane` icon, title **`Flight`** — the type, never the item. `LH 1953` there
+would duplicate the 26px title directly beneath it. `actions` is the `···`,
 holding `Delete` behind `ConfirmDialog` ([#49](https://github.com/MrModest/reisenotiz/issues/49)).
 
 **Body**, top to bottom:
@@ -365,16 +359,15 @@ holding `Delete` behind `ConfirmDialog` ([#49](https://github.com/MrModest/reise
    share with any other hero. Airport code 26px, then **`UTC+2` beneath the code**, then the time
    18px. A 64px rule between the two ends carrying `1h 20m`. Third line is `terminal · gate`,
    dropping whichever is absent.
-   - The offset shows **under both codes, always** — frame `05` draws `CET` on the arrival only,
-     which was a drawing accident. It goes with the *place*, not with the time, so the time axis
+   - The offset shows **under both codes, always**, and never as a zone abbreviation like `CET`. It
+     goes with the *place*, not with the time, so the time axis
      stays mirrored. Always shown, never conditional on the two zones differing: a conditional
      marker gives the hero two heights and reads as a bug to anyone who does not know the rule
      ([#53](https://github.com/MrModest/reisenotiz/issues/53)).
 4. **Fact list** — mono 11px label left, mono 12px value right, rule under each, `last:border-0`.
    **`BAGGAGE · 2 × 23KG` is cut**; nothing can source it.
 5. **Two address blocks**, stacked — `DEPARTURE AIRPORT` and `ARRIVAL AIRPORT`, each an
-   `AddressLink`. Frame `05` draws only the departure and puts the pair behind tabs; the tabs are
-   deleted, because a tab that hides half of two short blocks costs a tap to save four lines, and
+   `AddressLink`. No `Departure` / `Arrival` tabs, because a tab that hides half of two short blocks costs a tap to save four lines, and
    the arrival address is the one you need when you land.
 6. **Notes** — 13px/1.6, wrapping, `overflow-wrap: anywhere`.
 7. **Attachment chips.**
@@ -435,18 +428,17 @@ is `planned?.in ?? provided.in`.
 `…/items/new?type=Flight` · `…/items/:itemId/edit` · frame `14` ·
 [#39](https://github.com/MrModest/reisenotiz/issues/39)
 
-**Header**: `←`, `Plane` icon, title `New flight` / `Edit flight`. **No actions** — frame `14`'s
-`Cancel` and `Save flight` both leave the header ([#36](https://github.com/MrModest/reisenotiz/issues/36),
+**Header**: `←`, `Plane` icon, title `New flight` / `Edit flight`. **No actions** — `Cancel` and
+`Save` live in the footer, never the header ([#36](https://github.com/MrModest/reisenotiz/issues/36),
 [#49](https://github.com/MrModest/reisenotiz/issues/49)).
 
 **Flat, no collapsibles.** `CollapsibleSection` is deleted, along with the `openSections` state and
 the `handleInvalid` handlers that existed only to reveal a required field hidden inside a closed
-disclosure. Frames `14` and `15` draw none.
+disclosure.
 
 **Two labelled groups** — `DEPARTURE` and `ARRIVAL`, each a mono caps label and a rule, not a
-disclosure trigger. Each holds: the place picker, date, time, **terminal** and **gate**. The last
-two are added — frame `14` draws neither even though the model carries both and frame `05` displays
-them.
+disclosure trigger. Each holds: the place picker, date, time, **terminal** and **gate**. The model
+carries terminal and gate, and the flight view displays them, so the form edits them.
 
 Outside the groups: **flight number**, **carrier**, booking code, seat, passengers, notes,
 attachments. `carrier` gains a plain labelled input and the `LUFTHANSA · MATCHED FROM SAVED
@@ -492,9 +484,8 @@ store — submit re-anchors both typed values to the chosen place's zone.
 
 **Header**: `←`, `Bed` icon, title `New stay` / `Edit stay`. No actions.
 
-**Loses three controls and gains five.** `PROPERTY`, `KIND` and `ADDRESS` move into `PlaceDialog`,
-where they survive verbatim one surface over; guests, rooms, reserved-by, **notes** and
-**attachments** are added, none of which frame `15` draws. About nine controls in total.
+**About nine controls.** The property's name, kind and address are not here — they live in
+`PlaceDialog`, one surface over. Guests, rooms, reserved-by, **notes** and **attachments** are.
 
 - **One place picker**, labelled `PROPERTY`. The accommodation combobox **lists saved sites only**,
   so on a fresh install it is empty and `Add` is the first move — the geocoder that would populate
@@ -504,22 +495,21 @@ where they survive verbatim one surface over; guests, rooms, reserved-by, **note
   blocking. Two instant comparisons, no time-of-day reasoning.
   - A planned arrival on a **later day** than check-in is legal and saves — the traveller is
     knowingly wasting a paid night. The unused-night note renders in the plan group's header, in
-    accent, where frame `15` draws it.
+    accent.
   - What does not save is a plan outside the booking: arriving before check-in opens, or leaving
     after the by-time.
 - **Cut**: `CONFIRMATION`, `TOTAL`, `CANCELLATION`, the check-in window's late end, and the
   `Add your arrival and departure to calendar` toggle.
 
 **Footer**: `Cancel` + `Save` inside the `<form>`, Save disabled until dirty. **No `Delete`** —
-frame `15` draws one and it moves to the view's `···`.
+it lives in the view's `···`.
 
 **A new stay opens with `in` and `out` equal**, so its hero reads `0 NIGHTS` until the dates are
 set. Anchoring the default to the trip's start date was considered and rejected: the traveller has
 to set a real date either way.
 
-**The 10px content gap frame `15` uses is not kept** — both forms run 12px. Two pixels no reader can
-attribute to intent is drift by the time anyone else touches the file, and the density it bought is
-gone now that three controls moved into the dialog.
+**Both forms run 12px between fields**, never a tighter 10px for this one: two pixels no reader can
+attribute to intent is drift by the time anyone else touches the file.
 
 ---
 
