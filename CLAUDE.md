@@ -21,8 +21,9 @@ pnpm workspace (`apps/*`) with two packages:
 - **`docs/adr/`** — system-wide decisions and why they were made. `apps/frontend/docs/adr/` holds frontend-only ones.
 - **`CLAUDE.md`** (here, and one per app) — how to work here: commands, tooling, conventions.
 - **`docs/agents/`** — configuration the engineering skills read. Not project documentation.
-- **`apps/frontend/docs/design/handoff-2026-09-07/`** — the design: radius, spacing, colour, type and
-  every screen. Start at its `MANIFEST.md`. Read before writing UI.
+- **`apps/frontend/docs/design/reconciled-2026-09-17/`** — the design: radius, spacing, colour, type
+  and every screen. Start at its `DESIGN-SYSTEM.md`. Read before writing UI.
+  `handoff-2026-09-07/` beside it is the frozen original handoff, superseded and not built from.
 - **`plans/archived/`** — history, not current state. See `plans/README.md`.
 
 **Write documentation as a snapshot of the current state.** No migration notes, no "previously X,
