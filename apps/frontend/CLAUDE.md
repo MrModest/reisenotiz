@@ -55,8 +55,11 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
   `DESIGN-SYSTEM.md`, then `SCREENS.md` for the screen you are building
   - `docs/design/handoff-2026-09-07/` is a **frozen archive** of the original handoff. It is
     superseded in 95 recorded places and nothing is built from it
-  - Token values live in `docs/design/reconciled-2026-09-17/app.css` (shadcn preset
-    `b1GdgzGvQ`). Write Tailwind classes, never the literal values
+  - Token values live in `src/index.css`: the shadcn preset `b1GdgzGvQ` (kept verbatim for
+    reference in `docs/design/reconciled-2026-09-17/app.css`) plus a `--brand` ink and a light
+    `--card` one step off white. Write Tailwind classes, never the literal values
+  - Orange that is read — text, links, active nav, a selected row's edge — is `text-brand` /
+    `border-brand`, never a `chart-*` colour
   - Radius is **derived** from `--radius: 0.45rem`: `rounded-sm` 4.32px, `rounded-md` 5.76px,
     `rounded-lg` 7.2px, `rounded-xl` 10.08px. There is no `xs` step — the smallest radius the
     design uses is `rounded-sm`

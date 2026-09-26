@@ -53,7 +53,7 @@ const nav = [
 ]
 
 const tabBar = (active) => `<nav aria-label="Main" class="grid shrink-0 grid-cols-4 border-t border-border bg-card px-2 pt-1.5 pb-[22px]">
-  ${nav.map((n) => `<div class="flex min-h-11 min-w-[52px] flex-col items-center justify-center gap-1 ${n.key === active ? 'text-chart-2' : 'text-muted-foreground'}">
+  ${nav.map((n) => `<div class="flex min-h-11 min-w-[52px] flex-col items-center justify-center gap-1 ${n.key === active ? 'text-brand' : 'text-muted-foreground'}">
     ${icon(n.icon, 20)}<span class="text-[10px] font-medium">${n.short}</span>
   </div>`).join('')}
 </nav>`
@@ -127,12 +127,12 @@ const trip = { name: 'Alps to the Adriatic', range: '5 – 16 Sep 2026', days: 1
 // ─── Home ────────────────────────────────────────────────────────────────────────────────────
 
 const homeCard = ({ eyebrow, count, caption, big }) => `<div class="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
-  ${capsLabel(eyebrow, '!text-chart-2')}
+  ${capsLabel(eyebrow, '!text-brand')}
   <div class="line-clamp-2 min-w-0 font-semibold leading-[1.15] tracking-[-.01em]" style="font-size:${big ? 38 : 27}px">${trip.name}</div>
   <div class="font-mono text-[11px] uppercase tracking-[.04em] text-muted-foreground">${trip.range} · ${trip.days} days · ${trip.items} items</div>
   ${separator}
   <div class="flex flex-col gap-1">
-    <div class="text-[36px] font-semibold leading-none tabular-nums text-chart-2">${count}</div>
+    <div class="text-[36px] font-semibold leading-none tabular-nums text-brand">${count}</div>
     ${capsLabel(caption)}
   </div>
   ${button('Open timeline', 'primary', big ? 'self-start' : 'w-full')}
@@ -209,7 +209,7 @@ const groups = [
   ] },
 ]
 
-const tripRow = (r, px) => `<div class="flex min-w-0 items-start gap-3 border-b border-border py-3 ${px} ${r.hl ? 'border-l-2 border-l-chart-2 bg-accent' : ''}">
+const tripRow = (r, px) => `<div class="flex min-w-0 items-start gap-3 border-b border-border py-3 ${px} ${r.hl ? 'border-l-2 border-l-brand bg-accent' : ''}">
   <div class="flex w-[38px] shrink-0 flex-col items-center pt-0.5">
     <div class="font-mono text-[16px] leading-tight">${r.d}</div>
     <div class="font-mono text-[10px] uppercase text-muted-foreground">${r.m}</div>
@@ -217,7 +217,7 @@ const tripRow = (r, px) => `<div class="flex min-w-0 items-start gap-3 border-b 
   <div class="line-clamp-2 min-w-0 flex-1 text-[17px] font-semibold leading-snug">${r.name}</div>
   <div class="flex shrink-0 flex-col items-end gap-1 pt-0.5">
     ${chip(`${r.items} items`)}
-    ${r.when ? chip(r.when, 'text-chart-2') : ''}
+    ${r.when ? chip(r.when, 'text-brand') : ''}
   </div>
   <div class="-my-1 -mr-2 grid size-8 shrink-0 place-items-center text-muted-foreground">${icon('Ellipsis')}</div>
 </div>`
@@ -274,14 +274,14 @@ const chips = `<div class="-mx-4 flex gap-1.5 overflow-hidden px-4">
 
 const timelineRow = (r, { timeCol, px, selected }) => {
   const on = selected && r.item === selected
-  return `<div class="flex min-h-11 min-w-0 items-stretch gap-3 ${px} ${on ? 'border-l-2 border-l-chart-2 bg-accent' : ''}">
+  return `<div class="flex min-h-11 min-w-0 items-stretch gap-3 ${px} ${on ? 'border-l-2 border-l-brand bg-accent' : ''}">
   <div class="shrink-0 py-2.5 text-right" style="width:${timeCol}px">
     <div class="font-mono text-[13px] leading-5">${r.t}</div>
     ${r.prefix ? `<div class="font-mono text-[10px] uppercase text-destructive">${r.prefix}</div>` : ''}
   </div>
   <div class="w-px shrink-0 bg-border"></div>
   <div class="flex min-w-0 flex-1 items-start gap-2.5 py-2.5">
-    <span class="mt-0.5 ${on ? 'text-chart-2' : 'text-muted-foreground'}">${icon(r.icon)}</span>
+    <span class="mt-0.5 ${on ? 'text-brand' : 'text-muted-foreground'}">${icon(r.icon)}</span>
     <div class="min-w-0 flex-1">
       <div class="truncate text-[14px] font-medium leading-5">${r.title}</div>
       <div class="truncate font-mono text-[11px] uppercase tracking-[.04em] text-muted-foreground">${r.sum}</div>
@@ -321,7 +321,7 @@ const personChips = (names) => `<div class="flex flex-wrap justify-end gap-1">${
 const addressBlock = (label, name, address, extra = '') => `<div class="flex flex-col gap-1">
   ${capsLabel(label)}
   <div class="text-[14px] font-medium">${name}</div>
-  <div class="text-[13px] text-chart-2 underline decoration-chart-2/40 underline-offset-2">${address}</div>
+  <div class="text-[13px] text-brand underline decoration-brand/40 underline-offset-2">${address}</div>
   ${extra}
 </div>`
 
@@ -385,7 +385,7 @@ const stayHero = (planned) => `<div class="flex flex-col rounded-xl border borde
       <div class="font-mono text-[11px] uppercase text-muted-foreground">From 14:00</div>
     </div>
     <div class="flex flex-col items-center">
-      <div class="text-[20px] font-semibold leading-none tabular-nums text-chart-2">3</div>
+      <div class="text-[20px] font-semibold leading-none tabular-nums text-brand">3</div>
       ${capsLabel('Nights')}
     </div>
     <div class="flex flex-col items-end gap-0.5 text-right">
@@ -394,7 +394,7 @@ const stayHero = (planned) => `<div class="flex flex-col rounded-xl border borde
       <div class="font-mono text-[11px] uppercase text-muted-foreground">By 11:00</div>
     </div>
   </div>
-  ${planned ? `<div class="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 font-mono text-[11px] uppercase text-chart-2">
+  ${planned ? `<div class="mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 font-mono text-[11px] uppercase text-brand">
     <div class="flex flex-col gap-0.5"><span class="${caps}">You arrive</span>5 Sep · 16:40</div>
     <div class="flex flex-col items-end gap-0.5"><span class="${caps}">You leave</span>8 Sep · 10:30</div>
   </div>` : ''}
@@ -505,7 +505,7 @@ const stayForm = () => mobile(region({
     ${placePicker('Property', 'Vander Urbani Resort', 'Vander Urbani Resort · Hotel', 'Krojaška ulica 6, Ljubljana · Europe/Ljubljana')}
     <div class="grid grid-cols-2 gap-3">${field('Check-in', input('2026-09-08', { mono: true }))}${field('From', input('14:00', { mono: true }))}</div>
     <div class="grid grid-cols-2 gap-3">${field('Check-out', input('2026-09-12', { mono: true }))}${field('By', input('11:00', { mono: true }))}</div>
-    ${group('Plan', `<div class="font-mono text-[10px] uppercase tracking-[.08em] text-chart-2">Arriving 9 Sep · 1 paid night unused</div>`)}
+    ${group('Plan', `<div class="font-mono text-[10px] uppercase tracking-[.08em] text-brand">Arriving 9 Sep · 1 paid night unused</div>`)}
     <div class="grid grid-cols-2 gap-3">${field('You arrive', input('2026-09-09', { mono: true }))}${field('At', input('13:30', { mono: true }))}</div>
     <div class="grid grid-cols-2 gap-3">${field('You leave', input('2026-09-12', { mono: true }))}${field('At', input('11:00', { mono: true }))}</div>
     <div class="pt-3">${personField('Guests', ['Anna Weber', 'Jonas Weber'])}</div>

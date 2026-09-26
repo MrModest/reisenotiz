@@ -116,7 +116,7 @@ highlights, so the two can never disagree.
 
 Top to bottom:
 
-1. **Eyebrow** — `ONGOING TRIP` or `UPCOMING TRIP`, mono caps in `text-chart-2`. The glossary's
+1. **Eyebrow** — `ONGOING TRIP` or `UPCOMING TRIP`, mono caps in `text-brand`. The glossary's
    words.
 2. **Trip name** — 27px/600 mobile, 38px/600 desktop. **Clamps to two lines**, then truncates
    ([#55](https://github.com/MrModest/reisenotiz/issues/55)).
@@ -125,7 +125,7 @@ Top to bottom:
    `TRAVELLERS` and `UNSYNCED` were cut and a lone box in a four-up grid reads as a mistake ([#31](https://github.com/MrModest/reisenotiz/issues/31),
    [#32](https://github.com/MrModest/reisenotiz/issues/32)).
 4. **`Separator`.**
-5. **Countdown** — a 36px number in `text-chart-2` with a mono caption beneath. One shape for both
+5. **Countdown** — a 36px number in `text-brand` with a mono caption beneath. One shape for both
    statuses, so the slot does not change form when a trip flips at midnight:
    `7` / `DAYS TO GO` when upcoming, `TODAY` in place of the number on the day it starts, and
    `3` / `OF 12 DAYS` once ongoing. Day one is `1` / `OF 12 DAYS`, no special case.

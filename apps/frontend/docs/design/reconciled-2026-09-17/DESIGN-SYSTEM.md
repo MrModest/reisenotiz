@@ -17,10 +17,13 @@ session building this app should open.
 | `frames/` | The drawn screens: `NN-name-dark.png` and `NN-name-light.png` per frame, `mockups.html` to read them all in a browser with a theme toggle, and `mockups.mjs` + `build.mjs` that produce both. |
 
 **`app.css` is not imported by anything and must not be.** `src/index.css` is the file the app
-ships, and it carries the same palette plus the two font faces and `--font-mono` the preset does
-not include ([#30](https://github.com/MrModest/reisenotiz/issues/30)). `app.css` is here so a
-colour or a radius can be checked against its source. Where the two disagree, `src/index.css` is
-what a user sees, and the disagreement is a bug to fix rather than a choice to make.
+ships. It carries the preset's palette plus the two font faces and `--font-mono` the preset does
+not include ([#30](https://github.com/MrModest/reisenotiz/issues/30)), and it departs from the
+preset in exactly three light-theme values, all for legibility
+([#59](https://github.com/MrModest/reisenotiz/issues/59)): the added `--brand`, `--card` at
+`oklch(0.985 0 0)`, and `--sidebar-primary` equal to `--brand`. `app.css` is here so a colour or a
+radius can be checked against its source. Any other disagreement between the two is a bug to fix
+rather than a choice to make.
 
 The preset is regenerated with
 `npx shadcn@latest init --preset b1GdgzGvQ --template react-router --pointer`.
@@ -48,28 +51,43 @@ document and a cited ticket disagree, the ticket wins and the line here is a bug
 
 ## Colour
 
-Everything resolves to the preset. **Write Tailwind classes, never literal values** — not in
+Everything resolves to `src/index.css`. **Write Tailwind classes, never literal values** — not in
 components, not in the drawing.
 
-| Role | Class | Value in the preset (dark) |
-| --- | --- | --- |
-| Page background | `bg-background` | `oklch(0.145 0 0)` |
-| Card, sticky bar, rail | `bg-card`, `bg-sidebar` | `oklch(0.205 0 0)` |
-| Selected row, active nav | `bg-accent text-accent-foreground` | `oklch(0.269 0 0)` |
-| Divider, card border | `border-border` | `oklch(1 0 0 / 10%)` |
-| Field border, secondary button | `border-input` | `oklch(1 0 0 / 15%)` |
-| Primary text | `text-foreground` | `oklch(0.985 0 0)` |
-| Secondary text and fine print | `text-muted-foreground` | `oklch(0.708 0 0)` |
-| Filled button | `bg-primary text-primary-foreground` | `oklch(0.473 0.137 46.201)` |
-| Accent ink — countdown, active nav, links, a needs-attention status | `text-chart-2` / `text-sidebar-primary` | `oklch(0.769 0.188 70.08)` |
-| A value that contradicts its own context | `text-destructive` | preset |
-| Charts | `chart-2` → `chart-5`; `bg-muted` for an inactive bar | preset |
+| Role | Class | Light | Dark |
+| --- | --- | --- | --- |
+| Page background | `bg-background` | `oklch(1 0 0)` | `oklch(0.145 0 0)` |
+| Card, sticky bar, rail | `bg-card`, `bg-sidebar` | `oklch(0.985 0 0)` | `oklch(0.205 0 0)` |
+| Selected row, active nav | `bg-accent text-accent-foreground` | `oklch(0.97 0 0)` | `oklch(0.269 0 0)` |
+| Divider, card border | `border-border` | `oklch(0.922 0 0)` | `oklch(1 0 0 / 10%)` |
+| Field border, secondary button | `border-input` | `oklch(0.922 0 0)` | `oklch(1 0 0 / 15%)` |
+| Primary text | `text-foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` |
+| Secondary text and fine print | `text-muted-foreground` | `oklch(0.556 0 0)` | `oklch(0.708 0 0)` |
+| Filled button | `bg-primary text-primary-foreground` | `oklch(0.555 0.163 48.998)` | `oklch(0.473 0.137 46.201)` |
+| Brand ink — eyebrow, countdown, active nav, links, selected-row edge, a needs-attention status | `text-brand`, `border-brand` | `oklch(0.555 0.163 48.998)` | `oklch(0.769 0.188 70.08)` |
+| A value that contradicts its own context | `text-destructive` | preset | preset |
+| Charts | `chart-2` → `chart-5`; `bg-muted` for an inactive bar | preset | preset |
+
+**The brand is one orange, in two shades.** Every orange a reader must *read* — text, links, the
+countdown, the active nav icon, the edge of a selected row — is `brand`, never a chart colour. It is
+the dark theme's amber on dark, and on white the deeper shade the light theme's filled button already
+uses, because no single orange reads on both: the amber is 2.2:1 on white, and the best compromise
+value fails 4.5:1 on both backgrounds. `brand` is 5.05:1 on white, 4.84:1 on a light card and 9.2:1
+on the dark background ([#59](https://github.com/MrModest/reisenotiz/issues/59)). The chart colours
+keep their preset values, because a chart mark is not read as text. `--sidebar-primary` equals
+`--brand` in both themes, so the rail and the tab bar light the same orange.
+
+**Light cards are one step off white.** `--card` is `oklch(0.985 0 0)`, the light rail's value, so
+in both themes a card and the rail share one surface colour. It is the darkest card on which
+`text-muted-foreground` still passes 4.5:1 — 4.53:1 — so a grey caption on a card stays legible. The
+separation from the page is slight, 1.04:1 against 1.10:1 in dark; borders still do most of it
+([#59](https://github.com/MrModest/reisenotiz/issues/59)).
 
 **Two text tiers, and no third.** There is no dimmer grey below `text-muted-foreground`: at 10px it
 already fails 4.5:1 on this background.
 
-**Both themes ship.** Dark is the design's own; light is the preset's stock neutral
-(`--background: oklch(1 0 0)`), and the same classes resolve against it with no component changes.
+**Both themes ship.** Dark is the design's own; light is the preset's neutral on a white page,
+and the same classes resolve against it with no component changes.
 The theme control lives in Settings on both viewports
 ([#37](https://github.com/MrModest/reisenotiz/issues/37)).
 
@@ -172,7 +190,7 @@ else**. `LucideIcon` never leaves that file, so swapping icon libraries is one f
   dynamic version gave every icon its own chunk, made them appear a frame late, and tree-shook
   nothing.
 - **Sizes**: 16 in rows, 18 in headers and chrome, 20 in navigation. `strokeWidth` 2 throughout.
-- Icons inherit colour from the parent — `text-muted-foreground`, or `text-chart-2` when the item
+- Icons inherit colour from the parent — `text-muted-foreground`, or `text-brand` when the item
   is next up or selected.
 - Assigned today: `Plane` flight · `Bed` stay · `House` `Luggage` `Bookmark` `Settings` navigation ·
   `Plus` `ArrowLeft` `Ellipsis` chrome.
