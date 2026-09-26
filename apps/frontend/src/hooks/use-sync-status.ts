@@ -7,7 +7,7 @@ const SYNCING_RESET_MS = 1000
 
 interface TrackedRepoState {
   connectedPeers: Set<string>
-  syncingUntil: number
+  syncing: boolean
   listeners: Set<() => void>
 }
 
@@ -30,7 +30,7 @@ function trackRepo(repo: Repo): TrackedRepoState {
   // since Repo never removes an entry from it on disconnect.
   const state: TrackedRepoState = {
     connectedPeers: new Set(Object.keys(repo.peerMetadataByPeerId)),
-    syncingUntil: 0,
+    syncing: false,
     listeners: new Set(),
   }
   tracked.set(repo, state)
@@ -52,11 +52,17 @@ function trackRepo(repo: Repo): TrackedRepoState {
     notify()
   })
 
+  // The timer itself ends the syncing window. Comparing against `Date.now()` instead would strand
+  // the badge on 'syncing': a timer can fire a millisecond before the wall clock reaches its
+  // deadline, and nothing notifies again until the next message.
   networkSubsystem.on('message', () => {
-    state.syncingUntil = Date.now() + SYNCING_RESET_MS
+    state.syncing = true
     notify()
     clearTimeout(resetTimer)
-    resetTimer = setTimeout(notify, SYNCING_RESET_MS)
+    resetTimer = setTimeout(() => {
+      state.syncing = false
+      notify()
+    }, SYNCING_RESET_MS)
   })
 
   return state
@@ -77,7 +83,7 @@ export function useSyncStatus(): SyncStatus {
     if (!hasAdapters) return 'disabled'
     const state = trackRepo(repo)
     if (state.connectedPeers.size === 0) return 'offline'
-    if (Date.now() < state.syncingUntil) return 'syncing'
+    if (state.syncing) return 'syncing'
     return 'synced'
   }
 
