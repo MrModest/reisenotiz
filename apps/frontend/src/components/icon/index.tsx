@@ -46,7 +46,6 @@ import {
   Sun,
   TicketsPlane,
   Train,
-  TrainFront,
   Trash2,
   TriangleAlert,
   User,
@@ -105,7 +104,6 @@ const icons = {
   'person': User,
   'attachment': Paperclip,
   'info': Info,
-  'long-transfer': TrainFront,
   'unknown': ShieldQuestionMark,
   'refresh': RefreshCw,
 } satisfies Record<string, LucideIcon>

@@ -1,8 +1,6 @@
-import { DateTime, ZonedInstant } from '@/lib/datetime'
+import type { ZonedInstant } from '@/types/common'
 import { TripItem } from './trip-item'
-import { TimelineElement } from '@/components/ui/timeline'
 import { Address } from './address'
-import { routes } from '@/lib/routes'
 
 export interface StayInterval {
   in: ZonedInstant
@@ -40,31 +38,4 @@ export interface Accommodation extends TripItem {
     provided: StayInterval
     planned?: StayInterval
   }
-}
-
-function isPast(datetime: ZonedInstant): boolean {
-  return DateTime.from(datetime).isPast()
-}
-
-export function getHotelTimelineItems(hotel: Accommodation): TimelineElement[] {
-  return [
-    {
-      id: `${hotel.id}-checkin`,
-      title: `Check-In: ${hotel.site.name}`,
-      description: `${hotel.site.address.line}`,
-      datetime: hotel.stayInterval.planned?.in || hotel.stayInterval.provided.in,
-      link: routes.trips.item(hotel.tripId, hotel.id),
-      icon: 'hotel-checkIn',
-      status: isPast(hotel.stayInterval.provided.in) ? 'inactive' : 'active',
-    },
-    {
-      id: `${hotel.id}-checkout`,
-      title: `Check-Out: ${hotel.site.name}`,
-      description: `${hotel.site.address.line}`,
-      datetime: hotel.stayInterval.planned?.out || hotel.stayInterval.provided.out,
-      link: routes.trips.item(hotel.tripId, hotel.id),
-      icon: 'hotel-checkOut',
-      status: isPast(hotel.stayInterval.provided.out) ? 'inactive' : 'active',
-    },
-  ]
 }

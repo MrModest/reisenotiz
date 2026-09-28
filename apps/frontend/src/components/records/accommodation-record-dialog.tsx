@@ -5,8 +5,8 @@ import { userRecords } from '@/store'
 import { userAccommodationSchema, type UserAccommodationSchema } from '@/lib/validations/user-accommodation'
 import { Button } from '@/components/ui/button'
 import { FieldSet } from '@/components/ui/field'
-import { FieldInput } from '@/components/trip-item/field-input'
-import { FieldSelect } from '@/components/trip-item/field-select'
+import { FieldInput } from '@/components/trip-items/shared/field-input'
+import { FieldSelect } from '@/components/trip-items/shared/field-select'
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/dialog'
 import type { AccommodationSiteKind } from '@/types'
 import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
-import { FieldTimezone } from '../trip-item/field-timezone'
+import { FieldTimezone } from '@/components/trip-items/shared/field-timezone'
 import { TZ } from '@/lib/datetime'
 
 const SITE_KIND_OPTIONS: { value: AccommodationSiteKind; label: string }[] = [

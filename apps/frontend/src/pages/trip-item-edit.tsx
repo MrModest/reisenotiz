@@ -1,5 +1,5 @@
 import { Suspense } from 'react'
-import { TripItemForm } from '@/components/trip-item'
+import { getTripItemModule } from '@/components/trip-items/registry'
 import { PageHeader } from '@/components/layout/page-header'
 import {
   useTrip,
@@ -43,12 +43,13 @@ function TripItemEditContent({ tripId, itemId }: { tripId: string; itemId: strin
   }
 
   const handleCancel = () => navigate(-1)
+  const module = getTripItemModule(tripItem.type)
 
   return (
     <>
       <PageHeader title={trip.name} icon='trip' backTo={routes.trips.item(tripId, itemId)} />
       <div className='min-h-0 flex-1 overflow-y-auto px-4'>
-        <TripItemForm tripItem={tripItem} onSave={handleSave} onCancel={handleCancel} />
+        {module ? <module.Form item={tripItem} onSubmit={handleSave} onCancel={handleCancel} /> : <UnsupportedType />}
       </div>
     </>
   )
@@ -56,4 +57,8 @@ function TripItemEditContent({ tripId, itemId }: { tripId: string; itemId: strin
 
 function NotFound({ tripId }: { tripId?: string }) {
   return <PageHeader title='Not found' backTo={tripId ? routes.trips.trip(tripId) : routes.trips.list()} />
+}
+
+function UnsupportedType() {
+  return <p className='text-muted-foreground'>This app version cannot show this item type</p>
 }

@@ -1,23 +1,19 @@
 import { Icon } from '@/components/icon'
 import { formatTo } from '@/lib/datetime'
 import type { Airport, Flight, FlightPoint } from '@/types'
-import { FieldView } from '@/components/trip-item/field-view'
+import { FieldView } from '@/components/trip-items/shared/field-view'
 import { SeparatorWithLabel } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DateRange } from '../date-range'
+import { DateRange } from '../shared/date-range'
 import { useNavigate } from 'react-router'
-import { ItemHeader } from '../item-header'
+import { ItemHeader } from '../shared/item-header'
+import { useDeleteTripItemAndLeave } from '../shared/use-delete-trip-item'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { FieldChipsView } from '../field-chips-view'
+import { FieldChipsView } from '../shared/field-chips-view'
 
-interface FlightItemViewProps {
-  flight: Flight
-  className?: string
-  onDelete: () => void
-}
-
-export function FlightItemView({ flight, className, onDelete }: FlightItemViewProps) {
+export function FlightView({ item: flight }: { item: Flight }) {
+  const onDelete = useDeleteTripItemAndLeave(flight)
   const duration = formatTo.duration(flight.departure.time, flight.arrival.time)
   const navigate = useNavigate()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -28,7 +24,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
   }
 
   return (
-    <div className={className}>
+    <div className='mb-10'>
       <div className='flex justify-between items-center w-full'>
         <ItemHeader
           title='Flight Details'

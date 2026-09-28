@@ -279,7 +279,7 @@ wrapper layer:
 ```
 
 So: nothing to install, nothing blocked. This repo's existing `src/hooks/use-form-field.ts`
-and `src/components/trip-item/field-errors.tsx` are already the local stand-in for the missing
+and `src/components/trip-items/shared/field-errors.tsx` are already the local stand-in for the missing
 `Form` layer, and RHF is already used across nine form files. **Recommendation: keep the
 plain-`div` `field.tsx` + `Controller` pattern and do not adopt Base UI's `Field` primitive.**
 Mixing them would put two independent validity models (RHF's `fieldState` and Base UI's own

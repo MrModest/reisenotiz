@@ -2,23 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router'
 import { motion, AnimatePresence } from 'motion/react'
 import { Button } from '@/components/ui/button'
-import { Icon, IconName } from '@/components/icon'
+import { Icon } from '@/components/icon'
+import { tripItemModules } from '@/components/trip-items/registry'
 import { routes } from '@/lib/routes'
 import { TripItemType } from '@/types'
-
-interface TripItemTypeConfig {
-  type: TripItemType
-  icon: IconName
-  label: string
-}
-
-const tripItemTypes: TripItemTypeConfig[] = [
-  { type: 'Flight', icon: 'flight', label: 'Flight' },
-  { type: 'LongTransfer', icon: 'car', label: 'Land Transfer' },
-  { type: 'PublicTransport', icon: 'train', label: 'Transport' },
-  { type: 'Accommodation', icon: 'accommodation', label: 'Accommodation' },
-  { type: 'POI', icon: 'map-pin', label: 'Point of Interest' },
-]
 
 interface AddTripItemFabProps {
   tripId: string
@@ -81,7 +68,7 @@ export function AddTripItemFab({ tripId }: AddTripItemFabProps) {
             }}
             transition={{ duration: 0.2 }}
           >
-            {tripItemTypes.map((item, index) => (
+            {tripItemModules.map((item, index) => (
               <motion.div
                 key={item.type}
                 variants={{
