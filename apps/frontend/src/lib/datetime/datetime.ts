@@ -1,15 +1,24 @@
-import { DateTime as LuxonDateTime } from 'luxon'
-import type { Duration, ZonedInstant } from './types'
+import { DateTime as LuxonDateTime, type Duration } from 'luxon'
+import type { ZonedInstant } from './types'
+
+/**
+ * Every DateTime formats in this locale, never the browser's. Only month and weekday names come
+ * from it: every shape spells its own tokens, so 24-hour and day-first are fixed by the pattern.
+ */
+const LOCALE = 'en-US'
 
 /**
  * Immutable datetime abstraction for timezone-aware dates.
  * Encapsulates Luxon to prevent library-specific code from spreading across the codebase.
  */
 export class DateTime {
-  private constructor(private readonly dt: LuxonDateTime) {
+  private readonly dt: LuxonDateTime
+
+  private constructor(dt: LuxonDateTime) {
     if (!dt.isValid) {
       throw new Error(`Invalid DateTime: ${dt.invalidReason}`)
     }
+    this.dt = dt.setLocale(LOCALE)
   }
 
   /**
@@ -52,7 +61,7 @@ export class DateTime {
     const startDate = DateTime.from(start)
     const endDate = DateTime.from(end)
 
-    return endDate.dt.diff(startDate.dt, ['hours', 'minutes']).toObject() as Duration
+    return endDate.dt.diff(startDate.dt, ['hours', 'minutes'])
   }
 
   /**
@@ -77,10 +86,6 @@ export class DateTime {
    */
   get timezone(): string {
     return this.dt.zoneName!
-  }
-
-  get utcOffset(): string {
-    return this.dt.toFormat(`ZZ`)
   }
 
   /**
@@ -143,13 +148,6 @@ export class DateTime {
    */
   toJSDate(): Date {
     return this.dt.toJSDate()
-  }
-
-  /**
-   * Returns human-readable relative time (e.g., "2 hours ago", "in 3 days").
-   */
-  toRelative(base?: DateTime): string | null {
-    return this.dt.toRelative(base ? { base: base.dt } : undefined)
   }
 
   /**

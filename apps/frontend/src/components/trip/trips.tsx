@@ -61,7 +61,7 @@ function TripItem({ trip }: { trip: Trip }) {
         <ItemContent>
           <ItemTitle>{trip.name}</ItemTitle>
           <ItemDescription>
-            {formatTo.dateShort(trip.startDate)} - {formatTo.dateShort(trip.endDate)}
+            {formatTo.dateRange(trip.startDate, trip.endDate)}
           </ItemDescription>
         </ItemContent>
         <ItemActions>

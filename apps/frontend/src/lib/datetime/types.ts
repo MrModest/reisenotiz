@@ -12,10 +12,3 @@ export interface ZonedInstant {
   zone: string
 }
 
-/**
- * Represents a duration between two datetimes.
- */
-export interface Duration {
-  hours: number
-  minutes: number
-}

@@ -6,7 +6,7 @@
  *
  * @example
  * ```typescript
- * import { DateTime, formatDateTime } from '@/lib/datetime'
+ * import { DateTime, formatTo } from '@/lib/datetime'
  *
  * // Create a datetime in Los Angeles timezone
  * const departure = DateTime.fromObject(
@@ -18,7 +18,7 @@
  * const arrivalTime = departure.toZone('America/New_York')
  *
  * // Format for display
- * console.log(formatDateTime(arrivalTime))
+ * console.log(formatTo.time(arrivalTime.toZonedInstant()))
  *
  * // Serialize for storage
  * const stored = departure.toJSON() // { instant: "...", zone: "..." }
@@ -28,77 +28,7 @@
  * ```
  */
 
-import {
-  formatDate,
-  formatDateISO,
-  formatDateShort,
-  formatDateTime,
-  formatDayMonth,
-  formatDayShort,
-  formatDuration,
-  formatRelative,
-  formatTime,
-  formatUtcOffset,
-  formatWeekday,
-} from './formatters'
-
 export { DateTime } from './datetime'
 export type { ZonedInstant } from './types'
-export const formatTo = {
-  /**
-   * Formats date as "Nov 23, 2025"
-   */
-  date: formatDate,
-
-  /**
-   * Formats time as "20:30"
-   */
-  time: formatTime,
-
-  /**
-   * Formats as "Nov 23, 2025 at 20:30"
-   */
-  dateTime: formatDateTime,
-
-  /**
-   * Formats as "23.11.2025"
-   */
-  dateShort: formatDateShort,
-
-  /**
-   * Formats date as "Sun, 23 Nov"
-   */
-  dayShort: formatDayShort,
-
-  /**
-   * Formats weekday as "Sun"
-   */
-  weekday: formatWeekday,
-
-  /**
-   * Formats as "23 Nov"
-   */
-  dayMonth: formatDayMonth,
-
-  /**
-   * Formats as "2025-11-23" (ISO date only)
-   */
-  dateISO: formatDateISO,
-
-  /**
-   * Formats relative time (e.g., "2 hours ago", "in 3 days")
-   */
-  relative: formatRelative,
-
-  /**
-   * Formats duration as "2h 30m"
-   */
-  duration: formatDuration,
-
-  /**
-   * Formats UTC offset as "+02:00"
-   */
-  utcOffset: formatUtcOffset,
-}
-
+export { formatTo } from './formatters'
 export { TzUtils as TZ } from './timezone'

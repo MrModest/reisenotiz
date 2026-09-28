@@ -46,7 +46,7 @@ function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
       <div>
         <div className='font-medium'>{airportDisplay}</div>
         <div className='text-muted-foreground'>
-          {formatTo.date(zonedInstant)} · {formatTo.time(zonedInstant)} · {airport.tzone}
+          {formatTo.dayShort(zonedInstant)} · {formatTo.time(zonedInstant)} · {airport.tzone}
         </div>
       </div>
     </div>

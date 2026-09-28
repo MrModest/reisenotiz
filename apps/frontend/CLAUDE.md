@@ -128,9 +128,19 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 one — most needs are already covered.
 
 **Icon Component** (`src/components/icon/index.tsx`):
-- Wrapper around Lucide React icons
-- All used icons should be wrapped by it before being used
-- Whenever you need pass an icon as a variable, DO NOT pass a ReactNote. Use `IconName` as a type and just use the generic `Icon` component with passing the `name={icon}` as property.
+- Exports `Icon` and `IconName` and nothing else. Its body is a static map from `IconName` to
+  named Lucide imports, so icons are bundled and tree-shaken; `LucideIcon` never leaves the file
+- Add an icon by importing it there and giving it a name in the map
+- Pass an icon as `IconName` (`<Icon name={icon} />`), never as a `ReactNode`
+
+**Date formatting** (`src/lib/datetime/`):
+- `formatTo` holds the eight shapes of `DESIGN-SYSTEM.md` and no others: `time`, `dayShort`,
+  `dayMonth`, `dayOfMonth` + `monthShort`, `dateRange`, `utcOffset`, `duration`, `dateISO`
+- Each renders in its own `ZonedInstant`'s zone, never the reader's, and returns natural case;
+  uppercase is CSS
+- The locale is fixed to English in `DateTime`, never read from the browser; every shape spells
+  its own tokens, so times are 24-hour and numeric dates day-first. `Calendar` starts weeks on
+  Monday
 
 **Header Context** (`src/contexts/header-context.tsx`):
 - Provides dynamic header title/actions
