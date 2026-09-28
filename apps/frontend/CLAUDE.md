@@ -48,7 +48,9 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
 - Tailwind CSS v4 with custom theme defined in `src/index.css`
 - Uses OKLCH color space for theme colors
 - CSS variables for light/dark mode theming
-- Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`
+- Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`. Light is the default;
+  `useTheme` (`src/hooks/use-theme.ts`) stores an explicit choice in `localStorage`, and the only
+  control for it is Settings' Appearance section
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
 - **Design System**: `docs/design/reconciled-2026-09-17/` defines radius, spacing, colour, type and
   every screen. ALWAYS consult it when creating or modifying UI components; start at its
@@ -119,7 +121,25 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 ### Component Architecture
 
 **Layout Components** (`src/components/layout/`):
-- `AppLayout` provides the main app shell with header context
+- `AppShell` is the root route's component: an `h-dvh` shell whose page never scrolls. Above 900px
+  it shows the collapsible rail (`aria-label='Primary'`, 232px / 64px, collapse state in
+  `localStorage`); below it, the four-slot tab bar (`aria-label='Main'`). One `NavEntry` list
+  feeds both. Both are always rendered and CSS hides one
+- **The 900px breakpoint** is `--breakpoint-shell` in `src/index.css`'s `@theme`, and the `shell:`
+  / `max-shell:` variants appear **only in `AppShell`**. There is no `matchMedia`,
+  `useMediaQuery` or `isMobile`. A part of a page that only one presentation shows carries
+  `data-shell='mobile'` or `data-shell='desktop'`, and `AppShell` hides it
+- **Every page is a flex column of `PageHeader` · scroller · optional footer**, rendered as
+  siblings inside the shell's `main`. The scroller is `min-h-0 flex-1 overflow-y-auto`; there is no
+  centred column
+- `PageHeader` takes `title`, `mobileTitle?` (Home only), `subtitle?`, `icon?`, `backTo?`,
+  `actions?` and `children`. It renders the header's `SyncStatusBadge` itself, hidden above 900px.
+  `backTo` renders `←`, which goes back in history unless the page was the first one opened, then
+  to `backTo`. Pass `title=''` while the data behind it loads — never `Not found`
+- `SyncStatusBadge` reads `useSyncStatus()` itself; `variant='rail'` adds a second line for
+  offline and for no sync server
+- `useDocumentTitle(name)` (`src/hooks/`) sets `<name> – Reisenotiz`. Only outer pages call it,
+  never a trip item view or form
 
 **UI Components** (`src/components/ui/`):
 ~20 components built on Base UI primitives with CVA variants, including `Button`, `Input`,
@@ -141,10 +161,6 @@ one — most needs are already covered.
 - The locale is fixed to English in `DateTime`, never read from the browser; every shape spells
   its own tokens, so times are 24-hour and numeric dates day-first. `Calendar` starts weeks on
   Monday
-
-**Header Context** (`src/contexts/header-context.tsx`):
-- Provides dynamic header title/actions
-- `HeaderProvider` wraps the app; use the `useHeader` hook to set page headers
 
 ## Testing
 

@@ -1,25 +1,26 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export type Theme = 'light' | 'dark'
 
-export function getInitialTheme(): Theme {
-  const stored = localStorage.getItem('theme')
-  if (stored) return stored as Theme
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+const THEME_KEY = 'theme'
+
+// Light is the default (#37); only an explicit choice turns dark on.
+export function getStoredTheme(): Theme {
+  return localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light'
+}
+
+export function applyTheme(theme: Theme) {
+  document.documentElement.classList.toggle('dark', theme === 'dark')
 }
 
 export function useTheme(): [Theme, (theme: Theme) => void] {
-  const [theme, setTheme] = useState<Theme>(getInitialTheme())
+  const [theme, setTheme] = useState(getStoredTheme)
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
-  }, [theme])
+  function choose(next: Theme) {
+    localStorage.setItem(THEME_KEY, next)
+    applyTheme(next)
+    setTheme(next)
+  }
 
-  return [theme, setTheme]
+  return [theme, choose]
 }

@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
 import { isValidAutomergeUrl, useRepo } from '@automerge/react'
-import { useHeaderTitle } from '@/hooks/use-header-title'
-import { Icon } from '@/components/icon'
-import { routes } from '@/lib/routes'
-import { Item, ItemContent, ItemGroup, ItemMedia, ItemTitle, ItemDescription } from '@/components/ui/item'
+import { PageHeader } from '@/components/layout/page-header'
+import { useDocumentTitle } from '@/hooks/use-document-title'
+import { useTheme } from '@/hooks/use-theme'
+import { Switch } from '@/components/ui/switch'
 import { Field, FieldLabel, FieldContent, FieldDescription, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -64,24 +63,39 @@ export function SyncSettings() {
   )
 }
 
-export function SettingsPage() {
-  useHeaderTitle('Settings')
+export function AppearanceSettings() {
+  const [theme, setTheme] = useTheme()
 
   return (
-    <div className='p-4 w-default flex flex-col gap-6'>
-      <ItemGroup>
-        <Item variant='outline' render={<Link to={routes.records.root} />}>
-          <ItemMedia variant='icon'>
-            <Icon name='inbox' />
-          </ItemMedia>
-          <ItemContent>
-            <ItemTitle>Records</ItemTitle>
-            <ItemDescription>Manage custom airports and other records</ItemDescription>
-          </ItemContent>
-          <Icon name='chevron-right' className='size-4 text-muted-foreground' />
-        </Item>
-      </ItemGroup>
-      <SyncSettings />
-    </div>
+    <Field orientation='horizontal'>
+      <FieldLabel htmlFor='dark-theme'>Dark theme</FieldLabel>
+      <Switch
+        id='dark-theme'
+        checked={theme === 'dark'}
+        onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+      />
+    </Field>
+  )
+}
+
+const sectionTitle = 'font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground'
+
+export function SettingsPage() {
+  useDocumentTitle('Settings')
+
+  return (
+    <>
+      <PageHeader title='Settings' />
+      <div className='min-h-0 flex-1 overflow-y-auto p-4 flex flex-col gap-6'>
+        <section className='flex flex-col gap-3'>
+          <h2 className={sectionTitle}>Appearance</h2>
+          <AppearanceSettings />
+        </section>
+        <section className='flex flex-col gap-3'>
+          <h2 className={sectionTitle}>Sync</h2>
+          <SyncSettings />
+        </section>
+      </div>
+    </>
   )
 }

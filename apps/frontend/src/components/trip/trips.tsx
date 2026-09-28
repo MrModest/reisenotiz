@@ -20,7 +20,7 @@ export function Trips({ trips, className }: TripsProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
 
   return (
-    <div className={cn('flex flex-col gap-2 w-default', className)}>
+    <div className={cn('flex flex-col gap-2', className)}>
       <Item
         variant='outline'
         size='sm'

@@ -1,6 +1,8 @@
 import {
+  ArrowLeft,
   Ban,
   Bed,
+  Bookmark,
   Calendar,
   CalendarFold,
   Car,
@@ -28,6 +30,7 @@ import {
   Orbit,
   PanelLeft,
   PanelLeftClose,
+  PanelLeftOpen,
   Paperclip,
   Plane,
   PlaneLanding,
@@ -53,7 +56,7 @@ import {
 
 const icons = {
   'arrow-right': MoveRight,
-  'back': ChevronLeft,
+  'back': ArrowLeft,
   'home': House,
   'inbox': Inbox,
   'settings': Settings,
@@ -81,6 +84,8 @@ const icons = {
   'circle-alert': CircleAlert,
   'menu': PanelLeft,
   'sidebar-close': PanelLeftClose,
+  'sidebar-open': PanelLeftOpen,
+  'bookmark': Bookmark,
   'no-data': CircleQuestionMark,
   'loader': LoaderCircle,
   'logo': MapIcon,

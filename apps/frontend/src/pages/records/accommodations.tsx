@@ -1,13 +1,17 @@
-import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
+import { PageHeader } from '@/components/layout/page-header'
+import { useDocumentTitle } from '@/hooks/use-document-title'
+import { routes } from '@/lib/routes'
 import { AccommodationRecordsList } from '@/components/records/accommodation-records-list'
 
 export function AccommodationsRecordsPage() {
-  useHeaderTitle('Accommodations')
-  useHeaderBackButton(true)
+  useDocumentTitle('Accommodations')
 
   return (
-    <div className='p-4 w-default'>
-      <AccommodationRecordsList />
-    </div>
+    <>
+      <PageHeader title='Accommodations' backTo={routes.records.root} />
+      <div className='min-h-0 flex-1 overflow-y-auto p-4'>
+        <AccommodationRecordsList />
+      </div>
+    </>
   )
 }

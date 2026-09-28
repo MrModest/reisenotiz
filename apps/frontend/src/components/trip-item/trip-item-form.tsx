@@ -1,10 +1,8 @@
-import { Accommodation, Flight, Trip, TripItem } from '@/types'
-import { useHeaderTitle } from '@/hooks/use-header-title'
+import { Accommodation, Flight, TripItem } from '@/types'
 import { FlightItemForm } from './flight/item-form'
 import { AccommodationItemForm } from './accommodation/item-form'
 
 interface TripItemEditProps {
-  trip: Trip
   tripItem: TripItem
   onSave: (item: TripItem) => void
   onCancel: () => void
@@ -12,12 +10,8 @@ interface TripItemEditProps {
   className?: string
 }
 
-export function TripItemForm({ trip, tripItem, onSave, onCancel, isCreate = false, className }: TripItemEditProps) {
-  const result = getEdit({ tripItem, onSave, onCancel, isCreate, className })
-
-  useHeaderTitle(trip.name, 'trip')
-
-  return result
+export function TripItemForm({ tripItem, onSave, onCancel, isCreate = false, className }: TripItemEditProps) {
+  return getEdit({ tripItem, onSave, onCancel, isCreate, className })
 }
 
 function getEdit({

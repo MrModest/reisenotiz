@@ -46,15 +46,15 @@ const syncBadge = `<div class="flex shrink-0 items-center gap-1.5 ${caps}">
 // ─── Navigation ──────────────────────────────────────────────────────────────────────────────
 
 const nav = [
-  { key: 'home', label: 'Home', short: 'Home', icon: 'House' },
-  { key: 'trips', label: 'Trips', short: 'Trips', icon: 'Luggage' },
-  { key: 'places', label: 'Saved places', short: 'Places', icon: 'Bookmark' },
-  { key: 'settings', label: 'Settings', short: 'Settings', icon: 'Settings' },
+  { key: 'home', label: 'Home', icon: 'House' },
+  { key: 'trips', label: 'Trips', icon: 'Luggage' },
+  { key: 'places', label: 'Places', icon: 'Bookmark' },
+  { key: 'settings', label: 'Settings', icon: 'Settings' },
 ]
 
 const tabBar = (active) => `<nav aria-label="Main" class="grid shrink-0 grid-cols-4 border-t border-border bg-card px-2 pt-1.5 pb-[22px]">
   ${nav.map((n) => `<div class="flex min-h-11 min-w-[52px] flex-col items-center justify-center gap-1 ${n.key === active ? 'text-brand' : 'text-muted-foreground'}">
-    ${icon(n.icon, 20)}<span class="text-[10px] font-medium">${n.short}</span>
+    ${icon(n.icon, 20)}<span class="text-[10px] font-medium">${n.label}</span>
   </div>`).join('')}
 </nav>`
 

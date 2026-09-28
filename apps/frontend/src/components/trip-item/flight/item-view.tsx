@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DateRange } from '../date-range'
 import { useNavigate } from 'react-router'
 import { ItemHeader } from '../item-header'
-import { cn } from '@/lib/utils'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
 import { FieldChipsView } from '../field-chips-view'
@@ -29,7 +28,7 @@ export function FlightItemView({ flight, className, onDelete }: FlightItemViewPr
   }
 
   return (
-    <div className={cn('w-default', className)}>
+    <div className={className}>
       <div className='flex justify-between items-center w-full'>
         <ItemHeader
           title='Flight Details'

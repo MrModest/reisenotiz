@@ -4,7 +4,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import { Repo, RepoContext } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
 import { ROOT_DOC_KEY } from '@/store/automerge/root-doc'
-import { SyncSettings } from './settings'
+import { AppearanceSettings, SyncSettings } from './settings'
 
 function setup() {
   const repo = new Repo({ network: [] })
@@ -46,5 +46,24 @@ describe('SyncSettings', () => {
 
     await waitFor(() => expect(screen.getByText(/could not reach this document/i)).toBeDefined())
     expect(localStorage.getItem(ROOT_DOC_KEY)).toBe(rootHandle.url)
+  })
+})
+
+describe('AppearanceSettings', () => {
+  afterEach(() => {
+    cleanup()
+    localStorage.clear()
+    document.documentElement.classList.remove('dark')
+  })
+
+  it('starts light and switches the whole app to dark, remembering the choice', () => {
+    render(<AppearanceSettings />)
+    const toggle = screen.getByRole('switch', { name: 'Dark theme' })
+    expect(toggle.getAttribute('aria-checked')).toBe('false')
+
+    fireEvent.click(toggle)
+
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    expect(localStorage.getItem('theme')).toBe('dark')
   })
 })

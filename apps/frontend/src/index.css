@@ -6,6 +6,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* The app's one breakpoint (#33). Used only inside `AppShell`. */
+@theme {
+  --breakpoint-shell: 900px;
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Inter Variable', sans-serif;
@@ -136,11 +141,5 @@
   button:not(:disabled),
   [role='button']:not(:disabled) {
     cursor: pointer;
-  }
-}
-
-@layer components {
-  .w-default {
-    @apply w-full md:w-[480px];
   }
 }

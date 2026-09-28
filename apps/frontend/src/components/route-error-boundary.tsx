@@ -16,7 +16,7 @@ export function RouteErrorBoundary() {
   }
 
   return (
-    <div className='p-4 w-default flex flex-col gap-4 items-start'>
+    <div className='p-4 flex flex-col gap-4 items-start'>
       <p className='text-sm text-muted-foreground'>{message}</p>
       <div className='flex gap-2'>
         <Button onClick={() => window.location.reload()}>Reload</Button>

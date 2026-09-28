@@ -4,14 +4,19 @@ import { Separator } from '@/components/ui/separator'
 import { AirportSelector } from '@/components/ui/combobox/airport'
 import { useAirports } from '@/hooks/use-airports'
 import type { Airport } from '@/types'
+import { PageHeader } from '@/components/layout/page-header'
+import { useDocumentTitle } from '@/hooks/use-document-title'
 
 export function HomePage() {
   const airports = useAirports()
   const [count, setCount] = useState(0)
   const [selectedAirport, setSelectedAirport] = useState<Airport | null>(null)
+  useDocumentTitle('Overview')
 
   return (
-    <div className='min-h-screen flex flex-col items-center p-4'>
+    <>
+    <PageHeader title='Overview' mobileTitle='Reisenotiz' />
+    <div className='min-h-0 flex-1 overflow-y-auto flex flex-col items-center p-4'>
       <Button variant='default' onClick={() => setCount(count + 1)}>
         Click Me ({count})
       </Button>
@@ -29,5 +34,6 @@ export function HomePage() {
         </p>
       )}
     </div>
+    </>
   )
 }
