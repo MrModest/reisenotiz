@@ -22,10 +22,13 @@ function renderWithError() {
 describe('RouteErrorBoundary', () => {
   beforeEach(() => {
     localStorage.setItem(ROOT_DOC_KEY, 'automerge:existing')
+    // React and React Router both log the error this test throws on purpose
+    vi.spyOn(console, 'error').mockImplementation(() => {})
   })
 
   afterEach(() => {
     cleanup()
+    vi.restoreAllMocks()
   })
 
   it('renders the error message instead of crashing', () => {
