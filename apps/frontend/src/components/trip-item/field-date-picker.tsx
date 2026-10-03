@@ -58,7 +58,7 @@ export function FieldDatePicker({
             />
           }
         >
-          <span>{field.value ? formatDateForDisplay(field.value) : placeholder}</span>
+          <span>{field.value || placeholder}</span>
           <Icon name='calendar' />
         </PopoverTrigger>
         <PopoverContent className='w-auto p-0'>
@@ -82,14 +82,4 @@ function formatDateForInput(date: Date): string {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
   return `${year}-${month}-${day}`
-}
-
-function formatDateForDisplay(dateString: string): string {
-  const date = parseDate(dateString)
-  if (!date) return dateString
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
 }

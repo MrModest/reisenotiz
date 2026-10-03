@@ -2,78 +2,42 @@ import { DateTime } from './datetime'
 import type { ZonedInstant } from './types'
 
 /**
- * Common date/time formatting utilities.
- * These provide convenient presets on top of the DateTime class.
+ * The eight date shapes of `DESIGN-SYSTEM.md`. Each renders in its own `ZonedInstant`'s zone and
+ * returns natural case; any uppercase is CSS.
  */
+export const formatTo = {
+  /** `08:40` */
+  time: (at: ZonedInstant) => DateTime.from(at).format('HH:mm'),
 
-/**
- * Formats date as "Nov 23, 2025"
- */
-export function formatDate(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('LLL dd, yyyy')
-}
+  /** `Sat, 05 Sep` */
+  dayShort: (at: ZonedInstant) => DateTime.from(at).format('EEE, dd LLL'),
 
-/**
- * Formats date as "Sun, 23 Nov"
- */
-export function formatDayShort(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('EEE, dd LLL')
-}
+  /** `5 Sep` */
+  dayMonth: (at: ZonedInstant) => DateTime.from(at).format('d LLL'),
 
-/**
- * Formats weekday as "Sunday"
- */
-export function formatWeekday(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('EEEE')
-}
+  /** `05` — the trip-list date block, with `monthShort` */
+  dayOfMonth: (at: ZonedInstant) => DateTime.from(at).format('dd'),
 
-/**
- * Formats as "Nov 23"
- */
-export function formatDayMonth(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('LLL dd')
-}
+  /** `Sep` — the trip-list date block, with `dayOfMonth` */
+  monthShort: (at: ZonedInstant) => DateTime.from(at).format('LLL'),
 
-/**
- * Formats time as "20:30"
- */
-export function formatTime(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('HH:mm')
-}
+  /** `5 – 16 Sep 2026`, `28 Sep – 3 Oct 2026`, `28 Dec 2026 – 3 Jan 2027` */
+  dateRange: (start: ZonedInstant, end: ZonedInstant) => {
+    const s = DateTime.from(start)
+    const e = DateTime.from(end)
+    const last = e.format('d LLL yyyy')
+    if (s.year !== e.year) return `${s.format('d LLL yyyy')} – ${last}`
+    if (s.month !== e.month) return `${s.format('d LLL')} – ${last}`
+    if (s.day !== e.day) return `${s.format('d')} – ${last}`
+    return last
+  },
 
-/**
- * Formats as "Nov 23, 2025 at 20:30"
- */
-export function formatDateTime(dt: DateTime): string {
-  return dt.format("LLL dd, yyyy 'at' HH:mm")
-}
+  /** `UTC+2`, `UTC+5:30`, `UTC-8`, `UTC+0` */
+  utcOffset: (at: ZonedInstant) => `UTC${DateTime.from(at).format('Z')}`,
 
-/**
- * Formats as "23.11.2025"
- */
-export function formatDateShort(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('dd.MM.yyyy')
-}
+  /** `1h 20m` */
+  duration: (start: ZonedInstant, end: ZonedInstant) => DateTime.duration(start, end).toFormat("h'h' mm'm'"),
 
-/**
- * Formats as "2025-11-23" (ISO date only)
- */
-export function formatDateISO(dt: ZonedInstant): string {
-  return DateTime.from(dt).format('yyyy-MM-dd')
-}
-
-/**
- * Formats relative time (e.g., "2 hours ago", "in 3 days")
- */
-export function formatRelative(dt: DateTime, base?: DateTime): string {
-  return dt.toRelative(base) ?? formatDateTime(dt)
-}
-
-export function formatDuration(start: ZonedInstant, end: ZonedInstant): string {
-  const duration = DateTime.duration(start, end)
-  return `${duration.hours}h ${duration.minutes}m`
-}
-
-export function formatUtcOffset(datetime: ZonedInstant): string {
-  return DateTime.from(datetime).utcOffset
+  /** `2026-09-05` — the forms' date inputs */
+  dateISO: (at: ZonedInstant) => DateTime.from(at).format('yyyy-MM-dd'),
 }

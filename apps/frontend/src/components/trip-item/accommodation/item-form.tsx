@@ -48,14 +48,14 @@ function StayIntervalPreview({ tzone }: { tzone?: string }) {
       <div className='flex flex-row items-center gap-1'>
         <Icon name='hotel-checkIn' className='size-3.5 text-green-600/70' />
         <span className='font-medium'>
-          {formatTo.date(inTime)} · {formatTo.time(inTime)}
+          {formatTo.dayShort(inTime)} · {formatTo.time(inTime)}
         </span>
       </div>
       {outTime && (
         <div className='flex flex-row items-center gap-1'>
           <Icon name='hotel-checkOut' className='size-3.5 text-red-600/70' />
           <span className='font-medium'>
-            {formatTo.date(outTime)} · {formatTo.time(outTime)}
+            {formatTo.dayShort(outTime)} · {formatTo.time(outTime)}
           </span>
         </div>
       )}

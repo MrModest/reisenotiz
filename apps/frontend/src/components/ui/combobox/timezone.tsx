@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { formatTo } from '@/lib/datetime'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '../item'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './base'
 
@@ -9,22 +10,12 @@ interface TimezoneOption {
   offset: string
 }
 
-function getUtcOffset(iana: string): string {
-  const now = new Date()
-  const fmt = new Intl.DateTimeFormat('en-US', {
-    timeZone: iana,
-    timeZoneName: 'shortOffset',
-  })
-  const parts = fmt.formatToParts(now)
-  const tzPart = parts.find((p) => p.type === 'timeZoneName')
-  return tzPart?.value ?? ''
-}
-
 function buildTimezoneOptions(): TimezoneOption[] {
+  const instant = new Date().toISOString()
   const zones = (Intl as unknown as { supportedValuesOf(key: string): string[] }).supportedValuesOf('timeZone')
   return zones.map((iana: string) => ({
     iana,
-    offset: getUtcOffset(iana),
+    offset: formatTo.utcOffset({ instant, zone: iana }),
   }))
 }
 

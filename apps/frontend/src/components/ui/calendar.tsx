@@ -24,6 +24,8 @@ function Calendar({
 
   return (
     <DayPicker
+      // Monday first, whatever the browser's locale says
+      weekStartsOn={1}
       showOutsideDays={showOutsideDays}
       className={cn(
         'p-3 [--cell-radius:var(--radius-md)] [--cell-size:--spacing(6)] bg-background group/calendar in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent',
@@ -34,7 +36,7 @@ function Calendar({
       captionLayout={captionLayout}
       locale={locale}
       formatters={{
-        formatMonthDropdown: (date) => date.toLocaleString(locale?.code, { month: 'short' }),
+        formatMonthDropdown: (date) => date.toLocaleString(locale?.code ?? 'en-US', { month: 'short' }),
         ...formatters,
       }}
       classNames={{
@@ -151,7 +153,7 @@ function CalendarDayButton({
     <Button
       variant='ghost'
       size='icon'
-      data-day={day.date.toLocaleDateString(locale?.code)}
+      data-day={day.date.toLocaleDateString(locale?.code ?? 'en-US')}
       data-selected-single={
         modifiers.selected && !modifiers.range_start && !modifiers.range_end && !modifiers.range_middle
       }

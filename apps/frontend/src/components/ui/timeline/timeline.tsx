@@ -140,44 +140,10 @@ function TimelineItem({
 }
 TimelineItem.displayName = 'TimelineItem'
 
-interface TimelineTimeProps extends React.HTMLAttributes<HTMLTimeElement> {
-  /** Date string, Date object, or timestamp */
-  date?: string | Date | number
-  /** Optional format for displaying the date */
-  format?: Intl.DateTimeFormatOptions
-}
-
-const defaultDateFormat: Intl.DateTimeFormatOptions = {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
-}
-
-function TimelineTime({ className, date, format, children, ...props }: TimelineTimeProps) {
-  const formattedDate = React.useMemo(() => {
-    if (!date) return ''
-
-    try {
-      const dateObj = new Date(date)
-      if (isNaN(dateObj.getTime())) return ''
-
-      return new Intl.DateTimeFormat('en-US', {
-        ...defaultDateFormat,
-        ...format,
-      }).format(dateObj)
-    } catch (error) {
-      console.error('Error formatting date:', error)
-      return ''
-    }
-  }, [date, format])
-
+function TimelineTime({ className, children, ...props }: React.HTMLAttributes<HTMLTimeElement>) {
   return (
-    <time
-      dateTime={date ? new Date(date).toISOString() : undefined}
-      className={cn('text-sm font-medium tracking-tight text-muted-foreground', className)}
-      {...props}
-    >
-      {children || formattedDate}
+    <time className={cn('text-sm font-medium tracking-tight text-muted-foreground', className)} {...props}>
+      {children}
     </time>
   )
 }

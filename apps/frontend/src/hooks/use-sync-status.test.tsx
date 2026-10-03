@@ -47,7 +47,7 @@ describe('useSyncStatus', () => {
     await waitFor(() => expect(result.current).toBe('synced'))
 
     const handleA = repoA.create<{ count: number }>({ count: 0 })
-    const handleB = await repoB.find<{ count: number }>(handleA.url)
+    const handleB = await act(() => repoB.find<{ count: number }>(handleA.url))
 
     await act(async () => {
       handleB.change((doc) => {
@@ -55,6 +55,7 @@ describe('useSyncStatus', () => {
       })
     })
 
+    await waitFor(() => expect(result.current).toBe('syncing'))
     await waitFor(() => expect(result.current).toBe('synced'), { timeout: 3000 })
   })
 
@@ -76,7 +77,9 @@ describe('useSyncStatus', () => {
     // removes the adapter from the repo entirely — WebSocketClientAdapter never
     // emits 'close', so that's not representative of the real disconnect path.)
     const [adapter] = repoA.networkSubsystem.adapters
-    adapter.emit('peer-disconnected', { peerId: repoB.networkSubsystem.peerId })
+    act(() => {
+      adapter.emit('peer-disconnected', { peerId: repoB.networkSubsystem.peerId })
+    })
 
     await waitFor(() => expect(result.current).toBe('offline'))
   })
