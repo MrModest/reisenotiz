@@ -119,7 +119,7 @@ function FlightPoint({ point }: { point: FlightPoint }) {
           </span>
           <span className='text-lg font-semibold'>{formatTo.time(point.time)}</span>
         </div>
-        <span className='text-lg'>{formatTo.dayShort(point.time)}</span>
+        <span className='text-lg whitespace-nowrap'>{formatTo.dayShort(point.time)}</span>
       </div>
       <p className='flex flex-row flex-wrap gap-2 text-xs items-center justify-between'>
         <span>Terminal: {point.terminal}</span>
