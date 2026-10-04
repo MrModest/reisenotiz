@@ -1,29 +1,57 @@
-import { isRouteErrorResponse, useRouteError } from 'react-router'
+import { useEffect, useRef, type ReactNode } from 'react'
+import { useRouteError } from 'react-router'
 import { Button } from '@/components/ui/button'
-import { ROOT_DOC_KEY } from '@/store/automerge/root-doc'
+import { PageHeader } from '@/components/layout/page-header'
+import { useSyncStatus } from '@/hooks/use-sync-status'
+import { isDocumentUnavailableError } from '@/store/automerge/document-unavailable'
 
 export function RouteErrorBoundary() {
   const error = useRouteError()
-  const message = isRouteErrorResponse(error)
-    ? error.statusText
-    : error instanceof Error
-      ? error.message
-      : 'Something went wrong.'
+  if (isDocumentUnavailableError(error)) return <NotSyncedYet />
+  return <UnexpectedError error={error} />
+}
 
-  function handleResetLocalData() {
-    localStorage.removeItem(ROOT_DOC_KEY)
-    window.location.reload()
-  }
+function NotSyncedYet() {
+  const status = useSyncStatus()
+  const connected = status === 'synced' || status === 'syncing'
+  const wasConnected = useRef(connected)
+  const reloaded = useRef(false)
+
+  // reload on the first transition to connected, at most once per mount, so a flapping
+  // connection cannot loop
+  useEffect(() => {
+    if (connected && !wasConnected.current && !reloaded.current) {
+      reloaded.current = true
+      window.location.reload()
+    }
+    wasConnected.current = connected
+  }, [connected])
 
   return (
-    <div className='p-4 flex flex-col gap-4 items-start'>
-      <p className='text-sm text-muted-foreground'>{message}</p>
-      <div className='flex gap-2'>
-        <Button onClick={() => window.location.reload()}>Reload</Button>
-        <Button variant='destructive' onClick={handleResetLocalData}>
-          Reset local data
-        </Button>
-      </div>
-    </div>
+    <ErrorScreen>
+      <p className='text-sm text-muted-foreground'>This trip hasn't reached this device yet.</p>
+    </ErrorScreen>
+  )
+}
+
+function UnexpectedError({ error }: { error: unknown }) {
+  useEffect(() => {
+    console.error(error)
+  }, [error])
+
+  return (
+    <ErrorScreen>
+      <p className='text-sm text-muted-foreground'>Something went wrong on this screen.</p>
+      <Button variant='outline' onClick={() => window.location.reload()}>Reload</Button>
+    </ErrorScreen>
+  )
+}
+
+function ErrorScreen({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <PageHeader title='' />
+      <div className='flex min-h-0 flex-1 flex-col items-start gap-3 overflow-y-auto p-4'>{children}</div>
+    </>
   )
 }

@@ -1,6 +1,5 @@
-import { Suspense, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { RepoContext } from '@automerge/react'
-import { Loader } from '@/components/ui/loader'
 import { repo, rootDocUrl } from './sync-repo'
 import { RootDocUrlContext } from './root-doc-context'
 
@@ -12,7 +11,7 @@ export function SyncProvider({ children }: SyncProviderProps) {
   return (
     <RepoContext.Provider value={repo}>
       <RootDocUrlContext.Provider value={rootDocUrl}>
-        <Suspense fallback={<Loader />}>{children}</Suspense>
+        {children}
       </RootDocUrlContext.Provider>
     </RepoContext.Provider>
   )
