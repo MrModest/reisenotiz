@@ -24,7 +24,8 @@ const moves = [
   ['Ferry, bus', 8, 'bg-chart-5'],
 ] as const
 
-const caption = 'font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase'
+const capsLabel = 'font-mono text-[10px] tracking-[.08em] uppercase'
+const caption = `${capsLabel} text-muted-foreground`
 const panel = 'rounded-xl border border-border bg-card p-4'
 
 export function AllTimeStatsMockup() {
@@ -57,7 +58,7 @@ export function AllTimeStatsMockup() {
         </div>
         <div className='mt-2 flex gap-2'>
           {nightsPerYear.map(([year]) => (
-            <div key={year} className='flex-1 text-center font-mono text-[11px] text-muted-foreground'>
+            <div key={year} className='flex-1 text-center font-mono text-[10px] text-muted-foreground'>
               <span data-shell='mobile'>’{year.slice(2)}</span>
               <span data-shell='desktop'>{year}</span>
             </div>
@@ -74,7 +75,7 @@ export function AllTimeStatsMockup() {
         </div>
         <div className='mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5'>
           {moves.map(([label, share, colour]) => (
-            <div key={label} className='flex items-center gap-2 font-mono text-[11px] tracking-[.08em] uppercase'>
+            <div key={label} className={`flex items-center gap-2 ${capsLabel}`}>
               <span className={`size-2 shrink-0 rounded-full ${colour}`} />
               <span className='flex-1 text-muted-foreground'>{label}</span>
               <span className='tabular-nums'>{share}%</span>

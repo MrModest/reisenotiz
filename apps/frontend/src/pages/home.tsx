@@ -31,5 +31,5 @@ function HomeTripContent() {
   const summaries = useTripSummaries()
   const now = useNow()
   const homeTrip = selectHomeTrip(summaries.map((s) => s.trip), now)
-  return <HomeTripCard summary={summaries.find((s) => s.trip === homeTrip)} now={now} />
+  return <HomeTripCard summary={summaries.find((s) => s.trip.id === homeTrip?.id)} now={now} />
 }

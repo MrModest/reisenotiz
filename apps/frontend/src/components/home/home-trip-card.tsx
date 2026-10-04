@@ -6,6 +6,8 @@ import { getHomeCountdown, getTripDuration, getTripStatus, type TripSummary } fr
 import { routes } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
+const capsLabel = 'font-mono text-[10px] tracking-[.08em] uppercase'
+
 interface HomeTripCardProps {
   // `selectHomeTrip`'s pick; none when no trip is ongoing or upcoming
   summary?: TripSummary
@@ -23,7 +25,7 @@ export function HomeTripCard({ summary, now }: HomeTripCardProps) {
 
   return (
     <div className='flex min-w-0 flex-col gap-3 rounded-xl border border-border bg-card p-4'>
-      <div className='font-mono text-[11px] tracking-[.08em] text-brand uppercase'>
+      <div className={cn(capsLabel, 'text-brand')}>
         {getTripStatus(trip, now) === 'ongoing' ? 'Ongoing trip' : 'Upcoming trip'}
       </div>
       <h2 data-slot='home-trip-name' className='line-clamp-2 text-[27px] leading-tight font-semibold break-words'>
@@ -38,7 +40,7 @@ export function HomeTripCard({ summary, now }: HomeTripCardProps) {
         <div>
           <div className='text-[36px] leading-none font-semibold text-brand tabular-nums uppercase'>{countdown.value}</div>
           {countdown.caption && (
-            <div className='mt-1.5 font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase'>{countdown.caption}</div>
+            <div className={cn(capsLabel, 'mt-1.5 text-muted-foreground')}>{countdown.caption}</div>
           )}
         </div>
       )}
