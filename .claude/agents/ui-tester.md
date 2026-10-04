@@ -121,4 +121,13 @@ Report only what you saw. Don't fix code, don't push to the PR branch, and don't
 request changes on the PR. If something blocked a scenario (the app wouldn't start, a flow
 couldn't be reached), say which and why in the report rather than skipping it.
 
-Your final message back is the comment URL and the verdict.
+## 6. Hand the cleanup to the main session
+
+Don't delete any branch yourself. End your final message with the comment URL, the verdict,
+and this request to the main session, verbatim with `<N>` filled in:
+
+> **Cleanup for the main session:** delete `screenshots-pr-<N>` once PR #<N> is merged. Wait
+> for the merge in the background:
+> `until [ "$(gh pr view <N> --json state -q .state)" != OPEN ]; do sleep 300; done; gh pr view <N> --json state -q .state`
+> When it prints `MERGED`, run `git push origin --delete screenshots-pr-<N>`. If it prints
+> `CLOSED`, ask the user whether to delete the branch.
