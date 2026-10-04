@@ -1,5 +1,6 @@
 import { z } from 'zod'
-import { DateTime, formatTo } from '@/lib/datetime'
+import { formatTo } from '@/lib/datetime'
+import { convertTime } from '@/components/trip-items/shared/utils'
 import { schemas } from '@/lib/validations/commons'
 import type { Trip } from '@/types'
 
@@ -26,14 +27,10 @@ export function tripFormValues(trip: Trip): TripFormValues {
 
 // Each date becomes the start of that day in `zone`
 export function tripFromFormValues(values: TripFormValues, zone: string): Omit<Trip, 'id'> {
-  const atStartOfDay = (iso: string) => {
-    const [year, month, day] = iso.split('-').map(Number)
-    return DateTime.fromObject({ year, month, day }, zone).toZonedInstant()
-  }
   return {
     name: values.name,
     description: values.description,
-    startDate: atStartOfDay(values.startDate),
-    endDate: atStartOfDay(values.endDate),
+    startDate: convertTime(values.startDate, '00:00', zone),
+    endDate: convertTime(values.endDate, '00:00', zone),
   }
 }

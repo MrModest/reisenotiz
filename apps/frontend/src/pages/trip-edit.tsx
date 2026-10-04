@@ -1,9 +1,10 @@
 import { Suspense } from 'react'
-import { useNavigate, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { PageHeader } from '@/components/layout/page-header'
 import { TripForm } from '@/components/trip/trip-form'
 import { tripFormValues, tripFromFormValues, type TripFormValues } from '@/components/trip/trip-form-schema'
 import { routes } from '@/lib/routes'
+import { useGoBack } from '@/hooks/use-go-back'
 import { useTrip, useTripExists, useUpdateTrip } from '@/store'
 
 export function TripEditPage() {
@@ -22,20 +23,20 @@ function TripEditGate({ tripId }: { tripId: string }) {
 }
 
 function TripEditContent({ tripId }: { tripId: string }) {
-  const navigate = useNavigate()
+  const goBack = useGoBack(routes.trips.list())
   const trip = useTrip(tripId)
   const updateTrip = useUpdateTrip(tripId)
 
   // The dates stay in the zone the trip was created in
   const handleSave = (values: TripFormValues) => {
     updateTrip(tripFromFormValues(values, trip.startDate.zone))
-    navigate(-1)
+    goBack()
   }
 
   return (
     <>
       <PageHeader title='Edit trip' backTo={routes.trips.list()} />
-      <TripForm defaultValues={tripFormValues(trip)} onSubmit={handleSave} onCancel={() => navigate(-1)} />
+      <TripForm defaultValues={tripFormValues(trip)} onSubmit={handleSave} onCancel={goBack} />
     </>
   )
 }

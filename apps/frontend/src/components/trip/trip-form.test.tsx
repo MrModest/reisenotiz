@@ -24,4 +24,12 @@ describe('TripForm', () => {
     fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Tokyo' } })
     await waitFor(() => expect(save).toHaveProperty('disabled', true))
   })
+
+  it('shows an error for a name over 100 characters', async () => {
+    render(<TripForm defaultValues={{ name: '', description: '', startDate: '', endDate: '' }} onSubmit={noop} onCancel={noop} />)
+    const name = screen.getByLabelText('Name')
+    fireEvent.change(name, { target: { value: 'a'.repeat(101) } })
+    fireEvent.blur(name)
+    expect(await screen.findByText('Name is longer than 100 characters')).toBeTruthy()
+  })
 })

@@ -140,6 +140,8 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
   to `backTo`. Pass `title=''` while the data behind it loads — never `Not found`
 - `SyncStatusBadge` reads `useSyncStatus()` itself; `variant='rail'` adds a second line for
   offline and for no sync server
+- `useGoBack(fallback)` (`src/hooks/`) is the same rule for a form's `Cancel` and `Save`: back in
+  history, or to `fallback` when the page was the first one opened
 - `useDocumentTitle(name)` (`src/hooks/`) sets `<name> – Reisenotiz`. Only outer pages call it,
   never a trip item view or form
 
