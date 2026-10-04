@@ -5,6 +5,7 @@ import { getTripItemModule } from '@/components/trip-items/registry'
 import { generateUUID } from '@/types/common/uuid'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
 import type { RootDoc, TripDoc } from './automerge/types'
+import { withoutUndefined } from './automerge/without-undefined'
 
 function useRootDoc() {
   return useDocument<RootDoc>(useRootDocUrl(), { suspense: true })
@@ -66,11 +67,6 @@ export function useTimelineElements(tripId: string): TimelineElement[] {
 }
 
 /* ============= Writes ============= */
-
-// Automerge rejects `undefined` anywhere in a document; a JSON round trip drops those keys.
-function withoutUndefined<T>(value: T): T {
-  return JSON.parse(JSON.stringify(value)) as T
-}
 
 export function useCreateTrip() {
   const repo = useRepo()

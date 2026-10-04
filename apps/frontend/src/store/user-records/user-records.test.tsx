@@ -75,6 +75,18 @@ describe('useUserAirportsStore', () => {
     expect(airports.current.BER?.name).toBe('Berlin Brandenburg')
   })
 
+  it('saves an airport whose optional fields are empty', async () => {
+    const { wrapper } = setup()
+    const { result: add } = renderHook(() => useUserAirportsStore((s) => s.addAirport), { wrapper })
+    await act(async () => {
+      add.current(airportFixture({ address: { country: 'DE', city: 'Berlin', line: undefined } }))
+    })
+
+    const { result: airports } = renderHook(() => useUserAirportsStore((s) => s.airports), { wrapper })
+    expect(airports.current.TXL?.name).toBe('Berlin')
+    expect('line' in airports.current.TXL!.address).toBe(false)
+  })
+
   it('deletes an airport', async () => {
     const { wrapper } = setup()
     const { result: add } = renderHook(() => useUserAirportsStore((s) => s.addAirport), { wrapper })
@@ -106,6 +118,22 @@ describe('useUserAccommodationsStore', () => {
       wrapper,
     })
     expect(accommodations.current[recordId]?.name).toBe('Hotel Adlon')
+  })
+
+  it('saves an accommodation whose optional fields are empty', async () => {
+    const { wrapper } = setup()
+    const { result: add } = renderHook(() => useUserAccommodationsStore((s) => s.addAccommodation), { wrapper })
+
+    let recordId = ''
+    await act(async () => {
+      recordId = add.current(accommodationFixture({ contact: undefined })).id
+    })
+
+    const { result: accommodations } = renderHook(() => useUserAccommodationsStore((s) => s.accommodations), {
+      wrapper,
+    })
+    expect(accommodations.current[recordId]?.name).toBe('Hotel Adlon')
+    expect('contact' in accommodations.current[recordId]!).toBe(false)
   })
 
   it('updates an accommodation in place', async () => {
