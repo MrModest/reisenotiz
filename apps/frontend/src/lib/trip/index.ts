@@ -24,16 +24,16 @@ export interface TripGroup {
 
 // A date as midnight in the trip's start zone, so calendar arithmetic compares days.
 // Each end is read in its own zone; `now` is read in the start zone.
-function day(trip: Trip, dt: DateTime) {
+function tripDate(trip: Trip, dt: DateTime) {
   return DateTime.fromObject({ year: dt.year, month: dt.month, day: dt.day }, trip.startDate.zone)
 }
-const startDay = (trip: Trip) => day(trip, DateTime.from(trip.startDate))
-const endDay = (trip: Trip) => day(trip, DateTime.from(trip.endDate))
-const today = (trip: Trip, now: DateTime) => day(trip, now.toZone(trip.startDate.zone))
+const startDay = (trip: Trip) => tripDate(trip, DateTime.from(trip.startDate))
+const endDay = (trip: Trip) => tripDate(trip, DateTime.from(trip.endDate))
+const tripToday = (trip: Trip, now: DateTime) => tripDate(trip, now.toZone(trip.startDate.zone))
 
 export function getTripStatus(trip: Trip, now: DateTime): TripStatus {
   if (now.isBefore(DateTime.from(trip.startDate))) return 'upcoming'
-  return today(trip, now).isAfter(endDay(trip)) ? 'completed' : 'ongoing'
+  return tripToday(trip, now).isAfter(endDay(trip)) ? 'completed' : 'ongoing'
 }
 
 export function getTripDuration(trip: Trip): number {
@@ -41,7 +41,7 @@ export function getTripDuration(trip: Trip): number {
 }
 
 export function getTripDayIndex(trip: Trip, now: DateTime): number {
-  return today(trip, now).calendarDiff(startDay(trip)).days + 1
+  return tripToday(trip, now).calendarDiff(startDay(trip)).days + 1
 }
 
 /** `In 1 day`, `In 3 months`, `In 1 year`, `Today`, `Day 9 of 12`; none once completed. */
@@ -50,7 +50,7 @@ export function getTripCountdown(trip: Trip, now: DateTime): string | undefined 
   if (status === 'completed') return undefined
   if (status === 'ongoing') return `Day ${getTripDayIndex(trip, now)} of ${getTripDuration(trip)}`
 
-  const { years, months, days } = startDay(trip).calendarDiff(today(trip, now))
+  const { years, months, days } = startDay(trip).calendarDiff(tripToday(trip, now))
   const [value, unit] = years ? [years, 'year'] : months ? [months, 'month'] : [days, 'day']
   if (!value) return 'Today'
   return `In ${value} ${unit}${value === 1 ? '' : 's'}`
@@ -69,16 +69,18 @@ export function selectHomeTrip(trips: Trip[], now: DateTime): Trip | undefined {
  * trips. Unfinished trips run soonest first; completed trips most recent first.
  */
 export function groupTrips(summaries: TripSummary[], now: DateTime): TripGroup[] {
-  const unfinished = summaries.filter((s) => getTripStatus(s.trip, now) !== 'completed')
-    .sort((a, b) => byStart(a.trip, b.trip))
-  const completed = summaries.filter((s) => getTripStatus(s.trip, now) === 'completed')
+  const withStatus = summaries.map((s) => ({ s, status: getTripStatus(s.trip, now) }))
+  const unfinished = withStatus.filter((x) => x.status !== 'completed')
+    .sort((a, b) => byStart(a.s.trip, b.s.trip))
+  const completed = withStatus.filter((x) => x.status === 'completed')
+    .map((x) => x.s)
     .sort((a, b) => byStart(b.trip, a.trip))
 
   const groups: TripGroup[] = []
-  const ongoing = unfinished.find((s) => getTripStatus(s.trip, now) === 'ongoing')
+  const ongoing = unfinished.find((x) => x.status === 'ongoing')?.s
   if (ongoing) groups.push({ label: 'Ongoing', trips: [ongoing] })
 
-  const upcoming = unfinished.filter((s) => s !== ongoing)
+  const upcoming = unfinished.map((x) => x.s).filter((s) => s !== ongoing)
   if (upcoming.length) groups.push({ label: 'Upcoming', count: upcoming.length, trips: upcoming })
 
   for (const s of completed) {

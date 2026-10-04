@@ -23,8 +23,8 @@ export function TripRow({ summary: { trip, itemCount }, now, highlighted }: Trip
   return (
     <div
       className={cn(
-        'flex min-w-0 items-start gap-3 border-b border-border px-4 py-3',
-        highlighted && 'border-l-2 border-l-brand bg-accent',
+        'flex min-w-0 items-start gap-3 border-b border-border px-4 py-3 transition-colors duration-150 hover:bg-accent/50',
+        highlighted && 'border-l-2 border-l-brand bg-accent text-accent-foreground hover:bg-accent',
       )}
     >
       <Link to={routes.trips.trip(trip.id)} className='flex min-w-0 flex-1 items-start gap-3'>
