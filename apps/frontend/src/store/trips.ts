@@ -67,6 +67,11 @@ export function useTimelineElements(tripId: string): TimelineElement[] {
 
 /* ============= Writes ============= */
 
+// Automerge rejects `undefined` anywhere in a document; a JSON round trip drops those keys.
+function withoutUndefined<T>(value: T): T {
+  return JSON.parse(JSON.stringify(value)) as T
+}
+
 export function useCreateTrip() {
   const repo = useRepo()
   const [, changeRoot] = useRootDoc()
@@ -106,7 +111,7 @@ export function useCreateTripItem(tripId: string) {
   return (item: Omit<TripItem, 'id'>): string => {
     const id = generateUUID()
     changeTripDoc((d) => {
-      d.tripItems[id] = { ...item, id } as TripItem
+      d.tripItems[id] = withoutUndefined({ ...item, id } as TripItem)
     })
     return id
   }
@@ -115,8 +120,13 @@ export function useCreateTripItem(tripId: string) {
 export function useUpdateTripItem(tripId: string) {
   const [, changeTripDoc] = useTripDoc(tripId)
   return (itemId: string, item: TripItem): void => {
+    const next = withoutUndefined(item)
     changeTripDoc((d) => {
-      Object.assign(d.tripItems[itemId], item)
+      const stored = d.tripItems[itemId]
+      for (const key of Object.keys(stored)) {
+        if (!(key in next)) delete stored[key as keyof TripItem]
+      }
+      Object.assign(stored, next)
     })
   }
 }

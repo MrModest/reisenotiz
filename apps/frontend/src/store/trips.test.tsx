@@ -23,7 +23,7 @@ import {
   useTripItem,
 } from './trips'
 import { DateTime, TZ } from '@/lib/datetime'
-import type { Trip, Flight } from '@/types'
+import type { Trip, TripItem, Flight, Accommodation } from '@/types'
 
 interface Setup {
   repo: Repo
@@ -89,6 +89,22 @@ function flightFixture(tripId: string): Omit<Flight, 'id'> {
   }
 }
 
+function stayFixture(tripId: string): Omit<Accommodation, 'id'> {
+  const zone = 'Europe/Berlin'
+  const t = (day: number) => DateTime.fromObject({ year: 2026, month: 5, day, hour: 15 }, zone).toZonedInstant()
+  return {
+    tripId,
+    type: 'Accommodation',
+    note: '',
+    attachments: [],
+    site: { name: 'Hotel', kind: 'Hotel', address: { country: 'DE', city: 'Berlin' }, tzone: zone },
+    reservedOn: undefined,
+    guests: 1,
+    rooms: 1,
+    stayInterval: { provided: { in: t(1), out: t(3) }, planned: undefined },
+  }
+}
+
 async function createTrip(wrapper: Setup['wrapper'], trip = tripFixture()): Promise<string> {
   const { result } = renderHook(() => useCreateTrip(), { wrapper })
   let id = ''
@@ -101,7 +117,7 @@ async function createTrip(wrapper: Setup['wrapper'], trip = tripFixture()): Prom
 async function createItem(
   wrapper: Setup['wrapper'],
   tripId: string,
-  item = flightFixture(tripId),
+  item: Omit<TripItem, 'id'> = flightFixture(tripId),
 ): Promise<string> {
   const { result } = renderHook(() => useCreateTripItem(tripId), { wrapper })
   let id = ''
@@ -175,6 +191,35 @@ describe('trips store hooks', () => {
     const url = rootHandle.doc().tripIndex[tripId]
     const item = getTripDoc(repo, url).tripItems[itemId] as Flight
     expect(item.seat).toBe('1A')
+  })
+
+  it('useCreateTripItem saves an item whose optional fields are empty', async () => {
+    const { repo, rootHandle, wrapper } = setup()
+    const tripId = await createTrip(wrapper)
+    const itemId = await createItem(wrapper, tripId, stayFixture(tripId))
+
+    const url = rootHandle.doc().tripIndex[tripId]
+    const item = getTripDoc(repo, url).tripItems[itemId] as Accommodation
+    expect(item.site.name).toBe('Hotel')
+    expect('reservedOn' in item).toBe(false)
+    expect('planned' in item.stayInterval).toBe(false)
+  })
+
+  it('useUpdateTripItem removes an optional field the edit cleared', async () => {
+    const { repo, rootHandle, wrapper } = setup()
+    const tripId = await createTrip(wrapper)
+    const stay = stayFixture(tripId)
+    const booked: Omit<Accommodation, 'id'> = { ...stay, reservedOn: 'Kamil' }
+    const itemId = await createItem(wrapper, tripId, booked)
+
+    const { result } = renderHook(() => useUpdateTripItem(tripId), { wrapper })
+    await act(async () => {
+      result.current(itemId, { ...stay, id: itemId })
+    })
+
+    const url = rootHandle.doc().tripIndex[tripId]
+    const item = getTripDoc(repo, url).tripItems[itemId] as Accommodation
+    expect('reservedOn' in item).toBe(false)
   })
 
   it('useDeleteTripItem removes the item from its TripDoc', async () => {
