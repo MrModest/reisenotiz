@@ -28,8 +28,11 @@ built from shell variables. Work around it, don't fight it:
 ```bash
 gh pr view <N> --json title,body,headRefOid,files
 gh pr diff <N>
+cp .claude/agents/ui-tester-push-screenshots.sh /tmp/ui-tester-<N>-push.sh
 gh pr checkout <N> --detach
 ```
+
+Copy the push script first: the checkout swaps in the PR's files, and an older PR doesn't have it.
 
 If the checkout is refused, apply the diff instead: `gh pr diff <N> | patch -p1`.
 
@@ -49,8 +52,8 @@ Your port is `<PORT>` = 20000 + `<N>` (PR 86 → 20086). In `apps/frontend/`:
 2. Start `pnpm dev --port <PORT> --strictPort` with Bash `run_in_background` (no `&`).
 3. Wait for it: `curl -sf --retry 60 --retry-connrefused --retry-delay 1 -o /dev/null http://localhost:<PORT>`
 
-When you're done testing, stop it with TaskStop on that background task, or
-`pkill -f "port <PORT>"`.
+When you're done testing, stop it with TaskStop on that background task. If that fails,
+`pkill -f "[p]ort <PORT>"` (the brackets keep it from matching, and killing, its own shell).
 
 No sync server is needed: without `VITE_SYNC_SERVER_URL` the app runs local-only on IndexedDB
 and starts empty, so create the trips and items your scenarios need through the UI. Plan their
@@ -87,10 +90,10 @@ When done: `agent-browser --session ui-tester-<N> close`, and stop the dev serve
 ## 4. Push the screenshots
 
 Screenshots live on a branch `screenshots-pr-<N>` that holds nothing else. Never commit them
-to the PR branch. Push them through the GitHub API with the script next to this agent:
+to the PR branch. Push them through the GitHub API with the script you copied in step 1:
 
 ```bash
-bash .claude/agents/ui-tester-push-screenshots.sh <N> /tmp/ui-tester-<N>
+bash /tmp/ui-tester-<N>-push.sh <N> /tmp/ui-tester-<N>
 ```
 
 It creates the branch if needed, adds this run's images in their own folder, and prints the

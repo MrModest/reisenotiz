@@ -6,7 +6,8 @@ set -euo pipefail
 N=$1 DIR=$2
 REPO=MrModest/reisenotiz BR=screenshots-pr-$N RUN=$(date -u +%Y%m%d-%H%M%S)
 
-parent=$(gh api "repos/$REPO/git/ref/heads/$BR" -q .object.sha 2>/dev/null || true)
+# gh api prints the 404 body on stdout, so trust the exit code, not the output.
+parent=$(gh api "repos/$REPO/git/ref/heads/$BR" -q .object.sha 2>/dev/null) || parent=""
 
 entries=()
 for f in "$DIR"/*.png; do
