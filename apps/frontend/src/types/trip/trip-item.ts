@@ -1,14 +1,6 @@
 import { Attachment } from './attachment'
 
-const tripItemTypes = [
-  'Flight',
-  'LongTransfer',
-  'PublicTransport',
-  'Accommodation',
-  'POI'
-] as const
-
-export type TripItemType = (typeof tripItemTypes)[number]
+export type TripItemType = 'Flight' | 'Accommodation'
 
 export interface TripItem {
   id: string

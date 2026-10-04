@@ -109,9 +109,10 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 
 - **Routes are explicit**, never a `mode` flag: `.../new` to create, `.../:id` to view,
   `.../:id/edit` to edit.
-- **One form component serves create and edit**, driven by `defaultValues`. The form renders
-  inputs, holds draft state and validates; it never fetches, never navigates, and never knows
-  which flow it is in.
+- **One form component serves create and edit.** It takes `{ item, onSubmit, onCancel }`: the
+  create page passes the type's `createDraft(tripId)`, the edit page the stored item. The form
+  renders inputs, holds draft state and validates; it never fetches, never navigates, and never
+  knows which flow it is in.
 - **Pages orchestrate**: read route params, read from the store, supply defaults, call the
   mutation hook, then navigate.
 - **Views are read-only** — no form, no draft state.
@@ -146,6 +147,21 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 `Textarea`, `Dialog`, `Popover`, `Tabs`, `Collapsible`, `Combobox`, `Calendar`, `Badge`,
 `Switch`, `Separator`, `Item` and `Timeline`. Read the existing component before adding a new
 one — most needs are already covered.
+
+**Trip Item Registry** (`src/components/trip-items/`):
+- `registry.ts` maps every `TripItemType` (`'Flight' | 'Accommodation'`) to a `TripItemModule`:
+  `type`, `label` (`Flight`, `Stay`), `icon`, `createDraft(tripId)`, `toTimelineElements(item)`,
+  `View` and `Form`. The map is exhaustive, so a new type does not compile until it has a module.
+- Every per-type decision goes through `getTripItemModule(type)`, never a `switch (type)`. It
+  returns `undefined` for a type this build does not know, and the caller shows a short message.
+  `tripItemModules` lists them for the type picker.
+- Each type has its own folder — `flight/`, `accommodation/` — holding `module`, `view`, `form`,
+  `schema` and `draft`. Parts both types use live in `shared/`.
+- `createDraft` defaults every time to `DateTime.now()` in the device zone.
+- `View` takes `{ item }`. Its delete goes through `shared/use-delete-trip-item.ts`, which removes
+  the item and navigates back.
+- The type interfaces in `src/types/` import nothing from the app; `ZonedInstant` lives in
+  `src/types/common/` for that reason.
 
 **Icon Component** (`src/components/icon/index.tsx`):
 - Exports `Icon` and `IconName` and nothing else. Its body is a static map from `IconName` to

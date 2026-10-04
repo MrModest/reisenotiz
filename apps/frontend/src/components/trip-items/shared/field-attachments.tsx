@@ -1,7 +1,7 @@
 import { FieldInput } from './field-input'
 import { FieldArrayList } from './field-array-list'
 import { generateUUID } from '@/types'
-import { FieldGroup } from '../ui/field'
+import { FieldGroup } from '@/components/ui/field'
 
 interface FieldAttachmentsProps {
   name: string

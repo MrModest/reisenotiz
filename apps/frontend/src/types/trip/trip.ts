@@ -1,4 +1,4 @@
-import { ZonedInstant } from '@/lib/datetime'
+import type { ZonedInstant } from '@/types/common'
 
 export interface Trip {
   id: string

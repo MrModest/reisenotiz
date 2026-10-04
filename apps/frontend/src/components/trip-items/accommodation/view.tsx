@@ -1,21 +1,17 @@
 import { formatTo } from '@/lib/datetime'
 import type { Accommodation } from '@/types'
-import { FieldView } from '@/components/trip-item/field-view'
+import { FieldView } from '@/components/trip-items/shared/field-view'
 import { Separator, SeparatorWithLabel } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
-import { ItemHeader } from '../item-header'
+import { useDeleteTripItemAndLeave } from '../shared/use-delete-trip-item'
+import { ItemHeader } from '../shared/item-header'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { FieldChipsView } from '../field-chips-view'
+import { FieldChipsView } from '../shared/field-chips-view'
 
-interface HotelItemViewProps {
-  accommodation: Accommodation
-  className?: string
-  onDelete: () => void
-}
-
-export function AccommodationItemView({ accommodation, className, onDelete }: HotelItemViewProps) {
+export function AccommodationView({ item: accommodation }: { item: Accommodation }) {
+  const onDelete = useDeleteTripItemAndLeave(accommodation)
   const navigate = useNavigate()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
@@ -25,7 +21,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
   }
 
   return (
-    <div className={className}>
+    <div className='mb-10'>
       <div className='flex justify-between items-center'>
         <ItemHeader
           title={`${accommodation.site.kind} Details`}

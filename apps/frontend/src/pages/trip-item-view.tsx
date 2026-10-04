@@ -1,14 +1,13 @@
 import { Suspense } from 'react'
-import { TripItemView } from '@/components/trip-item'
+import { getTripItemModule } from '@/components/trip-items/registry'
 import { PageHeader } from '@/components/layout/page-header'
 import {
   useTrip,
   useTripItem,
   useTripExists,
   useTripItemExists,
-  useDeleteTripItem,
 } from '@/store'
-import { useParams, useNavigate } from 'react-router'
+import { useParams } from 'react-router'
 import { routes } from '@/lib/routes'
 
 export function TripItemViewPage() {
@@ -34,19 +33,13 @@ function TripItemViewItemGate({ tripId, itemId }: { tripId: string; itemId: stri
 function TripItemViewContent({ tripId, itemId }: { tripId: string; itemId: string }) {
   const trip = useTrip(tripId)
   const tripItem = useTripItem(tripId, itemId)
-  const deleteTripItem = useDeleteTripItem(tripId)
-  const navigate = useNavigate()
-
-  const handleDelete = () => {
-    deleteTripItem(itemId)
-    navigate(-1)
-  }
+  const module = getTripItemModule(tripItem.type)
 
   return (
     <>
       <PageHeader title={trip.name} icon='trip' backTo={routes.trips.trip(tripId)} />
       <div className='min-h-0 flex-1 overflow-y-auto px-4'>
-        <TripItemView className='mb-10' tripItem={tripItem} onDelete={handleDelete} />
+        {module ? <module.View item={tripItem} /> : <UnsupportedType />}
       </div>
     </>
   )
@@ -54,4 +47,8 @@ function TripItemViewContent({ tripId, itemId }: { tripId: string; itemId: strin
 
 function NotFound({ tripId }: { tripId?: string }) {
   return <PageHeader title='Not found' backTo={tripId ? routes.trips.trip(tripId) : routes.trips.list()} />
+}
+
+function UnsupportedType() {
+  return <p className='text-muted-foreground'>This app version cannot show this item type</p>
 }
