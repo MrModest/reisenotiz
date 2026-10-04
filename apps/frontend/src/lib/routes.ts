@@ -6,8 +6,11 @@ export const routes = {
   trips: {
     list: () =>
       `/trips`,
+    new: '/trips/new',
     trip: (tripId: string) =>
       `/trips/${tripId}`,
+    edit: (tripId: string) =>
+      `/trips/${tripId}/edit`,
     item: (tripId: string, itemId: string) =>
       `/trips/${tripId}/items/${itemId}`,
     newItem: (tripId: string, type: TripItemType) =>

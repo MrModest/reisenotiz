@@ -5,6 +5,8 @@ import { PageHeader } from '@/components/layout/page-header'
 import { RouteErrorBoundary } from '@/components/route-error-boundary'
 import { HomePage } from '@/pages/home'
 import { TripsPage } from '@/pages/trips'
+import { TripCreatePage } from '@/pages/trip-create'
+import { TripEditPage } from '@/pages/trip-edit'
 import { SettingsPage } from '@/pages/settings'
 import { TripTimelinePage } from '@/pages/trip-timeline'
 import { TripItemViewPage } from '@/pages/trip-item-view'
@@ -46,8 +48,16 @@ export const router = createBrowserRouter([
         ...withBoundaries(TripsPage),
       },
       {
+        path: routes.trips.new,
+        ...withBoundaries(TripCreatePage),
+      },
+      {
         path: routes.trips.trip(':tripId'),
         ...withBoundaries(TripTimelinePage),
+      },
+      {
+        path: routes.trips.edit(':tripId'),
+        ...withBoundaries(TripEditPage),
       },
       {
         path: routes.trips.item(':tripId', ':itemId'),

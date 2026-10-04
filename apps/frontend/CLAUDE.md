@@ -110,10 +110,10 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 
 - **Routes are explicit**, never a `mode` flag: `.../new` to create, `.../:id` to view,
   `.../:id/edit` to edit.
-- **One form component serves create and edit.** It takes `{ item, onSubmit, onCancel }`: the
-  create page passes the type's `createDraft(tripId)`, the edit page the stored item. The form
-  renders inputs, holds draft state and validates; it never fetches, never navigates, and never
-  knows which flow it is in.
+- **One form component serves create and edit.** A trip item form takes `{ item, onSubmit, onCancel }`:
+  the create page passes the type's `createDraft(tripId)`, the edit page the stored item. `TripForm`
+  takes `{ defaultValues, onSubmit, onCancel }` instead. The form renders inputs, holds draft state
+  and validates; it never fetches, never navigates, and never knows which flow it is in.
 - **Pages orchestrate**: read route params, read from the store, supply defaults, call the
   mutation hook, then navigate.
 - **Views are read-only** — no form, no draft state.
@@ -163,7 +163,7 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 **UI Components** (`src/components/ui/`):
 ~20 components built on Base UI primitives with CVA variants, including `Button`, `Input`,
 `Textarea`, `Dialog`, `AlertDialog`, `Popover`, `Tabs`, `Collapsible`, `Combobox`, `Calendar`,
-`Badge`, `Switch`, `Separator`, `Skeleton`, `Item` and `Timeline`. Read the existing component
+`Badge`, `Switch`, `Separator`, `Skeleton`, `Item`, `DropdownMenu` and `Timeline`. Read the existing component
 before adding a new one — most needs are already covered.
 - `ConfirmDialog` is the app's confirmation, built on `AlertDialog`
 - shadcn installs come from `base-mira` with `--dry-run` and `--diff`, never `-y`: an install can
@@ -220,8 +220,19 @@ before adding a new one — most needs are already covered.
 
 **Trip list** (`src/pages/trips.tsx`, `src/components/trip/`): one grouped list on both viewports,
 no table, tabs or chip row. `TripRow` owns its `min-w-0`, clamps the name to two lines and stacks
-the items chip over the countdown chip, top-aligned. No row carries a status badge. Empty reads
-`No trips yet`; loading shows `SkeletonRows`
+the items chip over the countdown chip, top-aligned. No row carries a status badge. Each row's `···`
+(`DropdownMenu`) holds `Edit`, to `/trips/:id/edit`, and `Delete`, behind `ConfirmDialog`. The
+floating 48×48 `+` sits bottom-right over the list's scroller on both viewports and links to
+`/trips/new`. Empty reads `No trips yet`; loading shows `SkeletonRows`
+
+**Trip form** (`src/pages/trip-create.tsx`, `src/pages/trip-edit.tsx`, `src/components/trip/`):
+`/trips/new` and `/trips/:id/edit` render the one `TripForm` — name, start and end date, description.
+`trip-form-schema.ts` holds its zod schema (name capped at 100 through `schemas.string`, end date not
+before start) and the two conversions: `tripFormValues(trip)` reads each date in the trip's own zone,
+and `tripFromFormValues(values, zone)` anchors each date to the start of that day in `zone` — the
+device zone on create, the trip's start zone on edit. `Cancel` and `Save` sit in a footer bar inside
+the `<form>`, and `Save` is disabled until the form is dirty, so a save always writes a real change.
+Creating replaces the form with the new trip's timeline in history
 
 ## Testing
 

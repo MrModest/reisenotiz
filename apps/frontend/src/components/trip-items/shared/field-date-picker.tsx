@@ -39,8 +39,8 @@ export function FieldDatePicker({
   }
 
   return (
-    <Field className={cn('gap-0.5', className)}>
-      <FieldLabel className='gap-1 pr-10' htmlFor={name}>
+    <Field className={cn('gap-1.5', className)}>
+      <FieldLabel className='gap-1 pr-10 font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground' htmlFor={name}>
         {label}
         {isRequired && <Required />}
       </FieldLabel>
@@ -50,10 +50,11 @@ export function FieldDatePicker({
             <Button
               variant='outline'
               className={cn(
-                'justify-between items-center gap-2 text-left font-normal w-full h-auto py-1.5 md:py-1 text-sm',
+                'justify-between items-center gap-2 text-left font-normal w-full h-auto py-1.5 text-sm',
                 !field.value && 'text-muted-foreground',
                 error && 'border-destructive',
               )}
+              id={name}
               disabled={disabled}
             />
           }
