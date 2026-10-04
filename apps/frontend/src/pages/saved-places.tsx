@@ -46,7 +46,7 @@ export function SavedPlacesPage() {
         </div>
       </PageHeader>
       <div className='min-h-0 flex-1 overflow-y-auto'>
-        {shown.length === 0 ? (
+        {entries.length === 0 ? (
           <p className='p-4 text-sm text-muted-foreground'>The airports and places you use on trips appear here</p>
         ) : (
           <ItemGroup className='gap-0'>

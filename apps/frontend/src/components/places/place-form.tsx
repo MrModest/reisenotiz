@@ -2,7 +2,7 @@ import type { FormEvent, ReactNode } from 'react'
 import { FormProvider, useFormState, type FieldValues, type UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 
-interface PlaceFormProps<T extends FieldValues> {
+interface PlaceFormFrameProps<T extends FieldValues> {
   form: UseFormReturn<T>
   onSubmit: (values: T) => void
   onCancel: () => void
@@ -10,7 +10,7 @@ interface PlaceFormProps<T extends FieldValues> {
 }
 
 // The frame both place forms share: the fields, then `Cancel` and `Save`, Save disabled until dirty
-export function PlaceForm<T extends FieldValues>({ form, onSubmit, onCancel, children }: PlaceFormProps<T>) {
+export function PlaceForm<T extends FieldValues>({ form, onSubmit, onCancel, children }: PlaceFormFrameProps<T>) {
   function handleSubmit(e: FormEvent) {
     // The dialog is portalled out of a trip item's form in the DOM, not in React's tree
     e.stopPropagation()

@@ -11,7 +11,6 @@ const countryOptions = () => [
     .map((country) => ({ value: country.code, label: country.name })),
 ]
 
-// The fields every place type shares: name, address line, city, country, timezone
 export function PlaceFields() {
   return (
     <>

@@ -18,7 +18,7 @@ export function AirportRow({ place }: { place: Airport }) {
 const emptyAirport: Airport = { code: '', name: '', address: { countryCode: '', city: '', line: '' }, tzone: TZ.local() }
 
 // The code is the saved airport's key, so it is typed once and fixed after that
-export function AirportForm({ place, onSubmit, onCancel }: PlaceFormProps<Airport>) {
+export function AirportForm({ place, takenKeys, onSubmit, onCancel }: PlaceFormProps<Airport>) {
   const form = useForm<Airport>({
     resolver: zodResolver(airportSchema),
     defaultValues: place ?? emptyAirport,
@@ -34,8 +34,17 @@ export function AirportForm({ place, onSubmit, onCancel }: PlaceFormProps<Airpor
     form.setValue('tzone', known.tzone, { shouldDirty: true, shouldValidate: true })
   }
 
+  // Adding never edits: a code already saved is refused rather than overwritten
+  function handleSubmit(airport: Airport) {
+    if (!place && takenKeys.includes(airport.code)) {
+      form.setError('code', { message: `${airport.code} is already saved` })
+      return
+    }
+    onSubmit(airport)
+  }
+
   return (
-    <PlaceForm form={form} onSubmit={onSubmit} onCancel={onCancel}>
+    <PlaceForm form={form} onSubmit={handleSubmit} onCancel={onCancel}>
       <FieldInput name='code' label='Code' placeholder='IATA' required disabled={!!place} onValueChange={prefill} />
       <PlaceFields />
     </PlaceForm>

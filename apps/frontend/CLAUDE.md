@@ -213,7 +213,7 @@ before adding a new one — most needs are already covered.
 - `SavedPlaceRow` owns its `min-w-0`. The Places screen (`src/pages/saved-places.tsx`) owns the row
   shell and its `Archive` / `Restore` / `Delete` actions, and derives its chips from the types
   present.
-- Trip items still hold a copy of their place. The airport picker (`useAirports()`) lists saved
+- Trip items hold a copy of their place. The airport picker (`useAirports()`) lists saved
   airports that are not archived and the dictionary airports that are not saved; picking one
   materialises it into `savedAirports` before the flight copies it.
 
