@@ -91,7 +91,8 @@ in this app.
 
 - **Read the `automerge` skill before touching `src/store/` or `src/contexts/sync*`.** It covers
   `useDocument` / `changeDoc` semantics, `updateText` for collaborative text, and testing patterns.
-- Components use the hooks exported from `@/store`: `useTrips`, `useTrip`, `useTripItems`,
+- Components use the hooks exported from `@/store`: `useTrips` (newest start first),
+  `useTripSummaries` (each trip with its item count, unsorted), `useTrip`, `useTripItems`,
   `useTripItem`, `useTimelineElements`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
   and the `TripItem` equivalents. `userRecords` covers saved airports and accommodations.
 - **Document model**: `RootDoc` per user, `TripDoc` per trip — see
@@ -198,6 +199,29 @@ before adding a new one — most needs are already covered.
 - The locale is fixed to English in `DateTime`, never read from the browser; every shape spells
   its own tokens, so times are 24-hour and numeric dates day-first. `Calendar` starts weeks on
   Monday
+
+**Trip facts** (`src/lib/trip/`):
+- `getTripStatus` (`upcoming` / `ongoing` / `completed`), `getTripDuration`, `getTripDayIndex`,
+  `getTripCountdown`, `selectHomeTrip(trips, now)` and `groupTrips(summaries, now)` are pure
+  functions. Each takes `now` and none reads the clock
+- A trip's days are calendar dates in its start zone. It turns ongoing at its start instant and
+  completes the day after its last day
+- The countdown is the calendar difference in years, months and days, printing the largest
+  non-zero unit, floored: `In 1 day`, `In 3 months`, `In 1 year`; `Today` on the first day before
+  the start instant; `Day 9 of 12` while ongoing; none once completed. It is a fact about a trip,
+  not a date shape, so it is not in `formatTo`
+- `groupTrips` returns `Ongoing` (at most one trip, no count), `Upcoming n`, then one group per
+  year of completed trips. Unfinished trips run soonest first, completed trips most recent first.
+  Labels are natural case; uppercase is CSS
+- `selectHomeTrip` picks the ongoing trip, else the nearest upcoming one. The trip list highlights
+  the trip it picks
+- `useNow()` (`src/hooks/`) is the only clock read for these: a `DateTime` re-read on
+  `visibilitychange`, so a restored PWA shows the present without a tap
+
+**Trip list** (`src/pages/trips.tsx`, `src/components/trip/`): one grouped list on both viewports,
+no table, tabs or chip row. `TripRow` owns its `min-w-0`, clamps the name to two lines and stacks
+the items chip over the countdown chip, top-aligned. No row carries a status badge. Empty reads
+`No trips yet`; loading shows `SkeletonRows`
 
 ## Testing
 

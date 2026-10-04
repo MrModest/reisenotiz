@@ -18,6 +18,7 @@ import {
   useUpdateTripItem,
   useDeleteTripItem,
   useTrips,
+  useTripSummaries,
   useTrip,
   useTripItems,
   useTripItem,
@@ -271,5 +272,17 @@ describe('trips store hooks', () => {
 
     const { result: item } = renderHook(() => useTripItem(tripId, itemId), { wrapper })
     expect(item.current.id).toBe(itemId)
+  })
+
+  it('useTripSummaries pairs each trip with its item count', async () => {
+    const { wrapper } = setup()
+    const tokyo = await createTrip(wrapper, tripFixture({ name: 'Tokyo' }))
+    const empty = await createTrip(wrapper, tripFixture({ name: 'Empty' }))
+    await createItem(wrapper, tokyo)
+    await createItem(wrapper, tokyo, stayFixture(tokyo))
+
+    const { result } = renderHook(() => useTripSummaries(), { wrapper })
+    const counts = Object.fromEntries(result.current.map((s) => [s.trip.id, s.itemCount]))
+    expect(counts).toEqual({ [tokyo]: 2, [empty]: 0 })
   })
 })

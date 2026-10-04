@@ -1,31 +1,28 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
 import { Icon } from '@/components/icon'
-import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from '@/components/ui/item'
-import { Button } from '@/components/ui/button'
-import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { cn } from '@/lib/utils'
-import { formatTo } from '@/lib/datetime'
-import type { Trip } from '@/types'
-import { useDeleteTrip } from '@/store'
-import { routes } from '@/lib/routes'
+import { Item, ItemContent, ItemMedia, ItemTitle } from '@/components/ui/item'
+import type { DateTime } from '@/lib/datetime'
+import type { TripGroup } from '@/lib/trip'
 import { CreateTripDialog } from './create-trip-dialog'
+import { TripRow } from './trip-row'
 
 interface TripsProps {
-  trips: Trip[]
-  className?: string
+  groups: TripGroup[]
+  highlightedId?: string
+  now: DateTime
 }
 
-export function Trips({ trips, className }: TripsProps) {
+export function Trips({ groups, highlightedId, now }: TripsProps) {
   const [dialogOpen, setDialogOpen] = useState(false)
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
+    <div className='flex flex-col pb-4'>
+      {/* ponytail: the create entry stays until #70's floating + and trip form page replace it */}
       <Item
         variant='outline'
         size='sm'
         onClick={() => setDialogOpen(true)}
-        className='cursor-pointer hover:bg-accent hover:text-accent-foreground hover:scale-[1.02] active:scale-[0.98] transition-transform'
+        className='mx-4 mt-4 cursor-pointer hover:bg-accent hover:text-accent-foreground'
       >
         <ItemMedia>
           <Icon name='add' />
@@ -34,62 +31,19 @@ export function Trips({ trips, className }: TripsProps) {
           <ItemTitle>New Trip</ItemTitle>
         </ItemContent>
       </Item>
-      {trips.map((trip) => (
-        <TripItem key={trip.id} trip={trip} />
+      {groups.length === 0 && <p className='px-4 pt-5 text-muted-foreground'>No trips yet</p>}
+      {groups.map((group) => (
+        <section key={group.label}>
+          <h2 className='flex items-center gap-2 px-4 pt-5 pb-2 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase'>
+            {group.label}
+            {group.count !== undefined && <span className='text-foreground'>{group.count}</span>}
+          </h2>
+          {group.trips.map((summary) => (
+            <TripRow key={summary.trip.id} summary={summary} now={now} highlighted={summary.trip.id === highlightedId} />
+          ))}
+        </section>
       ))}
       <CreateTripDialog open={dialogOpen} onOpenChange={setDialogOpen} />
     </div>
-  )
-}
-
-function TripItem({ trip }: { trip: Trip }) {
-  const navigate = useNavigate()
-  const deleteTrip = useDeleteTrip()
-  const [confirmOpen, setConfirmOpen] = useState(false)
-
-  return (
-    <>
-      <Item
-        variant='outline'
-        size='sm'
-        onClick={() => navigate(routes.trips.trip(trip.id))}
-        className='cursor-pointer hover:bg-accent hover:text-accent-foreground hover:scale-[1.02] active:scale-[0.98] transition-transform'
-      >
-        <ItemMedia>
-          <Icon name='trip' />
-        </ItemMedia>
-        <ItemContent>
-          <ItemTitle>{trip.name}</ItemTitle>
-          <ItemDescription>
-            {formatTo.dateRange(trip.startDate, trip.endDate)}
-          </ItemDescription>
-        </ItemContent>
-        <ItemActions>
-          <Button
-            variant='ghost'
-            size='icon-sm'
-            onClick={(e) => {
-              e.stopPropagation()
-              setConfirmOpen(true)
-            }}
-          >
-            <Icon name='trash' />
-          </Button>
-        </ItemActions>
-      </Item>
-      <ConfirmDialog
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title='Delete Trip'
-        description={
-          <>
-            Are you sure you want to delete <b>{trip.name}</b>?<br />
-            This action cannot be undone.
-          </>
-        }
-        confirmLabel='Delete'
-        onConfirm={() => deleteTrip(trip.id)}
-      />
-    </>
   )
 }

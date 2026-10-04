@@ -121,6 +121,14 @@ export class DateTime {
   }
 
   /**
+   * Calendar difference from `earlier` to this date in whole years, months and days.
+   */
+  calendarDiff(earlier: DateTime): { years: number; months: number; days: number } {
+    const { years, months, days } = this.dt.diff(earlier.dt, ['years', 'months', 'days'])
+    return { years, months, days: Math.floor(days) }
+  }
+
+  /**
    * Converts this date to a different timezone.
    */
   toZone(zone: string): DateTime {

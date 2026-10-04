@@ -1,5 +1,6 @@
 import { useDocument, useDocuments, useRepo } from '@automerge/react'
 import type { Trip, TripItem } from '@/types'
+import type { TripSummary } from '@/lib/trip'
 import type { TimelineElement } from '@/components/ui/timeline'
 import { getTripItemModule } from '@/components/trip-items/registry'
 import { generateUUID } from '@/types/common/uuid'
@@ -40,6 +41,16 @@ export function useTrips(): Trip[] {
   return Array.from(tripDocs.values())
     .map((doc) => doc.trip)
     .sort((a, b) => b.startDate.instant.localeCompare(a.startDate.instant))
+}
+
+export function useTripSummaries(): TripSummary[] {
+  const [rootDoc] = useRootDoc()
+  const [tripDocs] = useDocuments<TripDoc>(Object.values(rootDoc.tripIndex), { suspense: true })
+
+  return Array.from(tripDocs.values()).map((doc) => ({
+    trip: doc.trip,
+    itemCount: Object.keys(doc.tripItems).length,
+  }))
 }
 
 export function useTrip(tripId: string): Trip {
