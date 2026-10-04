@@ -1,5 +1,7 @@
+import { Suspense, type ComponentType } from 'react'
 import { createBrowserRouter } from 'react-router'
 import { AppShell } from '@/components/layout/app-shell'
+import { PageHeader } from '@/components/layout/page-header'
 import { RouteErrorBoundary } from '@/components/route-error-boundary'
 import { HomePage } from '@/pages/home'
 import { TripsPage } from '@/pages/trips'
@@ -14,11 +16,22 @@ import { AccommodationsRecordsPage } from '@/pages/records/accommodations'
 import { routes } from '@/lib/routes'
 import { airportDictionary, accommodationDictionary } from '@/services'
 
+// One Suspense and one error boundary per route, inside the shell, so navigation survives both
+function withBoundaries(Page: ComponentType) {
+  return {
+    ErrorBoundary: RouteErrorBoundary,
+    element: (
+      <Suspense fallback={null}>
+        <Page />
+      </Suspense>
+    ),
+  }
+}
+
 export const router = createBrowserRouter([
   {
     path: routes.root,
     Component: AppShell,
-    ErrorBoundary: RouteErrorBoundary,
     loader: async () => {
       await Promise.all([airportDictionary.load(), accommodationDictionary.load()])
       return null
@@ -26,43 +39,47 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: HomePage,
+        ...withBoundaries(HomePage),
       },
       {
         path: routes.trips.list(),
-        Component: TripsPage,
+        ...withBoundaries(TripsPage),
       },
       {
         path: routes.trips.trip(':tripId'),
-        Component: TripTimelinePage,
+        ...withBoundaries(TripTimelinePage),
       },
       {
         path: routes.trips.item(':tripId', ':itemId'),
-        Component: TripItemViewPage,
+        ...withBoundaries(TripItemViewPage),
       },
       {
         path: routes.trips.trip(':tripId') + '/items/new',
-        Component: TripItemCreatePage,
+        ...withBoundaries(TripItemCreatePage),
       },
       {
         path: routes.trips.editItem(':tripId', ':itemId'),
-        Component: TripItemEditPage,
+        ...withBoundaries(TripItemEditPage),
       },
       {
         path: routes.settings,
-        Component: SettingsPage,
+        ...withBoundaries(SettingsPage),
       },
       {
         path: routes.records.root,
-        Component: RecordsPage,
+        ...withBoundaries(RecordsPage),
       },
       {
         path: routes.records.airports,
-        Component: AirportsRecordsPage,
+        ...withBoundaries(AirportsRecordsPage),
       },
       {
         path: routes.records.accommodations,
-        Component: AccommodationsRecordsPage,
+        ...withBoundaries(AccommodationsRecordsPage),
+      },
+      {
+        path: '*',
+        element: <PageHeader title='Not found' />,
       },
     ],
   },

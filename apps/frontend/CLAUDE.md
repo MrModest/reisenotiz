@@ -142,11 +142,32 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 - `useDocumentTitle(name)` (`src/hooks/`) sets `<name> – Reisenotiz`. Only outer pages call it,
   never a trip item view or form
 
+**Loading and error** (`src/routes.tsx`, `src/components/route-error-boundary.tsx`):
+- Every child route gets its own `Suspense` (fallback: nothing) and `RouteErrorBoundary` from
+  `withBoundaries()` in `src/routes.tsx`, so the rail and tab bar survive both a wait and a throw. There is
+  no boundary on the root route and no `Suspense` above the router. An unmatched URL is a
+  catch-all child route reading `Not found`
+- A trip id missing from the index is not an error: pages gate on `useTripExists` /
+  `useTripItemExists` and `PageHeader` reads `Not found`
+- `RouteErrorBoundary` classifies with `isDocumentUnavailableError` (`src/store/automerge/`), the
+  only place the library's `Document … is unavailable` message is matched. A trip file that has not
+  reached this device shows `NotSyncedYet`, titled `Not synced yet`: no button, and it calls `window.location.reload()` on
+  the first transition to a connected sync state, at most once per mount. Anything else shows
+  `UnexpectedError`, titled `Error`: one sentence and `Reload`; the error goes to `console.error` and is never
+  rendered
+- `SkeletonRows` (`src/components/ui/`) is the only loading visual, used on the trip list and the
+  timeline. Its rows are held invisible for 200ms by a CSS animation delay. Everything else
+  suspends to nothing; nothing in the app spins
+
 **UI Components** (`src/components/ui/`):
 ~20 components built on Base UI primitives with CVA variants, including `Button`, `Input`,
-`Textarea`, `Dialog`, `Popover`, `Tabs`, `Collapsible`, `Combobox`, `Calendar`, `Badge`,
-`Switch`, `Separator`, `Item` and `Timeline`. Read the existing component before adding a new
-one — most needs are already covered.
+`Textarea`, `Dialog`, `AlertDialog`, `Popover`, `Tabs`, `Collapsible`, `Combobox`, `Calendar`,
+`Badge`, `Switch`, `Separator`, `Skeleton`, `Item` and `Timeline`. Read the existing component
+before adding a new one — most needs are already covered.
+- `ConfirmDialog` is the app's confirmation, built on `AlertDialog`
+- shadcn installs come from `base-mira` with `--dry-run` and `--diff`, never `-y`: an install can
+  overwrite `button.tsx` and drop its `ButtonVariant` export, and it writes `import { cn } from "cn"`,
+  which must be `@/lib/utils`
 
 **Trip Item Registry** (`src/components/trip-items/`):
 - `registry.ts` maps every `TripItemType` (`'Flight' | 'Accommodation'`) to a `TripItemModule`:
