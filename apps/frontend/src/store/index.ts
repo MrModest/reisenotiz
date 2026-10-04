@@ -2,6 +2,7 @@ export {
   useTripExists,
   useTripItemExists,
   useTrips,
+  useTripSummaries,
   useTrip,
   useTripItems,
   useTripItem,
