@@ -64,7 +64,7 @@ When done: `agent-browser --session ui-tester-<N> close`, and stop the dev serve
 ## 4. Push the screenshots
 
 Screenshots live on a branch `screenshots-pr-<N>` that holds nothing else. Never commit them
-to the PR branch. A workflow deletes the branch when the PR closes.
+to the PR branch.
 
 ```bash
 DIR=/tmp/ui-tester-shots-<N>
