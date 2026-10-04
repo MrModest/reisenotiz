@@ -1,6 +1,7 @@
 import { useDocument } from '@automerge/react'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
 import type { RootDoc } from '@/store/automerge/types'
+import { withoutUndefined } from '@/store/automerge/without-undefined'
 import type { Airport } from '@/types'
 
 interface UserAirportsState {
@@ -22,14 +23,14 @@ export function useUserAirportsStore<T>(selector: (state: UserAirportsState) => 
 
     addAirport: (airport) => {
       changeDoc((d) => {
-        d.userAirports[airport.code] = airport
+        d.userAirports[airport.code] = withoutUndefined(airport)
       })
     },
 
     updateAirport: (code, airport) => {
       changeDoc((d) => {
         delete d.userAirports[code]
-        d.userAirports[airport.code] = airport
+        d.userAirports[airport.code] = withoutUndefined(airport)
       })
     },
 

@@ -1,6 +1,7 @@
 import { useDocument } from '@automerge/react'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
 import type { RootDoc } from '@/store/automerge/types'
+import { withoutUndefined } from '@/store/automerge/without-undefined'
 import { generateUUID, type AccommodationSite } from '@/types'
 
 export type AccommodationSiteRecord = AccommodationSite & { id: string }
@@ -25,14 +26,14 @@ export function useUserAccommodationsStore<T>(selector: (state: UserAccommodatio
     addAccommodation: (site) => {
       const record: AccommodationSiteRecord = { ...site, id: generateUUID() }
       changeDoc((d) => {
-        d.userAccommodations[record.id] = record
+        d.userAccommodations[record.id] = withoutUndefined(record)
       })
       return record
     },
 
     updateAccommodation: (id, site) => {
       changeDoc((d) => {
-        d.userAccommodations[id] = { ...site, id }
+        d.userAccommodations[id] = withoutUndefined({ ...site, id })
       })
     },
 
