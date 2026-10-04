@@ -25,7 +25,7 @@ export function AccommodationItemView({ accommodation, className, onDelete }: Ho
   }
 
   return (
-    <div className={cn('w-default', className)}>
+    <div className={className}>
       <div className='flex justify-between items-center'>
         <ItemHeader
           title={`${accommodation.site.kind} Details`}

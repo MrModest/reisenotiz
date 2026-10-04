@@ -40,23 +40,25 @@ Four destinations, one config, two presentations
 ([#33](https://github.com/MrModest/reisenotiz/issues/33)):
 
 ```
-Home  ·  Trips  ·  Saved places  ·  Settings
+Home  ·  Trips  ·  Places  ·  Settings
 ```
 
 - **Rail** (≥900px): label beside icon, `aria-label='Primary'`. At its foot, the collapse toggle,
   then `SyncStatusBadge variant='rail'`. Nothing else — no recent trips, no `New trip`, no search.
   232px expanded, 64px collapsed to icons only with the name on `title`. The collapsed state
   persists in `localStorage` and defaults to expanded. Frame `22` is drawn in both states.
-- **Tab bar** (<900px): label below icon, `aria-label='Main'`, `Saved places` shortened to
-  `Places` for its 52px slot. Four items evenly spread, **no centre `+`**. Bottom padding is
-  `env(safe-area-inset-bottom)` with a 22px fallback.
+- **Tab bar** (<900px): label below icon, `aria-label='Main'`. Four items evenly spread, **no
+  centre `+`**. Bottom padding is `env(safe-area-inset-bottom)` with a 22px fallback.
 - `Statistics` is in neither: no screen, no route, nothing to navigate to.
 - `end` is passed by the renderer as `entry.to === routes.root`, so `/` matches exactly and
   everything else by prefix — which keeps `Trips` lit while a trip timeline is open.
 
 **Page titles follow the navigation.** A destination's page title is its nav label, so the lit nav
 row and the page heading read the same word
-([#49](https://github.com/MrModest/reisenotiz/issues/49)). Home is the one exception.
+([#49](https://github.com/MrModest/reisenotiz/issues/49)). Home is the one exception. The saved
+places destination is labelled `Places` everywhere — rail, tab bar, page title and browser tab —
+while its route stays `/saved-places` and the glossary term stays **Saved Place**
+([#65](https://github.com/MrModest/reisenotiz/issues/65)).
 
 ## `PageHeader`
 
@@ -519,7 +521,7 @@ attribute to intent is drift by the time anyone else touches the file.
 
 One flat list, not a hub with a page per kind.
 
-**Header**: title `Saved places`, chip row as `children`, no back, no actions.
+**Header**: title `Places`, chip row as `children`, no back, no actions.
 
 **Chip row**: `ALL` plus one chip per type present, derived as `unique(entries.map(e => e.type))` —
 the same component and behaviour as the timeline's. Labels are `Airport` and `Accommodation`;

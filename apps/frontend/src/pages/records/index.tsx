@@ -1,15 +1,17 @@
 import { Link } from 'react-router'
-import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
+import { PageHeader } from '@/components/layout/page-header'
+import { useDocumentTitle } from '@/hooks/use-document-title'
 import { Icon } from '@/components/icon'
 import { routes } from '@/lib/routes'
 import { Item, ItemContent, ItemGroup, ItemMedia, ItemTitle, ItemDescription } from '@/components/ui/item'
 
 export function RecordsPage() {
-  useHeaderTitle('Records')
-  useHeaderBackButton(true)
+  useDocumentTitle('Places')
 
   return (
-    <div className='p-4 w-default'>
+    <>
+    <PageHeader title='Places' />
+    <div className='min-h-0 flex-1 overflow-y-auto p-4'>
       <ItemGroup>
         <Item variant='outline' render={<Link to={routes.records.airports} />}>
           <ItemMedia variant='icon'>
@@ -33,5 +35,6 @@ export function RecordsPage() {
         </Item>
       </ItemGroup>
     </div>
+    </>
   )
 }

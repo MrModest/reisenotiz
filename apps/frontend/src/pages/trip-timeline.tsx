@@ -2,21 +2,22 @@ import { Suspense } from 'react'
 import { useParams } from 'react-router'
 import { TimelineLayout } from '@/components/ui/timeline'
 import { AddTripItemFab } from '@/components/trip-timeline'
+import { PageHeader } from '@/components/layout/page-header'
 import { useTrip, useTripExists, useTimelineElements } from '@/store'
-import { useHeaderTitle, useHeaderBackButton } from '@/hooks/use-header-title'
+import { useDocumentTitle } from '@/hooks/use-document-title'
+import { routes } from '@/lib/routes'
 
 export function TripTimelinePage() {
   const { tripId } = useParams<{ tripId: string }>()
-  useHeaderBackButton(true)
-
   if (!tripId) return <NotFound />
   return <TripTimelineGate tripId={tripId} />
 }
 
 function TripTimelineGate({ tripId }: { tripId: string }) {
   if (!useTripExists(tripId)) return <NotFound />
+  // the title slot stays empty while the trip file loads; `Not found` is never the loading fallback
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<PageHeader title='' backTo={routes.trips.list()} />}>
       <TripTimelineContent tripId={tripId} />
     </Suspense>
   )
@@ -25,20 +26,21 @@ function TripTimelineGate({ tripId }: { tripId: string }) {
 function TripTimelineContent({ tripId }: { tripId: string }) {
   const trip = useTrip(tripId)
   const timelineElements = useTimelineElements(tripId)
-  useHeaderTitle(trip.name, 'timeline')
+  useDocumentTitle(trip.name)
 
   return (
     <>
-      <TimelineLayout items={timelineElements} size='md' animate={true} />
-      <AddTripItemFab tripId={tripId} />
+      <PageHeader title={trip.name} backTo={routes.trips.list()} />
+      <div className='relative min-h-0 flex-1'>
+        <div className='h-full overflow-y-auto p-4'>
+          <TimelineLayout items={timelineElements} size='md' animate={true} />
+        </div>
+        <AddTripItemFab tripId={tripId} />
+      </div>
     </>
   )
 }
 
 function NotFound() {
-  return (
-    <div className='p-4 text-center'>
-      <p className='text-muted-foreground'>Trip not found</p>
-    </div>
-  )
+  return <PageHeader title='Not found' backTo={routes.trips.list()} />
 }

@@ -67,7 +67,7 @@ export function AddTripItemFab({ tripId }: AddTripItemFabProps) {
         )}
       </AnimatePresence>
 
-      <div className='fixed bottom-20 md:bottom-4 right-4 z-50'>
+      <div className='absolute bottom-4 right-4 z-50'>
         <motion.div
           className='flex flex-col gap-2 items-end'
           initial={false}

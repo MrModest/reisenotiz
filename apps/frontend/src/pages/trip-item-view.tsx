@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { TripItemView } from '@/components/trip-item'
-import { Loader } from '@/components/ui/loader'
+import { PageHeader } from '@/components/layout/page-header'
 import {
   useTrip,
   useTripItem,
@@ -9,6 +9,7 @@ import {
   useDeleteTripItem,
 } from '@/store'
 import { useParams, useNavigate } from 'react-router'
+import { routes } from '@/lib/routes'
 
 export function TripItemViewPage() {
   const { tripId, itemId } = useParams<{ tripId: string; itemId: string }>()
@@ -19,14 +20,14 @@ export function TripItemViewPage() {
 function TripItemViewTripGate({ tripId, itemId }: { tripId: string; itemId: string }) {
   if (!useTripExists(tripId)) return <NotFound />
   return (
-    <Suspense fallback={<Loader />}>
+    <Suspense fallback={<PageHeader title='' backTo={routes.trips.trip(tripId)} />}>
       <TripItemViewItemGate tripId={tripId} itemId={itemId} />
     </Suspense>
   )
 }
 
 function TripItemViewItemGate({ tripId, itemId }: { tripId: string; itemId: string }) {
-  if (!useTripItemExists(tripId, itemId)) return <NotFound />
+  if (!useTripItemExists(tripId, itemId)) return <NotFound tripId={tripId} />
   return <TripItemViewContent tripId={tripId} itemId={itemId} />
 }
 
@@ -41,13 +42,16 @@ function TripItemViewContent({ tripId, itemId }: { tripId: string; itemId: strin
     navigate(-1)
   }
 
-  return <TripItemView className='mb-10' trip={trip} tripItem={tripItem} onDelete={handleDelete} />
+  return (
+    <>
+      <PageHeader title={trip.name} icon='trip' backTo={routes.trips.trip(tripId)} />
+      <div className='min-h-0 flex-1 overflow-y-auto px-4'>
+        <TripItemView className='mb-10' tripItem={tripItem} onDelete={handleDelete} />
+      </div>
+    </>
+  )
 }
 
-function NotFound() {
-  return (
-    <div className='p-4 text-center'>
-      <p className='text-muted-foreground'>Trip item not found</p>
-    </div>
-  )
+function NotFound({ tripId }: { tripId?: string }) {
+  return <PageHeader title='Not found' backTo={tripId ? routes.trips.trip(tripId) : routes.trips.list()} />
 }

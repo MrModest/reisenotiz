@@ -4,7 +4,6 @@ import type { TimelineElement } from './types'
 import { Link } from 'react-router'
 import { formatTo } from '@/lib/datetime'
 import { IconName } from '@/components/icon'
-import { cn } from '@/lib/utils'
 
 interface TimelineLayoutProps {
   items: TimelineElement[]
@@ -16,7 +15,7 @@ interface TimelineLayoutProps {
 
 export const TimelineLayout = ({ items, size = 'md', customIcon, animate = true, className }: TimelineLayoutProps) => {
   return (
-    <Timeline size={size} className={cn('w-default', className)}>
+    <Timeline size={size} className={className}>
       {[...items].map((item, index) => (
         <motion.div
           key={item.id}

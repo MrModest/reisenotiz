@@ -1,5 +1,5 @@
 import { createBrowserRouter } from 'react-router'
-import { AppLayout } from '@/components/layout/app-layout'
+import { AppShell } from '@/components/layout/app-shell'
 import { RouteErrorBoundary } from '@/components/route-error-boundary'
 import { HomePage } from '@/pages/home'
 import { TripsPage } from '@/pages/trips'
@@ -17,7 +17,7 @@ import { airportDictionary, accommodationDictionary } from '@/services'
 export const router = createBrowserRouter([
   {
     path: routes.root,
-    Component: AppLayout,
+    Component: AppShell,
     ErrorBoundary: RouteErrorBoundary,
     loader: async () => {
       await Promise.all([airportDictionary.load(), accommodationDictionary.load()])

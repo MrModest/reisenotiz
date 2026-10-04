@@ -96,7 +96,7 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
 
   return (
     <FormProvider {...form}>
-      <form className={cn('w-default mb-10', className)} onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}>
+      <form className={cn('mb-10', className)} onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}>
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
             title={isCreate ? 'New Flight' : 'Edit Flight'}
