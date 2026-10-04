@@ -28,7 +28,7 @@ function NotSyncedYet() {
   }, [connected])
 
   return (
-    <ErrorScreen>
+    <ErrorScreen title='Not synced yet'>
       <p className='text-sm text-muted-foreground'>This trip hasn't reached this device yet.</p>
     </ErrorScreen>
   )
@@ -40,17 +40,17 @@ function UnexpectedError({ error }: { error: unknown }) {
   }, [error])
 
   return (
-    <ErrorScreen>
+    <ErrorScreen title='Error'>
       <p className='text-sm text-muted-foreground'>Something went wrong on this screen.</p>
       <Button variant='outline' onClick={() => window.location.reload()}>Reload</Button>
     </ErrorScreen>
   )
 }
 
-function ErrorScreen({ children }: { children: ReactNode }) {
+function ErrorScreen({ title, children }: { title: string; children: ReactNode }) {
   return (
     <>
-      <PageHeader title='' />
+      <PageHeader title={title} />
       <div className='flex min-h-0 flex-1 flex-col items-start gap-3 overflow-y-auto p-4'>{children}</div>
     </>
   )

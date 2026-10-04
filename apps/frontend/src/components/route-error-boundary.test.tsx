@@ -87,6 +87,7 @@ describe('RouteErrorBoundary state selection', () => {
     renderTimeline(repo, { 'trip-1': generateAutomergeUrl() })
 
     expect(await screen.findByText(/hasn't reached this device yet/)).toBeDefined()
+    expect(screen.getByRole('heading', { name: 'Not synced yet' })).toBeDefined()
     expect(screen.queryByRole('button')).toBeNull()
     expect(reload).not.toHaveBeenCalled()
 
@@ -104,6 +105,7 @@ describe('RouteErrorBoundary state selection', () => {
     renderTimeline(new Repo({ network: [] }), { 'trip-1': 'automerge:not-a-document' as AutomergeUrl })
 
     expect(await screen.findByRole('button', { name: 'Reload' })).toBeDefined()
+    expect(screen.getByRole('heading', { name: 'Error' })).toBeDefined()
     expect(screen.queryByText(/automerge:not-a-document/)).toBeNull()
     expect(screen.queryByText(/hasn't reached this device yet/)).toBeNull()
     expect(console.error).toHaveBeenCalledWith(expect.objectContaining({ message: expect.stringContaining('automerge:not-a-document') }))

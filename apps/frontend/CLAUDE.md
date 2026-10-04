@@ -151,9 +151,9 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
   `useTripItemExists` and `PageHeader` reads `Not found`
 - `RouteErrorBoundary` classifies with `isDocumentUnavailableError` (`src/store/automerge/`), the
   only place the library's `Document … is unavailable` message is matched. A trip file that has not
-  reached this device shows `NotSyncedYet`: no button, and it calls `window.location.reload()` on
+  reached this device shows `NotSyncedYet`, titled `Not synced yet`: no button, and it calls `window.location.reload()` on
   the first transition to a connected sync state, at most once per mount. Anything else shows
-  `UnexpectedError`: one sentence and `Reload`; the error goes to `console.error` and is never
+  `UnexpectedError`, titled `Error`: one sentence and `Reload`; the error goes to `console.error` and is never
   rendered
 - `SkeletonRows` (`src/components/ui/`) is the only loading visual, used on the trip list and the
   timeline. Its rows are held invisible for 200ms by a CSS animation delay. Everything else
