@@ -2,23 +2,24 @@ import { useState } from 'react'
 import { FieldErrors, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Airport, Flight } from '@/types'
-import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './edit/formSchema'
+import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './schema'
 import { Field, FieldSet } from '@/components/ui/field'
-import { cn } from '@/lib/utils'
-import { ItemHeader } from '../item-header'
+import type { TripItemFormProps } from '../module'
+import { flightModule } from './module'
+import { ItemHeader } from '../shared/item-header'
 import { Separator } from '@/components/ui/separator'
-import { FieldInput } from '../field-input'
-import { FieldPassengers } from '../field-passengers'
-import { FieldDatePicker } from '../field-date-picker'
-import { FieldTimePicker } from '../field-time-picker'
+import { FieldInput } from '../shared/field-input'
+import { FieldPassengers } from '../shared/field-passengers'
+import { FieldDatePicker } from '../shared/field-date-picker'
+import { FieldTimePicker } from '../shared/field-time-picker'
 import { formatTo } from '@/lib/datetime'
-import { convertTime } from '../utils'
+import { convertTime } from '../shared/utils'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
-import { CollapsibleSection } from '../collapsible-section'
-import { NoteSection } from '../section-note'
-import { AttachmentsSection } from '../section-attachments'
-import { FieldErrorAt } from '../field-errors'
+import { CollapsibleSection } from '../shared/collapsible-section'
+import { NoteSection } from '../shared/section-note'
+import { AttachmentsSection } from '../shared/section-attachments'
+import { FieldErrorAt } from '../shared/field-errors'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { AirportSelector } from '@/components/ui/combobox/airport'
 import { useAirports } from '@/hooks/use-airports'
@@ -65,15 +66,7 @@ function PassengersSection({ children }: { children: React.ReactNode }) {
   )
 }
 
-interface FlightItemFormProps {
-  flight: Flight
-  onSubmit: (flight: Flight) => void
-  onCancel: () => void
-  isCreate: boolean
-  className?: string
-}
-
-export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className }: FlightItemFormProps) {
+export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormProps<Flight>) {
   const form = useForm<FlightFormSchema>({
     resolver: zodResolver(flightFormSchema),
     defaultValues: defaultsFromFlight(flight),
@@ -96,11 +89,11 @@ export function FlightItemForm({ flight, onSubmit, onCancel, isCreate, className
 
   return (
     <FormProvider {...form}>
-      <form className={cn('mb-10', className)} onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}>
+      <form className='mb-10' onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}>
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
-            title={isCreate ? 'New Flight' : 'Edit Flight'}
-            icon='flight'
+            title={flightModule.label}
+            icon={flightModule.icon}
             buttons={[
               { icon: 'save', isSubmit: true },
               { icon: 'cancel', onClick: onCancel },

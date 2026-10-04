@@ -7,7 +7,7 @@ import { userAirportSchema, type UserAirportSchema } from '@/lib/validations/use
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { FieldSet } from '@/components/ui/field'
-import { FieldInput } from '@/components/trip-item/field-input'
+import { FieldInput } from '@/components/trip-items/shared/field-input'
 import {
   Dialog,
   DialogContent,
@@ -17,7 +17,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog'
 import type { Airport } from '@/types'
-import { FieldTimezone } from '../trip-item/field-timezone'
+import { FieldTimezone } from '@/components/trip-items/shared/field-timezone'
 
 interface AirportRecordDialogProps {
   open: boolean

@@ -7,23 +7,25 @@ import {
   accommodationFormSchema,
   AccommodationFormSchema,
   AccommodationStayIntervalSchema,
-} from './edit/formSchema'
+} from './schema'
 import { Field, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
-import { ItemHeader } from '@/components/trip-item/item-header'
+import type { TripItemFormProps } from '../module'
+import { accommodationModule } from './module'
+import { ItemHeader } from '@/components/trip-items/shared/item-header'
 import { Separator } from '@/components/ui/separator'
-import { FieldInput } from '@/components/trip-item/field-input'
-import { FieldDatePicker } from '@/components/trip-item/field-date-picker'
-import { FieldTimePicker } from '@/components/trip-item/field-time-picker'
-import { convertTime } from '@/components/trip-item/utils'
+import { FieldInput } from '@/components/trip-items/shared/field-input'
+import { FieldDatePicker } from '@/components/trip-items/shared/field-date-picker'
+import { FieldTimePicker } from '@/components/trip-items/shared/field-time-picker'
+import { convertTime } from '@/components/trip-items/shared/utils'
 import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { formatTo } from '@/lib/datetime'
 import { getCountryFlag } from '@/lib/utils/country-flag'
-import { CollapsibleSection } from '@/components/trip-item/collapsible-section'
-import { FieldErrorAt } from '@/components/trip-item/field-errors'
-import { NoteSection } from '@/components/trip-item/section-note'
-import { AttachmentsSection } from '@/components/trip-item/section-attachments'
+import { CollapsibleSection } from '@/components/trip-items/shared/collapsible-section'
+import { FieldErrorAt } from '@/components/trip-items/shared/field-errors'
+import { NoteSection } from '@/components/trip-items/shared/section-note'
+import { AttachmentsSection } from '@/components/trip-items/shared/section-attachments'
 import { AccommodationSelector } from '@/components/ui/combobox/accommodation'
 import { useAccommodations } from '@/hooks/use-accommodations'
 import { AccommodationRecordDialog } from '@/components/records/accommodation-record-dialog'
@@ -152,21 +154,7 @@ function StayIntervalFields() {
   )
 }
 
-interface AccommodationItemFormProps {
-  accommodation: Accommodation
-  onSubmit: (accommodation: Accommodation) => void
-  onCancel: () => void
-  isCreate: boolean
-  className?: string
-}
-
-export function AccommodationItemForm({
-  accommodation,
-  onSubmit,
-  onCancel,
-  isCreate,
-  className,
-}: AccommodationItemFormProps) {
+export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: TripItemFormProps<Accommodation>) {
   const accommodations = useAccommodations()
   const [selectedRecord, setSelectedRecord] = useState<AccommodationSiteRecord | null>(() =>
     accommodation.site.id ? (accommodations.find((r) => r.id === accommodation.site.id) ?? null) : null,
@@ -193,14 +181,12 @@ export function AccommodationItemForm({
 
   return (
     <FormProvider {...form}>
-      <form
-        className={cn('mb-10', className)}
-        onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}
+      <form className='mb-10' onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}
       >
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
-            title={isCreate ? 'New Accommodation' : 'Edit Accommodation'}
-            icon='accommodation'
+            title={accommodationModule.label}
+            icon={accommodationModule.icon}
             buttons={[
               { icon: 'save', isSubmit: true },
               { icon: 'cancel', onClick: onCancel },

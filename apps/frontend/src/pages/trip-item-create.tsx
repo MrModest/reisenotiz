@@ -1,36 +1,36 @@
-import { Suspense } from 'react'
-import { TripItemForm } from '@/components/trip-item'
+import { Suspense, useState } from 'react'
+import { getTripItemModule } from '@/components/trip-items/registry'
+import type { TripItemModule } from '@/components/trip-items/module'
 import { PageHeader } from '@/components/layout/page-header'
 import { useTrip, useTripExists, useCreateTripItem } from '@/store'
-import { TripItem, TripItemType } from '@/types'
+import { TripItem } from '@/types'
 import { useParams, useNavigate, useSearchParams } from 'react-router'
-import { createDraftItem } from '@/lib/draft-items'
 import { routes } from '@/lib/routes'
 
 export function TripItemCreatePage() {
   const { tripId } = useParams<{ tripId: string }>()
   const [searchParams] = useSearchParams()
-  const type = searchParams.get('type') as TripItemType | null
+  const module = getTripItemModule(searchParams.get('type') ?? '')
 
-  if (!tripId || !type) return <NotFound tripId={tripId} />
-  return <TripItemCreateGate tripId={tripId} type={type} />
+  if (!tripId || !module) return <NotFound tripId={tripId} />
+  return <TripItemCreateGate key={module.type} tripId={tripId} module={module} />
 }
 
-function TripItemCreateGate({ tripId, type }: { tripId: string; type: TripItemType }) {
+function TripItemCreateGate({ tripId, module }: { tripId: string; module: TripItemModule }) {
   if (!useTripExists(tripId)) return <NotFound />
   return (
     <Suspense fallback={<PageHeader title='' backTo={routes.trips.trip(tripId)} />}>
-      <TripItemCreateContent tripId={tripId} type={type} />
+      <TripItemCreateContent tripId={tripId} module={module} />
     </Suspense>
   )
 }
 
-function TripItemCreateContent({ tripId, type }: { tripId: string; type: TripItemType }) {
+function TripItemCreateContent({ tripId, module }: { tripId: string; module: TripItemModule }) {
   const navigate = useNavigate()
   const trip = useTrip(tripId)
   const createTripItem = useCreateTripItem(tripId)
 
-  const draftItem = createDraftItem(tripId, type)
+  const [draft] = useState(() => module.createDraft(tripId))
 
   const handleSave = (item: TripItem) => {
     createTripItem(item)
@@ -43,7 +43,7 @@ function TripItemCreateContent({ tripId, type }: { tripId: string; type: TripIte
     <>
       <PageHeader title={trip.name} icon='trip' backTo={routes.trips.trip(tripId)} />
       <div className='min-h-0 flex-1 overflow-y-auto px-4'>
-        <TripItemForm tripItem={draftItem} onSave={handleSave} onCancel={handleCancel} isCreate />
+        <module.Form item={draft} onSubmit={handleSave} onCancel={handleCancel} />
       </div>
     </>
   )
