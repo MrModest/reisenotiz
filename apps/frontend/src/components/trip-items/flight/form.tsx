@@ -5,6 +5,7 @@ import { Airport, Flight } from '@/types'
 import { defaultsFromFlight, flightFormSchema, FlightFormSchema } from './schema'
 import { Field, FieldSet } from '@/components/ui/field'
 import type { TripItemFormProps } from '../module'
+import { flightModule } from './module'
 import { ItemHeader } from '../shared/item-header'
 import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '../shared/field-input'
@@ -91,8 +92,8 @@ export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormPro
       <form className='mb-10' onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}>
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
-            title='Flight'
-            icon='flight'
+            title={flightModule.label}
+            icon={flightModule.icon}
             buttons={[
               { icon: 'save', isSubmit: true },
               { icon: 'cancel', onClick: onCancel },

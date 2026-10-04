@@ -11,6 +11,7 @@ import {
 import { Field, FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
 import type { TripItemFormProps } from '../module'
+import { accommodationModule } from './module'
 import { ItemHeader } from '@/components/trip-items/shared/item-header'
 import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '@/components/trip-items/shared/field-input'
@@ -184,8 +185,8 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
       >
         <Field orientation='horizontal' className='flex-row items-center justify-between'>
           <ItemHeader
-            title='Stay'
-            icon='accommodation'
+            title={accommodationModule.label}
+            icon={accommodationModule.icon}
             buttons={[
               { icon: 'save', isSubmit: true },
               { icon: 'cancel', onClick: onCancel },
