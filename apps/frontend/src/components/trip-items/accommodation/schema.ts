@@ -15,11 +15,10 @@ const stayIntervalSchema = z.object({
 // so validate it as a single unit with one message instead of per-subfield errors.
 const siteSchema = z
   .object({
-    id: z.string().optional(),
     name: z.string(),
     kind: z.enum(ACCOMMODATION_SITE_KINDS),
     address: z.object({
-      country: z.string(),
+      countryCode: z.string(),
       city: z.string(),
       line: z.string().optional(),
     }),
@@ -29,7 +28,7 @@ const siteSchema = z
   .refine(
     (site) =>
       site.name.trim().length > 0 &&
-      site.address.country.trim().length > 0 &&
+      site.address.countryCode.length > 0 &&
       site.address.city.trim().length > 0,
     { message: 'Accommodation is required' },
   )
@@ -54,7 +53,6 @@ export function defaultsFromAccommodation(accomodation: Accommodation): Accommod
 
   return {
     site: {
-      id: site.id,
       name: site.name,
       kind: site.kind,
       address: site.address,

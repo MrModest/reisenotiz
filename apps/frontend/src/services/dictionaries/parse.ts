@@ -1,4 +1,5 @@
 import type { Airport } from '@/types'
+import type { Country } from './types'
 
 // Can be replaced with a library like 'papaparse' if the CSV format gets more complex
 function parseCsvLine(line: string): string[] {
@@ -20,33 +21,29 @@ function parseCsvLine(line: string): string[] {
   return result
 }
 
-export async function parseCountries(): Promise<Record<string, string>> {
-  const response = await fetch('/dicts/countries.csv')
-  const countriesCsv = await response.text()
-  const lines = countriesCsv.trim().split('\n')
+export function parseCountries(csv: string): Record<string, Country> {
+  const lines = csv.trim().split('\n')
   const headers = parseCsvLine(lines[0])
   const idx = (col: string) => headers.indexOf(col)
 
-  const result: Record<string, string> = {}
+  const result: Record<string, Country> = {}
 
   for (let i = 1; i < lines.length; i++) {
     const values = parseCsvLine(lines[i])
-    const countryCode = values[idx('code')]
-    const countryName = values[idx('name')]
-    if (countryCode && countryName && !result[countryCode]) {
-      result[countryCode] = countryName
+    const code = values[idx('code')]
+    const name = values[idx('name')]
+    if (code && name && !result[code]) {
+      result[code] = { code, name }
     }
   }
 
   return result
 }
 
-export async function parseAirports(): Promise<Record<string, Airport>> {
-  const response = await fetch('/dicts/airports.csv')
-  console.log('Fetched airports')
-  const airportsCsv = await response.text()
-  const lines = airportsCsv.trim().split('\n')
-  console.log(`Received ${lines.length} lines`)
+// The CSV names each airport's country; the app stores its ISO code. Every name in `airports.csv`
+// maps, so a miss means the two files drifted apart.
+export function parseAirports(csv: string, countryCodeByName: Record<string, string>): Record<string, Airport> {
+  const lines = csv.trim().split('\n')
   const headers = parseCsvLine(lines[0])
   const idx = (col: string) => headers.indexOf(col)
 
@@ -59,8 +56,9 @@ export async function parseAirports(): Promise<Record<string, Airport>> {
     const name = values[idx('name')]
     if (!code || !name) continue
 
-    const lat = parseFloat(values[idx('latitude')])
-    const lon = parseFloat(values[idx('longitude')])
+    const country = values[idx('country')]
+    const countryCode = countryCodeByName[country]
+    if (!countryCode) throw new Error(`Airport ${code} is in '${country}', which the country list lacks`)
 
     result[code] = {
       code,
@@ -68,10 +66,10 @@ export async function parseAirports(): Promise<Record<string, Airport>> {
       address: {
         line: '',
         city: values[idx('city')],
-        country: values[idx('country')],
+        countryCode,
         geoPoint: {
-          latitude: lat,
-          longitude: lon,
+          latitude: parseFloat(values[idx('latitude')]),
+          longitude: parseFloat(values[idx('longitude')]),
         },
       },
       tzone: values[idx('timezone')] ?? 'Etc/Utc',

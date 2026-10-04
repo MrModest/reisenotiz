@@ -12,11 +12,9 @@ import { TripTimelinePage } from '@/pages/trip-timeline'
 import { TripItemViewPage } from '@/pages/trip-item-view'
 import { TripItemCreatePage } from '@/pages/trip-item-create'
 import { TripItemEditPage } from '@/pages/trip-item-edit'
-import { RecordsPage } from '@/pages/records'
-import { AirportsRecordsPage } from '@/pages/records/airports'
-import { AccommodationsRecordsPage } from '@/pages/records/accommodations'
+import { SavedPlacesPage, NewPlaceDialogRoute, EditPlaceDialogRoute } from '@/pages/saved-places'
 import { routes } from '@/lib/routes'
-import { airportDictionary, accommodationDictionary } from '@/services'
+import { airportDictionary, countryDictionary } from '@/services'
 
 // One Suspense and one error boundary per route, inside the shell, so navigation survives both
 function withBoundaries(Page: ComponentType) {
@@ -35,7 +33,8 @@ export const router = createBrowserRouter([
     path: routes.root,
     Component: AppShell,
     loader: async () => {
-      await Promise.all([airportDictionary.load(), accommodationDictionary.load()])
+      // Countries load beside airports: a cached airport dictionary never fetches them
+      await Promise.all([countryDictionary.load(), airportDictionary.load()])
       return null
     },
     children: [
@@ -76,16 +75,13 @@ export const router = createBrowserRouter([
         ...withBoundaries(SettingsPage),
       },
       {
-        path: routes.records.root,
-        ...withBoundaries(RecordsPage),
-      },
-      {
-        path: routes.records.airports,
-        ...withBoundaries(AirportsRecordsPage),
-      },
-      {
-        path: routes.records.accommodations,
-        ...withBoundaries(AccommodationsRecordsPage),
+        path: routes.savedPlaces.list,
+        ...withBoundaries(SavedPlacesPage),
+        // The dialog routes mount over the still-mounted list
+        children: [
+          { path: 'new', Component: NewPlaceDialogRoute },
+          { path: ':placeKey/edit', Component: EditPlaceDialogRoute },
+        ],
       },
       {
         path: '*',

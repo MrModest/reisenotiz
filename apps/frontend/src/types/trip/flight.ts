@@ -1,14 +1,7 @@
 import type { ZonedInstant } from '@/types/common'
 import { Person } from './person'
 import { TripItem } from './trip-item'
-import { Address } from './address'
-
-export interface Airport {
-  code: string
-  name: string
-  address: Address
-  tzone: string
-}
+import { Airport } from './place'
 
 export interface FlightPoint {
   airport: Airport

@@ -21,9 +21,10 @@ const geoPointSchema = z.object({
 })
 
 const addressSchema = z.object({
-  country: stringSchema('Country', 100),
+  countryCode: z.string().length(2, 'Country is required'),
   city: stringSchema('City', 100),
   line: stringSchema('Address line', 200, false).optional(),
+  geoPoint: geoPointSchema.optional(),
 })
 
 const personSchema = z.object({

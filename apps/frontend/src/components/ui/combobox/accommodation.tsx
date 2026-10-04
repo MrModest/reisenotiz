@@ -1,28 +1,31 @@
 import { useState } from 'react'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '../item'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './base'
-import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
+import { countryName } from '@/services'
+import type { SavedPlaceEntry } from '@/store'
+
+export type SavedSiteEntry = Extract<SavedPlaceEntry, { type: 'AccommodationSite' }>
 
 const MAX_RESULTS = 50
 const MIN_QUERY_LENGTH = 2
 
 export interface AccommodationSelectorProps {
-  items: AccommodationSiteRecord[]
-  selected?: AccommodationSiteRecord | null
-  onSelect: (accommodation: AccommodationSiteRecord | null) => void
+  items: SavedSiteEntry[]
+  selected?: SavedSiteEntry | null
+  onSelect: (accommodation: SavedSiteEntry | null) => void
 }
 
-function filterAccommodations(items: AccommodationSiteRecord[], query: string): AccommodationSiteRecord[] {
+function filterAccommodations(items: SavedSiteEntry[], query: string): SavedSiteEntry[] {
   const q = query.trim().toLowerCase()
   if (q.length < MIN_QUERY_LENGTH) return []
-  return items.filter((r) => r.name.toLowerCase().includes(q)).slice(0, MAX_RESULTS)
+  return items.filter((r) => r.place.name.toLowerCase().includes(q)).slice(0, MAX_RESULTS)
 }
 
 export function AccommodationSelector({ items, selected = null, onSelect }: AccommodationSelectorProps) {
   const [query, setQuery] = useState('')
 
   const filtered = filterAccommodations(items, query)
-  const displayItems = selected && !filtered.some((a) => a.id === selected.id)
+  const displayItems = selected && !filtered.some((a) => a.key === selected.key)
     ? [selected, ...filtered]
     : filtered
 
@@ -32,9 +35,9 @@ export function AccommodationSelector({ items, selected = null, onSelect }: Acco
       value={selected}
       filter={() => true}
       onInputValueChange={(val) => setQuery(val)}
-      itemToStringValue={(item: AccommodationSiteRecord) => item.id}
-      itemToStringLabel={(item: AccommodationSiteRecord) => item.name}
-      isItemEqualToValue={(a, b) => a.id === b.id}
+      itemToStringValue={(item: SavedSiteEntry) => item.key}
+      itemToStringLabel={(item: SavedSiteEntry) => item.place.name}
+      isItemEqualToValue={(a, b) => a.key === b.key}
       onValueChange={(val) => {
         onSelect(val)
       }}
@@ -47,13 +50,13 @@ export function AccommodationSelector({ items, selected = null, onSelect }: Acco
             : 'No accommodations found.'}
         </ComboboxEmpty>
         <ComboboxList>
-          {(record: AccommodationSiteRecord) => (
-            <ComboboxItem key={record.id} value={record}>
+          {(record: SavedSiteEntry) => (
+            <ComboboxItem key={record.key} value={record}>
               <Item size='xs' className='p-0'>
                 <ItemContent>
-                  <ItemTitle className='whitespace-nowrap'>{record.name}</ItemTitle>
+                  <ItemTitle className='block w-full truncate'>{record.place.name}</ItemTitle>
                   <ItemDescription>
-                    {record.kind} — {[record.address.city, record.address.country].filter(Boolean).join(', ')}
+                    {record.place.kind} — {[record.place.address.city, countryName(record.place.address.countryCode)].filter(Boolean).join(', ')}
                   </ItemDescription>
                 </ItemContent>
               </Item>

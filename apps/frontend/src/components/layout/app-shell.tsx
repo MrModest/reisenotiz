@@ -14,7 +14,7 @@ interface NavEntry {
 const navEntries: NavEntry[] = [
   { to: routes.root, label: 'Home', icon: 'home' },
   { to: routes.trips.list(), label: 'Trips', icon: 'luggage' },
-  { to: routes.records.root, label: 'Places', icon: 'bookmark' },
+  { to: routes.savedPlaces.list, label: 'Places', icon: 'bookmark' },
   { to: routes.settings, label: 'Settings', icon: 'settings' },
 ]
 

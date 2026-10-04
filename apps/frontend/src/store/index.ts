@@ -14,4 +14,4 @@ export {
   useUpdateTripItem,
   useDeleteTripItem,
 } from './trips'
-export { userRecords } from './user-records'
+export { useSavedPlaces, useSavedPlace, useSavedPlaceMutations, type SavedPlaceEntry } from './saved-places'

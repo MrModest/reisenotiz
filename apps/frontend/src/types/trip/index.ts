@@ -1,5 +1,6 @@
 export * from './address'
 export * from './attachment'
+export * from './place'
 export * from './flight'
 export * from './accommodation'
 export * from './person'

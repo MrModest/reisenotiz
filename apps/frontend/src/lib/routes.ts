@@ -1,4 +1,4 @@
-import { TripItemType } from '@/types'
+import type { PlaceType, TripItemType } from '@/types'
 
 export const routes = {
   root: '/',
@@ -18,9 +18,11 @@ export const routes = {
     editItem: (tripId: string, itemId: string) =>
       `/trips/${tripId}/items/${itemId}/edit`,
   },
-  records: {
-    root: '/records',
-    airports: '/records/airports',
-    accommodations: '/records/accommodations',
+  savedPlaces: {
+    list: '/saved-places',
+    new: (type: PlaceType) =>
+      `/saved-places/new?type=${type}`,
+    edit: (placeKey: string) =>
+      `/saved-places/${placeKey}/edit`,
   },
 } as const

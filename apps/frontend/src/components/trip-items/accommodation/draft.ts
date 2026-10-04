@@ -15,7 +15,7 @@ export function createAccommodationDraft(tripId: string): Accommodation {
     site: {
       name: '',
       kind: 'Hotel',
-      address: { country: '', city: '', line: '' },
+      address: { countryCode: '', city: '', line: '' },
       contact: '',
       tzone: zone,
     },
