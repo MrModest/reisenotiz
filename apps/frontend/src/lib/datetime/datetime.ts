@@ -129,6 +129,13 @@ export class DateTime {
   }
 
   /**
+   * Whole days from `earlier` to this date.
+   */
+  daysSince(earlier: DateTime): number {
+    return Math.floor(this.dt.diff(earlier.dt, 'days').days)
+  }
+
+  /**
    * Converts this date to a different timezone.
    */
   toZone(zone: string): DateTime {

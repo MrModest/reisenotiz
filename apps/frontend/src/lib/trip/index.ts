@@ -37,11 +37,11 @@ export function getTripStatus(trip: Trip, now: DateTime): TripStatus {
 }
 
 export function getTripDuration(trip: Trip): number {
-  return endDay(trip).calendarDiff(startDay(trip)).days + 1
+  return endDay(trip).daysSince(startDay(trip)) + 1
 }
 
 export function getTripDayIndex(trip: Trip, now: DateTime): number {
-  return tripToday(trip, now).calendarDiff(startDay(trip)).days + 1
+  return tripToday(trip, now).daysSince(startDay(trip)) + 1
 }
 
 /** `In 1 day`, `In 3 months`, `In 1 year`, `Today`, `Day 9 of 12`; none once completed. */
@@ -54,6 +54,17 @@ export function getTripCountdown(trip: Trip, now: DateTime): string | undefined 
   const [value, unit] = years ? [years, 'year'] : months ? [months, 'month'] : [days, 'day']
   if (!value) return 'Today'
   return `In ${value} ${unit}${value === 1 ? '' : 's'}`
+}
+
+/** The home card's countdown: `7` / `Days to go`, `Today` on the first day, `3` / `Of 12 days` while ongoing. */
+export function getHomeCountdown(trip: Trip, now: DateTime): { value: string; caption?: string } | undefined {
+  const status = getTripStatus(trip, now)
+  if (status === 'completed') return undefined
+  if (status === 'ongoing') return { value: String(getTripDayIndex(trip, now)), caption: `Of ${getTripDuration(trip)} days` }
+
+  const days = startDay(trip).daysSince(tripToday(trip, now))
+  if (!days) return { value: 'Today' }
+  return { value: String(days), caption: days === 1 ? 'Day to go' : 'Days to go' }
 }
 
 const byStart = (a: Trip, b: Trip) => a.startDate.instant.localeCompare(b.startDate.instant)

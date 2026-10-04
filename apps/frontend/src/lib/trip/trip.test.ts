@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { DateTime } from '@/lib/datetime'
 import type { Trip } from '@/types'
 import {
+  getHomeCountdown,
   getTripCountdown,
   getTripDayIndex,
   getTripDuration,
@@ -71,6 +72,10 @@ describe('getTripDuration', () => {
   it('counts calendar days across a DST change', () => {
     expect(getTripDuration(trip('dst', [2026, 10, 24], [2026, 10, 26]))).toBe(3)
   })
+
+  it('counts days across a month boundary', () => {
+    expect(getTripDuration(trip('long', [2026, 9, 5], [2026, 10, 16]))).toBe(42)
+  })
 })
 
 describe('getTripDayIndex', () => {
@@ -78,6 +83,10 @@ describe('getTripDayIndex', () => {
     expect(getTripDayIndex(alps, at([2026, 9, 5]))).toBe(1)
     expect(getTripDayIndex(alps, at([2026, 9, 13], 18))).toBe(9)
     expect(getTripDayIndex(alps, at([2026, 9, 16], 23))).toBe(12)
+  })
+
+  it('keeps counting past a month boundary', () => {
+    expect(getTripDayIndex(trip('long', [2026, 9, 5], [2026, 10, 16]), at([2026, 10, 6]))).toBe(32)
   })
 })
 
@@ -122,6 +131,28 @@ describe('getTripCountdown', () => {
 
   it('has none once completed', () => {
     expect(getTripCountdown(alps, at([2026, 9, 17]))).toBeUndefined()
+  })
+})
+
+describe('getHomeCountdown', () => {
+  it('counts whole days to go, never a larger unit', () => {
+    expect(getHomeCountdown(alps, at([2026, 8, 29], 22))).toEqual({ value: '7', caption: 'Days to go' })
+    expect(getHomeCountdown(alps, at([2026, 9, 4], 23))).toEqual({ value: '1', caption: 'Day to go' })
+    expect(getHomeCountdown(alps, at([2026, 6, 5]))).toEqual({ value: '92', caption: 'Days to go' })
+  })
+
+  it('reads Today on the first day before the start instant', () => {
+    const afternoon = { ...alps, startDate: at([2026, 9, 5], 15).toZonedInstant() }
+    expect(getHomeCountdown(afternoon, at([2026, 9, 5], 9))).toEqual({ value: 'Today' })
+  })
+
+  it('reads the day index of the duration while ongoing, day one included', () => {
+    expect(getHomeCountdown(alps, at([2026, 9, 5], 9))).toEqual({ value: '1', caption: 'Of 12 days' })
+    expect(getHomeCountdown(alps, at([2026, 9, 7]))).toEqual({ value: '3', caption: 'Of 12 days' })
+  })
+
+  it('has none once completed', () => {
+    expect(getHomeCountdown(alps, at([2026, 9, 17]))).toBeUndefined()
   })
 })
 

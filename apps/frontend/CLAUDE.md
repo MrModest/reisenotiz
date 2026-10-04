@@ -130,7 +130,8 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 - **The 900px breakpoint** is `--breakpoint-shell` in `src/index.css`'s `@theme`, and the `shell:`
   / `max-shell:` variants appear **only in `AppShell`**. There is no `matchMedia`,
   `useMediaQuery` or `isMobile`. A part of a page that only one presentation shows carries
-  `data-shell='mobile'` or `data-shell='desktop'`, and `AppShell` hides it
+  `data-shell='mobile'` or `data-shell='desktop'`, and `AppShell` hides it. A part styled
+  differently above 900px carries a `data-slot`, and `AppShell` holds its `shell:` rule
 - **Every page is a flex column of `PageHeader` · scroller · optional footer**, rendered as
   siblings inside the shell's `main`. The scroller is `min-h-0 flex-1 overflow-y-auto`; there is no
   centred column
@@ -207,19 +208,22 @@ before adding a new one — most needs are already covered.
 
 **Trip facts** (`src/lib/trip/`):
 - `getTripStatus` (`upcoming` / `ongoing` / `completed`), `getTripDuration`, `getTripDayIndex`,
-  `getTripCountdown`, `selectHomeTrip(trips, now)` and `groupTrips(summaries, now)` are pure
-  functions. Each takes `now` and none reads the clock
+  `getTripCountdown`, `getHomeCountdown`, `selectHomeTrip(trips, now)` and
+  `groupTrips(summaries, now)` are pure functions. Each takes `now` and none reads the clock
 - A trip's days are calendar dates in its start zone. It turns ongoing at its start instant and
   completes the day after its last day
 - The countdown is the calendar difference in years, months and days, printing the largest
   non-zero unit, floored: `In 1 day`, `In 3 months`, `In 1 year`; `Today` on the first day before
   the start instant; `Day 9 of 12` while ongoing; none once completed. It is a fact about a trip,
   not a date shape, so it is not in `formatTo`
+- `getHomeCountdown` is the home card's slot: whole days to go (`7` / `Days to go`, never a larger
+  unit), `Today` with no caption on the first day before the start instant, and the day index over
+  the duration (`3` / `Of 12 days`) while ongoing
 - `groupTrips` returns `Ongoing` (at most one trip, no count), `Upcoming n`, then one group per
   year of completed trips. Unfinished trips run soonest first, completed trips most recent first.
   Labels are natural case; uppercase is CSS
-- `selectHomeTrip` picks the ongoing trip, else the nearest upcoming one. The trip list highlights
-  the trip it picks
+- `selectHomeTrip` picks the ongoing trip, else the nearest upcoming one. The home card leads with
+  it and the trip list highlights it
 - `useNow()` (`src/hooks/`) is the only clock read for these: a `DateTime` re-read on
   `visibilitychange`, so a restored PWA shows the present without a tap
 
@@ -238,6 +242,14 @@ and `tripFromFormValues(values, zone)` anchors each date to the start of that da
 device zone on create, the trip's start zone on edit. `Cancel` and `Save` sit in a footer bar inside
 the `<form>`, and `Save` is disabled until the form is dirty, so a save always writes a real change.
 Creating replaces the form with the new trip's timeline in history
+
+**Home** (`src/pages/home.tsx`, `src/components/home/`): `HomeTripCard` on the left and
+`AllTimeStatsMockup` in a 400px column on the right above 900px, stacked below it. Each sits in its
+own `Suspense` with no fallback, so the card slot is empty while trips load and `All time` paints at
+once. `HomeTripCard` takes the summary `selectHomeTrip` picked and `now`; with none it reads
+`No upcoming trips` with no button. `AllTimeStatsMockup` takes no props and every value is a literal:
+it is deleted whole when a statistics service exists. Its content is the same on both viewports;
+only its year labels change, two digits on mobile and four on desktop, via `data-shell`
 
 ## Testing
 
