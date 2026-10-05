@@ -1,8 +1,6 @@
 import { useDocument, useDocuments, useRepo } from '@automerge/react'
 import type { Trip, TripItem } from '@/types'
 import type { TripSummary } from '@/lib/trip'
-import type { TimelineElement } from '@/components/ui/timeline'
-import { getTripItemModule } from '@/components/trip-items/registry'
 import { generateUUID } from '@/types/common/uuid'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
 import type { RootDoc, TripDoc } from './automerge/types'
@@ -68,13 +66,6 @@ export function useTripItem(tripId: string, itemId: string): TripItem {
   const item = tripDoc.tripItems[itemId]
   if (!item) throw new Error(`TripItem ${itemId} not found — caller must gate on useTripItemExists`)
   return item
-}
-
-export function useTimelineElements(tripId: string): TimelineElement[] {
-  const tripItems = useTripItems(tripId)
-  const elements = tripItems.flatMap((item) => getTripItemModule(item.type)?.toTimelineElements(item) ?? [])
-  elements.sort((a, b) => a.datetime.instant.localeCompare(b.datetime.instant))
-  return elements
 }
 
 /* ============= Writes ============= */

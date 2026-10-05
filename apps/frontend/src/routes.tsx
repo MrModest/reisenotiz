@@ -53,22 +53,25 @@ export const router = createBrowserRouter([
       {
         path: routes.trips.trip(':tripId'),
         ...withBoundaries(TripTimelinePage),
+        // rendered into the timeline's detail pane
+        children: [
+          {
+            path: 'items/new',
+            ...withBoundaries(TripItemCreatePage),
+          },
+          {
+            path: 'items/:itemId',
+            ...withBoundaries(TripItemViewPage),
+          },
+          {
+            path: 'items/:itemId/edit',
+            ...withBoundaries(TripItemEditPage),
+          },
+        ],
       },
       {
         path: routes.trips.edit(':tripId'),
         ...withBoundaries(TripEditPage),
-      },
-      {
-        path: routes.trips.item(':tripId', ':itemId'),
-        ...withBoundaries(TripItemViewPage),
-      },
-      {
-        path: routes.trips.trip(':tripId') + '/items/new',
-        ...withBoundaries(TripItemCreatePage),
-      },
-      {
-        path: routes.trips.editItem(':tripId', ':itemId'),
-        ...withBoundaries(TripItemEditPage),
       },
       {
         path: routes.settings,

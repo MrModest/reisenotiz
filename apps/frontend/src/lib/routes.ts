@@ -11,10 +11,12 @@ export const routes = {
       `/trips/${tripId}`,
     edit: (tripId: string) =>
       `/trips/${tripId}/edit`,
-    item: (tripId: string, itemId: string) =>
-      `/trips/${tripId}/items/${itemId}`,
-    newItem: (tripId: string, type: TripItemType) =>
-      `/trips/${tripId}/items/new?type=${type}`,
+    // generic so `item(':tripId', ':itemId')` is a literal pattern `useMatch` can type
+    item: <T extends string, I extends string>(tripId: T, itemId: I) =>
+      `/trips/${tripId}/items/${itemId}` as const,
+    // without a type: the type picker
+    newItem: (tripId: string, type?: TripItemType) =>
+      `/trips/${tripId}/items/new${type ? `?type=${type}` : ''}`,
     editItem: (tripId: string, itemId: string) =>
       `/trips/${tripId}/items/${itemId}/edit`,
   },

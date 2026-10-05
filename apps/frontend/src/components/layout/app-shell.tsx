@@ -23,6 +23,7 @@ const RAIL_COLLAPSED_KEY = 'rail-collapsed'
 // The one place the 900px `shell` breakpoint is used. Both navigations are always rendered and CSS
 // hides one; `data-shell` marks the parts of a page that only one presentation shows, and `data-slot`
 // the parts whose desktop styling differs.
+// The timeline's detail pane is one node: a 400px column above the breakpoint, full screen below.
 export function AppShell() {
   return (
     <div
@@ -34,6 +35,9 @@ export function AppShell() {
         'shell:**:data-[slot=home]:grid-cols-[minmax(0,1fr)_400px] shell:**:data-[slot=home]:p-6',
         'shell:**:data-[slot=home-trip-name]:text-[38px] shell:**:data-[slot=home-open-timeline]:w-fit',
         'shell:**:data-[slot=home-stat-value]:text-[30px] shell:**:data-[slot=home-bars]:h-[90px]',
+        'shell:**:data-[slot=timeline-time]:w-[52px]',
+        'shell:**:data-[slot=split]:has-data-[slot=detail-pane]:grid-cols-[minmax(0,1.35fr)_400px]',
+        'shell:**:data-[slot=detail-pane]:static shell:**:data-[slot=detail-pane]:border-l',
       )}
     >
       <Rail />

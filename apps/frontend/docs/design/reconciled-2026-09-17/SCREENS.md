@@ -262,7 +262,7 @@ the `<form>`, Save disabled until dirty. **Open**: nothing fixes its field order
 **Chip row**: `ALL` plus one chip per type **present in this trip**, derived as
 `unique(items.map(i => i.type))` — no stored category, nothing to keep in step with the type union
 ([#32](https://github.com/MrModest/reisenotiz/issues/32)). Single-select with `ALL` as a member, not
-multi-select: an `ALL` chip is contradictory inside a multi-select. Labels are the glossary's words — `FLIGHT`, `ACCOMMODATION`. Horizontal
+multi-select: an `ALL` chip is contradictory inside a multi-select. Labels are the registry's `label` — `FLIGHT`, `STAY`. Horizontal
 scroll, chips never wrap, `ALL` pinned left. `UNSYNCED` is not a chip; per-item sync state does not
 exist.
 

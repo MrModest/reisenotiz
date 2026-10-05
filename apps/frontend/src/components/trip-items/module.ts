@@ -1,6 +1,6 @@
 import type { FunctionComponent } from 'react'
 import type { IconName } from '@/components/icon'
-import type { TimelineElement } from '@/components/ui/timeline'
+import type { TimelineElement } from '@/lib/timeline'
 import type { TripItem, TripItemType } from '@/types'
 
 export interface TripItemFormProps<T extends TripItem> {

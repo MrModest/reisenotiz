@@ -6,7 +6,6 @@ export {
   useTrip,
   useTripItems,
   useTripItem,
-  useTimelineElements,
   useCreateTrip,
   useUpdateTrip,
   useDeleteTrip,
