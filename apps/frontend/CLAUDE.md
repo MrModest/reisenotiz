@@ -140,8 +140,9 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
   to `backTo`. Pass `title=''` while the data behind it loads — never `Not found`
 - `SyncStatusBadge` reads `useSyncStatus()` itself; `variant='rail'` adds a second line for
   offline and for no sync server
-- `useGoBack(fallback)` (`src/hooks/`) is the same rule for a form's `Cancel` and `Save`: back in
-  history, or to `fallback` when the page was the first one opened
+- `useGoBack(fallback)` (`src/hooks/`) is that rule, and the only place it lives: back in history,
+  or to `fallback` when the page was the first one opened. The `←` and the trip form pages' `Cancel` and
+  `Save` call it
 - `useDocumentTitle(name)` (`src/hooks/`) sets `<name> – Reisenotiz`. Only outer pages call it,
   never a trip item view or form
 
@@ -196,6 +197,8 @@ before adding a new one — most needs are already covered.
 **Date formatting** (`src/lib/datetime/`):
 - `formatTo` holds the eight shapes of `DESIGN-SYSTEM.md` and no others: `time`, `dayShort`,
   `dayMonth`, `dayOfMonth` + `monthShort`, `dateRange`, `utcOffset`, `duration`, `dateISO`
+- `convertTime(date, time, zone)` builds a `ZonedInstant` from a form's `yyyy-MM-dd` and `HH:mm`
+  strings in `zone`
 - Each renders in its own `ZonedInstant`'s zone, never the reader's, and returns natural case;
   uppercase is CSS
 - The locale is fixed to English in `DateTime`, never read from the browser; every shape spells

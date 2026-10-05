@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router'
 
-// Back in history, or to `fallback` when this page was the first one opened — `PageHeader`'s rule
+// History is right whenever it exists; `fallback` answers "up" only on a cold start from a shared link
 export function useGoBack(fallback: string) {
   const navigate = useNavigate()
   const location = useLocation()

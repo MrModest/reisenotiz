@@ -1,6 +1,5 @@
 import { z } from 'zod'
-import { formatTo } from '@/lib/datetime'
-import { convertTime } from '@/components/trip-items/shared/utils'
+import { formatTo, convertTime } from '@/lib/datetime'
 import { schemas } from '@/lib/validations/commons'
 import type { Trip } from '@/types'
 

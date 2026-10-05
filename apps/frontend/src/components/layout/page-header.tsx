@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { Icon, type IconName } from '@/components/icon'
+import { useGoBack } from '@/hooks/use-go-back'
 import { SyncStatusBadge } from './sync-status-badge'
 
 interface PageHeaderProps {
@@ -45,10 +46,8 @@ export function PageHeader({ title, mobileTitle, subtitle, icon, backTo, actions
   )
 }
 
-// History is right whenever it exists; `backTo` answers "up" only on a cold start from a shared link.
 function BackLink({ to }: { to: string }) {
-  const navigate = useNavigate()
-  const location = useLocation()
+  const goBack = useGoBack(to)
 
   return (
     <Link
@@ -57,9 +56,8 @@ function BackLink({ to }: { to: string }) {
       aria-label='Back'
       className='-ml-2 grid size-9 shrink-0 place-items-center rounded-md hover:bg-accent/50'
       onClick={(e) => {
-        if (location.key === 'default') return
         e.preventDefault()
-        navigate(-1)
+        goBack()
       }}
     >
       <Icon name='back' className='size-[18px]' />
