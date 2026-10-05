@@ -1,6 +1,6 @@
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Field } from '@/components/ui/field'
+import { Field, FieldError } from '@/components/ui/field'
 import { useFormField } from '@/hooks/use-form-field'
 import { useSavedPlaces } from '@/store'
 import type { Flight } from '@/types'
@@ -13,7 +13,7 @@ import { FieldTextarea } from '../shared/field-textarea'
 import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
 import { PlacePicker } from '../shared/place-picker'
-import { flightFormSchema, flightFormValues, flightFromFormValues, type FlightFormValues } from './schema'
+import { flightFormSchema, flightFormValues, flightFromFormValues, unresolvedAirports, type FlightFormValues } from './schema'
 
 export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormProps<Flight>) {
   const places = useSavedPlaces()
@@ -23,10 +23,16 @@ export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormPro
     mode: 'onTouched',
   })
 
+  function submit(values: FlightFormValues) {
+    const unresolved = unresolvedAirports(values, flight, places)
+    unresolved.forEach((point) => form.setError(`${point}.placeKey`, { message: 'Unknown place, pick the airport again' }))
+    if (unresolved.length === 0) onSubmit(flightFromFormValues(values, flight, places))
+  }
+
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit((values) => onSubmit(flightFromFormValues(values, flight, places)))}
+        onSubmit={form.handleSubmit(submit)}
         className='flex min-h-0 flex-1 flex-col'
       >
         <div className='flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4'>
@@ -69,11 +75,13 @@ function FlightPointGroup({ point, label }: { point: 'departure' | 'arrival'; la
 
 function PassengersField() {
   const { field } = useFormField('passengers')
+  const { field: draft, error } = useFormField('passengerDraft')
 
   return (
     <Field className='gap-1.5'>
       <FieldLabel htmlFor='passengers'>Passengers</FieldLabel>
-      <PersonChips id='passengers' people={field.value} onChange={field.onChange} />
+      <PersonChips id='passengers' people={field.value} onChange={field.onChange} draft={draft.value} onDraftChange={draft.onChange} />
+      {error && <FieldError className='text-xs font-thin'>{error.message}</FieldError>}
     </Field>
   )
 }

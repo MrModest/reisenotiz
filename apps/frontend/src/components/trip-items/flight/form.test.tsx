@@ -68,6 +68,20 @@ describe('FlightForm', () => {
     await waitFor(() => expect(save).toHaveProperty('disabled', false))
   })
 
+  it('counts a passenger name still being typed as a change, and saves it', async () => {
+    const onSubmit = vi.fn()
+    renderForm(onSubmit)
+    const save = await screen.findByRole('button', { name: 'Save' })
+    fireEvent.change(screen.getByLabelText('Passengers'), { target: { value: 'Anna Weber' } })
+    await waitFor(() => expect(save).toHaveProperty('disabled', false))
+
+    await pickAirport('Departure', 'BER', 'Berlin Brandenburg')
+    await pickAirport('Arrival', 'MUC', 'Munich Airport')
+    fireEvent.click(save)
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
+    expect(onSubmit.mock.calls[0][0].passengers.map((p: { fullname: string }) => p.fullname)).toEqual(['Anna Weber'])
+  })
+
   // #90: picking airports from the combobox used to leave Save doing nothing
   it('saves dictionary airports it picks, then submits the flight linked to them', async () => {
     const onSubmit = vi.fn()

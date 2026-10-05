@@ -1,4 +1,4 @@
-import { formatAddress } from '@/components/places/format'
+import { formatAddress } from '@/lib/utils/format-address'
 import type { Place } from '@/types'
 
 // The one place that sniffs the platform: each opens its own maps app
