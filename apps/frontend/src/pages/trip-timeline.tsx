@@ -3,12 +3,13 @@ import { Link, useMatch, useOutlet, useParams } from 'react-router'
 import { PageHeader } from '@/components/layout/page-header'
 import { Icon } from '@/components/icon'
 import { SkeletonRows } from '@/components/ui/skeleton-rows'
-import { getTripItemModule, presentTripItemModules } from '@/components/trip-items/registry'
+import { getTripItemModule, presentTripItemModules, toTimelineElements } from '@/components/trip-items/registry'
 import { TimelineChips } from '@/components/trip-timeline/timeline-chips'
 import { TimelineDayHeader, TimelineRow, UnknownItemRow } from '@/components/trip-timeline/timeline-row'
-import { useTrip, useTripExists, useTripItems, useTimelineDays } from '@/store'
+import { useTrip, useTripExists, useTripItems } from '@/store'
 import { useDocumentTitle } from '@/hooks/use-document-title'
 import { formatTo } from '@/lib/datetime'
+import { buildTimelineDays } from '@/lib/timeline'
 import { routes } from '@/lib/routes'
 import type { TripItemType } from '@/types'
 
@@ -54,11 +55,12 @@ function TripTimelineContent({ tripId }: { tripId: string }) {
   const items = useTripItems(tripId)
   const [filter, setFilter] = useState<TripItemType>()
   const chips = presentTripItemModules(items)
-  // a filter whose last item went away falls back to ALL
+  // a filter whose last item went away is cleared, so the type coming back does not revive it
+  if (filter && !chips.some((m) => m.type === filter)) setFilter(undefined)
   const activeFilter = chips.some((m) => m.type === filter) ? filter : undefined
-  const days = useTimelineDays(tripId, activeFilter)
+  const days = buildTimelineDays(toTimelineElements(items), activeFilter)
   const unknownItems = activeFilter ? [] : items.filter((i) => !getTripItemModule(i.type))
-  const openItemId = useMatch('/trips/:tripId/items/:itemId/*')?.params.itemId
+  const openItemId = useMatch(`${routes.trips.item(':tripId', ':itemId')}/*` as const)?.params.itemId
   useDocumentTitle(trip.name)
 
   const itemCount = `${items.length} ${items.length === 1 ? 'item' : 'items'}`

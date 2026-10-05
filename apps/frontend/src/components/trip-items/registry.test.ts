@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Accommodation, Flight, TripItem } from '@/types'
-import { getTripItemModule, presentTripItemModules } from './registry'
+import { getTripItemModule, presentTripItemModules, toTimelineElements } from './registry'
 import { createFlightDraft } from './flight/draft'
 import { createAccommodationDraft } from './accommodation/draft'
 
@@ -26,6 +26,10 @@ describe('presentTripItemModules', () => {
     expect(presentTripItemModules([stay, flight, flight, unknown]).map((m) => m.label)).toEqual(['Flight', 'Stay'])
     expect(presentTripItemModules([stay]).map((m) => m.label)).toEqual(['Stay'])
     expect(presentTripItemModules([])).toEqual([])
+  })
+
+  it('gives every known item its elements and an unknown one none', () => {
+    expect(toTimelineElements([flight, stay, unknown]).map((e) => e.tripItemId)).toEqual([flight.id, flight.id, stay.id, stay.id])
   })
 })
 

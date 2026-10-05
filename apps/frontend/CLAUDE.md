@@ -93,7 +93,7 @@ in this app.
   `useDocument` / `changeDoc` semantics, `updateText` for collaborative text, and testing patterns.
 - Components use the hooks exported from `@/store`: `useTrips` (newest start first),
   `useTripSummaries` (each trip with its item count, unsorted), `useTrip`, `useTripItems`,
-  `useTripItem`, `useTimelineDays`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
+  `useTripItem`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
   and the `TripItem` equivalents. Saved places come from `useSavedPlaces()` (tagged
   `{ type, key, place }` entries), `useSavedPlace(placeKey)` and `useSavedPlaceMutations()`
   (`add`, `update`, `archive`, `restore`, `remove(type, key)`, `materialiseAirport`). Each checks
@@ -193,7 +193,8 @@ before adding a new one — most needs are already covered.
 - Every per-type decision goes through `getTripItemModule(type)`, never a `switch (type)`. It
   returns `undefined` for a type this build does not know, and the caller shows a short message.
   `tripItemModules` lists them for the type picker; `presentTripItemModules(items)` lists the
-  types present, in registry order, for the timeline's chips.
+  types present, in registry order, for the timeline's chips, and `toTimelineElements(items)` every
+  element of the items it knows.
 - `toTimelineElements(item)` returns one `TimelineElement` per data point — a flight's departure
   and arrival, a stay's check-in and check-out at `planned?.in ?? provided.in` and
   `planned?.out ?? provided.out`. The title is the item's own name; the summary is role first,
@@ -279,12 +280,14 @@ before adding a new one — most needs are already covered.
   filter?)` is pure: it sorts by instant, buckets by local date in the origin zone (the zone of the
   earliest element, filtered or not), filters before bucketing, emits only non-empty days as
   `{ date, elements }[]` and sets `otherDay` on an element whose own local date differs from its
-  day. `useTimelineDays(tripId, filter)` only reads the store and calls it
+  day. The page reads `useTripItems` once and derives the chips, the days and the unknown rows from
+  that one array
 - One `section` per day: a sticky `TimelineDayHeader`, the app's only `position: sticky`, then a
   `TimelineRow` per element, each in its own zone, with a `5 Sep` prefix when `otherDay`. Items of
   a type this build does not know follow the days as muted `UnknownItemRow`s, under `All` only
 - The header's `children` is `TimelineChips`: `All` plus one chip per type present, single-select,
-  held in local state. A filter whose last item went away falls back to `All`
+  held in local state. A filter whose last item went away is cleared, so `All` stays active when
+  that type returns
 - The item routes are children of `/trips/:tripId`. View, edit, create and the type picker
   (`items/new` with no `type`) render into one `data-slot='detail-pane'` node, which exists
   exactly when `useOutlet()` is non-null. `AppShell` makes it the 400px column of a

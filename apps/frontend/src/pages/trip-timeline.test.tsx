@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest'
 import { Suspense } from 'react'
-import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
+import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { createMemoryRouter, RouterProvider } from 'react-router'
 import { Repo, RepoContext } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
@@ -33,6 +33,7 @@ function renderTimeline() {
       </RootDocUrlContext.Provider>
     </RepoContext.Provider>,
   )
+  return { trip, stay: withoutUndefined(stay) }
 }
 
 describe('TripTimelinePage filter chips', () => {
@@ -55,5 +56,20 @@ describe('TripTimelinePage filter chips', () => {
 
     fireEvent.click(chips.getByRole('button', { name: 'All' }))
     expect(screen.getAllByText('Hotel Weisses Kreuz')).toHaveLength(2)
+  })
+
+  it('drops a filter whose last item went away, so the type coming back shows under ALL', async () => {
+    const { trip, stay } = renderTimeline()
+    const chips = within(await screen.findByRole('group', { name: 'Filter' }))
+    fireEvent.click(chips.getByRole('button', { name: 'Stay' }))
+    expect(screen.queryByText('LH 1953')).toBeNull()
+
+    act(() => trip.change((d) => { delete d.tripItems[stay.id] }))
+    expect(await screen.findAllByText('LH 1953')).toHaveLength(2)
+
+    act(() => trip.change((d) => { d.tripItems[stay.id] = stay }))
+    expect(await screen.findAllByText('Hotel Weisses Kreuz')).toHaveLength(2)
+    expect(screen.getAllByText('LH 1953')).toHaveLength(2)
+    expect(chips.getByRole('button', { name: 'All' }).getAttribute('aria-pressed')).toBe('true')
   })
 })
