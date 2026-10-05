@@ -1,137 +1,73 @@
-import { Icon } from '@/components/icon'
 import { formatTo } from '@/lib/datetime'
-import type { Airport, Flight, FlightPoint } from '@/types'
-import { FieldView } from '@/components/trip-items/shared/field-view'
-import { SeparatorWithLabel } from '@/components/ui/separator'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { DateRange } from '../shared/date-range'
-import { useNavigate } from 'react-router'
-import { ItemHeader } from '../shared/item-header'
-import { useDeleteTripItemAndLeave } from '../shared/use-delete-trip-item'
-import { useState } from 'react'
-import { ConfirmDialog } from '@/components/ui/confirm-dialog'
-import { FieldChipsView } from '../shared/field-chips-view'
+import { routes } from '@/lib/routes'
+import { cn } from '@/lib/utils'
+import { useSavedPlace } from '@/store'
+import type { Flight, FlightPoint } from '@/types'
+import { AddressLink } from '../shared/address-link'
+import { AttachmentChips } from '../shared/attachment-chips'
+import { DetailActions } from '../shared/detail-actions'
+import { FactList, FactRow } from '../shared/fact-list'
+import { NotesBlock } from '../shared/notes-block'
+import { PersonChips } from '../shared/person-chips'
 
 export function FlightView({ item: flight }: { item: Flight }) {
-  const onDelete = useDeleteTripItemAndLeave(flight)
-  const duration = formatTo.duration(flight.departure.time, flight.arrival.time)
-  const navigate = useNavigate()
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-
-  const handleDelete = () => {
-    setDeleteDialogOpen(false)
-    onDelete()
-  }
+  const departure = useSavedPlace(flight.departure.placeKey)
+  const arrival = useSavedPlace(flight.arrival.placeKey)
+  const subline = [flight.carrier, formatTo.dayShort(flight.departure.time)].filter(Boolean).join(' · ')
 
   return (
-    <div className='mb-10'>
-      <div className='flex justify-between items-center w-full'>
-        <ItemHeader
-          title='Flight Details'
-          icon='flight'
-          buttons={[
-            { icon: 'edit', onClick: () => navigate('edit') },
-            { icon: 'trash', onClick: () => setDeleteDialogOpen(true) },
-          ]}
-        />
+    <>
+      <div className='min-h-0 flex-1 overflow-y-auto'>
+        <div className='flex flex-col gap-6 p-4'>
+          <div className='flex flex-col gap-1'>
+            <h2 className='text-[26px] leading-tight font-semibold wrap-anywhere'>{flight.flightNumber}</h2>
+            <p className='font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase'>{subline}</p>
+          </div>
+          <FlightHero flight={flight} />
+          <FactList>
+            {flight.bookingCode && <FactRow label='Booking code'>{flight.bookingCode}</FactRow>}
+            {flight.seat && <FactRow label='Seat'>{flight.seat}</FactRow>}
+            {flight.passengers.length > 0 && (
+              <FactRow label='Passengers'>
+                <PersonChips people={flight.passengers} />
+              </FactRow>
+            )}
+          </FactList>
+          <AddressLink label='Departure airport' place={departure?.place} />
+          <AddressLink label='Arrival airport' place={arrival?.place} />
+          <NotesBlock note={flight.note} />
+          <AttachmentChips attachments={flight.attachments} />
+        </div>
       </div>
-      <DateRange>
-        <FlightPoint point={flight.departure} />
-        <DateRange.Separator label={duration} />
-        <FlightPoint point={flight.arrival} />
-      </DateRange>
-      <div className='grid grid-cols-2 gap-2 mt-4 justify-between'>
-        <FieldView label='Airline' value={flight.carrier} />
-        <FieldView label='Flight' value={flight.flightNumber} />
-        <FieldView label='Booking' value={flight.bookingCode} />
-        <FieldView label='Seat' value={flight.seat} />
-      </div>
-      <div className='flex flex-col gap-2 mt-2'>
-        {flight.passengers.length > 0 && (
-          <FieldChipsView
-            label='Passengers'
-            icon='person'
-            items={flight.passengers.map((p) => ({ value: p.fullname }))}
-          />
-        )}
-        {flight.attachments.length > 0 && (
-          <FieldChipsView
-            label='Attachments'
-            icon='attachment'
-            items={flight.attachments.map((a) => ({ value: a.name, link: a.link }))}
-          />
-        )}
-        {flight.note && <FieldView label='Notes' value={flight.note} />}
-      </div>
-      <SeparatorWithLabel className='my-2' label='Details' />
-      <Tabs defaultValue='departure' variant='contained'>
-        <TabsList variant='line'>
-          <TabsTrigger value='departure'>
-            <Icon name='flight-departure' className='size-4' />
-            Departure
-          </TabsTrigger>
-          <TabsTrigger value='arrival'>
-            <Icon name='flight-arrival' className='size-4' />
-            Arrival
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value='departure'>
-          <AirportDetails airport={flight.departure.airport} />
-        </TabsContent>
-        <TabsContent value='arrival'>
-          <AirportDetails airport={flight.arrival.airport} />
-        </TabsContent>
-      </Tabs>
+      <DetailActions editTo={routes.trips.editItem(flight.tripId, flight.id)} />
+    </>
+  )
+}
 
-      <ConfirmDialog
-        open={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
-        title='Delete Flight'
-        description={
-          <>
-            Are you sure you want to delete <b>{flight.flightNumber}</b>?<br />
-            This action cannot be undone.
-          </>
-        }
-        onConfirm={handleDelete}
-        confirmLabel='Delete'
-      />
+// Everything here comes from the flight itself, so a dangling airport link costs the hero nothing
+function FlightHero({ flight }: { flight: Flight }) {
+  return (
+    <div className='flex items-start gap-3 rounded-xl border border-border bg-card p-4'>
+      <HeroEnd point={flight.departure} />
+      <div className='flex shrink-0 flex-col items-center gap-1.5 pt-2'>
+        <span className='font-mono text-[11px] text-muted-foreground'>{formatTo.duration(flight.departure.time, flight.arrival.time)}</span>
+        <span className='h-px w-16 bg-border' />
+      </div>
+      <HeroEnd point={flight.arrival} end />
     </div>
   )
 }
 
-function FlightPoint({ point }: { point: FlightPoint }) {
-  return (
-    <DateRange.Point>
-      <p className='flex flex-row justify-between'>
-        <span className='text-primary font-bold'>{point.airport.code}</span>
-        <span className='text-primary/80'>{point.airport.address.city}</span>
-      </p>
-      <div className='flex flex-row justify-between items-start gap-2'>
-        <div className='flex flex-col'>
-          <span className='-mb-1.5 pb-0 text-[0.6rem] text-right font-light text-muted-foreground'>
-            {formatTo.utcOffset(point.time)}
-          </span>
-          <span className='text-lg font-semibold'>{formatTo.time(point.time)}</span>
-        </div>
-        <span className='text-lg whitespace-nowrap'>{formatTo.dayShort(point.time)}</span>
-      </div>
-      <p className='flex flex-row flex-wrap gap-2 text-xs items-center justify-between'>
-        <span>Terminal: {point.terminal}</span>
-        <span className='flex flex-row items-center gap-x-1'>
-          <span>Gate:</span>
-          <span>{!!point.gate ? point.gate : <Icon name='no-data' className='inline-block size-3 my-0.5' />}</span>
-        </span>
-      </p>
-    </DateRange.Point>
-  )
-}
+// The offset sits under the code on both ends, always, so the hero has one height
+function HeroEnd({ point, end }: { point: FlightPoint; end?: boolean }) {
+  const where = [point.terminal && `T${point.terminal}`, point.gate && `Gate ${point.gate}`].filter(Boolean).join(' · ')
 
-function AirportDetails({ airport }: { airport: Airport }) {
   return (
-    <div className='flex flex-col gap-2'>
-      <FieldView label='Airport' value={airport.name} />
-      <FieldView label='Address' value={airport.address.line || 'Unknown'} />
+    <div className={cn('flex min-w-0 flex-1 flex-col', end && 'items-end text-right')}>
+      <span className='font-mono text-[26px] leading-tight font-semibold'>{point.placeKey}</span>
+      <span className='font-mono text-[10px] text-muted-foreground'>{formatTo.utcOffset(point.time)}</span>
+      <span className='mt-2.5 font-mono text-[18px] leading-tight'>{formatTo.time(point.time)}</span>
+      {where && <span className='mt-1.5 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase wrap-anywhere'>{where}</span>}
     </div>
   )
 }

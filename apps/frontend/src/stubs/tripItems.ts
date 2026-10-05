@@ -19,13 +19,13 @@ export const tripsItems: TripItem[] = [
     seat: '12F, 36B',
     passengers: persons,
     departure: {
-      airport: airportsByCode['BER'],
+      placeKey: 'BER',
       terminal: '2',
       gate: 'A24',
       time: { instant: '2025-12-01T18:00:00.000Z', zone: airportsByCode['BER'].tzone },
     },
     arrival: {
-      airport: airportsByCode['HND'],
+      placeKey: 'HND',
       terminal: '1',
       time: { instant: '2025-12-02T06:00:00.000Z', zone: airportsByCode['HND'].tzone },
     },
@@ -42,13 +42,13 @@ export const tripsItems: TripItem[] = [
     seat: '12F, 36B',
     passengers: persons,
     departure: {
-      airport: airportsByCode['HND'],
+      placeKey: 'HND',
       terminal: '1',
       gate: 'B16',
       time: { instant: '2025-12-10T10:00:00.000Z', zone: airportsByCode['HND'].tzone },
     },
     arrival: {
-      airport: airportsByCode['BER'],
+      placeKey: 'BER',
       terminal: '2',
       time: { instant: '2025-12-10T20:00:00.000Z', zone: airportsByCode['BER'].tzone },
     },

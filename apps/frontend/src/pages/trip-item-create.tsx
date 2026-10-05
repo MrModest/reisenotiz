@@ -4,7 +4,7 @@ import type { TripItemModule } from '@/components/trip-items/module'
 import { PageHeader } from '@/components/layout/page-header'
 import { Icon } from '@/components/icon'
 import { Item, ItemTitle } from '@/components/ui/item'
-import { useTrip, useTripExists, useCreateTripItem } from '@/store'
+import { useTripExists, useCreateTripItem } from '@/store'
 import { TripItem } from '@/types'
 import { Link, useParams, useNavigate, useSearchParams } from 'react-router'
 import { routes } from '@/lib/routes'
@@ -31,7 +31,6 @@ function TripItemCreateGate({ tripId, module }: { tripId: string; module: TripIt
 
 function TripItemCreateContent({ tripId, module }: { tripId: string; module: TripItemModule }) {
   const navigate = useNavigate()
-  const trip = useTrip(tripId)
   const createTripItem = useCreateTripItem(tripId)
 
   const [draft] = useState(() => module.createDraft(tripId))
@@ -45,10 +44,8 @@ function TripItemCreateContent({ tripId, module }: { tripId: string; module: Tri
 
   return (
     <>
-      <PageHeader title={trip.name} icon='trip' backTo={routes.trips.trip(tripId)} />
-      <div className='min-h-0 flex-1 overflow-y-auto px-4'>
-        <module.Form item={draft} onSubmit={handleSave} onCancel={handleCancel} />
-      </div>
+      <PageHeader title={`New ${module.label.toLowerCase()}`} icon={module.icon} backTo={routes.trips.trip(tripId)} />
+      <module.Form item={draft} onSubmit={handleSave} onCancel={handleCancel} />
     </>
   )
 }

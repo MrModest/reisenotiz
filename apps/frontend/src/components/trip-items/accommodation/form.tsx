@@ -8,11 +8,10 @@ import {
   AccommodationFormSchema,
   AccommodationStayIntervalSchema,
 } from './schema'
-import { Field, FieldSet } from '@/components/ui/field'
+import { FieldSet } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
 import type { TripItemFormProps } from '../module'
-import { accommodationModule } from './module'
-import { ItemHeader } from '@/components/trip-items/shared/item-header'
+import { FormActions } from '@/components/trip-items/shared/form-actions'
 import { Separator } from '@/components/ui/separator'
 import { FieldInput } from '@/components/trip-items/shared/field-input'
 import { FieldDatePicker } from '@/components/trip-items/shared/field-date-picker'
@@ -183,63 +182,43 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
 
   return (
     <FormProvider {...form}>
-      <form className='mb-10' onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}
-      >
-        <Field orientation='horizontal' className='flex-row items-center justify-between'>
-          <ItemHeader
-            title={accommodationModule.label}
-            icon={accommodationModule.icon}
-            buttons={[
-              { icon: 'save', isSubmit: true },
-              { icon: 'cancel', onClick: onCancel },
-            ]}
+      <form className='flex min-h-0 flex-1 flex-col' onSubmit={form.handleSubmit(handleSubmit, handleInvalid)}>
+        <div className='min-h-0 flex-1 overflow-y-auto px-4 pb-4'>
+          <AccommodationSiteSelector
+            accommodations={accommodations}
+            selected={selectedRecord}
+            onSelectedChange={setSelectedRecord}
           />
-        </Field>
+          <FieldErrorAt name='site' className='text-xs font-thin' />
 
-        <AccommodationSiteSelector
-          accommodations={accommodations}
-          selected={selectedRecord}
-          onSelectedChange={setSelectedRecord}
-        />
-        <FieldErrorAt name='site' className='text-xs font-thin' />
+          <AccommodationSitePreview />
 
-        <AccommodationSitePreview />
+          <Separator className='mt-4' />
 
-        <Separator className='mt-4' />
+          <FieldSet className='flex-row gap-2 mt-4'>
+            <FieldInput className='grow' name='reservedOn' label='Reserved By' />
+            <FieldInput className='w-16' name='guests' label='Guests' type='number' />
+            <FieldInput className='w-16' name='rooms' label='Rooms' type='number' />
+          </FieldSet>
 
-        <FieldSet className='flex-row gap-2 mt-4'>
-          <FieldInput className='grow' name='reservedOn' label='Reserved By' />
-          <FieldInput className='w-16' name='guests' label='Guests' type='number' />
-          <FieldInput className='w-16' name='rooms' label='Rooms' type='number' />
-        </FieldSet>
+          <Separator className='my-4' />
 
-        <Separator className='my-4' />
+          <CollapsibleSection
+            label='Stay Interval'
+            icon='accommodation'
+            preview={<StayIntervalPreview />}
+            open={stayIntervalOpen}
+            onOpenChange={setStayIntervalOpen}
+            className='mt-4'
+          >
+            <StayIntervalFields />
+          </CollapsibleSection>
 
-        <CollapsibleSection
-          label='Stay Interval'
-          icon='accommodation'
-          preview={<StayIntervalPreview />}
-          open={stayIntervalOpen}
-          onOpenChange={setStayIntervalOpen}
-          className='mt-4'
-        >
-          <StayIntervalFields />
-        </CollapsibleSection>
+          <NoteSection name='note' placeholder='Add any notes about this accommodation...' />
 
-        <NoteSection name='note' placeholder='Add any notes about this accommodation...' />
-
-        <AttachmentsSection name='attachments' />
-
-        <Separator className='mt-4 mb-6' />
-
-        <Field>
-          <Button type='submit' variant='default'>
-            Save
-          </Button>
-          <Button type='button' onClick={onCancel} variant='secondary'>
-            Cancel
-          </Button>
-        </Field>
+          <AttachmentsSection name='attachments' />
+        </div>
+        <FormActions onCancel={onCancel} />
       </form>
     </FormProvider>
   )

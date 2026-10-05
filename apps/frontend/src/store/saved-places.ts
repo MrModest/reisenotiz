@@ -44,6 +44,11 @@ export function useSavedPlaces(): SavedPlaceEntry[] {
   )
 }
 
+// Resolves a link against places already read, where a hook cannot run
+export function findSavedPlace<T extends PlaceType>(places: SavedPlaceEntry[], type: T, key: string): SavedPlace<PlaceTypes[T]> | undefined {
+  return places.find((entry) => entry.type === type && entry.key === key)?.place as SavedPlace<PlaceTypes[T]> | undefined
+}
+
 // Airport keys are IATA codes and site keys are uuids, so one key names at most one place.
 export function useSavedPlace(placeKey: string | undefined): SavedPlaceEntry | undefined {
   return useSavedPlaces().find((entry) => entry.key === placeKey)

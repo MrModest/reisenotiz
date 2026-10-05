@@ -8,6 +8,7 @@ const MAX_RESULTS = 50
 const MIN_QUERY_LENGTH = 2
 
 export interface AirportSelectorProps {
+  id?: string
   items: Airport[]
   selected?: Airport | null
   onSelect: (airport: Airport | null) => void
@@ -43,7 +44,7 @@ function filterAirports(items: Airport[], query: string): Airport[] {
   return scored.slice(0, MAX_RESULTS).map((s) => s.airport)
 }
 
-export function AirportSelector({ items, selected = null, onSelect }: AirportSelectorProps) {
+export function AirportSelector({ id, items, selected = null, onSelect }: AirportSelectorProps) {
   const [query, setQuery] = useState('')
 
   const filtered = filterAirports(items, query)
@@ -64,7 +65,7 @@ export function AirportSelector({ items, selected = null, onSelect }: AirportSel
         onSelect(val)
       }}
     >
-      <ComboboxInput className='rounded-md' placeholder='Search airports...' showClear />
+      <ComboboxInput id={id} className='rounded-md' placeholder='Search airports...' showClear />
       <ComboboxContent className='rounded-xl'>
         <ComboboxEmpty>
           {query.trim().length < MIN_QUERY_LENGTH

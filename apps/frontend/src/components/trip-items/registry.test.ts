@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { Accommodation, Flight, TripItem } from '@/types'
+import type { SavedPlaceEntry } from '@/store'
 import { getTripItemModule, presentTripItemModules, toTimelineElements } from './registry'
 import { createFlightDraft } from './flight/draft'
 import { createAccommodationDraft } from './accommodation/draft'
@@ -29,7 +30,7 @@ describe('presentTripItemModules', () => {
   })
 
   it('gives every known item its elements and an unknown one none', () => {
-    expect(toTimelineElements([flight, stay, unknown]).map((e) => e.tripItemId)).toEqual([flight.id, flight.id, stay.id, stay.id])
+    expect(toTimelineElements([flight, stay, unknown], []).map((e) => e.tripItemId)).toEqual([flight.id, flight.id, stay.id, stay.id])
   })
 })
 
@@ -40,10 +41,16 @@ describe('flight toTimelineElements', () => {
     id: 'f1',
     flightNumber: 'LH 1953',
     seat: '14A',
-    departure: { ...draft.departure, airport: { ...draft.departure.airport, code: 'BER' }, terminal: '1', time: at('2026-09-05T06:40:00.000Z') },
-    arrival: { ...draft.arrival, airport: { ...draft.arrival.airport, code: 'MUC' }, terminal: '2', time: at('2026-09-05T08:00:00.000Z') },
+    departure: { ...draft.departure, placeKey: 'BER', terminal: '1', time: at('2026-09-05T06:40:00.000Z') },
+    arrival: { ...draft.arrival, placeKey: 'MUC', terminal: '2', time: at('2026-09-05T08:00:00.000Z') },
   }
-  const toElements = (f: Flight) => getTripItemModule('Flight')!.toTimelineElements(f)
+  const airport = (code: string): SavedPlaceEntry => ({
+    type: 'Airport',
+    key: code,
+    place: { code, name: code, address: { countryCode: 'DE', city: '' }, tzone: 'Europe/Berlin' },
+  })
+  const places = [airport('BER'), airport('MUC')]
+  const toElements = (f: Flight, saved = places) => getTripItemModule('Flight')!.toTimelineElements(f, saved)
 
   it('is a departure and an arrival, both titled with the flight number', () => {
     expect(toElements(flight)).toEqual([
@@ -56,6 +63,11 @@ describe('flight toTimelineElements', () => {
     const bare = { ...flight, seat: '', departure: { ...flight.departure, terminal: '' } }
     expect(toElements(bare)[0].summary).toBe('Departure · BER')
   })
+
+  // The link is the IATA code, so a deleted airport costs the timeline nothing
+  it('keeps both elements whole when an airport link dangles', () => {
+    expect(toElements(flight, [])).toEqual(toElements(flight))
+  })
 })
 
 describe('stay toTimelineElements', () => {
@@ -66,7 +78,7 @@ describe('stay toTimelineElements', () => {
     site: { ...draft.site, name: 'Hotel Weisses Kreuz', address: { ...draft.site.address, line: 'Herzog-Friedrich-Strasse 31' } },
     stayInterval: { provided: { in: at('2026-09-05T13:00:00.000Z'), out: at('2026-09-08T08:00:00.000Z') } },
   }
-  const toElements = (s: Accommodation) => getTripItemModule('Accommodation')!.toTimelineElements(s)
+  const toElements = (s: Accommodation) => getTripItemModule('Accommodation')!.toTimelineElements(s, [])
 
   it('is a check-in and a check-out at the provided times when nothing is planned', () => {
     expect(toElements(stay)).toEqual([

@@ -10,6 +10,7 @@ const MAX_RESULTS = 50
 const MIN_QUERY_LENGTH = 2
 
 export interface AccommodationSelectorProps {
+  id?: string
   items: SavedSiteEntry[]
   selected?: SavedSiteEntry | null
   onSelect: (accommodation: SavedSiteEntry | null) => void
@@ -21,7 +22,7 @@ function filterAccommodations(items: SavedSiteEntry[], query: string): SavedSite
   return items.filter((r) => r.place.name.toLowerCase().includes(q)).slice(0, MAX_RESULTS)
 }
 
-export function AccommodationSelector({ items, selected = null, onSelect }: AccommodationSelectorProps) {
+export function AccommodationSelector({ id, items, selected = null, onSelect }: AccommodationSelectorProps) {
   const [query, setQuery] = useState('')
 
   const filtered = filterAccommodations(items, query)
@@ -42,7 +43,7 @@ export function AccommodationSelector({ items, selected = null, onSelect }: Acco
         onSelect(val)
       }}
     >
-      <ComboboxInput className='rounded-md' placeholder='Search accommodations...' showClear />
+      <ComboboxInput id={id} className='rounded-md' placeholder='Search accommodations...' showClear />
       <ComboboxContent className='rounded-xl'>
         <ComboboxEmpty>
           {query.trim().length < MIN_QUERY_LENGTH

@@ -37,7 +37,7 @@ export function FieldArrayList<T extends FieldValues>({
         <Icon name='add' className='h-4 w-4 mr-2' />
         {addButtonLabel}
       </Button>
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+      <div className='grid grid-cols-1 gap-2'>
         {fields.map((field, index) => (
           <FieldSet key={field.id} className='gap-2 p-3 border border-input rounded-md'>
             <div className='flex items-center justify-between'>

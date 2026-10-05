@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { useFormField } from '@/hooks/use-form-field'
 import { cn } from '@/lib/utils'
 import { Icon } from '@/components/icon'
-import { Required } from '@/components/ui/required'
+import { FieldLabel } from './field-label'
 
 interface FieldDatePickerProps {
   name: string
@@ -40,9 +40,8 @@ export function FieldDatePicker({
 
   return (
     <Field className={cn('gap-1.5', className)}>
-      <FieldLabel className='gap-1 pr-10 font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground' htmlFor={name}>
+      <FieldLabel htmlFor={name} required={isRequired}>
         {label}
-        {isRequired && <Required />}
       </FieldLabel>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
@@ -50,7 +49,7 @@ export function FieldDatePicker({
             <Button
               variant='outline'
               className={cn(
-                'justify-between items-center gap-2 text-left font-normal w-full h-auto py-1.5 text-sm',
+                'justify-between items-center gap-2 text-left font-mono font-normal w-full h-auto py-1.5 text-sm',
                 !field.value && 'text-muted-foreground',
                 error && 'border-destructive',
               )}

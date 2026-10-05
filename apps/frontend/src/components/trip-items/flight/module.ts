@@ -4,7 +4,8 @@ import { createFlightDraft } from './draft'
 import { FlightForm } from './form'
 import { FlightView } from './view'
 
-const place = (point: FlightPoint) => [point.airport.code, point.terminal && `T${point.terminal}`].filter(Boolean).join(' ')
+// The link is the airport's IATA code, so the summary needs no lookup and survives a dangling link
+const place = (point: FlightPoint) => [point.placeKey, point.terminal && `T${point.terminal}`].filter(Boolean).join(' ')
 
 export const flightModule: TripItemModule<Flight> = {
   type: 'Flight',
