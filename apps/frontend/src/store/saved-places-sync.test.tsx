@@ -34,12 +34,13 @@ describe('saved places sync across devices', () => {
     const { result: mutate } = renderHook(() => useSavedPlaceMutations(), { wrapper: wrapperA })
     let key = ''
     await act(async () => {
-      key = mutate.current.add('AccommodationSite', {
+      const added = mutate.current.add('AccommodationSite', {
         name: 'Hotel Adlon',
         kind: 'Hotel',
         address: { countryCode: 'DE', city: 'Berlin' },
         tzone: 'Europe/Berlin',
       })
+      if (added.ok) key = added.key
     })
     await act(async () => {
       mutate.current.archive('AccommodationSite', key)

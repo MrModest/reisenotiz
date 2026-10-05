@@ -96,13 +96,17 @@ in this app.
   `useTripItem`, `useTimelineElements`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
   and the `TripItem` equivalents. Saved places come from `useSavedPlaces()` (tagged
   `{ type, key, place }` entries), `useSavedPlace(placeKey)` and `useSavedPlaceMutations()`
-  (`add`, `update`, `archive`, `restore`, `remove(type, key)`, `materialiseAirport`).
+  (`add`, `update`, `archive`, `restore`, `remove(type, key)`, `materialiseAirport`). Each checks
+  the document inside its own change, since another device may have changed it since the render:
+  `add` refuses a key already saved and `update` a place deleted meanwhile, both as a typed
+  `PlaceSaveResult` (`key-taken` / `not-found`), and `archive`, `restore` and `remove` of a
+  missing place change nothing.
 - **Document model**: `RootDoc` per user, `TripDoc` per trip — see
   `/docs/adr/0004-automerge-document-model.md` for the shape and why.
 - `RootDoc` holds the saved places in two maps keyed differently on purpose: `savedAirports` by
   IATA code, `savedAccommodationSites` by uuid. A place's type is known from which map it sits in;
-  nothing stored says it. A root document made before the maps existed lacks them, so the store
-  reads a missing map as empty and creates it on the first write.
+  nothing stored says it. Both maps are optional in `RootDoc`, because a root document made before
+  them lacks them; the store reads a missing map as empty and creates it on the first write.
 - **Storage**: IndexedDB locally. When `VITE_SYNC_SERVER_URL` is set the repo also connects to
   `apps/sync/` over WebSocket; absent, the app runs local-only with no error.
 - **Conflicts** are resolved by Automerge's CRDT merge. Never write custom merge logic
@@ -204,7 +208,8 @@ before adding a new one — most needs are already covered.
   `type`, `label` (`Airport`, `Accommodation`), `icon`, `Row` and `Form`. `placeTypeModules` is in
   display order.
 - `PlaceDialog` takes `{ type, placeKey?, onSaved?, onClose }`: no key adds, a key edits, and
-  `onSaved` gets the key and the saved place. It never learns who opened it. The Places screen
+  `onSaved` gets the key and the saved place. It never learns who opened it. A refusal from the
+  store goes back to the form: an airport code already saved shows on the code field. The Places screen
   opens it by route (`/saved-places/new?type=…`, `/saved-places/:placeKey/edit`) over the
   still-mounted list; the flight and stay forms open it from component state.
 - Both forms share `PlaceFields` (name, address line, city, country dropdown, timezone) inside
@@ -213,7 +218,8 @@ before adding a new one — most needs are already covered.
 - `SavedPlaceRow` owns its `min-w-0`. The Places screen (`src/pages/saved-places.tsx`) owns the row
   shell and its `Archive` / `Restore` / `Delete` actions, and derives its chips from the types
   present.
-- Trip items hold a copy of their place. The airport picker (`useAirports()`) lists saved
+- Trip items hold a copy of their place, with no key back to it. The stay form therefore offers
+  `Edit` only for a site picked in that form. The airport picker (`useAirports()`) lists saved
   airports that are not archived and the dictionary airports that are not saved; picking one
   materialises it into `savedAirports` before the flight copies it.
 

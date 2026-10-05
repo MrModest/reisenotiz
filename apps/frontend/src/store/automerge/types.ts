@@ -3,10 +3,11 @@ import type { Trip, TripItem, Airport, AccommodationSite, SavedPlace } from '@/t
 
 export interface RootDoc {
   tripIndex: Record<string, AutomergeUrl>
+  // Both absent from a root document made before saved places existed; there is no migration.
   // Keyed by IATA code
-  savedAirports: Record<string, SavedPlace<Airport>>
+  savedAirports?: Record<string, SavedPlace<Airport>>
   // Keyed by uuid
-  savedAccommodationSites: Record<string, SavedPlace<AccommodationSite>>
+  savedAccommodationSites?: Record<string, SavedPlace<AccommodationSite>>
 }
 
 export interface TripDoc {

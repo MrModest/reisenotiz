@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { Repo, RepoContext, interpretAsDocumentId, type DocHandle } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
 import { EMPTY_ROOT_DOC, type RootDoc } from './automerge/types'
-import { useSavedPlace, useSavedPlaceMutations, useSavedPlaces } from './saved-places'
+import { useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type PlaceSaveResult } from './saved-places'
 import type { AccommodationSite, Airport } from '@/types'
 
 function setup() {
@@ -21,7 +21,11 @@ function setup() {
     )
   }
 
-  const doc = () => (repo.handles[interpretAsDocumentId(rootHandle.url)] as DocHandle<RootDoc>).doc()
+  const handle = repo.handles[interpretAsDocumentId(rootHandle.url)] as DocHandle<RootDoc>
+  const doc = () => {
+    const { savedAirports = {}, savedAccommodationSites = {} } = handle.doc()
+    return { savedAirports, savedAccommodationSites }
+  }
   const { result } = renderHook(() => ({ places: useSavedPlaces(), mutate: useSavedPlaceMutations() }), { wrapper })
   return { wrapper, doc, result }
 }
@@ -42,12 +46,17 @@ const site = (overrides: Partial<AccommodationSite> = {}): AccommodationSite => 
   ...overrides,
 })
 
+function keyOf(result: PlaceSaveResult): string {
+  if (!result.ok) throw new Error(`Not saved: ${result.reason}`)
+  return result.key
+}
+
 describe('saved places', () => {
   it('adds an airport keyed by its IATA code', async () => {
     const { result, doc } = setup()
     let key = ''
     await act(async () => {
-      key = result.current.mutate.add('Airport', airport())
+      key = keyOf(result.current.mutate.add('Airport', airport()))
     })
 
     expect(key).toBe('BER')
@@ -59,7 +68,7 @@ describe('saved places', () => {
     const { result, doc } = setup()
     let key = ''
     await act(async () => {
-      key = result.current.mutate.add('AccommodationSite', site({ contact: undefined }))
+      key = keyOf(result.current.mutate.add('AccommodationSite', site({ contact: undefined })))
     })
 
     expect(key).toMatch(/^[0-9a-f-]{36}$/)
@@ -71,7 +80,7 @@ describe('saved places', () => {
     const { result, doc } = setup()
     let key = ''
     await act(async () => {
-      key = result.current.mutate.add('AccommodationSite', site())
+      key = keyOf(result.current.mutate.add('AccommodationSite', site()))
     })
     await act(async () => {
       result.current.mutate.archive('AccommodationSite', key)
@@ -136,11 +145,54 @@ describe('saved places', () => {
     expect(doc().savedAirports.BER.name).toBe('BER, my spelling')
   })
 
+  it('refuses to add an airport whose code is already saved, keeping the saved one', async () => {
+    const { result, doc } = setup()
+    await act(async () => {
+      result.current.mutate.add('Airport', airport({ name: 'BER, my spelling' }))
+    })
+    let second: PlaceSaveResult | undefined
+    await act(async () => {
+      second = result.current.mutate.add('Airport', airport())
+    })
+
+    expect(second).toEqual({ ok: false, reason: 'key-taken' })
+    expect(doc().savedAirports.BER.name).toBe('BER, my spelling')
+  })
+
+  it('reports an update to a place deleted meanwhile as not found, and recreates nothing', async () => {
+    const { result, doc } = setup()
+    let key = ''
+    await act(async () => {
+      key = keyOf(result.current.mutate.add('AccommodationSite', site()))
+    })
+    await act(async () => {
+      result.current.mutate.remove('AccommodationSite', key)
+    })
+    let update: PlaceSaveResult | undefined
+    await act(async () => {
+      update = result.current.mutate.update('AccommodationSite', key, site({ name: 'Renamed' }))
+    })
+
+    expect(update).toEqual({ ok: false, reason: 'not-found' })
+    expect(doc().savedAccommodationSites[key]).toBeUndefined()
+  })
+
+  it('leaves the document alone when archiving, restoring or removing a missing place', async () => {
+    const { result, doc } = setup()
+    await act(async () => {
+      result.current.mutate.archive('Airport', 'BER')
+      result.current.mutate.restore('Airport', 'BER')
+      result.current.mutate.remove('Airport', 'BER')
+    })
+
+    expect(doc().savedAirports).toEqual({})
+  })
+
   it('resolves one saved place by its key', async () => {
     const { result, wrapper } = setup()
     let key = ''
     await act(async () => {
-      key = result.current.mutate.add('AccommodationSite', site())
+      key = keyOf(result.current.mutate.add('AccommodationSite', site()))
     })
 
     const { result: resolved } = renderHook(() => [useSavedPlace(key), useSavedPlace('NOPE')], { wrapper })

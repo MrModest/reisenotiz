@@ -31,7 +31,8 @@ import { useSavedPlaces } from '@/store'
 import { PlaceDialog } from '@/components/places/place-dialog'
 import { Badge } from '@/components/ui/badge'
 
-function StayIntervalPreview({ tzone }: { tzone?: string }) {
+function StayIntervalPreview() {
+  const tzone: string | undefined = useWatch({ name: 'site.tzone' })
   const planned = useWatch({ name: 'plannedInterval' })
   const provided = useWatch({ name: 'providedInterval' })
   const interval: AccommodationStayIntervalSchema = planned || provided
@@ -157,9 +158,9 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
   const places = useSavedPlaces()
   const accommodations = places.filter((e): e is SavedSiteEntry => e.type === 'AccommodationSite' && !e.place.archived)
   // The stay holds a copy of its site, so the saved site it came from is found by what it says
-  const [selectedRecord, setSelectedRecord] = useState<SavedSiteEntry | null>(
-    () => accommodations.find((e) => isSameSite(e.place, accommodation.site)) ?? null,
-  )
+  // The stay holds a copy with no key back to its saved site, so only a site picked here is known
+  // by key; until then the picker starts empty and offers `Add`, never an `Edit` of a guessed site
+  const [selectedRecord, setSelectedRecord] = useState<SavedSiteEntry | null>(null)
 
   const form = useForm<AccommodationFormSchema>({
     resolver: zodResolver(accommodationFormSchema),
@@ -202,7 +203,7 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
         />
         <FieldErrorAt name='site' className='text-xs font-thin' />
 
-        {selectedRecord && <AccommodationSitePreview record={selectedRecord} />}
+        <AccommodationSitePreview />
 
         <Separator className='mt-4' />
 
@@ -217,7 +218,7 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
         <CollapsibleSection
           label='Stay Interval'
           icon='accommodation'
-          preview={<StayIntervalPreview tzone={selectedRecord?.place.tzone} />}
+          preview={<StayIntervalPreview />}
           open={stayIntervalOpen}
           onOpenChange={setStayIntervalOpen}
           className='mt-4'
@@ -282,11 +283,10 @@ function AccommodationSiteSelector({ accommodations, selected, onSelectedChange 
   )
 }
 
-function isSameSite(a: AccommodationSite, b: AccommodationSite): boolean {
-  return a.name === b.name && a.address.city === b.address.city && a.address.countryCode === b.address.countryCode
-}
-
-function AccommodationSitePreview({ record: { place: record } }: { record: SavedSiteEntry }) {
+// The copy the stay will save, whether it came with the stay or from a pick
+function AccommodationSitePreview() {
+  const record: AccommodationSite = useWatch({ name: 'site' })
+  if (!record?.name) return null
   const flag = getCountryFlag(record.address.countryCode)
   return (
     <div className='flex items-start gap-2 mt-2 text-sm'>

@@ -4,8 +4,8 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { Repo, RepoContext, interpretAsDocumentId, type DocHandle } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
 import { EMPTY_ROOT_DOC, type RootDoc } from '@/store/automerge/types'
-import { countryDictionary } from '@/services'
-import type { AccommodationSite } from '@/types'
+import { airportDictionary, countryDictionary } from '@/services'
+import type { AccommodationSite, Airport, PlaceType } from '@/types'
 import { PlaceDialog } from './place-dialog'
 
 const adlon: AccommodationSite = {
@@ -15,9 +15,19 @@ const adlon: AccommodationSite = {
   tzone: 'Europe/Berlin',
 }
 
-function renderDialog(props: { placeKey?: string; onSaved: (key: string) => void }, saved: RootDoc['savedAccommodationSites'] = {}) {
+const ber: Airport = {
+  code: 'BER',
+  name: 'Berlin Brandenburg',
+  address: { countryCode: 'DE', city: 'Berlin' },
+  tzone: 'Europe/Berlin',
+}
+
+function renderDialog(
+  props: { type?: PlaceType; placeKey?: string; onSaved: (key: string) => void },
+  saved: Partial<RootDoc> = {},
+) {
   const repo = new Repo({ network: [] })
-  const rootHandle = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC, savedAccommodationSites: saved })
+  const rootHandle = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC, ...saved })
   render(
     <RepoContext.Provider value={repo}>
       <RootDocUrlContext.Provider value={rootHandle.url}>
@@ -27,7 +37,8 @@ function renderDialog(props: { placeKey?: string; onSaved: (key: string) => void
       </RootDocUrlContext.Provider>
     </RepoContext.Provider>,
   )
-  return () => (repo.handles[interpretAsDocumentId(rootHandle.url)] as DocHandle<RootDoc>).doc().savedAccommodationSites
+  const doc = () => (repo.handles[interpretAsDocumentId(rootHandle.url)] as DocHandle<RootDoc>).doc()
+  return { sites: () => doc().savedAccommodationSites ?? {}, airports: () => doc().savedAirports ?? {} }
 }
 
 describe('PlaceDialog', () => {
@@ -39,7 +50,12 @@ describe('PlaceDialog', () => {
         data: { DE: { code: 'DE', name: 'Germany' }, AT: { code: 'AT', name: 'Austria' } },
       }),
     )
+    localStorage.setItem(
+      'dict:airports-by-country-code',
+      JSON.stringify({ fetchedAt: new Date().toISOString(), data: { BER: ber } }),
+    )
     await countryDictionary.load()
+    await airportDictionary.load()
     localStorage.clear()
   })
 
@@ -47,7 +63,7 @@ describe('PlaceDialog', () => {
 
   it('adds a new place and hands its key to onSaved', async () => {
     const onSaved = vi.fn()
-    const sites = renderDialog({ onSaved })
+    const { sites } = renderDialog({ onSaved })
 
     fireEvent.change(await screen.findByLabelText(/Name/), { target: { value: 'Hotel Weisses Kreuz' } })
     fireEvent.change(screen.getByLabelText(/City/), { target: { value: 'Innsbruck' } })
@@ -61,7 +77,7 @@ describe('PlaceDialog', () => {
 
   it('edits the place saved under its key and hands that key to onSaved', async () => {
     const onSaved = vi.fn()
-    const sites = renderDialog({ placeKey: 'adlon', onSaved }, { adlon })
+    const { sites } = renderDialog({ placeKey: 'adlon', onSaved }, { savedAccommodationSites: { adlon } })
 
     const save = await screen.findByRole('button', { name: 'Save' })
     expect((save as HTMLButtonElement).disabled).toBe(true)
@@ -72,5 +88,20 @@ describe('PlaceDialog', () => {
     await waitFor(() => expect(onSaved).toHaveBeenCalledWith('adlon', expect.anything()))
     expect(Object.keys(sites())).toEqual(['adlon'])
     expect(sites().adlon.name).toBe('Hotel Adlon Kempinski')
+  })
+
+  it('refuses an airport code already saved, showing why and keeping the saved airport', async () => {
+    const onSaved = vi.fn()
+    const { airports } = renderDialog(
+      { type: 'Airport', onSaved },
+      { savedAirports: { BER: { ...ber, name: 'BER, my spelling' } } },
+    )
+
+    fireEvent.change(await screen.findByLabelText(/Code/), { target: { value: 'BER' } })
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(await screen.findByText('BER is already saved')).toBeTruthy()
+    expect(onSaved).not.toHaveBeenCalled()
+    expect(airports().BER.name).toBe('BER, my spelling')
   })
 })

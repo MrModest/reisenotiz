@@ -1,13 +1,13 @@
 import type { FunctionComponent } from 'react'
 import type { IconName } from '@/components/icon'
+import type { PlaceSaveError } from '@/store'
 import type { Place, PlaceType } from '@/types'
 
 export interface PlaceFormProps<T extends Place> {
   // Absent when adding
   place?: T
-  // Keys already saved for this type, which a new place may not take
-  takenKeys: string[]
-  onSubmit: (place: T) => void
+  // Returns why the store refused the place, for the form to show
+  onSubmit: (place: T) => PlaceSaveError | void
   onCancel: () => void
 }
 
