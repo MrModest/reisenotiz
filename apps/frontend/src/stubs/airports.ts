@@ -7,7 +7,7 @@ export const airports: Airport[] = [
     address: {
       line: 'Willy-Brandt-Platz 1, 12529 Schönefeld',
       city: 'Schönefeld',
-      country: 'Germany',
+      countryCode: 'DE',
       geoPoint: {
         latitude: 52.361738,
         longitude: 13.502341,
@@ -21,7 +21,7 @@ export const airports: Airport[] = [
     address: {
       line: 'Haneda Airport, 144-0041 Ota City, Tokyo',
       city: 'Tokyo',
-      country: 'Japan',
+      countryCode: 'JP',
     },
     tzone: 'Asia/Tokyo',
   },
@@ -31,7 +31,7 @@ export const airports: Airport[] = [
     address: {
       line: '60547 Frankfurt am Main',
       city: 'Frankfurt',
-      country: 'Germany',
+      countryCode: 'DE',
     },
     tzone: 'Europe/Berlin',
   },
@@ -41,7 +41,7 @@ export const airports: Airport[] = [
     address: {
       line: 'Narita, Chiba 282-0004',
       city: 'Narita',
-      country: 'Japan',
+      countryCode: 'JP',
     },
     tzone: 'Asia/Tokyo',
   },
@@ -51,7 +51,7 @@ export const airports: Airport[] = [
     address: {
       line: 'Queens, NY 11430',
       city: 'New York',
-      country: 'United States',
+      countryCode: 'US',
     },
     tzone: 'America/New_York',
   },

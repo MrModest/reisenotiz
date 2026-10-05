@@ -3,7 +3,7 @@ import { generateUUID } from '@/types/common/uuid'
 import type { Airport, Flight } from '@/types'
 
 function draftAirport(tzone: string): Airport {
-  return { code: '', name: '', address: { country: '', city: '', line: '' }, tzone }
+  return { code: '', name: '', address: { countryCode: '', city: '', line: '' }, tzone }
 }
 
 export function createFlightDraft(tripId: string): Flight {

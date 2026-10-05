@@ -1,4 +1,5 @@
 import { formatTo } from '@/lib/datetime'
+import { countryName } from '@/services'
 import type { Accommodation } from '@/types'
 import { FieldView } from '@/components/trip-items/shared/field-view'
 import { Separator, SeparatorWithLabel } from '@/components/ui/separator'
@@ -42,7 +43,7 @@ export function AccommodationView({ item: accommodation }: { item: Accommodation
         <FieldView
           label='Address'
           value={accommodation.site.address.line || 'Unknown'}
-          subValue={`${accommodation.site.address.country}, ${accommodation.site.address.city}`}
+          subValue={`${countryName(accommodation.site.address.countryCode)}, ${accommodation.site.address.city}`}
         />
         {accommodation.site.contact && <FieldView label='Contact' value={accommodation.site.contact} />}
       </div>

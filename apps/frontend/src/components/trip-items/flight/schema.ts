@@ -10,7 +10,7 @@ const airportSchema = z
     code: z.string(),
     name: z.string(),
     address: z.object({
-      country: z.string(),
+      countryCode: z.string(),
       city: z.string(),
       line: z.string().optional(),
     }),

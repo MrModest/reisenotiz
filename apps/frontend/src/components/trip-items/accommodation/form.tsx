@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { FieldErrors, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Accommodation } from '@/types'
+import type { Accommodation, AccommodationSite } from '@/types'
 import {
   defaultsFromAccommodation,
   accommodationFormSchema,
@@ -21,17 +21,18 @@ import { Button } from '@/components/ui/button'
 import { Icon } from '@/components/icon'
 import { formatTo, convertTime } from '@/lib/datetime'
 import { getCountryFlag } from '@/lib/utils/country-flag'
+import { countryName } from '@/services'
 import { CollapsibleSection } from '@/components/trip-items/shared/collapsible-section'
 import { FieldErrorAt } from '@/components/trip-items/shared/field-errors'
 import { NoteSection } from '@/components/trip-items/shared/section-note'
 import { AttachmentsSection } from '@/components/trip-items/shared/section-attachments'
-import { AccommodationSelector } from '@/components/ui/combobox/accommodation'
-import { useAccommodations } from '@/hooks/use-accommodations'
-import { AccommodationRecordDialog } from '@/components/records/accommodation-record-dialog'
-import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
+import { AccommodationSelector, type SavedSiteEntry } from '@/components/ui/combobox/accommodation'
+import { useSavedPlaces } from '@/store'
+import { PlaceDialog } from '@/components/places/place-dialog'
 import { Badge } from '@/components/ui/badge'
 
-function StayIntervalPreview({ tzone }: { tzone?: string }) {
+function StayIntervalPreview() {
+  const tzone: string | undefined = useWatch({ name: 'site.tzone' })
   const planned = useWatch({ name: 'plannedInterval' })
   const provided = useWatch({ name: 'providedInterval' })
   const interval: AccommodationStayIntervalSchema = planned || provided
@@ -154,10 +155,12 @@ function StayIntervalFields() {
 }
 
 export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: TripItemFormProps<Accommodation>) {
-  const accommodations = useAccommodations()
-  const [selectedRecord, setSelectedRecord] = useState<AccommodationSiteRecord | null>(() =>
-    accommodation.site.id ? (accommodations.find((r) => r.id === accommodation.site.id) ?? null) : null,
-  )
+  const places = useSavedPlaces()
+  const accommodations = places.filter((e): e is SavedSiteEntry => e.type === 'AccommodationSite' && !e.place.archived)
+  // The stay holds a copy of its site, so the saved site it came from is found by what it says
+  // The stay holds a copy with no key back to its saved site, so only a site picked here is known
+  // by key; until then the picker starts empty and offers `Add`, never an `Edit` of a guessed site
+  const [selectedRecord, setSelectedRecord] = useState<SavedSiteEntry | null>(null)
 
   const form = useForm<AccommodationFormSchema>({
     resolver: zodResolver(accommodationFormSchema),
@@ -200,7 +203,7 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
         />
         <FieldErrorAt name='site' className='text-xs font-thin' />
 
-        {selectedRecord && <AccommodationSitePreview record={selectedRecord} />}
+        <AccommodationSitePreview />
 
         <Separator className='mt-4' />
 
@@ -215,7 +218,7 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
         <CollapsibleSection
           label='Stay Interval'
           icon='accommodation'
-          preview={<StayIntervalPreview tzone={selectedRecord?.tzone} />}
+          preview={<StayIntervalPreview />}
           open={stayIntervalOpen}
           onOpenChange={setStayIntervalOpen}
           className='mt-4'
@@ -243,30 +246,20 @@ export function AccommodationForm({ item: accommodation, onSubmit, onCancel }: T
 }
 
 interface AccommodationSiteSelectorProps {
-  accommodations: AccommodationSiteRecord[]
-  selected: AccommodationSiteRecord | null
-  onSelectedChange: (record: AccommodationSiteRecord | null) => void
+  accommodations: SavedSiteEntry[]
+  selected: SavedSiteEntry | null
+  onSelectedChange: (record: SavedSiteEntry | null) => void
 }
 
 function AccommodationSiteSelector({ accommodations, selected, onSelectedChange }: AccommodationSiteSelectorProps) {
   const { setValue } = useFormContext<AccommodationFormSchema>()
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  function handleSelect(record: AccommodationSiteRecord | null) {
+  function handleSelect(record: SavedSiteEntry | null) {
     onSelectedChange(record)
     if (!record) return
-    setValue(
-      'site',
-      {
-        id: record.id,
-        name: record.name,
-        kind: record.kind,
-        address: record.address,
-        contact: record.contact || '',
-        tzone: record.tzone,
-      },
-      { shouldValidate: true },
-    )
+    const { name, kind, address, contact, tzone } = record.place
+    setValue('site', { name, kind, address, contact: contact || '', tzone }, { shouldValidate: true })
   }
 
   return (
@@ -276,20 +269,25 @@ function AccommodationSiteSelector({ accommodations, selected, onSelectedChange 
       </div>
       <Button type='button' variant='outline' onClick={() => setDialogOpen(true)}>
         <Icon name={selected ? 'edit' : 'add'} />
-        {selected ? 'Edit' : 'Add New'}
+        {selected ? 'Edit' : 'Add'}
       </Button>
-      <AccommodationRecordDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        accommodation={selected}
-        onSave={handleSelect}
-      />
+      {dialogOpen && (
+        <PlaceDialog
+          type='AccommodationSite'
+          placeKey={selected?.key}
+          onSaved={(key, place) => handleSelect({ type: 'AccommodationSite', key, place })}
+          onClose={() => setDialogOpen(false)}
+        />
+      )}
     </FieldSet>
   )
 }
 
-function AccommodationSitePreview({ record }: { record: AccommodationSiteRecord }) {
-  const flag = record.address?.country ? getCountryFlag(record.address.country) : '🌐'
+// The copy the stay will save, whether it came with the stay or from a pick
+function AccommodationSitePreview() {
+  const record: AccommodationSite = useWatch({ name: 'site' })
+  if (!record?.name) return null
+  const flag = getCountryFlag(record.address.countryCode)
   return (
     <div className='flex items-start gap-2 mt-2 text-sm'>
       <span className='text-xl'>{flag}</span>
@@ -301,7 +299,7 @@ function AccommodationSitePreview({ record }: { record: AccommodationSiteRecord 
           {record.name}
         </div>
         <div className='text-muted-foreground'>
-          {record.address.line} · {record.address.country}
+          {record.address.line} · {countryName(record.address.countryCode)}
         </div>
       </div>
     </div>

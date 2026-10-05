@@ -65,7 +65,7 @@ export const tripsItems: TripItem[] = [
       address: {
         line: 'Dummy-hotel-straße 345, 12345 Leipzig',
         city: 'Leipzig',
-        country: 'Germany',
+        countryCode: 'DE',
       },
       tzone: 'Europe/Berlin',
     },

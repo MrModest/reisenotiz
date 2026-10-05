@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '../item'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './base'
+import { countryName } from '@/services'
 import type { Airport } from '@/types'
 
 const MAX_RESULTS = 50
@@ -16,7 +17,7 @@ function scoreAirport(airport: Airport, q: string): number {
   const code = airport.code.toLowerCase()
   const name = airport.name.toLowerCase()
   const city = airport.address.city.toLowerCase()
-  const country = airport.address.country.toLowerCase()
+  const country = countryName(airport.address.countryCode).toLowerCase()
 
   if (code.startsWith(q)) return 7
   if (code.includes(q)) return 6
@@ -75,9 +76,9 @@ export function AirportSelector({ items, selected = null, onSelect }: AirportSel
             <ComboboxItem key={airport.code} value={airport}>
               <Item size='xs' className='p-0'>
                 <ItemContent>
-                  <ItemTitle className='whitespace-nowrap'>{airport.name}</ItemTitle>
+                  <ItemTitle className='block w-full truncate'>{airport.name}</ItemTitle>
                   <ItemDescription>
-                    {airport.code} ({airport.address.city}, {airport.address.country})
+                    {airport.code} ({airport.address.city}, {countryName(airport.address.countryCode)})
                   </ItemDescription>
                 </ItemContent>
               </Item>

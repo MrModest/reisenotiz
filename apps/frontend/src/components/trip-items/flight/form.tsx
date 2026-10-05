@@ -22,7 +22,8 @@ import { FieldErrorAt } from '../shared/field-errors'
 import { getCountryFlag } from '@/lib/utils/country-flag'
 import { AirportSelector } from '@/components/ui/combobox/airport'
 import { useAirports } from '@/hooks/use-airports'
-import { AirportRecordDialog } from '@/components/records/airport-record-dialog'
+import { PlaceDialog } from '@/components/places/place-dialog'
+import { useSavedPlace, useSavedPlaceMutations } from '@/store'
 
 function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
   const airport: Airport = useWatch({ name: `${direction}.airport` })
@@ -33,7 +34,7 @@ function AirportPreview({ direction }: { direction: 'departure' | 'arrival' }) {
     return <span className='text-muted-foreground text-sm'>No {direction} info</span>
   }
 
-  const flag = airport.address?.country ? getCountryFlag(airport.address.country) : '🌐'
+  const flag = airport.address?.countryCode ? getCountryFlag(airport.address.countryCode) : '🌐'
   const airportDisplay = airport.name
     ? `${airport.name} (${airport.code})`
     : airport.code
@@ -151,6 +152,7 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
   const airports = useAirports()
   const { setValue, getValues } = useFormContext<FlightFormSchema>()
   const [dialogOpen, setDialogOpen] = useState(false)
+  const { materialiseAirport } = useSavedPlaceMutations()
 
   const initialAirport = getValues(`${direction}.airport`)
   const [selected, setSelected] = useState<Airport | null>(() =>
@@ -162,7 +164,7 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
     if (!airport) {
       setValue(
         `${direction}.airport`,
-        { code: '', name: '', tzone: 'Etc/Utc', address: { country: '', city: '' } },
+        { code: '', name: '', tzone: 'Etc/Utc', address: { countryCode: '', city: '' } },
         { shouldValidate: true },
       )
       return
@@ -170,15 +172,23 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
     setValue(`${direction}.airport`, airport, { shouldValidate: true })
   }
 
+  // Saved before the flight copies it, so a dictionary airport becomes a saved place
+  function handleAirportPick(airport: Airport | null) {
+    if (airport) materialiseAirport(airport)
+    handleAirportSelect(airport)
+  }
+
+  const savedSelected = useSavedPlace(selected?.code)
+
   return (
     <>
       <FieldSet className='flex-row items-end gap-2 my-2'>
         <div className='flex-1'>
-          <AirportSelector items={airports} selected={selected} onSelect={handleAirportSelect} />
+          <AirportSelector items={airports} selected={selected} onSelect={handleAirportPick} />
         </div>
         <Button type='button' variant='outline' onClick={() => setDialogOpen(true)}>
-          <Icon name={selected ? 'edit' : 'add'} />
-          {selected ? 'Edit' : 'Add New'}
+          <Icon name={savedSelected ? 'edit' : 'add'} />
+          {savedSelected ? 'Edit' : 'Add'}
         </Button>
       </FieldSet>
       <FieldErrorAt name={`${direction}.airport`} className='text-xs font-thin' />
@@ -190,12 +200,14 @@ function AirportPoint({ direction }: { direction: 'departure' | 'arrival' }) {
         <FieldInput className='md:w-15' name={`${direction}.terminal`} label='Terminal' />
         <FieldInput className='md:w-15' name={`${direction}.gate`} label='Gate' />
       </FieldSet>
-      <AirportRecordDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        airport={selected}
-        onSave={handleAirportSelect}
-      />
+      {dialogOpen && (
+        <PlaceDialog
+          type='Airport'
+          placeKey={savedSelected?.key}
+          onSaved={(_, airport) => handleAirportSelect(airport)}
+          onClose={() => setDialogOpen(false)}
+        />
+      )}
     </>
   )
 }

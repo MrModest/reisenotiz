@@ -8,3 +8,8 @@ export interface DictionaryConfig<T> {
   fetcher: () => Promise<Record<string, T>>
   maxAgeMs: number
 }
+
+export interface Country {
+  code: string // ISO 3166-1 alpha-2
+  name: string
+}

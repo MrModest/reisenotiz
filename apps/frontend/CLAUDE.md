@@ -94,9 +94,19 @@ in this app.
 - Components use the hooks exported from `@/store`: `useTrips` (newest start first),
   `useTripSummaries` (each trip with its item count, unsorted), `useTrip`, `useTripItems`,
   `useTripItem`, `useTimelineElements`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
-  and the `TripItem` equivalents. `userRecords` covers saved airports and accommodations.
+  and the `TripItem` equivalents. Saved places come from `useSavedPlaces()` (tagged
+  `{ type, key, place }` entries), `useSavedPlace(placeKey)` and `useSavedPlaceMutations()`
+  (`add`, `update`, `archive`, `restore`, `remove(type, key)`, `materialiseAirport`). Each checks
+  the document inside its own change, since another device may have changed it since the render:
+  `add` refuses a key already saved and `update` a place deleted meanwhile, both as a typed
+  `PlaceSaveResult` (`key-taken` / `not-found`), and `archive`, `restore` and `remove` of a
+  missing place change nothing.
 - **Document model**: `RootDoc` per user, `TripDoc` per trip — see
   `/docs/adr/0004-automerge-document-model.md` for the shape and why.
+- `RootDoc` holds the saved places in two maps keyed differently on purpose: `savedAirports` by
+  IATA code, `savedAccommodationSites` by uuid. A place's type is known from which map it sits in;
+  nothing stored says it. Both maps are optional in `RootDoc`, because a root document made before
+  them lacks them; the store reads a missing map as empty and creates it on the first write.
 - **Storage**: IndexedDB locally. When `VITE_SYNC_SERVER_URL` is set the repo also connects to
   `apps/sync/` over WebSocket; absent, the app runs local-only with no error.
 - **Conflicts** are resolved by Automerge's CRDT merge. Never write custom merge logic
@@ -167,9 +177,11 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 **UI Components** (`src/components/ui/`):
 ~20 components built on Base UI primitives with CVA variants, including `Button`, `Input`,
 `Textarea`, `Dialog`, `AlertDialog`, `Popover`, `Tabs`, `Collapsible`, `Combobox`, `Calendar`,
-`Badge`, `Switch`, `Separator`, `Skeleton`, `Item`, `DropdownMenu` and `Timeline`. Read the existing component
+`Badge`, `Switch`, `Separator`, `Skeleton`, `Item`, `DropdownMenu`, `ToggleGroup` and `Timeline`. Read the existing component
 before adding a new one — most needs are already covered.
 - `ConfirmDialog` is the app's confirmation, built on `AlertDialog`
+- `ChipRow` is the single-select chip row on `ToggleGroup`: exactly one chip is on, and pressing
+  the active chip does nothing
 - shadcn installs come from `base-mira` with `--dry-run` and `--diff`, never `-y`: an install can
   overwrite `button.tsx` and drop its `ButtonVariant` export, and it writes `import { cn } from "cn"`,
   which must be `@/lib/utils`
@@ -188,6 +200,36 @@ before adding a new one — most needs are already covered.
   the item and navigates back.
 - The type interfaces in `src/types/` import nothing from the app; `ZonedInstant` lives in
   `src/types/common/` for that reason.
+
+**Places** (`src/components/places/`):
+- A `Place` is a name, an `Address` and a timezone; `Airport` adds `code`, `AccommodationSite` adds
+  `kind` and `contact`. `SavedPlace<T>` adds `archived`. The types live in `src/types/trip/place.ts`.
+- `registry.ts` maps each `PlaceType` (`'Airport' | 'AccommodationSite'`) to a `PlaceTypeModule`:
+  `type`, `label` (`Airport`, `Accommodation`), `icon`, `Row` and `Form`. `placeTypeModules` is in
+  display order.
+- `PlaceDialog` takes `{ type, placeKey?, onSaved?, onClose }`: no key adds, a key edits, and
+  `onSaved` gets the key and the saved place. It never learns who opened it. A refusal from the
+  store goes back to the form: an airport code already saved shows on the code field. The Places screen
+  opens it by route (`/saved-places/new?type=…`, `/saved-places/:placeKey/edit`) over the
+  still-mounted list; the flight and stay forms open it from component state.
+- Both forms share `PlaceFields` (name, address line, city, country dropdown, timezone) inside
+  `PlaceForm`, whose `Save` is disabled until the form is dirty. The airport's code is fixed once
+  saved, because it is the key; typing a code the airport dictionary knows prefills the rest.
+- `SavedPlaceRow` owns its `min-w-0`. The Places screen (`src/pages/saved-places.tsx`) owns the row
+  shell and its `Archive` / `Restore` / `Delete` actions, and derives its chips from the types
+  present.
+- Trip items hold a copy of their place, with no key back to it. The stay form therefore offers
+  `Edit` only for a site picked in that form. The airport picker (`useAirports()`) lists saved
+  airports that are not archived and the dictionary airports that are not saved; picking one
+  materialises it into `savedAirports` before the flight copies it.
+
+**Countries** (`src/services/dictionaries/`):
+- `Address.countryCode` is an ISO 3166-1 alpha-2 code, chosen from a dropdown and never typed.
+- `countryDictionary` is built from `public/dicts/countries.csv`. The airport dictionary converts
+  each row's country name to its code as it loads; a name the country list lacks throws.
+- `countryName(code)` is the display name; an unmapped code is a bug and throws.
+  `getCountryFlag(code)` (`src/lib/utils/`) builds the flag from the code alone.
+- The root route's loader loads `countryDictionary` and `airportDictionary`.
 
 **Icon Component** (`src/components/icon/index.tsx`):
 - Exports `Icon` and `IconName` and nothing else. Its body is a static map from `IconName` to

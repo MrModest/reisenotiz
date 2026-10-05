@@ -77,7 +77,7 @@ export function TimezoneSelector({ selected = null, onSelect }: TimezoneSelector
             <ComboboxItem key={tz.iana} value={tz}>
               <Item size='xs' className='p-0'>
                 <ItemContent>
-                  <ItemTitle className='whitespace-nowrap'>{tz.iana}</ItemTitle>
+                  <ItemTitle className='block w-full truncate'>{tz.iana}</ItemTitle>
                   <ItemDescription>{tz.offset}</ItemDescription>
                 </ItemContent>
               </Item>

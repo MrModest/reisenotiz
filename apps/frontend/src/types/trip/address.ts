@@ -1,5 +1,6 @@
 export interface Address {
-  country: string
+  // ISO 3166-1 alpha-2
+  countryCode: string
   city: string
   line?: string
   geoPoint?: GeoPoint

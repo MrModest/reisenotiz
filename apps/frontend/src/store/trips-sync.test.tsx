@@ -78,11 +78,11 @@ function flightFixture(tripId: string): Omit<Flight, 'id'> {
     seat: '12A',
     passengers: [],
     departure: {
-      airport: { code: 'TXL', name: 'Berlin', address: { country: 'DE', city: 'Berlin' }, tzone: 'Europe/Berlin' },
+      airport: { code: 'TXL', name: 'Berlin', address: { countryCode: 'DE', city: 'Berlin' }, tzone: 'Europe/Berlin' },
       time: t(8),
     },
     arrival: {
-      airport: { code: 'MUC', name: 'Munich', address: { country: 'DE', city: 'Munich' }, tzone: 'Europe/Berlin' },
+      airport: { code: 'MUC', name: 'Munich', address: { countryCode: 'DE', city: 'Munich' }, tzone: 'Europe/Berlin' },
       time: t(10),
     },
   }

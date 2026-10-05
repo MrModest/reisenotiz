@@ -11,6 +11,8 @@ interface FieldInputProps {
   disabled?: boolean
   placeholder?: string
   className?: string
+  // Runs after the form has taken the value
+  onValueChange?: (value: string) => void
   type?: Omit<React.HTMLInputTypeAttribute, 'checkbox' | 'date' | 'datetime-local' | 'radio' | 'submit' | 'time'> // Exclude types that require special handling
 }
 
@@ -22,13 +24,17 @@ export function FieldInput({
   placeholder,
   className,
   type,
+  onValueChange,
 }: FieldInputProps) {
   const { field, error } = useFormField(name)
 
   const isNumber = type === 'number'
   const onChange = isNumber
     ? (e: React.ChangeEvent<HTMLInputElement>) => field.onChange(e.target.valueAsNumber)
-    : field.onChange
+    : (e: React.ChangeEvent<HTMLInputElement>) => {
+        field.onChange(e)
+        onValueChange?.(e.target.value)
+      }
   const value = isNumber && Number.isNaN(field.value) ? '' : field.value
 
   return (

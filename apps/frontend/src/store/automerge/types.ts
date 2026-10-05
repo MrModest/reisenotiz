@@ -1,11 +1,13 @@
 import type { AutomergeUrl } from '@automerge/react'
-import type { Trip, TripItem, Airport } from '@/types'
-import type { AccommodationSiteRecord } from '@/store/user-records/accommodations'
+import type { Trip, TripItem, Airport, AccommodationSite, SavedPlace } from '@/types'
 
 export interface RootDoc {
   tripIndex: Record<string, AutomergeUrl>
-  userAirports: Record<string, Airport>
-  userAccommodations: Record<string, AccommodationSiteRecord>
+  // Both absent from a root document made before saved places existed; there is no migration.
+  // Keyed by IATA code
+  savedAirports?: Record<string, SavedPlace<Airport>>
+  // Keyed by uuid
+  savedAccommodationSites?: Record<string, SavedPlace<AccommodationSite>>
 }
 
 export interface TripDoc {
@@ -15,6 +17,6 @@ export interface TripDoc {
 
 export const EMPTY_ROOT_DOC: RootDoc = {
   tripIndex: {},
-  userAirports: {},
-  userAccommodations: {},
+  savedAirports: {},
+  savedAccommodationSites: {},
 }
