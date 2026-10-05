@@ -201,9 +201,9 @@ before adding a new one — most needs are already covered.
 - `toTimelineElements(item, places)` returns one `TimelineElement` per data point — a flight's departure
   and arrival, a stay's check-in and check-out at `planned?.in ?? provided.in` and
   `planned?.out ?? provided.out`. The title is the item's own name; the summary is role first,
-  then where, never how long, in natural case: `Departure · BER T1 · Seat 14A`. Saved places are
-  handed in, never read inside, so an edited place reaches the timeline. A flight's summary names
-  its airports by `placeKey`, which is the IATA code, so a dangling link changes nothing there.
+  then where, never how long, in natural case: `Departure · BER T1 · Seat 14A`. The saved places
+  are an argument rather than a store read inside the module. A flight's summary names its airports
+  by `placeKey`, which is the IATA code, so it needs no lookup and a dangling link changes nothing.
 - Each type has its own folder — `flight/`, `accommodation/` — holding `module`, `view`, `form`,
   `schema` and `draft`. Parts both types use live in `shared/`.
 - `createDraft` defaults every time to `DateTime.now()` in the device zone. Submit re-anchors the
@@ -221,8 +221,8 @@ before adding a new one — most needs are already covered.
   is not a control), `DateTimeField`, `PlacePicker`, `PersonChips` (read-only without `onChange`),
   `FormActions`, and the React Hook Form wrappers `FieldInput`, `FieldTextarea` and `FieldErrorAt`.
   `NotesBlock`, `FactRow`, `AddressLink`, `PersonChips` and `AttachmentChips` carry
-  `wrap-anywhere`. No `md:` utility appears in a view or form body: the pane is 400px wide above
-  900px, so a viewport breakpoint would fire inside it
+  `wrap-anywhere`. The flight's view and form and these shared parts use no `md:` utility: the pane
+  is 400px wide above 900px, so a viewport breakpoint would fire inside it
 - `PlacePicker` (`type`, the form field `name` holding the place key, `label`) is a combobox plus
   an `Add` / `Edit` button and a two-line preview: name (and code), then address and timezone. The
   airport list mixes saved airports and the dictionary (`useAirports()`); picking a dictionary

@@ -5,7 +5,6 @@ import { generateUUID, type Person } from '@/types'
 
 interface PersonChipsProps {
   people: Person[]
-  // Absent: the chips are read-only
   onChange?: (people: Person[]) => void
   id?: string
 }

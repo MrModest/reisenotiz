@@ -12,7 +12,6 @@ import { FieldLabel } from './field-label'
 
 interface PlacePickerProps {
   type: PlaceType
-  // The form field holding the place key
   name: string
   label: string
 }

@@ -254,7 +254,7 @@ The drawing shows none of this. Every interactive element in a frame is a `div`;
   [#56](https://github.com/MrModest/reisenotiz/issues/56); wanted in a future iteration.
 - **Offline is a working state, not an error.** Nothing warns, blocks or toasts when the connection
   drops ([#34](https://github.com/MrModest/reisenotiz/issues/34)).
-- **Maps**: `useMapUrl(address, coords)` builds one URL — `geo:` on Android, `maps://` on iOS,
+- **Maps**: `useMapUrl(place)` builds one URL — `geo:` on Android, `maps://` on iOS,
   `https://www.google.com/maps/search/?api=1&query=` elsewhere. Platform sniffing lives in that hook
   and nowhere else.
 
