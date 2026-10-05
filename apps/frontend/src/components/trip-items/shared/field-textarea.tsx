@@ -14,8 +14,8 @@ export function FieldTextarea({ name, label, className, placeholder }: FieldText
   const { field, error } = useFormField(name)
 
   return (
-    <Field className={cn('gap-0.5', className)}>
-      <FieldLabel htmlFor={name}>{label}</FieldLabel>
+    <Field className={cn('gap-1.5', className)}>
+      <FieldLabel className='font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground' htmlFor={name}>{label}</FieldLabel>
       <Textarea aria-invalid={!!error} id={name} placeholder={placeholder} {...field} />
       {error && <FieldError className='text-xs font-thin text-foreground'>{error.message?.toString()}</FieldError>}
     </Field>

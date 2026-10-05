@@ -32,8 +32,8 @@ export function FieldInput({
   const value = isNumber && Number.isNaN(field.value) ? '' : field.value
 
   return (
-    <Field className={cn('gap-0.5', className)}>
-      <FieldLabel className='gap-1 pr-10' htmlFor={name}>
+    <Field className={cn('gap-1.5', className)}>
+      <FieldLabel className='gap-1 pr-10 font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground' htmlFor={name}>
         {label}
         {isRequired && <Required />}
       </FieldLabel>

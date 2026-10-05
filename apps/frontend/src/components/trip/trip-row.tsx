@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { Icon } from '@/components/icon'
 import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/ui/confirm-dialog'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { formatTo, type DateTime } from '@/lib/datetime'
 import { getTripCountdown, type TripSummary } from '@/lib/trip'
 import { routes } from '@/lib/routes'
@@ -16,6 +17,7 @@ interface TripRowProps {
 }
 
 export function TripRow({ summary: { trip, itemCount }, now, highlighted }: TripRowProps) {
+  const navigate = useNavigate()
   const deleteTrip = useDeleteTrip()
   const [confirmOpen, setConfirmOpen] = useState(false)
   const countdown = getTripCountdown(trip, now)
@@ -38,10 +40,17 @@ export function TripRow({ summary: { trip, itemCount }, now, highlighted }: Trip
           {countdown && <Chip className='text-brand'>{countdown}</Chip>}
         </div>
       </Link>
-      {/* ponytail: the trash stays until #70 replaces it with the row's ··· menu */}
-      <Button variant='ghost' size='icon-sm' aria-label='Delete' className='-my-1 -mr-2 text-muted-foreground' onClick={() => setConfirmOpen(true)}>
-        <Icon name='trash' />
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={<Button variant='ghost' size='icon-sm' aria-label='Trip actions' className='-my-1 -mr-2 text-muted-foreground' />}
+        >
+          <Icon name='more' />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align='end' className='w-auto'>
+          <DropdownMenuItem onClick={() => navigate(routes.trips.edit(trip.id))}>Edit</DropdownMenuItem>
+          <DropdownMenuItem variant='destructive' onClick={() => setConfirmOpen(true)}>Delete</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
       <ConfirmDialog
         open={confirmOpen}
         onOpenChange={setConfirmOpen}

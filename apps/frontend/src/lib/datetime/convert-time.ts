@@ -1,4 +1,5 @@
-import { DateTime, ZonedInstant } from '@/lib/datetime'
+import { DateTime } from './datetime'
+import type { ZonedInstant } from './types'
 
 export function convertTime(date: string, time: string, tz: string): ZonedInstant {
   const [year, month, day] = date.split('-').map(s => parseInt(s))
