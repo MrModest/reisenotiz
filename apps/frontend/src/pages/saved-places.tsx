@@ -34,6 +34,7 @@ export function SavedPlacesPage() {
       <PageHeader title='Places'>
         <div className='flex min-w-0 items-center gap-3'>
           <ChipRow
+            aria-label='Filter'
             className='flex-1'
             value={active}
             onValueChange={setFilter}

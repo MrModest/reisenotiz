@@ -4,7 +4,7 @@ import { PageHeader } from '@/components/layout/page-header'
 import { Icon } from '@/components/icon'
 import { SkeletonRows } from '@/components/ui/skeleton-rows'
 import { getTripItemModule, presentTripItemModules, toTimelineElements } from '@/components/trip-items/registry'
-import { TimelineChips } from '@/components/trip-timeline/timeline-chips'
+import { ChipRow } from '@/components/ui/chip-row'
 import { TimelineDayHeader, TimelineRow, UnknownItemRow } from '@/components/trip-timeline/timeline-row'
 import { useTrip, useTripExists, useTripItems } from '@/store'
 import { useDocumentTitle } from '@/hooks/use-document-title'
@@ -53,11 +53,11 @@ function TripTimelineSplit({ tripId }: { tripId: string }) {
 function TripTimelineContent({ tripId }: { tripId: string }) {
   const trip = useTrip(tripId)
   const items = useTripItems(tripId)
-  const [filter, setFilter] = useState<TripItemType>()
+  const [filter, setFilter] = useState<TripItemType | 'ALL'>('ALL')
   const chips = presentTripItemModules(items)
   // a filter whose last item went away is cleared, so the type coming back does not revive it
-  if (filter && !chips.some((m) => m.type === filter)) setFilter(undefined)
-  const activeFilter = chips.some((m) => m.type === filter) ? filter : undefined
+  if (filter !== 'ALL' && !chips.some((m) => m.type === filter)) setFilter('ALL')
+  const activeFilter = filter !== 'ALL' && chips.some((m) => m.type === filter) ? filter : undefined
   const days = buildTimelineDays(toTimelineElements(items), activeFilter)
   const unknownItems = activeFilter ? [] : items.filter((i) => !getTripItemModule(i.type))
   const openItemId = useMatch(`${routes.trips.item(':tripId', ':itemId')}/*` as const)?.params.itemId
@@ -68,7 +68,14 @@ function TripTimelineContent({ tripId }: { tripId: string }) {
   return (
     <>
       <PageHeader title={trip.name} subtitle={`${formatTo.dateRange(trip.startDate, trip.endDate)} · ${itemCount}`} backTo={routes.trips.list()}>
-        {chips.length > 0 && <TimelineChips modules={chips} value={activeFilter} onChange={setFilter} />}
+        {chips.length > 0 && (
+          <ChipRow
+            aria-label='Filter'
+            value={activeFilter ?? 'ALL'}
+            onValueChange={setFilter}
+            options={[{ value: 'ALL', label: 'All' }, ...chips.map((m) => ({ value: m.type, label: m.label }))]}
+          />
+        )}
       </PageHeader>
       <div className='relative min-h-0 flex-1'>
         <div className='h-full overflow-y-auto pb-20'>

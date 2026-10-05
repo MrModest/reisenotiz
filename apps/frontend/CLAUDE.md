@@ -180,8 +180,9 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 `Badge`, `Switch`, `Separator`, `Skeleton`, `Item`, `DropdownMenu` and `ToggleGroup`. Read the existing component
 before adding a new one — most needs are already covered.
 - `ConfirmDialog` is the app's confirmation, built on `AlertDialog`
-- `ChipRow` is the single-select chip row on `ToggleGroup`: exactly one chip is on, and pressing
-  the active chip does nothing
+- `ChipRow` is the app's one chip row — the timeline's and the Places screen's — single-select on
+  `ToggleGroup`: exactly one chip is on, pressing the active chip does nothing, and a long label
+  truncates at a max width. It takes an `aria-label`
 - shadcn installs come from `base-mira` with `--dry-run` and `--diff`, never `-y`: an install can
   overwrite `button.tsx` and drop its `ButtonVariant` export, and it writes `import { cn } from "cn"`,
   which must be `@/lib/utils`
@@ -285,8 +286,8 @@ before adding a new one — most needs are already covered.
 - One `section` per day: a sticky `TimelineDayHeader`, the app's only `position: sticky`, then a
   `TimelineRow` per element, each in its own zone, with a `5 Sep` prefix when `otherDay`. Items of
   a type this build does not know follow the days as muted `UnknownItemRow`s, under `All` only
-- The header's `children` is `TimelineChips`: `All` plus one chip per type present, single-select,
-  held in local state. A filter whose last item went away is cleared, so `All` stays active when
+- The header's `children` is a `ChipRow`: `All` plus one chip per type present, held in local
+  state. A filter whose last item went away is cleared, so `All` stays active when
   that type returns
 - The item routes are children of `/trips/:tripId`. View, edit, create and the type picker
   (`items/new` with no `type`) render into one `data-slot='detail-pane'` node, which exists
