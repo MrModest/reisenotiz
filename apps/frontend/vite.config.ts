@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite'
+import { defineConfig, searchForWorkspaceRoot } from 'vite'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import tailwindcss from '@tailwindcss/vite'
@@ -21,7 +21,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       devOptions: {
         enabled: true,
-        type: 'module'
+        type: 'module',
       },
       manifest: {
         name: 'Reisenotiz',
@@ -32,27 +32,27 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            "src": "pwa-64x64.png",
-            "sizes": "64x64",
-            "type": "image/png"
+            src: 'pwa-64x64.png',
+            sizes: '64x64',
+            type: 'image/png',
           },
           {
-            "src": "pwa-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png"
+            src: 'pwa-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
           },
           {
-            "src": "pwa-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png"
+            src: 'pwa-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
           },
           {
-            "src": "maskable-icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-          }
-        ]
+            src: 'maskable-icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,wasm}'],
@@ -60,22 +60,28 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
-    })
+    }),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
+      '@': path.resolve(__dirname, './src'),
+    },
   },
   css: {
     modules: {
-      localsConvention: 'camelCase'
-    }
+      localsConvention: 'camelCase',
+    },
   },
   build: {
-    target: 'esnext'
+    target: 'esnext',
   },
   optimizeDeps: {
-    exclude: ['@automerge/automerge-wasm']
+    exclude: ['@automerge/automerge-wasm'],
+  },
+  server: {
+    fs: {
+      // a root workspace install keeps packages in the repo-root node_modules
+      allow: [searchForWorkspaceRoot(process.cwd()), path.resolve(__dirname, '../../node_modules')],
+    },
   },
 })
