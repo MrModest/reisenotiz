@@ -1,7 +1,7 @@
 import { useDocument, useDocuments, useRepo } from '@automerge/react'
-import type { Trip, TripItem } from '@/types'
+import type { Trip, TripItem, TripItemType } from '@/types'
 import type { TripSummary } from '@/lib/trip'
-import type { TimelineElement } from '@/components/ui/timeline'
+import { buildTimelineDays, type TimelineDay } from '@/lib/timeline'
 import { getTripItemModule } from '@/components/trip-items/registry'
 import { generateUUID } from '@/types/common/uuid'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
@@ -70,11 +70,10 @@ export function useTripItem(tripId: string, itemId: string): TripItem {
   return item
 }
 
-export function useTimelineElements(tripId: string): TimelineElement[] {
+export function useTimelineDays(tripId: string, filter?: TripItemType): TimelineDay[] {
   const tripItems = useTripItems(tripId)
   const elements = tripItems.flatMap((item) => getTripItemModule(item.type)?.toTimelineElements(item) ?? [])
-  elements.sort((a, b) => a.datetime.instant.localeCompare(b.datetime.instant))
-  return elements
+  return buildTimelineDays(elements, filter)
 }
 
 /* ============= Writes ============= */

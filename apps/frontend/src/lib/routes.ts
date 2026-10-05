@@ -13,8 +13,9 @@ export const routes = {
       `/trips/${tripId}/edit`,
     item: (tripId: string, itemId: string) =>
       `/trips/${tripId}/items/${itemId}`,
-    newItem: (tripId: string, type: TripItemType) =>
-      `/trips/${tripId}/items/new?type=${type}`,
+    // without a type: the type picker
+    newItem: (tripId: string, type?: TripItemType) =>
+      `/trips/${tripId}/items/new${type ? `?type=${type}` : ''}`,
     editItem: (tripId: string, itemId: string) =>
       `/trips/${tripId}/items/${itemId}/edit`,
   },

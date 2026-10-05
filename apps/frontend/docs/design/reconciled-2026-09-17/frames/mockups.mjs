@@ -269,7 +269,7 @@ const days = [
 const chips = `<div class="-mx-4 flex gap-1.5 overflow-hidden px-4">
   <span class="inline-flex h-7 shrink-0 items-center rounded-sm border border-input bg-accent px-2.5 font-mono text-[10px] uppercase tracking-[.08em] text-accent-foreground">All</span>
   <span class="inline-flex h-7 shrink-0 items-center rounded-sm border border-border px-2.5 font-mono text-[10px] uppercase tracking-[.08em] text-muted-foreground">Flight</span>
-  <span class="inline-flex h-7 shrink-0 items-center rounded-sm border border-border px-2.5 font-mono text-[10px] uppercase tracking-[.08em] text-muted-foreground">Accommodation</span>
+  <span class="inline-flex h-7 shrink-0 items-center rounded-sm border border-border px-2.5 font-mono text-[10px] uppercase tracking-[.08em] text-muted-foreground">Stay</span>
 </div>`
 
 const timelineRow = (r, { timeCol, px, selected }) => {

@@ -1,51 +1,107 @@
-import { Suspense } from 'react'
-import { useParams } from 'react-router'
-import { TimelineLayout } from '@/components/ui/timeline'
-import { AddTripItemFab } from '@/components/trip-timeline'
+import { Suspense, useState } from 'react'
+import { Link, useMatch, useOutlet, useParams } from 'react-router'
 import { PageHeader } from '@/components/layout/page-header'
+import { Icon } from '@/components/icon'
 import { SkeletonRows } from '@/components/ui/skeleton-rows'
-import { useTrip, useTripExists, useTimelineElements } from '@/store'
+import { getTripItemModule, presentTripItemModules } from '@/components/trip-items/registry'
+import { TimelineChips } from '@/components/trip-timeline/timeline-chips'
+import { TimelineDayHeader, TimelineRow, UnknownItemRow } from '@/components/trip-timeline/timeline-row'
+import { useTrip, useTripExists, useTripItems, useTimelineDays } from '@/store'
 import { useDocumentTitle } from '@/hooks/use-document-title'
+import { formatTo } from '@/lib/datetime'
 import { routes } from '@/lib/routes'
+import type { TripItemType } from '@/types'
 
 export function TripTimelinePage() {
   const { tripId } = useParams<{ tripId: string }>()
   if (!tripId) return <NotFound />
-  return <TripTimelineGate tripId={tripId} />
+  return <TripTimelineSplit tripId={tripId} />
 }
 
-function TripTimelineGate({ tripId }: { tripId: string }) {
+// The item routes render into the pane, which exists exactly when one is active. `AppShell` makes
+// it a 400px column above 900px; below, it is `fixed inset-0` over the still-mounted timeline.
+function TripTimelineSplit({ tripId }: { tripId: string }) {
+  const outlet = useOutlet()
   if (!useTripExists(tripId)) return <NotFound />
-  // the title slot stays empty while the trip file loads; `Not found` is never the loading fallback
+
   return (
-    <Suspense
-      fallback={
-        <>
-          <PageHeader title='' backTo={routes.trips.list()} />
-          <div className='min-h-0 flex-1 overflow-y-auto p-4'>
-            <SkeletonRows />
-          </div>
-        </>
-      }
-    >
-      <TripTimelineContent tripId={tripId} />
-    </Suspense>
+    <div data-slot='split' className='grid min-h-0 flex-1 grid-cols-1 grid-rows-1'>
+      <div className='flex min-h-0 min-w-0 flex-col'>
+        {/* the title slot stays empty while the trip file loads; `Not found` is never the loading fallback */}
+        <Suspense
+          fallback={
+            <>
+              <PageHeader title='' backTo={routes.trips.list()} />
+              <div className='min-h-0 flex-1 overflow-y-auto p-4'>
+                <SkeletonRows />
+              </div>
+            </>
+          }
+        >
+          <TripTimelineContent tripId={tripId} />
+        </Suspense>
+      </div>
+      {outlet && (
+        <div data-slot='detail-pane' className='@container fixed inset-0 flex min-h-0 min-w-0 flex-col border-border bg-background'>
+          {outlet}
+        </div>
+      )}
+    </div>
   )
 }
 
 function TripTimelineContent({ tripId }: { tripId: string }) {
   const trip = useTrip(tripId)
-  const timelineElements = useTimelineElements(tripId)
+  const items = useTripItems(tripId)
+  const [filter, setFilter] = useState<TripItemType>()
+  const chips = presentTripItemModules(items)
+  // a filter whose last item went away falls back to ALL
+  const activeFilter = chips.some((m) => m.type === filter) ? filter : undefined
+  const days = useTimelineDays(tripId, activeFilter)
+  const unknownItems = activeFilter ? [] : items.filter((i) => !getTripItemModule(i.type))
+  const openItemId = useMatch('/trips/:tripId/items/:itemId/*')?.params.itemId
   useDocumentTitle(trip.name)
+
+  const itemCount = `${items.length} ${items.length === 1 ? 'item' : 'items'}`
 
   return (
     <>
-      <PageHeader title={trip.name} backTo={routes.trips.list()} />
+      <PageHeader title={trip.name} subtitle={`${formatTo.dateRange(trip.startDate, trip.endDate)} · ${itemCount}`} backTo={routes.trips.list()}>
+        {chips.length > 0 && <TimelineChips modules={chips} value={activeFilter} onChange={setFilter} />}
+      </PageHeader>
       <div className='relative min-h-0 flex-1'>
-        <div className='h-full overflow-y-auto p-4'>
-          <TimelineLayout items={timelineElements} size='md' animate={true} />
+        <div className='h-full overflow-y-auto pb-20'>
+          {days.length === 0 && unknownItems.length === 0 && <p className='p-4 text-muted-foreground'>Nothing planned yet</p>}
+          {days.map((day) => (
+            <section key={day.date.instant}>
+              <TimelineDayHeader date={day.date} />
+              <div className='py-1'>
+                {day.elements.map((element) => (
+                  <TimelineRow
+                    key={element.id}
+                    element={element}
+                    to={routes.trips.item(tripId, element.tripItemId)}
+                    selected={element.tripItemId === openItemId}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+          {unknownItems.length > 0 && (
+            <div className='border-t border-border py-1'>
+              {unknownItems.map((item) => (
+                <UnknownItemRow key={item.id} type={item.type} to={routes.trips.item(tripId, item.id)} selected={item.id === openItemId} />
+              ))}
+            </div>
+          )}
         </div>
-        <AddTripItemFab tripId={tripId} />
+        <Link
+          to={routes.trips.newItem(tripId)}
+          aria-label='Add item'
+          className='absolute right-4 bottom-4 grid size-12 place-items-center rounded-xl bg-primary text-primary-foreground shadow-lg transition-opacity duration-150 hover:opacity-90'
+        >
+          <Icon name='plus' className='size-[22px]' />
+        </Link>
       </div>
     </>
   )

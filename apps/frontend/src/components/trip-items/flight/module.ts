@@ -1,10 +1,10 @@
-import { DateTime } from '@/lib/datetime'
-import { routes } from '@/lib/routes'
-import type { Flight } from '@/types'
+import type { Flight, FlightPoint } from '@/types'
 import type { TripItemModule } from '../module'
 import { createFlightDraft } from './draft'
 import { FlightForm } from './form'
 import { FlightView } from './view'
+
+const place = (point: FlightPoint) => [point.airport.code, point.terminal && `T${point.terminal}`].filter(Boolean).join(' ')
 
 export const flightModule: TripItemModule<Flight> = {
   type: 'Flight',
@@ -14,21 +14,19 @@ export const flightModule: TripItemModule<Flight> = {
   toTimelineElements: (flight) => [
     {
       id: `${flight.id}-departure`,
-      title: `Departure: ${flight.flightNumber}`,
-      description: `${flight.departure.airport.name} (${flight.departure.airport.code})`,
-      datetime: flight.departure.time,
-      link: routes.trips.item(flight.tripId, flight.id),
-      icon: 'flight-departure',
-      status: DateTime.from(flight.departure.time).isPast() ? 'inactive' : 'active',
+      tripItemId: flight.id,
+      type: 'Flight',
+      at: flight.departure.time,
+      title: flight.flightNumber,
+      summary: ['Departure', place(flight.departure), flight.seat && `Seat ${flight.seat}`].filter(Boolean).join(' · '),
     },
     {
       id: `${flight.id}-arrival`,
-      title: `Arrival: ${flight.flightNumber}`,
-      description: `${flight.arrival.airport.name} (${flight.arrival.airport.code})`,
-      datetime: flight.arrival.time,
-      link: routes.trips.item(flight.tripId, flight.id),
-      icon: 'flight-arrival',
-      status: DateTime.from(flight.arrival.time).isPast() ? 'inactive' : 'active',
+      tripItemId: flight.id,
+      type: 'Flight',
+      at: flight.arrival.time,
+      title: flight.flightNumber,
+      summary: `Arrival · ${place(flight.arrival)}`,
     },
   ],
   View: FlightView,

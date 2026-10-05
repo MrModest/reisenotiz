@@ -93,7 +93,7 @@ in this app.
   `useDocument` / `changeDoc` semantics, `updateText` for collaborative text, and testing patterns.
 - Components use the hooks exported from `@/store`: `useTrips` (newest start first),
   `useTripSummaries` (each trip with its item count, unsorted), `useTrip`, `useTripItems`,
-  `useTripItem`, `useTimelineElements`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
+  `useTripItem`, `useTimelineDays`, plus `useCreateTrip` / `useUpdateTrip` / `useDeleteTrip`
   and the `TripItem` equivalents. Saved places come from `useSavedPlaces()` (tagged
   `{ type, key, place }` entries), `useSavedPlace(placeKey)` and `useSavedPlaceMutations()`
   (`add`, `update`, `archive`, `restore`, `remove(type, key)`, `materialiseAirport`). Each checks
@@ -177,7 +177,7 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 **UI Components** (`src/components/ui/`):
 ~20 components built on Base UI primitives with CVA variants, including `Button`, `Input`,
 `Textarea`, `Dialog`, `AlertDialog`, `Popover`, `Tabs`, `Collapsible`, `Combobox`, `Calendar`,
-`Badge`, `Switch`, `Separator`, `Skeleton`, `Item`, `DropdownMenu`, `ToggleGroup` and `Timeline`. Read the existing component
+`Badge`, `Switch`, `Separator`, `Skeleton`, `Item`, `DropdownMenu` and `ToggleGroup`. Read the existing component
 before adding a new one — most needs are already covered.
 - `ConfirmDialog` is the app's confirmation, built on `AlertDialog`
 - `ChipRow` is the single-select chip row on `ToggleGroup`: exactly one chip is on, and pressing
@@ -192,7 +192,12 @@ before adding a new one — most needs are already covered.
   `View` and `Form`. The map is exhaustive, so a new type does not compile until it has a module.
 - Every per-type decision goes through `getTripItemModule(type)`, never a `switch (type)`. It
   returns `undefined` for a type this build does not know, and the caller shows a short message.
-  `tripItemModules` lists them for the type picker.
+  `tripItemModules` lists them for the type picker; `presentTripItemModules(items)` lists the
+  types present, in registry order, for the timeline's chips.
+- `toTimelineElements(item)` returns one `TimelineElement` per data point — a flight's departure
+  and arrival, a stay's check-in and check-out at `planned?.in ?? provided.in` and
+  `planned?.out ?? provided.out`. The title is the item's own name; the summary is role first,
+  then where, never how long, in natural case: `Departure · BER T1 · Seat 14A`.
 - Each type has its own folder — `flight/`, `accommodation/` — holding `module`, `view`, `form`,
   `schema` and `draft`. Parts both types use live in `shared/`.
 - `createDraft` defaults every time to `DateTime.now()` in the device zone.
@@ -268,6 +273,26 @@ before adding a new one — most needs are already covered.
   upcoming one. The home card leads with it and the trip list highlights it
 - `useNow()` (`src/hooks/`) is the only clock read for these: a `DateTime` re-read on
   `visibilitychange`, so a restored PWA shows the present without a tap
+
+**Trip timeline** (`src/pages/trip-timeline.tsx`, `src/components/trip-timeline/`, `src/lib/timeline/`):
+- `TimelineElement` is `{ id, tripItemId, type, at, title, summary }`. `buildTimelineDays(elements,
+  filter?)` is pure: it sorts by instant, buckets by local date in the origin zone (the zone of the
+  earliest element, filtered or not), filters before bucketing, emits only non-empty days as
+  `{ date, elements }[]` and sets `otherDay` on an element whose own local date differs from its
+  day. `useTimelineDays(tripId, filter)` only reads the store and calls it
+- One `section` per day: a sticky `TimelineDayHeader`, the app's only `position: sticky`, then a
+  `TimelineRow` per element, each in its own zone, with a `5 Sep` prefix when `otherDay`. Items of
+  a type this build does not know follow the days as muted `UnknownItemRow`s, under `All` only
+- The header's `children` is `TimelineChips`: `All` plus one chip per type present, single-select,
+  held in local state. A filter whose last item went away falls back to `All`
+- The item routes are children of `/trips/:tripId`. View, edit, create and the type picker
+  (`items/new` with no `type`) render into one `data-slot='detail-pane'` node, which exists
+  exactly when `useOutlet()` is non-null. `AppShell` makes it the 400px column of a
+  `1.35fr 400px` grid above 900px; below, it is `fixed inset-0` over the still-mounted timeline.
+  Both rows of the open item carry `bg-accent` and a `border-brand` edge
+- The floating `+` links to the type picker; a picker tile replaces it with
+  `…/items/new?type=…`, so back and save return to the timeline. Empty reads `Nothing planned
+  yet`; loading shows `SkeletonRows`
 
 **Trip list** (`src/pages/trips.tsx`, `src/components/trip/`): one grouped list on both viewports,
 no table, tabs or chip row. `TripRow` owns its `min-w-0`, clamps the name to two lines and stacks
