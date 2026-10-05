@@ -37,11 +37,11 @@ export function getTripStatus(trip: Trip, now: DateTime): TripStatus {
 }
 
 export function getTripDuration(trip: Trip): number {
-  return endDay(trip).calendarDiff(startDay(trip)).days + 1
+  return endDay(trip).daysSince(startDay(trip)) + 1
 }
 
 export function getTripDayIndex(trip: Trip, now: DateTime): number {
-  return tripToday(trip, now).calendarDiff(startDay(trip)).days + 1
+  return tripToday(trip, now).daysSince(startDay(trip)) + 1
 }
 
 /** `In 1 day`, `In 3 months`, `In 1 year`, `Today`, `Day 9 of 12`; none once completed. */
@@ -56,12 +56,24 @@ export function getTripCountdown(trip: Trip, now: DateTime): string | undefined 
   return `In ${value} ${unit}${value === 1 ? '' : 's'}`
 }
 
+/** The home card's countdown: `7` / `Days to go`, `Today` on the first day, `3` / `Of 12 days` while ongoing. */
+export function getHomeCountdown(trip: Trip, now: DateTime): { value: string; caption?: string } | undefined {
+  const status = getTripStatus(trip, now)
+  if (status === 'completed') return undefined
+  if (status === 'ongoing') return { value: String(getTripDayIndex(trip, now)), caption: `Of ${getTripDuration(trip)} days` }
+
+  const days = startDay(trip).daysSince(tripToday(trip, now))
+  if (!days) return { value: 'Today' }
+  return { value: String(days), caption: days === 1 ? 'Day to go' : 'Days to go' }
+}
+
 const byStart = (a: Trip, b: Trip) => a.startDate.instant.localeCompare(b.startDate.instant)
 
 /** The ongoing trip, else the nearest upcoming one, else none. */
-export function selectHomeTrip(trips: Trip[], now: DateTime): Trip | undefined {
-  const unfinished = trips.filter((t) => getTripStatus(t, now) !== 'completed').sort(byStart)
-  return unfinished.find((t) => getTripStatus(t, now) === 'ongoing') ?? unfinished[0]
+export function selectHomeTrip(summaries: TripSummary[], now: DateTime): TripSummary | undefined {
+  const unfinished = summaries.filter((s) => getTripStatus(s.trip, now) !== 'completed')
+    .sort((a, b) => byStart(a.trip, b.trip))
+  return unfinished.find((s) => getTripStatus(s.trip, now) === 'ongoing') ?? unfinished[0]
 }
 
 /**

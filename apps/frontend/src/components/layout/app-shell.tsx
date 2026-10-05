@@ -21,7 +21,8 @@ const navEntries: NavEntry[] = [
 const RAIL_COLLAPSED_KEY = 'rail-collapsed'
 
 // The one place the 900px `shell` breakpoint is used. Both navigations are always rendered and CSS
-// hides one; `data-shell` marks the parts of a `PageHeader` that only one presentation shows.
+// hides one; `data-shell` marks the parts of a page that only one presentation shows, and `data-slot`
+// the parts whose desktop styling differs.
 export function AppShell() {
   return (
     <div
@@ -30,6 +31,9 @@ export function AppShell() {
         'max-shell:**:data-[shell=desktop]:hidden shell:**:data-[shell=mobile]:hidden',
         'shell:**:data-[slot=page-header]:px-6 shell:**:data-[slot=page-header]:py-3.5',
         'shell:**:data-[slot=page-title]:text-xl',
+        'shell:**:data-[slot=home]:grid-cols-[minmax(0,1fr)_400px] shell:**:data-[slot=home]:p-6',
+        'shell:**:data-[slot=home-trip-name]:text-[38px] shell:**:data-[slot=home-open-timeline]:w-fit',
+        'shell:**:data-[slot=home-stat-value]:text-[30px] shell:**:data-[slot=home-bars]:h-[90px]',
       )}
     >
       <Rail />

@@ -36,7 +36,7 @@ export function TripsPage() {
 function TripsContent() {
   const summaries = useTripSummaries()
   const now = useNow()
-  const highlightedId = selectHomeTrip(summaries.map((s) => s.trip), now)?.id
+  const highlightedId = selectHomeTrip(summaries, now)?.trip.id
   const groups = groupTrips(summaries, now)
 
   // pb-20 keeps the last row's ··· clear of the floating +

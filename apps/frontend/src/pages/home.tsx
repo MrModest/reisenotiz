@@ -1,39 +1,34 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { AirportSelector } from '@/components/ui/combobox/airport'
-import { useAirports } from '@/hooks/use-airports'
-import type { Airport } from '@/types'
+import { Suspense } from 'react'
+import { useTripSummaries } from '@/store'
+import { AllTimeStatsMockup } from '@/components/home/all-time-stats-mockup'
+import { HomeTripCard } from '@/components/home/home-trip-card'
 import { PageHeader } from '@/components/layout/page-header'
 import { useDocumentTitle } from '@/hooks/use-document-title'
+import { useNow } from '@/hooks/use-now'
+import { selectHomeTrip } from '@/lib/trip'
 
 export function HomePage() {
-  const airports = useAirports()
-  const [count, setCount] = useState(0)
-  const [selectedAirport, setSelectedAirport] = useState<Airport | null>(null)
   useDocumentTitle('Overview')
-
   return (
     <>
-    <PageHeader title='Overview' mobileTitle='Reisenotiz' />
-    <div className='min-h-0 flex-1 overflow-y-auto flex flex-col items-center p-4'>
-      <Button variant='default' onClick={() => setCount(count + 1)}>
-        Click Me ({count})
-      </Button>
-      <Separator className='my-4 w-full' orientation='horizontal' />
-      <AirportSelector
-        items={airports}
-        onSelect={(airport) => {
-          console.log('Selected airport:', airport)
-          setSelectedAirport(airport)
-        }}
-      />
-      {selectedAirport && (
-        <p className='mt-2 text-sm text-muted-foreground'>
-          Selected: {selectedAirport.name} ({selectedAirport.code})
-        </p>
-      )}
-    </div>
+      <PageHeader title='Overview' mobileTitle='Reisenotiz' />
+      <div className='min-h-0 flex-1 overflow-y-auto'>
+        <div data-slot='home' className='grid items-start gap-6 p-4'>
+          {/* Two regions: the card waits on the trip files, `All time` paints at once */}
+          <Suspense fallback={null}>
+            <HomeTripContent />
+          </Suspense>
+          <Suspense fallback={null}>
+            <AllTimeStatsMockup />
+          </Suspense>
+        </div>
+      </div>
     </>
   )
+}
+
+function HomeTripContent() {
+  const summaries = useTripSummaries()
+  const now = useNow()
+  return <HomeTripCard summary={selectHomeTrip(summaries, now)} now={now} />
 }
