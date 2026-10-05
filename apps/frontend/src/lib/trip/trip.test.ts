@@ -157,12 +157,13 @@ describe('getHomeCountdown', () => {
 })
 
 describe('selectHomeTrip', () => {
-  const past = trip('past', [2026, 3, 1], [2026, 3, 5])
-  const near = trip('near', [2026, 10, 1], [2026, 10, 5])
-  const far = trip('far', [2027, 1, 1], [2027, 1, 5])
+  const past = summary(trip('past', [2026, 3, 1], [2026, 3, 5]))
+  const near = summary(trip('near', [2026, 10, 1], [2026, 10, 5]))
+  const far = summary(trip('far', [2027, 1, 1], [2027, 1, 5]))
+  const ongoing = summary(alps)
 
   it('picks the ongoing trip over any upcoming one', () => {
-    expect(selectHomeTrip([near, alps, past], at([2026, 9, 10]))).toBe(alps)
+    expect(selectHomeTrip([near, ongoing, past], at([2026, 9, 10]))).toBe(ongoing)
   })
 
   it('picks the nearest upcoming trip when none is ongoing', () => {
@@ -170,7 +171,7 @@ describe('selectHomeTrip', () => {
   })
 
   it('picks none when every trip is completed', () => {
-    expect(selectHomeTrip([past, alps], at([2026, 9, 20]))).toBeUndefined()
+    expect(selectHomeTrip([past, ongoing], at([2026, 9, 20]))).toBeUndefined()
     expect(selectHomeTrip([], at([2026, 9, 20]))).toBeUndefined()
   })
 })

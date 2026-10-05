@@ -70,9 +70,10 @@ export function getHomeCountdown(trip: Trip, now: DateTime): { value: string; ca
 const byStart = (a: Trip, b: Trip) => a.startDate.instant.localeCompare(b.startDate.instant)
 
 /** The ongoing trip, else the nearest upcoming one, else none. */
-export function selectHomeTrip(trips: Trip[], now: DateTime): Trip | undefined {
-  const unfinished = trips.filter((t) => getTripStatus(t, now) !== 'completed').sort(byStart)
-  return unfinished.find((t) => getTripStatus(t, now) === 'ongoing') ?? unfinished[0]
+export function selectHomeTrip(summaries: TripSummary[], now: DateTime): TripSummary | undefined {
+  const unfinished = summaries.filter((s) => getTripStatus(s.trip, now) !== 'completed')
+    .sort((a, b) => byStart(a.trip, b.trip))
+  return unfinished.find((s) => getTripStatus(s.trip, now) === 'ongoing') ?? unfinished[0]
 }
 
 /**

@@ -208,7 +208,7 @@ before adding a new one — most needs are already covered.
 
 **Trip facts** (`src/lib/trip/`):
 - `getTripStatus` (`upcoming` / `ongoing` / `completed`), `getTripDuration`, `getTripDayIndex`,
-  `getTripCountdown`, `getHomeCountdown`, `selectHomeTrip(trips, now)` and
+  `getTripCountdown`, `getHomeCountdown`, `selectHomeTrip(summaries, now)` and
   `groupTrips(summaries, now)` are pure functions. Each takes `now` and none reads the clock
 - A trip's days are calendar dates in its start zone. It turns ongoing at its start instant and
   completes the day after its last day
@@ -222,8 +222,8 @@ before adding a new one — most needs are already covered.
 - `groupTrips` returns `Ongoing` (at most one trip, no count), `Upcoming n`, then one group per
   year of completed trips. Unfinished trips run soonest first, completed trips most recent first.
   Labels are natural case; uppercase is CSS
-- `selectHomeTrip` picks the ongoing trip, else the nearest upcoming one. The home card leads with
-  it and the trip list highlights it
+- `selectHomeTrip` takes and returns `TripSummary`, picking the ongoing trip, else the nearest
+  upcoming one. The home card leads with it and the trip list highlights it
 - `useNow()` (`src/hooks/`) is the only clock read for these: a `DateTime` re-read on
   `visibilitychange`, so a restored PWA shows the present without a tap
 
