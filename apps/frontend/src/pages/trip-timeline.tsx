@@ -18,8 +18,7 @@ export function TripTimelinePage() {
   return <TripTimelineSplit tripId={tripId} />
 }
 
-// The item routes render into the pane, which exists exactly when one is active. `AppShell` makes
-// it a 400px column above 900px; below, it is `fixed inset-0` over the still-mounted timeline.
+// The item routes render into the pane, which exists exactly when one is active; `AppShell` sizes it
 function TripTimelineSplit({ tripId }: { tripId: string }) {
   const outlet = useOutlet()
   if (!useTripExists(tripId)) return <NotFound />

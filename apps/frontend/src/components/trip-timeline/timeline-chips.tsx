@@ -26,7 +26,7 @@ function Chip({ pressed, onClick, children }: { pressed: boolean; onClick: () =>
       type='button'
       aria-pressed={pressed}
       onClick={onClick}
-      className='h-7 shrink-0 rounded-sm border border-border px-2.5 font-mono text-[10px] tracking-[.08em] whitespace-nowrap text-muted-foreground uppercase transition-colors duration-150 hover:bg-accent/50 aria-pressed:border-input aria-pressed:bg-accent aria-pressed:text-accent-foreground'
+      className='h-7 max-w-40 shrink-0 truncate rounded-sm border border-border px-2.5 font-mono text-[10px] tracking-[.08em] whitespace-nowrap text-muted-foreground uppercase transition-colors duration-150 hover:bg-accent/50 aria-pressed:border-input aria-pressed:bg-accent aria-pressed:text-accent-foreground'
     >
       {children}
     </button>
