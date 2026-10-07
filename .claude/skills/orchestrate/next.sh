@@ -21,7 +21,7 @@ branches() {
 
 while :; do
   out=()
-  open=$(gh api "repos/{owner}/{repo}/issues/$spec/sub_issues" --jq '.[]|select(.state=="open")|.number') &&
+  open=$(gh api --paginate "repos/{owner}/{repo}/issues/$spec/sub_issues" --jq '.[]|select(.state=="open")|.number') &&
   merged=$(gh pr list --state merged --limit 100 --json number,headRefName --jq '.[]|"\(.headRefName) \(.number)"') ||
     { sleep 120; continue; }
 
@@ -37,8 +37,8 @@ while :; do
 
   for n in $open; do
     [ -d "$wts/implement-$n" ] || [ -n "${skip[$n]}" ] && continue
-    blockers=$(gh api "repos/{owner}/{repo}/issues/$n/dependencies/blocked_by" --jq '[.[]|select(.state=="open")]|length') || continue
-    [ "$blockers" = 0 ] && out+=("ready $n")
+    blockers=$(gh api --paginate "repos/{owner}/{repo}/issues/$n/dependencies/blocked_by" --jq '.[]|select(.state=="open")|.number') || continue
+    [ -z "$blockers" ] && out+=("ready $n")
   done
 
   [ -z "$open" ] && ! compgen -G "$wts/implement-*" >/dev/null && out+=("done")

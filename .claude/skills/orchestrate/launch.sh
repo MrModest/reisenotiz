@@ -3,7 +3,7 @@
 # Starts a worker for <ticket>: a Claude session running /implement in worktree
 # .claude/worktrees/implement-<ticket>, in a pane of the "#<spec>" tab. Refuses if the
 # ticket already has a worktree or a pane titled with "#<ticket>".
-set -e
+set -euo pipefail
 spec=$1 n=$2
 root=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 ws=${HERDR_WORKSPACE_ID:?not running inside herdr}
@@ -27,4 +27,9 @@ fi
 git -C "$root" fetch -q origin
 prompt="/implement #$n. In a new well-named branch. Create a PR. Once you done, spawn a ui-tester sub-agent and share the PR link with it. Hard fail if you can't spawn the sub-agent. Do not run the UI test inside the main session. Raise the problem and wait."
 herdr pane run "$pane" "cd '$root' && claude -w implement-$n -n 'Implement #$n' --model claude-opus-5-5 --effort medium \"$prompt\""
-echo "launched $n in $pane"
+# Return only once the worktree exists, so the next poll sees the ticket as taken.
+for _ in $(seq 60); do
+  [ -d "$root/.claude/worktrees/implement-$n" ] && { echo "launched $n in $pane"; exit 0; }
+  sleep 1
+done
+echo "failed: worktree implement-$n did not appear within 60s, check pane $pane"; exit 1
