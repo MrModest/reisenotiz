@@ -204,12 +204,14 @@ before adding a new one — most needs are already covered.
   then where, never how long, in natural case: `Departure · BER T1 · Seat 14A`. The saved places
   are an argument rather than a store read inside the module. A flight's summary names its airports
   by `placeKey`, which is the IATA code, so it needs no lookup and a dangling link changes nothing.
+  A stay's title is its site's name and its summary the site's address line; a dangling link reads
+  `Unknown place` with the role alone.
 - Each type has its own folder — `flight/`, `accommodation/` — holding `module`, `view`, `form`,
   `schema` and `draft`. Parts both types use live in `shared/`.
 - `createDraft` defaults every time to `DateTime.now()` in the device zone. Submit re-anchors the
   typed date and time to the linked place's zone, so the device zone never reaches the store.
 - The item pages render the `PageHeader`, which names the type, never the item: `Flight`, `New flight`,
-  `Edit flight`, with the type's icon. The view page's `···` holds `Delete` behind `ConfirmDialog`, through
+  `Edit flight`, `Stay`, `New stay`, `Edit stay`, with the type's icon. The view page's `···` holds `Delete` behind `ConfirmDialog`, through
   `shared/use-delete-trip-item.ts`, which removes the item and navigates back. Form headers carry no
   actions
 - `View` takes `{ item }` and renders the scroller and a `DetailActions` footer (an outline `Edit`).
@@ -219,13 +221,15 @@ before adding a new one — most needs are already covered.
   a missing place reads a muted `Unknown place` with no link), `NotesBlock`, `AttachmentChips`,
   `DetailActions`; for forms, `FieldLabel` (and `SectionLabel`, the same mono caps over a block that
   is not a control), `DateTimeField`, `PlacePicker`, `PersonChips` (read-only without `onChange`),
-  `FormActions`, and the React Hook Form wrappers `FieldInput`, `FieldTextarea` and `FieldErrorAt`.
+  `FormActions`, and the React Hook Form wrappers `FieldInput`, `FieldTextarea` and `FieldAttachments`.
+  `AddressLink` renders its `children` beneath the address, as the stay's phone.
   `NotesBlock`, `FactRow`, `AddressLink`, `PersonChips` and `AttachmentChips` carry
-  `wrap-anywhere`. The flight's view and form and these shared parts use no `md:` utility: the pane
+  `wrap-anywhere`. The item views and forms and these shared parts use no `md:` utility: the pane
   is 400px wide above 900px, so a viewport breakpoint would fire inside it
 - `PlacePicker` (`type`, the form field `name` holding the place key, `label`) is a combobox plus
-  an `Add` / `Edit` button and a two-line preview: name (and code), then address and timezone. The
-  airport list mixes saved airports and the dictionary (`useAirports()`); picking a dictionary
+  an `Add` / `Edit` button and a two-line preview: name and the airport's code or the site's kind,
+  then address and timezone. The airport list mixes saved airports and the dictionary (`useAirports()`);
+  the site list holds saved sites only, not archived; picking a dictionary
   airport materialises it before the key is written. Picking another entry replaces the link and
   never edits the place. The button opens `PlaceDialog` from component state, and `onSaved` writes
   the key
@@ -238,6 +242,20 @@ before adding a new one — most needs are already covered.
   (`Unknown place, pick the airport again`), so a dangling link blocks Save until the airport is
   picked again. A passenger name still being typed is the form field `passengerDraft`: it makes the form
   dirty and is saved as a passenger
+- The stay (`accommodation/`) links its site by `placeKey`, the site's uuid. `guests` is `Person[]`
+  and `reservedOn` an optional `Person`, typed as one name; an unchanged name keeps its `Person`.
+  `stayInterval` holds the booked `provided` interval and the traveller's optional `planned` one.
+  `nights.ts` holds `countNights(provided)`, the calendar dates from check-in to check-out, never from
+  the plan, and `unusedNightNote(stayInterval)` (`Arriving 6 Sep · 1 paid night unused`, and the
+  `Leaving …` mirror) when the plan starts or ends on another day than the booking. The view's title
+  is the site's name, or `Unknown place` with no `City, Country · UTC+2` subline on a dangling link;
+  its hero renders from the stay alone, with the `You arrive` / `You leave` row and the note only when
+  there is a plan. `schema.ts` holds `stayFormSchema(places)`, `stayFormValues(stay)` and
+  `stayFromFormValues(values, stay, places)`, which anchors every time to the site's zone. The plan
+  is four optional fields, all empty for no plan, cleared by the `Plan` group's `Clear`; the schema
+  asks for the rest once any is typed and refuses a plan outside the booking, compared as instants
+  (`You arrive before check-in`, `You leave after check-out`). A later-day arrival saves, with the
+  note in the `Plan` group's header. A new stay opens with check-in equal to check-out
 - The type interfaces in `src/types/` import nothing from the app; `ZonedInstant` lives in
   `src/types/common/` for that reason.
 
@@ -258,10 +276,9 @@ before adding a new one — most needs are already covered.
 - `SavedPlaceRow` owns its `min-w-0`. The Places screen (`src/pages/saved-places.tsx`) owns the row
   shell and its `Archive` / `Restore` / `Delete` actions, and derives its chips from the types
   present.
-- A flight point links its airport by `placeKey`, the IATA code it is saved under, and resolves
-  it at the point of use with `useSavedPlace` or, where a hook cannot run, `findSavedPlace(places,
-  type, key)`. A stay holds a copy of its site, with no key back to it, so the stay form offers
-  `Edit` only for a site picked in that form. `useAirports()` lists saved airports that are not
+- A flight point links its airport by `placeKey`, the IATA code it is saved under, and a stay its
+  site by `placeKey`, the site's uuid. Each resolves at the point of use with `useSavedPlace` or,
+  where a hook cannot run, `findSavedPlace(places, type, key)`. `useAirports()` lists saved airports that are not
   archived and the dictionary airports that are not saved.
 
 **Countries** (`src/services/dictionaries/`):

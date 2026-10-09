@@ -2,9 +2,10 @@ import { DateTime, TZ } from '@/lib/datetime'
 import { generateUUID } from '@/types/common/uuid'
 import type { Accommodation } from '@/types'
 
+// Opens at the current time in the device zone, check-in equal to check-out, so the traveller sets
+// real dates; submit re-anchors them to the site's zone
 export function createAccommodationDraft(tripId: string): Accommodation {
-  const zone = TZ.local()
-  const time = DateTime.now(zone).toZonedInstant()
+  const time = DateTime.now(TZ.local()).toZonedInstant()
 
   return {
     id: generateUUID(),
@@ -12,15 +13,8 @@ export function createAccommodationDraft(tripId: string): Accommodation {
     type: 'Accommodation',
     note: '',
     attachments: [],
-    site: {
-      name: '',
-      kind: 'Hotel',
-      address: { countryCode: '', city: '', line: '' },
-      contact: '',
-      tzone: zone,
-    },
-    reservedOn: undefined,
-    guests: 1,
+    placeKey: '',
+    guests: [],
     rooms: 1,
     stayInterval: { provided: { in: time, out: time } },
   }

@@ -59,19 +59,9 @@ export const tripsItems: TripItem[] = [
     id: 'dbc32db4-d180-41a1-bc30-afa9dccc85b3',
     tripId: trips[0].id,
     type: 'Accommodation',
-    site: {
-      name: 'NH Leipzig Messe',
-      kind: 'Hotel',
-      address: {
-        line: 'Dummy-hotel-straße 345, 12345 Leipzig',
-        city: 'Leipzig',
-        countryCode: 'DE',
-      },
-      tzone: 'Europe/Berlin',
-    },
-    contact: '+49 177 1234567',
-    reservedOn: 'Max Mustermann',
-    guests: 3,
+    placeKey: 'b6f1c7e2-3d4a-4e8b-9c1f-2a5d7e9b0c13',
+    reservedOn: persons[0],
+    guests: persons,
     rooms: 1,
     stayInterval: {
       provided: {

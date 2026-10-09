@@ -15,13 +15,13 @@ function renderTimeline() {
   const repo = new Repo({ network: [] })
   const day = (d: number) => DateTime.fromObject({ year: 2026, month: 9, day: d }, TZ.local()).toZonedInstant()
   const flight = { ...createFlightDraft('trip-1'), flightNumber: 'LH 1953' }
-  const stay = createAccommodationDraft('trip-1')
-  stay.site.name = 'Hotel Weisses Kreuz'
+  const stay = { ...createAccommodationDraft('trip-1'), placeKey: 'site-1' }
+  const site = { name: 'Hotel Weisses Kreuz', kind: 'Hotel' as const, address: { countryCode: 'AT', city: 'Innsbruck' }, tzone: 'Europe/Vienna' }
   const trip = repo.create<TripDoc>({
     trip: { id: 'trip-1', name: 'Alps', description: '', startDate: day(5), endDate: day(16) },
     tripItems: { [flight.id]: flight, [stay.id]: withoutUndefined(stay) },
   })
-  const root = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC, tripIndex: { 'trip-1': trip.url } })
+  const root = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC, tripIndex: { 'trip-1': trip.url }, savedAccommodationSites: { 'site-1': site } })
   const router = createMemoryRouter(
     [{ path: '/trips/:tripId', element: <Suspense fallback={null}><TripTimelinePage /></Suspense> }],
     { initialEntries: ['/trips/trip-1'] },

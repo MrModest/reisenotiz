@@ -90,7 +90,7 @@ function SitePicker({ id, linked, onPick }: PickerProps) {
 // Spelling the code out is what catches a typo that happens to be another valid code
 function PlacePreview({ entry }: { entry: SavedPlaceEntry }) {
   const { place } = entry
-  const title = entry.type === 'Airport' ? `${place.name} · ${entry.place.code}` : place.name
+  const title = `${place.name} · ${entry.type === 'Airport' ? entry.place.code : entry.place.kind}`
   const address = [place.address.line, place.address.city].filter(Boolean).join(', ')
 
   return (

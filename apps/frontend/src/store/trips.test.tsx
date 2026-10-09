@@ -98,9 +98,9 @@ function stayFixture(tripId: string): Omit<Accommodation, 'id'> {
     type: 'Accommodation',
     note: '',
     attachments: [],
-    site: { name: 'Hotel', kind: 'Hotel', address: { countryCode: 'DE', city: 'Berlin' }, tzone: zone },
+    placeKey: 'site-1',
     reservedOn: undefined,
-    guests: 1,
+    guests: [],
     rooms: 1,
     stayInterval: { provided: { in: t(1), out: t(3) }, planned: undefined },
   }
@@ -213,7 +213,7 @@ describe('trips store hooks', () => {
 
     const url = rootHandle.doc().tripIndex[tripId]
     const item = getTripDoc(repo, url).tripItems[itemId] as Accommodation
-    expect(item.site.name).toBe('Hotel')
+    expect(item.placeKey).toBe('site-1')
     expect('reservedOn' in item).toBe(false)
     expect('planned' in item.stayInterval).toBe(false)
   })
@@ -222,7 +222,7 @@ describe('trips store hooks', () => {
     const { repo, rootHandle, wrapper } = setup()
     const tripId = await createTrip(wrapper)
     const stay = stayFixture(tripId)
-    const booked: Omit<Accommodation, 'id'> = { ...stay, reservedOn: 'Kamil' }
+    const booked: Omit<Accommodation, 'id'> = { ...stay, reservedOn: { id: 'p1', fullname: 'Kamil', contacts: [] } }
     const itemId = await createItem(wrapper, tripId, booked)
 
     const { result } = renderHook(() => useUpdateTripItem(tripId), { wrapper })
