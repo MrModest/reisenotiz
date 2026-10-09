@@ -8,7 +8,7 @@ n=$1
 root=$(git rev-parse --show-toplevel)
 wt=$root/.claude/worktrees/implement-$n
 [ -d "$wt" ] || { echo "no worktree $wt"; exit 1; }
-panes=$(herdr pane list | jq -r --arg wt "$wt" '.result.panes[] | select((.foreground_cwd // "") | startswith($wt)) | "\(.pane_id) \(.agent_status)"')
+panes=$(herdr pane list | jq -r --arg wt "$wt" '.result.panes[] | select((.foreground_cwd // "") as $cwd | $cwd == $wt or ($cwd | startswith($wt + "/"))) | "\(.pane_id) \(.agent_status)"')
 ! grep -q ' working$' <<<"$panes" || { echo "refused: session in $wt is working"; exit 1; }
 [ -z "$(git -C "$wt" status --porcelain)" ] || { echo "refused: $wt has uncommitted changes"; exit 1; }
 
