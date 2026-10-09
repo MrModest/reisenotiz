@@ -80,11 +80,11 @@ function flightFixture(tripId: string): Omit<Flight, 'id'> {
     seat: '12A',
     passengers: [],
     departure: {
-      airport: { code: 'TXL', name: 'Berlin', address: { countryCode: 'DE', city: 'Berlin' }, tzone: 'Europe/Berlin' },
+      placeKey: 'TXL',
       time: t(8),
     },
     arrival: {
-      airport: { code: 'MUC', name: 'Munich', address: { countryCode: 'DE', city: 'Munich' }, tzone: 'Europe/Berlin' },
+      placeKey: 'MUC',
       time: t(10),
     },
   }
@@ -176,6 +176,18 @@ describe('trips store hooks', () => {
     expect(item.id).toBe(itemId)
     expect(item.tripId).toBe(tripId)
     expect(item.type).toBe('Flight')
+  })
+
+  it('writes a flight that links its airports by placeKey, with no copy of them', async () => {
+    const { repo, rootHandle, wrapper } = setup()
+    const tripId = await createTrip(wrapper)
+    const itemId = await createItem(wrapper, tripId)
+
+    const url = rootHandle.doc().tripIndex[tripId]
+    const item = getTripDoc(repo, url).tripItems[itemId] as Flight
+    expect(item.departure.placeKey).toBe('TXL')
+    expect(item.arrival.placeKey).toBe('MUC')
+    expect('airport' in item.departure).toBe(false)
   })
 
   it('useUpdateTripItem mutates a single item field', async () => {

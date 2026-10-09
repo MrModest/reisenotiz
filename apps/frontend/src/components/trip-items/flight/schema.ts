@@ -1,69 +1,84 @@
 import { z } from 'zod'
 import { schemas } from '@/lib/validations/commons'
-import { Flight } from '@/types'
-import { formatTo } from '@/lib/datetime'
+import { convertTime, formatTo } from '@/lib/datetime'
+import { findSavedPlace, type SavedPlaceEntry } from '@/store'
+import { generateUUID, type Flight, type FlightPoint } from '@/types'
 
-// The airport is picked as a whole (selector / dialog), never field-by-field,
-// so validate it as a single unit with one message instead of per-subfield errors.
-const airportSchema = z
-  .object({
-    code: z.string(),
-    name: z.string(),
-    address: z.object({
-      countryCode: z.string(),
-      city: z.string(),
-      line: z.string().optional(),
-    }),
-    tzone: schemas.timezone,
-  })
-  .refine((airport) => airport.code.trim().length >= 3 && airport.name.trim().length > 0, {
-    message: 'Airport is required',
+// Takes the saved places because a link must resolve: the airport's zone is what typed times are read in
+export const flightFormSchema = (places: SavedPlaceEntry[]) => {
+  const point = z.object({
+    placeKey: z
+      .string()
+      .min(1, 'Airport is required')
+      .refine((key) => !key || findSavedPlace(places, 'Airport', key), 'Unknown place, pick the airport again'),
+    date: schemas.date,
+    time: schemas.time,
+    terminal: z.string(),
+    gate: z.string(),
   })
 
-const flightPointSchema = z.object({
-  airport: airportSchema,
-  terminal: z.string().optional(),
-  gate: z.string().optional(),
-  date: schemas.date,
-  time: schemas.time,
+  return z.object({
+    flightNumber: z.string(),
+    carrier: z.string(),
+    departure: point,
+    arrival: point,
+    bookingCode: z.string(),
+    seat: z.string(),
+    passengers: z.array(schemas.person),
+    // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
+    passengerDraft: schemas.string('Full name', 100, false),
+    note: z.string(),
+    attachments: z.array(schemas.attachment),
+  })
+}
+
+export type FlightFormValues = z.infer<ReturnType<typeof flightFormSchema>>
+type FlightPointValues = FlightFormValues['departure']
+
+const pointValues = (point: FlightPoint): FlightPointValues => ({
+  placeKey: point.placeKey,
+  date: formatTo.dateISO(point.time),
+  time: formatTo.time(point.time),
+  terminal: point.terminal ?? '',
+  gate: point.gate ?? '',
 })
 
-export const flightFormSchema = z.object({
-  flightNumber: z.string().optional(),
-  carrier: z.string().optional(),
-  bookingCode: z.string().optional(),
-  seat: z.string().optional(),
-  note: z.string().optional(),
-  passengers: z.array(schemas.person).optional(),
-  attachments: z.array(schemas.attachment).optional(),
-  departure: flightPointSchema,
-  arrival: flightPointSchema,
-})
-
-export type FlightFormSchema = z.infer<typeof flightFormSchema>
-
-export function defaultsFromFlight(flight: Flight): FlightFormSchema {
+export function flightFormValues(flight: Flight): FlightFormValues {
   return {
     flightNumber: flight.flightNumber,
     carrier: flight.carrier,
+    departure: pointValues(flight.departure),
+    arrival: pointValues(flight.arrival),
     bookingCode: flight.bookingCode,
     seat: flight.seat,
-    note: flight.note,
     passengers: flight.passengers,
+    passengerDraft: '',
+    note: flight.note,
     attachments: flight.attachments,
-    departure: {
-      airport: flight.departure.airport,
-      terminal: flight.departure.terminal,
-      gate: flight.departure.gate,
-      date: formatTo.dateISO(flight.departure.time),
-      time: formatTo.time(flight.departure.time),
-    },
-    arrival: {
-      airport: flight.arrival.airport,
-      terminal: flight.arrival.terminal,
-      gate: flight.arrival.gate,
-      date: formatTo.dateISO(flight.arrival.time),
-      time: formatTo.time(flight.arrival.time),
-    },
+  }
+}
+
+// Typed times are wall-clock values at the airport, so each is anchored to its airport's zone.
+// Call only with values `flightFormSchema(places)` accepted.
+export function flightFromFormValues(values: FlightFormValues, flight: Flight, places: SavedPlaceEntry[]): Flight {
+  const point = (v: FlightPointValues): FlightPoint => {
+    const airport = findSavedPlace(places, 'Airport', v.placeKey)
+    if (!airport) throw new Error(`No saved airport ${v.placeKey}`)
+    return { placeKey: v.placeKey, terminal: v.terminal, gate: v.gate, time: convertTime(v.date, v.time, airport.tzone) }
+  }
+
+  return {
+    ...flight,
+    flightNumber: values.flightNumber,
+    carrier: values.carrier,
+    departure: point(values.departure),
+    arrival: point(values.arrival),
+    bookingCode: values.bookingCode,
+    seat: values.seat,
+    passengers: values.passengerDraft.trim()
+      ? [...values.passengers, { id: generateUUID(), fullname: values.passengerDraft.trim(), contacts: [] }]
+      : values.passengers,
+    note: values.note,
+    attachments: values.attachments.map((a) => ({ ...a, tripItemId: flight.id })),
   }
 }

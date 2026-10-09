@@ -1,10 +1,10 @@
 import type { ZonedInstant } from '@/types/common'
 import { Person } from './person'
 import { TripItem } from './trip-item'
-import { Airport } from './place'
 
 export interface FlightPoint {
-  airport: Airport
+  // The saved airport's IATA code, which is its key in `savedAirports`
+  placeKey: string
   terminal?: string
   gate?: string
   time: ZonedInstant

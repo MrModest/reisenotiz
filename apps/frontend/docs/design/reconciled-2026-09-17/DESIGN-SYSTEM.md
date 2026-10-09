@@ -139,6 +139,9 @@ Without `--font-mono` the timeline's time column stops aligning.
 - **The mono caps label** is one class string:
   `font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground`. It is a plain `div` or
   `h3`, **not** a `Label` — it has no control.
+- **A group heading** inside a form — a mono caps label over a rule, heading several labelled
+  controls (the flight's `DEPARTURE` / `ARRIVAL`, the stay's `PLAN`) — takes `text-foreground`
+  instead, so it outranks the muted labels beneath it.
 - A `Label` is used only where a real control follows, and always carries `htmlFor`.
 - **Numbers set in Inter take `tabular-nums`** — stat values, the countdown. Times and codes are
   mono already.
@@ -254,7 +257,7 @@ The drawing shows none of this. Every interactive element in a frame is a `div`;
   [#56](https://github.com/MrModest/reisenotiz/issues/56); wanted in a future iteration.
 - **Offline is a working state, not an error.** Nothing warns, blocks or toasts when the connection
   drops ([#34](https://github.com/MrModest/reisenotiz/issues/34)).
-- **Maps**: `useMapUrl(address, coords)` builds one URL — `geo:` on Android, `maps://` on iOS,
+- **Maps**: `useMapUrl(place)` builds one URL — `geo:` on Android, `maps://` on iOS,
   `https://www.google.com/maps/search/?api=1&query=` elsewhere. Platform sniffing lives in that hook
   and nowhere else.
 

@@ -1,5 +1,6 @@
 import type { Accommodation, Flight, TripItem, TripItemType } from '@/types'
 import type { TimelineElement } from '@/lib/timeline'
+import type { SavedPlaceEntry } from '@/store'
 import type { TripItemModule } from './module'
 import { accommodationModule } from './accommodation/module'
 import { flightModule } from './flight/module'
@@ -23,6 +24,6 @@ export function presentTripItemModules(items: TripItem[]): TripItemModule[] {
 }
 
 /** Every timeline element of `items`. Items of a type this build does not know have none. */
-export function toTimelineElements(items: TripItem[]): TimelineElement[] {
-  return items.flatMap((item) => getTripItemModule(item.type)?.toTimelineElements(item) ?? [])
+export function toTimelineElements(items: TripItem[], places: SavedPlaceEntry[]): TimelineElement[] {
+  return items.flatMap((item) => getTripItemModule(item.type)?.toTimelineElements(item, places) ?? [])
 }

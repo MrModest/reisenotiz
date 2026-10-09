@@ -3,13 +3,13 @@ import { Link, useMatch, useOutlet, useParams } from 'react-router'
 import { PageHeader } from '@/components/layout/page-header'
 import { Icon } from '@/components/icon'
 import { SkeletonRows } from '@/components/ui/skeleton-rows'
-import { getTripItemModule, presentTripItemModules, toTimelineElements } from '@/components/trip-items/registry'
+import { getTripItemModule, presentTripItemModules } from '@/components/trip-items/registry'
 import { ChipRow } from '@/components/ui/chip-row'
 import { TimelineDayHeader, TimelineRow, UnknownItemRow } from '@/components/trip-timeline/timeline-row'
 import { useTrip, useTripExists, useTripItems } from '@/store'
 import { useDocumentTitle } from '@/hooks/use-document-title'
+import { useTimelineDays } from '@/hooks/use-timeline-days'
 import { formatTo } from '@/lib/datetime'
-import { buildTimelineDays } from '@/lib/timeline'
 import { routes } from '@/lib/routes'
 import type { TripItemType } from '@/types'
 
@@ -58,7 +58,7 @@ function TripTimelineContent({ tripId }: { tripId: string }) {
   // a filter whose last item went away is cleared, so the type coming back does not revive it
   if (filter !== 'ALL' && !chips.some((m) => m.type === filter)) setFilter('ALL')
   const activeFilter = filter !== 'ALL' && chips.some((m) => m.type === filter) ? filter : undefined
-  const days = buildTimelineDays(toTimelineElements(items), activeFilter)
+  const days = useTimelineDays(items, activeFilter)
   const unknownItems = activeFilter ? [] : items.filter((i) => !getTripItemModule(i.type))
   const openItemId = useMatch(`${routes.trips.item(':tripId', ':itemId')}/*` as const)?.params.itemId
   useDocumentTitle(trip.name)

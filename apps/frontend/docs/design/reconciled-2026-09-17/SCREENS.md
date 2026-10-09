@@ -438,9 +438,10 @@ is `planned?.in ?? provided.in`.
 the `handleInvalid` handlers that existed only to reveal a required field hidden inside a closed
 disclosure.
 
-**Two labelled groups** — `DEPARTURE` and `ARRIVAL`, each a mono caps label and a rule, not a
-disclosure trigger. Each holds: the place picker, date, time, **terminal** and **gate**. The model
-carries terminal and gate, and the flight view displays them, so the form edits them.
+**Two labelled groups** — `DEPARTURE` and `ARRIVAL`, each a group heading (`text-foreground`) and
+a rule, not a disclosure trigger. Each holds: the place picker, date, time, **terminal** and
+**gate**. The model carries terminal and gate, and the flight view displays them, so the form edits
+them.
 
 Outside the groups: **flight number**, **carrier**, booking code, seat, passengers, notes,
 attachments. `carrier` gains a plain labelled input and the `LUFTHANSA · MATCHED FROM SAVED

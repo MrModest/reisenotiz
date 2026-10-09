@@ -1,14 +1,10 @@
 import { DateTime, TZ } from '@/lib/datetime'
 import { generateUUID } from '@/types/common/uuid'
-import type { Airport, Flight } from '@/types'
+import type { Flight } from '@/types'
 
-function draftAirport(tzone: string): Airport {
-  return { code: '', name: '', address: { countryCode: '', city: '', line: '' }, tzone }
-}
-
+// Opens at the current time in the device zone; submit re-anchors it to each airport's zone
 export function createFlightDraft(tripId: string): Flight {
-  const zone = TZ.local()
-  const time = DateTime.now(zone).toZonedInstant()
+  const time = DateTime.now(TZ.local()).toZonedInstant()
 
   return {
     id: generateUUID(),
@@ -21,7 +17,7 @@ export function createFlightDraft(tripId: string): Flight {
     bookingCode: '',
     seat: '',
     passengers: [],
-    departure: { airport: draftAirport(zone), time, terminal: '', gate: '' },
-    arrival: { airport: draftAirport(zone), time, terminal: '', gate: '' },
+    departure: { placeKey: '', time, terminal: '', gate: '' },
+    arrival: { placeKey: '', time, terminal: '', gate: '' },
   }
 }

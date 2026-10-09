@@ -1,8 +1,8 @@
-import { Field, FieldError, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useFormField } from '@/hooks/use-form-field'
 import { cn } from '@/lib/utils'
-import { Required } from '@/components/ui/required'
+import { FieldLabel } from './field-label'
 
 interface FieldInputProps {
   name: string
@@ -11,6 +11,8 @@ interface FieldInputProps {
   disabled?: boolean
   placeholder?: string
   className?: string
+  inputClassName?: string
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
   // Runs after the form has taken the value
   onValueChange?: (value: string) => void
   type?: Omit<React.HTMLInputTypeAttribute, 'checkbox' | 'date' | 'datetime-local' | 'radio' | 'submit' | 'time'> // Exclude types that require special handling
@@ -23,6 +25,8 @@ export function FieldInput({
   disabled,
   placeholder,
   className,
+  inputClassName,
+  inputMode,
   type,
   onValueChange,
 }: FieldInputProps) {
@@ -39,14 +43,15 @@ export function FieldInput({
 
   return (
     <Field className={cn('gap-1.5', className)}>
-      <FieldLabel className='gap-1 pr-10 font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground' htmlFor={name}>
+      <FieldLabel htmlFor={name} required={isRequired}>
         {label}
-        {isRequired && <Required />}
       </FieldLabel>
       <Input
         aria-invalid={!!error}
         id={name}
         type={type as string}
+        inputMode={inputMode}
+        className={inputClassName}
         disabled={disabled}
         placeholder={placeholder}
         {...field}

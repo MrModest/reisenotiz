@@ -156,6 +156,8 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
   `Save` call it
 - `useDocumentTitle(name)` (`src/hooks/`) sets `<name> – Reisenotiz`. Only outer pages call it,
   never a trip item view or form
+- `useMapUrl(place)` (`src/hooks/`) builds the maps link — `geo:` on Android, `maps://` on iOS,
+  Google Maps elsewhere — and is the only place that reads the platform
 
 **Loading and error** (`src/routes.tsx`, `src/components/route-error-boundary.tsx`):
 - Every child route gets its own `Suspense` (fallback: nothing) and `RouteErrorBoundary` from
@@ -189,22 +191,53 @@ before adding a new one — most needs are already covered.
 
 **Trip Item Registry** (`src/components/trip-items/`):
 - `registry.ts` maps every `TripItemType` (`'Flight' | 'Accommodation'`) to a `TripItemModule`:
-  `type`, `label` (`Flight`, `Stay`), `icon`, `createDraft(tripId)`, `toTimelineElements(item)`,
+  `type`, `label` (`Flight`, `Stay`), `icon`, `createDraft(tripId)`, `toTimelineElements(item, places)`,
   `View` and `Form`. The map is exhaustive, so a new type does not compile until it has a module.
 - Every per-type decision goes through `getTripItemModule(type)`, never a `switch (type)`. It
   returns `undefined` for a type this build does not know, and the caller shows a short message.
   `tripItemModules` lists them for the type picker; `presentTripItemModules(items)` lists the
-  types present, in registry order, for the timeline's chips, and `toTimelineElements(items)` every
-  element of the items it knows.
-- `toTimelineElements(item)` returns one `TimelineElement` per data point — a flight's departure
+  types present, in registry order, for the timeline's chips, and `toTimelineElements(items, places)`
+  every element of the items it knows.
+- `toTimelineElements(item, places)` returns one `TimelineElement` per data point — a flight's departure
   and arrival, a stay's check-in and check-out at `planned?.in ?? provided.in` and
   `planned?.out ?? provided.out`. The title is the item's own name; the summary is role first,
-  then where, never how long, in natural case: `Departure · BER T1 · Seat 14A`.
+  then where, never how long, in natural case: `Departure · BER T1 · Seat 14A`. The saved places
+  are an argument rather than a store read inside the module. A flight's summary names its airports
+  by `placeKey`, which is the IATA code, so it needs no lookup and a dangling link changes nothing.
 - Each type has its own folder — `flight/`, `accommodation/` — holding `module`, `view`, `form`,
   `schema` and `draft`. Parts both types use live in `shared/`.
-- `createDraft` defaults every time to `DateTime.now()` in the device zone.
-- `View` takes `{ item }`. Its delete goes through `shared/use-delete-trip-item.ts`, which removes
-  the item and navigates back.
+- `createDraft` defaults every time to `DateTime.now()` in the device zone. Submit re-anchors the
+  typed date and time to the linked place's zone, so the device zone never reaches the store.
+- The item pages render the `PageHeader`, which names the type, never the item: `Flight`, `New flight`,
+  `Edit flight`, with the type's icon. The view page's `···` holds `Delete` behind `ConfirmDialog`, through
+  `shared/use-delete-trip-item.ts`, which removes the item and navigates back. Form headers carry no
+  actions
+- `View` takes `{ item }` and renders the scroller and a `DetailActions` footer (an outline `Edit`).
+  `Form` renders a `<form>` holding the scroller and a `FormActions` footer (`Cancel` + `Save`,
+  `Save` disabled until dirty). Neither has an `isCreate`
+- Shared parts in `shared/`: for views, `FactList` / `FactRow`, `AddressLink` (over `useMapUrl`;
+  a missing place reads a muted `Unknown place` with no link), `NotesBlock`, `AttachmentChips`,
+  `DetailActions`; for forms, `FieldLabel` (and `SectionLabel`, the same mono caps over a block that
+  is not a control), `DateTimeField`, `PlacePicker`, `PersonChips` (read-only without `onChange`),
+  `FormActions`, and the React Hook Form wrappers `FieldInput`, `FieldTextarea` and `FieldErrorAt`.
+  `NotesBlock`, `FactRow`, `AddressLink`, `PersonChips` and `AttachmentChips` carry
+  `wrap-anywhere`. The flight's view and form and these shared parts use no `md:` utility: the pane
+  is 400px wide above 900px, so a viewport breakpoint would fire inside it
+- `PlacePicker` (`type`, the form field `name` holding the place key, `label`) is a combobox plus
+  an `Add` / `Edit` button and a two-line preview: name (and code), then address and timezone. The
+  airport list mixes saved airports and the dictionary (`useAirports()`); picking a dictionary
+  airport materialises it before the key is written. Picking another entry replaces the link and
+  never edits the place. The button opens `PlaceDialog` from component state, and `onSaved` writes
+  the key
+- The flight (`flight/`) links both airports by `placeKey`. Its view's hero renders from the flight
+  alone — codes, `UTC+2` under both codes, times, duration, terminal and gate — so a dangling link
+  costs only the address blocks. A terminal is printed exactly as typed (`T1`, `North Terminal`,
+  `Concourse B`), with no prefix added. `schema.ts` holds `flightFormSchema(places)`,
+  `flightFormValues(flight)` and `flightFromFormValues(values, flight, places)`, which anchors each
+  point's time to its airport's zone. The schema rejects an airport key that matches no saved airport
+  (`Unknown place, pick the airport again`), so a dangling link blocks Save until the airport is
+  picked again. A passenger name still being typed is the form field `passengerDraft`: it makes the form
+  dirty and is saved as a passenger
 - The type interfaces in `src/types/` import nothing from the app; `ZonedInstant` lives in
   `src/types/common/` for that reason.
 
@@ -225,10 +258,11 @@ before adding a new one — most needs are already covered.
 - `SavedPlaceRow` owns its `min-w-0`. The Places screen (`src/pages/saved-places.tsx`) owns the row
   shell and its `Archive` / `Restore` / `Delete` actions, and derives its chips from the types
   present.
-- Trip items hold a copy of their place, with no key back to it. The stay form therefore offers
-  `Edit` only for a site picked in that form. The airport picker (`useAirports()`) lists saved
-  airports that are not archived and the dictionary airports that are not saved; picking one
-  materialises it into `savedAirports` before the flight copies it.
+- A flight point links its airport by `placeKey`, the IATA code it is saved under, and resolves
+  it at the point of use with `useSavedPlace` or, where a hook cannot run, `findSavedPlace(places,
+  type, key)`. A stay holds a copy of its site, with no key back to it, so the stay form offers
+  `Edit` only for a site picked in that form. `useAirports()` lists saved airports that are not
+  archived and the dictionary airports that are not saved.
 
 **Countries** (`src/services/dictionaries/`):
 - `Address.countryCode` is an ISO 3166-1 alpha-2 code, chosen from a dropdown and never typed.
@@ -282,7 +316,8 @@ before adding a new one — most needs are already covered.
   earliest element, filtered or not), filters before bucketing, emits only non-empty days as
   `{ date, elements }[]` and sets `otherDay` on an element whose own local date differs from its
   day. The page reads `useTripItems` once and derives the chips, the days and the unknown rows from
-  that one array
+  that one array; `useTimelineDays(items, filter)` (`src/hooks/`) builds the days, with the saved
+  places in its memo dependencies so a row never keeps a place's old name
 - One `section` per day: a sticky `TimelineDayHeader`, the app's only `position: sticky`, then a
   `TimelineRow` per element, each in its own zone, with a `5 Sep` prefix when `otherDay`. Items of
   a type this build does not know follow the days as muted `UnknownItemRow`s, under `All` only

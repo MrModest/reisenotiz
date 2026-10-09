@@ -29,14 +29,14 @@ const addressSchema = z.object({
 
 const personSchema = z.object({
   id: z.string().min(1),
-  fullname: z.string().min(1, 'Full name is required'),
+  fullname: stringSchema('Full name', 100),
   contacts: z.array(z.string()),
 })
 
 const attachmentSchema = z.object({
   id: z.string(),
   link: z.string().min(1, 'Link is required'),
-  name: z.string().min(1, 'Name is required'),
+  name: stringSchema('Name', 100),
   note: z.string().optional(),
 })
 
