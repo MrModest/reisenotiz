@@ -13,26 +13,20 @@ import { FieldTextarea } from '../shared/field-textarea'
 import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
 import { PlacePicker } from '../shared/place-picker'
-import { flightFormSchema, flightFormValues, flightFromFormValues, unresolvedAirports, type FlightFormValues } from './schema'
+import { flightFormSchema, flightFormValues, flightFromFormValues, type FlightFormValues } from './schema'
 
 export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormProps<Flight>) {
   const places = useSavedPlaces()
   const form = useForm<FlightFormValues>({
-    resolver: zodResolver(flightFormSchema),
+    resolver: zodResolver(flightFormSchema(places)),
     defaultValues: flightFormValues(flight),
     mode: 'onTouched',
   })
 
-  function submit(values: FlightFormValues) {
-    const unresolved = unresolvedAirports(values, flight, places)
-    unresolved.forEach((point) => form.setError(`${point}.placeKey`, { message: 'Unknown place, pick the airport again' }))
-    if (unresolved.length === 0) onSubmit(flightFromFormValues(values, flight, places))
-  }
-
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit(submit)}
+        onSubmit={form.handleSubmit((values) => onSubmit(flightFromFormValues(values, flight, places)))}
         className='flex min-h-0 flex-1 flex-col'
       >
         <div className='flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4'>

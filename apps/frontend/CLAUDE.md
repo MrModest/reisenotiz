@@ -232,11 +232,11 @@ before adding a new one — most needs are already covered.
 - The flight (`flight/`) links both airports by `placeKey`. Its view's hero renders from the flight
   alone — codes, `UTC+2` under both codes, times, duration, terminal and gate — so a dangling link
   costs only the address blocks. A terminal is printed exactly as typed (`T1`, `North Terminal`,
-  `Concourse B`), with no prefix added. `schema.ts` holds `flightFormValues(flight)` and
-  `flightFromFormValues(values, flight, places)`, which anchors each point's time to its airport's
-  zone. An unchanged link that dangles keeps the point's old zone; a newly picked airport that is gone
-  by submit has no zone, so `unresolvedAirports` names it and the form refuses to save with an error on
-  that picker. A passenger name still being typed is the form field `passengerDraft`: it makes the form
+  `Concourse B`), with no prefix added. `schema.ts` holds `flightFormSchema(places)`,
+  `flightFormValues(flight)` and `flightFromFormValues(values, flight, places)`, which anchors each
+  point's time to its airport's zone. The schema rejects an airport key that matches no saved airport
+  (`Unknown place, pick the airport again`), so a dangling link blocks Save until the airport is
+  picked again. A passenger name still being typed is the form field `passengerDraft`: it makes the form
   dirty and is saved as a passenger
 - The type interfaces in `src/types/` import nothing from the app; `ZonedInstant` lives in
   `src/types/common/` for that reason.

@@ -4,29 +4,35 @@ import { convertTime, formatTo } from '@/lib/datetime'
 import { findSavedPlace, type SavedPlaceEntry } from '@/store'
 import { generateUUID, type Flight, type FlightPoint } from '@/types'
 
-const flightPointSchema = z.object({
-  placeKey: z.string().min(1, 'Airport is required'),
-  date: schemas.date,
-  time: schemas.time,
-  terminal: z.string(),
-  gate: z.string(),
-})
+// Takes the saved places because a link must resolve: the airport's zone is what typed times are read in
+export const flightFormSchema = (places: SavedPlaceEntry[]) => {
+  const point = z.object({
+    placeKey: z
+      .string()
+      .min(1, 'Airport is required')
+      .refine((key) => !key || findSavedPlace(places, 'Airport', key), 'Unknown place, pick the airport again'),
+    date: schemas.date,
+    time: schemas.time,
+    terminal: z.string(),
+    gate: z.string(),
+  })
 
-export const flightFormSchema = z.object({
-  flightNumber: z.string(),
-  carrier: z.string(),
-  departure: flightPointSchema,
-  arrival: flightPointSchema,
-  bookingCode: z.string(),
-  seat: z.string(),
-  passengers: z.array(schemas.person),
-  // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
-  passengerDraft: schemas.string('Full name', 100, false),
-  note: z.string(),
-  attachments: z.array(schemas.attachment),
-})
+  return z.object({
+    flightNumber: z.string(),
+    carrier: z.string(),
+    departure: point,
+    arrival: point,
+    bookingCode: z.string(),
+    seat: z.string(),
+    passengers: z.array(schemas.person),
+    // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
+    passengerDraft: schemas.string('Full name', 100, false),
+    note: z.string(),
+    attachments: z.array(schemas.attachment),
+  })
+}
 
-export type FlightFormValues = z.infer<typeof flightFormSchema>
+export type FlightFormValues = z.infer<ReturnType<typeof flightFormSchema>>
 type FlightPointValues = FlightFormValues['departure']
 
 const pointValues = (point: FlightPoint): FlightPointValues => ({
@@ -52,34 +58,21 @@ export function flightFormValues(flight: Flight): FlightFormValues {
   }
 }
 
-type Point = 'departure' | 'arrival'
-const points: Point[] = ['departure', 'arrival']
-
-// The airport's own zone; a link left unchanged that dangles keeps the zone the point had
-function airportZone(v: FlightPointValues, before: FlightPoint, places: SavedPlaceEntry[]): string | undefined {
-  return findSavedPlace(places, 'Airport', v.placeKey)?.tzone ?? (v.placeKey === before.placeKey ? before.time.zone : undefined)
-}
-
-// Points whose time has no zone to be read in: a newly picked airport deleted before submit
-export function unresolvedAirports(values: FlightFormValues, flight: Flight, places: SavedPlaceEntry[]): Point[] {
-  return points.filter((p) => !airportZone(values[p], flight[p], places))
-}
-
 // Typed times are wall-clock values at the airport, so each is anchored to its airport's zone.
-// Call only once `unresolvedAirports` is empty.
+// Call only with values `flightFormSchema(places)` accepted.
 export function flightFromFormValues(values: FlightFormValues, flight: Flight, places: SavedPlaceEntry[]): Flight {
-  const point = (v: FlightPointValues, before: FlightPoint): FlightPoint => {
-    const zone = airportZone(v, before, places)
-    if (!zone) throw new Error(`No zone for airport ${v.placeKey}`)
-    return { placeKey: v.placeKey, terminal: v.terminal, gate: v.gate, time: convertTime(v.date, v.time, zone) }
+  const point = (v: FlightPointValues): FlightPoint => {
+    const airport = findSavedPlace(places, 'Airport', v.placeKey)
+    if (!airport) throw new Error(`No saved airport ${v.placeKey}`)
+    return { placeKey: v.placeKey, terminal: v.terminal, gate: v.gate, time: convertTime(v.date, v.time, airport.tzone) }
   }
 
   return {
     ...flight,
     flightNumber: values.flightNumber,
     carrier: values.carrier,
-    departure: point(values.departure, flight.departure),
-    arrival: point(values.arrival, flight.arrival),
+    departure: point(values.departure),
+    arrival: point(values.arrival),
     bookingCode: values.bookingCode,
     seat: values.seat,
     passengers: values.passengerDraft.trim()
