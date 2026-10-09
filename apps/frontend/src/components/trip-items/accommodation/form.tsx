@@ -14,7 +14,7 @@ import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
 import { PlacePicker } from '../shared/place-picker'
 import { unusedNightNote } from './nights'
-import { isComplete, stayFormSchema, stayFormValues, stayFromFormValues, toInterval, type StayFormValues } from './schema'
+import { hasPlan, isComplete, NO_PLAN, stayFormSchema, stayFormValues, stayFromFormValues, toInterval, type StayFormValues } from './schema'
 
 export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFormProps<Accommodation>) {
   const places = useSavedPlaces()
@@ -54,8 +54,6 @@ export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFo
   )
 }
 
-const NO_PLAN = { dateIn: '', timeIn: '', dateOut: '', timeOut: '' }
-
 // The traveller's own arrival and departure, optional, within the booking
 function PlanGroup() {
   const { setValue } = useFormContext<StayFormValues>()
@@ -65,7 +63,6 @@ function PlanGroup() {
     isComplete(provided) && isComplete(planned)
       ? unusedNightNote({ provided: toInterval(provided, 'UTC'), planned: toInterval(planned, 'UTC') })
       : undefined
-  const hasPlan = Object.values(planned).some(Boolean)
 
   return (
     <section aria-label='Plan' className='flex flex-col gap-3 pt-3'>
@@ -73,7 +70,7 @@ function PlanGroup() {
         <h3>Plan</h3>
         <div className='flex min-w-0 items-baseline gap-3'>
           {note && <span className='text-right text-brand'>{note}</span>}
-          {hasPlan && (
+          {hasPlan(planned) && (
             <button
               type='button'
               className='shrink-0 text-muted-foreground uppercase hover:text-foreground'

@@ -4,8 +4,8 @@ import { convertTime, DateTime, formatTo } from '@/lib/datetime'
 import { findSavedPlace, type SavedPlaceEntry } from '@/store'
 import { generateUUID, type Accommodation, type StayInterval } from '@/types'
 
-const interval = z.object({ dateIn: schemas.date, timeIn: schemas.time, dateOut: schemas.date, timeOut: schemas.time })
-const optional = <T extends z.ZodType>(s: T) => z.union([z.literal(''), s])
+const intervalSchema = z.object({ dateIn: schemas.date, timeIn: schemas.time, dateOut: schemas.date, timeOut: schemas.time })
+const emptyOr = <T extends z.ZodType>(s: T) => z.union([z.literal(''), s])
 
 // Takes the saved places because a link must resolve: the site's zone is what typed times are read in
 export const stayFormSchema = (places: SavedPlaceEntry[]) =>
@@ -15,13 +15,13 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
         .string()
         .min(1, 'Property is required')
         .refine((key) => !key || findSavedPlace(places, 'AccommodationSite', key), 'Unknown place, pick the property again'),
-      provided: interval,
+      provided: intervalSchema,
       // All four empty means no plan
       planned: z.object({
-        dateIn: optional(schemas.date),
-        timeIn: optional(schemas.time),
-        dateOut: optional(schemas.date),
-        timeOut: optional(schemas.time),
+        dateIn: emptyOr(schemas.date),
+        timeIn: emptyOr(schemas.time),
+        dateOut: emptyOr(schemas.date),
+        timeOut: emptyOr(schemas.time),
       }),
       guests: z.array(schemas.person),
       // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
@@ -33,7 +33,7 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
     })
     .superRefine((v, ctx) => {
       const issue = (path: string[], message: string) => ctx.addIssue({ code: 'custom', path, message })
-      const plan = Object.values(v.planned).some(Boolean)
+      const plan = hasPlan(v.planned)
       if (plan) {
         for (const [field, value] of Object.entries(v.planned)) {
           if (!value) issue(['planned', field], 'Required for a plan')
@@ -58,9 +58,13 @@ export type IntervalValues = StayFormValues['planned']
 
 const isBefore = (a: StayInterval['in'], b: StayInterval['in']) => DateTime.from(a).isBefore(DateTime.from(b))
 
-export const isComplete = (v: IntervalValues): v is z.infer<typeof interval> => interval.safeParse(v).success
+export const NO_PLAN: IntervalValues = { dateIn: '', timeIn: '', dateOut: '', timeOut: '' }
 
-export const toInterval = (v: z.infer<typeof interval>, zone: string): StayInterval => ({
+export const hasPlan = (v: IntervalValues) => Object.values(v).some(Boolean)
+
+export const isComplete = (v: IntervalValues): v is z.infer<typeof intervalSchema> => intervalSchema.safeParse(v).success
+
+export const toInterval = (v: z.infer<typeof intervalSchema>, zone: string): StayInterval => ({
   in: convertTime(v.dateIn, v.timeIn, zone),
   out: convertTime(v.dateOut, v.timeOut, zone),
 })
@@ -76,9 +80,7 @@ export function stayFormValues(stay: Accommodation): StayFormValues {
   return {
     placeKey: stay.placeKey,
     provided: intervalValues(stay.stayInterval.provided),
-    planned: stay.stayInterval.planned
-      ? intervalValues(stay.stayInterval.planned)
-      : { dateIn: '', timeIn: '', dateOut: '', timeOut: '' },
+    planned: stay.stayInterval.planned ? intervalValues(stay.stayInterval.planned) : NO_PLAN,
     guests: stay.guests,
     guestDraft: '',
     rooms: stay.rooms,

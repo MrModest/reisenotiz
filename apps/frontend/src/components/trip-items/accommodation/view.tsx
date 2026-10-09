@@ -82,7 +82,6 @@ function HeroEnd({ label, day, time, end }: { label: string; day: string; time: 
   )
 }
 
-// Never rendered empty: without a plan there is no row and no rule
 function PlannedRow({ planned, note }: { planned: StayInterval; note: string | undefined }) {
   const when = (at: StayInterval['in']) => `${formatTo.dayMonth(at)} · ${formatTo.time(at)}`
 

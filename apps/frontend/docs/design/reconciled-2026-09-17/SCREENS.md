@@ -501,6 +501,8 @@ store — submit re-anchors both typed values to the chosen place's zone.
     accent.
   - What does not save is a plan outside the booking: arriving before check-in opens, or leaving
     after the by-time.
+  - The plan is optional: all four fields empty means no plan. Once any is filled the rest are
+    required, and a `Clear` in the plan group's header, shown only while a plan exists, empties it.
 - **Cut**: `CONFIRMATION`, `TOTAL`, `CANCELLATION`, the check-in window's late end, and the
   `Add your arrival and departure to calendar` toggle.
 
