@@ -41,8 +41,8 @@ describe('flight toTimelineElements', () => {
     id: 'f1',
     flightNumber: 'LH 1953',
     seat: '14A',
-    departure: { ...draft.departure, placeKey: 'BER', terminal: '1', time: at('2026-09-05T06:40:00.000Z') },
-    arrival: { ...draft.arrival, placeKey: 'MUC', terminal: '2', time: at('2026-09-05T08:00:00.000Z') },
+    departure: { ...draft.departure, placeKey: 'BER', terminal: 'T1', time: at('2026-09-05T06:40:00.000Z') },
+    arrival: { ...draft.arrival, placeKey: 'MUC', terminal: 'T2', time: at('2026-09-05T08:00:00.000Z') },
   }
   const airport = (code: string): SavedPlaceEntry => ({
     type: 'Airport',
@@ -62,6 +62,12 @@ describe('flight toTimelineElements', () => {
   it('leaves out a missing terminal and seat', () => {
     const bare = { ...flight, seat: '', departure: { ...flight.departure, terminal: '' } }
     expect(toElements(bare)[0].summary).toBe('Departure · BER')
+  })
+
+  // Terminals are numbers, letters, names or directions, so none gets a prefix
+  it('prints the terminal exactly as typed', () => {
+    const named = { ...flight, departure: { ...flight.departure, terminal: 'North Terminal' } }
+    expect(toElements(named)[0].summary).toBe('Departure · BER North Terminal · Seat 14A')
   })
 
   // The link is the IATA code, so a deleted airport costs the timeline nothing

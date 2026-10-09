@@ -231,7 +231,8 @@ before adding a new one — most needs are already covered.
   the key
 - The flight (`flight/`) links both airports by `placeKey`. Its view's hero renders from the flight
   alone — codes, `UTC+2` under both codes, times, duration, terminal and gate — so a dangling link
-  costs only the address blocks. `schema.ts` holds `flightFormValues(flight)` and
+  costs only the address blocks. A terminal is printed exactly as typed (`T1`, `North Terminal`,
+  `Concourse B`), with no prefix added. `schema.ts` holds `flightFormValues(flight)` and
   `flightFromFormValues(values, flight, places)`, which anchors each point's time to its airport's
   zone. An unchanged link that dangles keeps the point's old zone; a newly picked airport that is gone
   by submit has no zone, so `unresolvedAirports` names it and the form refuses to save with an error on

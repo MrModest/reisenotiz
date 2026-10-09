@@ -60,7 +60,7 @@ function FlightHero({ flight }: { flight: Flight }) {
 
 // The offset sits under the code on both ends, always, so the hero has one height
 function HeroEnd({ point, end }: { point: FlightPoint; end?: boolean }) {
-  const where = [point.terminal && `T${point.terminal}`, point.gate && `Gate ${point.gate}`].filter(Boolean).join(' · ')
+  const where = [point.terminal, point.gate && `Gate ${point.gate}`].filter(Boolean).join(' · ')
 
   return (
     <div className={cn('flex min-w-0 flex-1 flex-col', end && 'items-end text-right')}>

@@ -20,13 +20,13 @@ export const tripsItems: TripItem[] = [
     passengers: persons,
     departure: {
       placeKey: 'BER',
-      terminal: '2',
+      terminal: 'T2',
       gate: 'A24',
       time: { instant: '2025-12-01T18:00:00.000Z', zone: airportsByCode['BER'].tzone },
     },
     arrival: {
       placeKey: 'HND',
-      terminal: '1',
+      terminal: 'T1',
       time: { instant: '2025-12-02T06:00:00.000Z', zone: airportsByCode['HND'].tzone },
     },
     note: '',
@@ -43,13 +43,13 @@ export const tripsItems: TripItem[] = [
     passengers: persons,
     departure: {
       placeKey: 'HND',
-      terminal: '1',
+      terminal: 'T1',
       gate: 'B16',
       time: { instant: '2025-12-10T10:00:00.000Z', zone: airportsByCode['HND'].tzone },
     },
     arrival: {
       placeKey: 'BER',
-      terminal: '2',
+      terminal: 'T2',
       time: { instant: '2025-12-10T20:00:00.000Z', zone: airportsByCode['BER'].tzone },
     },
     note: '',
