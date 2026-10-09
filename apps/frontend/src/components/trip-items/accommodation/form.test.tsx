@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeAll, afterEach } from 'vitest'
 import { Suspense } from 'react'
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { Repo, RepoContext } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
 import { EMPTY_ROOT_DOC, type RootDoc } from '@/store/automerge/types'
@@ -67,5 +67,19 @@ describe('AccommodationForm', () => {
     expect(stay.stayInterval.provided.in).toEqual(stay.stayInterval.provided.out)
     expect(stay.stayInterval.provided.in.zone).toBe('Europe/Vienna')
     expect(stay.stayInterval.planned).toBeUndefined()
+  })
+
+  // A site added from the form is linked before the form re-renders with it
+  it('links a site added through Add without a stale Unknown place error', async () => {
+    renderForm(vi.fn())
+    fireEvent.click(await screen.findByRole('button', { name: 'Add' }))
+    const dialog = within(await screen.findByRole('dialog'))
+    fireEvent.change(dialog.getByLabelText(/Name/), { target: { value: 'Hotel Alpha' } })
+    fireEvent.change(dialog.getByLabelText(/City/), { target: { value: 'Innsbruck' } })
+    fireEvent.change(dialog.getByLabelText(/Country/), { target: { value: 'AT' } })
+    fireEvent.click(dialog.getByRole('button', { name: 'Save' }))
+
+    expect(await screen.findByText('Hotel Alpha · Hotel')).toBeTruthy()
+    await waitFor(() => expect(screen.queryByText('Unknown place, pick the property again')).toBeNull())
   })
 })
