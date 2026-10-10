@@ -79,15 +79,14 @@ describe('stayFromFormValues', () => {
   })
 
   it('saves guests, a guest name still being typed, and who reserved it as people', () => {
-    const stay = stayFromFormValues({ ...booked, guestDraft: ' Jonas Weber ', reservedOn: 'Anna Weber' }, draft, [site])
+    const anna = { id: 'p1', fullname: ' Anna Weber ', contacts: ['+43 1'] }
+    const stay = stayFromFormValues({ ...booked, guestDraft: ' Jonas Weber ', reservedOn: anna }, draft, [site])
     expect(stay.guests.map((p) => p.fullname)).toEqual(['Jonas Weber'])
-    expect(stay.reservedOn?.fullname).toBe('Anna Weber')
+    expect(stay.reservedOn).toEqual({ ...anna, fullname: 'Anna Weber' })
   })
 
-  it('keeps the person who reserved it while the name is unchanged, and drops them when cleared', () => {
-    const anna = { id: 'p1', fullname: 'Anna Weber', contacts: ['+43 1'] }
-    const stay = { ...draft, reservedOn: anna }
-    expect(stayFromFormValues({ ...booked, reservedOn: 'Anna Weber' }, stay, [site]).reservedOn).toBe(anna)
-    expect(stayFromFormValues({ ...booked, reservedOn: '' }, stay, [site]).reservedOn).toBeUndefined()
+  it('saves nobody as having reserved it when the name is empty', () => {
+    const stay = { ...draft, reservedOn: { id: 'p1', fullname: 'Anna Weber', contacts: [] } }
+    expect(stayFromFormValues(booked, stay, [site]).reservedOn).toBeUndefined()
   })
 })

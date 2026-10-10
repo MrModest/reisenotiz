@@ -128,7 +128,8 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
   mutation hook, then navigate.
 - **Views are read-only** — no form, no draft state.
 - **Validate twice**: the form for UX (required, lengths), the store mutation hook for
-  invariants (`assertValidTripItem` in `src/store/invariants.ts`, which throws).
+  invariants (`assertValidTripItem` in `src/store/invariants.ts`, which throws; a stay must link a
+  saved site).
 
 ### Component Architecture
 
@@ -243,7 +244,7 @@ before adding a new one — most needs are already covered.
   picked again. A passenger name still being typed is the form field `passengerDraft`: it makes the form
   dirty and is saved as a passenger
 - The stay (`accommodation/`) links its site by `placeKey`, the site's uuid. `guests` is `Person[]`
-  and `reservedOn` an optional `Person`, typed as one name; an unchanged name keeps its `Person`.
+  and `reservedOn` an optional `Person`, edited in the form by its name; an empty name saves none.
   `stayInterval` holds the booked `provided` interval and the traveller's optional `planned` one.
   `nights.ts` holds `countNights(provided)`, the calendar dates from check-in to check-out, never from
   the plan, and `unusedNightNote(stayInterval)` (`Arriving 6 Sep · 1 paid night unused`, and the

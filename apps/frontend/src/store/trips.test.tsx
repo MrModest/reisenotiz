@@ -34,7 +34,12 @@ interface Setup {
 
 function setup(): Setup {
   const repo = new Repo({ network: [] })
-  const rootHandle = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC })
+  const rootHandle = repo.create<RootDoc>({
+    ...EMPTY_ROOT_DOC,
+    savedAccommodationSites: {
+      'site-1': { name: 'Hotel Adlon', kind: 'Hotel', tzone: 'Europe/Berlin', address: { countryCode: 'DE', city: 'Berlin' } },
+    },
+  })
 
   function wrapper({ children }: { children: ReactNode }) {
     return (
@@ -241,6 +246,7 @@ describe('trips store hooks', () => {
       DateTime.fromObject({ year: 2026, month: 5, day, hour }, 'Europe/Berlin').toZonedInstant()
     const cases: [string, (s: Omit<Accommodation, 'id'>) => Omit<Accommodation, 'id'>][] = [
       ['no property', (s) => ({ ...s, placeKey: '' })],
+      ['a property that is not saved', (s) => ({ ...s, placeKey: 'site-gone' })],
       ['check-out before check-in', (s) => ({ ...s, stayInterval: { provided: { in: at(3), out: at(1) } } })],
       ['a plan before check-in', (s) => ({ ...s, stayInterval: { ...s.stayInterval, planned: { in: at(1, 10), out: at(2) } } })],
       ['a plan after check-out', (s) => ({ ...s, stayInterval: { ...s.stayInterval, planned: { in: at(2), out: at(3, 18) } } })],

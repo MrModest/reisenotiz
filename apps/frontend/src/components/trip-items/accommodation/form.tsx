@@ -14,7 +14,7 @@ import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
 import { PlacePicker } from '../shared/place-picker'
 import { unusedNightNote } from './nights'
-import { hasPlan, isComplete, NO_PLAN, stayFormSchema, stayFormValues, stayFromFormValues, toInterval, type StayFormValues } from './schema'
+import { hasPlan, isComplete, NO_PLAN, stayFormSchema, stayFormValues, stayFromFormValues, toStayInterval, type StayFormValues } from './schema'
 
 export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFormProps<Accommodation>) {
   const places = useSavedPlaces()
@@ -40,7 +40,7 @@ export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFo
           </div>
           <div className='grid grid-cols-2 gap-3'>
             <FieldInput name='rooms' label='Rooms' type='number' inputMode='numeric' inputClassName='font-mono' />
-            <FieldInput name='reservedOn' label='Reserved by' />
+            <FieldInput name='reservedOn.fullname' label='Reserved by' />
           </div>
           <FieldTextarea name='note' label='Notes' />
           <Field className='gap-1.5'>
@@ -61,7 +61,7 @@ function PlanGroup() {
   // Both intervals are wall-clock values in the one site zone, so any shared zone gives the same days
   const note =
     isComplete(provided) && isComplete(planned)
-      ? unusedNightNote({ provided: toInterval(provided, 'UTC'), planned: toInterval(planned, 'UTC') })
+      ? unusedNightNote({ provided: toStayInterval(provided, 'UTC'), planned: toStayInterval(planned, 'UTC') })
       : undefined
 
   return (
