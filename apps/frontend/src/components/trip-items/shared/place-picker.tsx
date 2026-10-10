@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Field, FieldError } from '@/components/ui/field'
 import { AirportSelector } from '@/components/ui/combobox/airport'
@@ -23,6 +24,14 @@ export function PlacePicker({ type, name, label }: PlacePickerProps) {
   const entry = useSavedPlace(field.value || undefined)
   const linked = entry?.type === type ? entry : undefined
   const [dialogOpen, setDialogOpen] = useState(false)
+  const { trigger } = useFormContext()
+  const errorMessage = error?.message
+
+  // A place added in the dialog is linked before the form re-renders with it, so that first check
+  // ran against the old places; check again once the link resolves
+  useEffect(() => {
+    if (linked && errorMessage) void trigger(name)
+  }, [linked, errorMessage, name, trigger])
 
   function link(key: string) {
     field.onChange(key)
@@ -90,7 +99,7 @@ function SitePicker({ id, linked, onPick }: PickerProps) {
 // Spelling the code out is what catches a typo that happens to be another valid code
 function PlacePreview({ entry }: { entry: SavedPlaceEntry }) {
   const { place } = entry
-  const title = entry.type === 'Airport' ? `${place.name} · ${entry.place.code}` : place.name
+  const title = `${place.name} · ${entry.type === 'Airport' ? entry.place.code : entry.place.kind}`
   const address = [place.address.line, place.address.city].filter(Boolean).join(', ')
 
   return (
