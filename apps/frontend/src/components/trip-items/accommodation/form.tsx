@@ -13,7 +13,7 @@ import { FieldTextarea } from '../shared/field-textarea'
 import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
 import { PlacePicker } from '../shared/place-picker'
-import { hasPlan, NO_PLAN, stayFormSchema, stayFormValues, stayFromFormValues, type StayFormValues } from './schema'
+import { stayFormSchema, stayFormValues, stayFromFormValues, type StayFormValues } from './schema'
 
 export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFormProps<Accommodation>) {
   const places = useSavedPlaces()
@@ -55,25 +55,31 @@ export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFo
 
 // The traveller's own arrival and departure, optional, within the booking
 function PlanGroup() {
-  const { setValue } = useFormContext<StayFormValues>()
+  const { setValue, getValues } = useFormContext<StayFormValues>()
   const planned = useWatch<StayFormValues, 'planned'>({ name: 'planned' })
 
   return (
     <section aria-label='Plan' className='flex flex-col gap-3 pt-3'>
       <div className='flex items-baseline justify-between gap-3 border-b border-border pb-2 font-mono text-[10px] tracking-[.08em] uppercase'>
         <h3>Plan</h3>
-        {hasPlan(planned) && (
-          <button
-            type='button'
-            className='text-muted-foreground uppercase hover:text-foreground'
-            onClick={() => setValue('planned', NO_PLAN, { shouldDirty: true, shouldValidate: true })}
-          >
-            Clear
-          </button>
-        )}
+        <button
+          type='button'
+          className='text-muted-foreground uppercase hover:text-foreground'
+          onClick={() =>
+            planned
+              ? setValue('planned', undefined, { shouldDirty: true, shouldValidate: true })
+              : setValue('planned', getValues('provided'), { shouldDirty: true })
+          }
+        >
+          {planned ? 'Clear' : 'Add plan'}
+        </button>
       </div>
-      <DateTimeField dateName='planned.dateIn' timeName='planned.timeIn' dateLabel='You arrive' timeLabel='At' />
-      <DateTimeField dateName='planned.dateOut' timeName='planned.timeOut' dateLabel='You leave' timeLabel='At' />
+      {planned && (
+        <>
+          <DateTimeField dateName='planned.dateIn' timeName='planned.timeIn' dateLabel='You arrive' timeLabel='At' />
+          <DateTimeField dateName='planned.dateOut' timeName='planned.timeOut' dateLabel='You leave' timeLabel='At' />
+        </>
+      )}
     </section>
   )
 }

@@ -82,4 +82,25 @@ describe('AccommodationForm', () => {
     expect(await screen.findByText('Hotel Alpha · Hotel')).toBeTruthy()
     await waitFor(() => expect(screen.queryByText('Unknown place, pick the property again')).toBeNull())
   })
+
+  it('shows the plan fields only after Add plan, starting from the booking, and Clear removes them', async () => {
+    const onSubmit = vi.fn()
+    renderForm(onSubmit)
+    fireEvent.input(await screen.findByLabelText('Property'), { target: { value: 'Weis' }, inputType: 'insertText' })
+    fireEvent.click(await screen.findByRole('option', { name: /Hotel Weisses Kreuz/ }))
+    const add = await screen.findByRole('button', { name: 'Add plan' })
+    expect(screen.queryByLabelText('You arrive')).toBeNull()
+
+    fireEvent.click(add)
+    const arriveAt = (await screen.findAllByLabelText('At'))[0] as HTMLInputElement
+    expect(arriveAt.value).toBe((screen.getByLabelText('From') as HTMLInputElement).value)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clear' }))
+    await waitFor(() => expect(screen.queryAllByLabelText('At')).toHaveLength(0))
+    expect(screen.getByRole('button', { name: 'Add plan' })).toBeTruthy()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
+    expect(onSubmit.mock.calls[0][0].stayInterval.planned).toBeUndefined()
+  })
 })

@@ -5,7 +5,6 @@ import { findSavedPlace, type SavedPlaceEntry } from '@/store'
 import { generateUUID, type Accommodation, type StayInterval } from '@/types'
 
 const stayIntervalSchema = z.object({ dateIn: schemas.date, timeIn: schemas.time, dateOut: schemas.date, timeOut: schemas.time })
-const emptyOr = <T extends z.ZodType>(s: T) => z.union([z.literal(''), s])
 
 // Takes the saved places because a link must resolve: the site's zone is what typed times are read in
 export const stayFormSchema = (places: SavedPlaceEntry[]) =>
@@ -16,13 +15,7 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
         .min(1, 'Property is required')
         .refine((key) => !key || findSavedPlace(places, 'AccommodationSite', key), 'Unknown place, pick the property again'),
       provided: stayIntervalSchema,
-      // All four empty means no plan
-      planned: z.object({
-        dateIn: emptyOr(schemas.date),
-        timeIn: emptyOr(schemas.time),
-        dateOut: emptyOr(schemas.date),
-        timeOut: emptyOr(schemas.time),
-      }),
+      planned: stayIntervalSchema.optional(),
       guests: z.array(schemas.person),
       // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
       guestDraft: schemas.string('Full name', 100, false),
@@ -33,18 +26,11 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
     })
     .superRefine((v, ctx) => {
       const issue = (path: string[], message: string) => ctx.addIssue({ code: 'custom', path, message })
-      const plan = hasPlan(v.planned)
-      if (plan) {
-        for (const [field, value] of Object.entries(v.planned)) {
-          if (!value) issue(['planned', field], 'Required for a plan')
-        }
-      }
-
       const site = findSavedPlace(places, 'AccommodationSite', v.placeKey)
       if (!site) return
       const provided = toStayInterval(v.provided, site.tzone)
       if (isBefore(provided.out, provided.in)) issue(['provided', 'dateOut'], 'Check-out is before check-in')
-      if (!plan || !isValid(v.planned)) return
+      if (!v.planned) return
 
       // The plan must lie within the booking, compared as instants
       const planned = toStayInterval(v.planned, site.tzone)
@@ -54,17 +40,8 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
     })
 
 export type StayFormValues = z.infer<ReturnType<typeof stayFormSchema>>
-export type StayIntervalValues = StayFormValues['planned']
 
 const isBefore = (a: StayInterval['in'], b: StayInterval['in']) => DateTime.from(a).isBefore(DateTime.from(b))
-
-export const NO_PLAN: StayIntervalValues = { dateIn: '', timeIn: '', dateOut: '', timeOut: '' }
-
-export const hasPlan = (v: StayIntervalValues) => Object.values(v).some(Boolean)
-
-// True when all four plan fields hold a valid date or time, so they can become a StayInterval.
-// Each plan field is optional on its own, so a half-typed plan is not valid.
-const isValid = (v: StayIntervalValues): v is z.infer<typeof stayIntervalSchema> => stayIntervalSchema.safeParse(v).success
 
 const toStayInterval = (v: z.infer<typeof stayIntervalSchema>, zone: string): StayInterval => ({
   in: convertTime(v.dateIn, v.timeIn, zone),
@@ -82,7 +59,7 @@ export function stayFormValues(stay: Accommodation): StayFormValues {
   return {
     placeKey: stay.placeKey,
     provided: stayIntervalValues(stay.stayInterval.provided),
-    planned: stay.stayInterval.planned ? stayIntervalValues(stay.stayInterval.planned) : NO_PLAN,
+    planned: stay.stayInterval.planned && stayIntervalValues(stay.stayInterval.planned),
     guests: stay.guests,
     guestDraft: '',
     rooms: stay.rooms,
@@ -107,7 +84,7 @@ export function stayFromFormValues(values: StayFormValues, stay: Accommodation, 
     placeKey: values.placeKey,
     stayInterval: {
       provided: toStayInterval(values.provided, site.tzone),
-      planned: isValid(values.planned) ? toStayInterval(values.planned, site.tzone) : undefined,
+      planned: values.planned && toStayInterval(values.planned, site.tzone),
     },
     guests: guest ? [...values.guests, person(guest)] : values.guests,
     rooms: values.rooms,

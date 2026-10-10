@@ -250,12 +250,13 @@ before adding a new one — most needs are already covered.
   `nights.ts` holds `countNights(provided)`, the calendar dates from check-in to check-out, never from
   the plan. The view's title is the site's name, or `Unknown place` with no `City, Country · UTC+2`
   subline on a dangling link; its hero renders from the stay alone, with the `You arrive` /
-  `You leave` row only when there is a plan. `schema.ts` holds `stayFormSchema(places)`, `stayFormValues(stay)` and
+  `You leave` row only when there is a plan.
+  `schema.ts` holds `stayFormSchema(places)`, `stayFormValues(stay)` and
   `stayFromFormValues(values, stay, places)`, which anchors every time to the site's zone. The plan
-  is four optional fields, all empty for no plan, cleared by the `Plan` group's `Clear`; the schema
-  asks for the rest once any is typed and refuses a plan outside the booking, compared as instants
-  (`You arrive before check-in`, `You leave after check-out`). A later-day arrival saves, with the
-  note in the `Plan` group's header. A new stay opens with check-in equal to check-out
+  is optional: its fields appear on the `Plan` group's `Add plan`, filled from the booking, and
+  `Clear` removes them with their values. The schema refuses a plan outside the booking, compared as
+  instants (`You arrive before check-in`, `You leave after check-out`). A later-day arrival saves.
+  A new stay opens with check-in equal to check-out
 - The type interfaces in `src/types/` import nothing from the app; `ZonedInstant` lives in
   `src/types/common/` for that reason.
 

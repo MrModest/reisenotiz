@@ -37,14 +37,6 @@ describe('stayFormSchema', () => {
     expect(issues(plan('2026-09-05', '16:40', '2026-09-08', '11:01'))).toEqual([['planned.dateOut', 'You leave after check-out']])
   })
 
-  it('asks for the rest of a plan once any of it is typed', () => {
-    expect(issues(plan('2026-09-06', '', '', ''))).toEqual([
-      ['planned.timeIn', 'Required for a plan'],
-      ['planned.dateOut', 'Required for a plan'],
-      ['planned.timeOut', 'Required for a plan'],
-    ])
-  })
-
   it('refuses a check-out before check-in', () => {
     expect(issues({ ...booked, provided: { ...booked.provided, dateOut: '2026-09-04' } })).toEqual([
       ['provided.dateOut', 'Check-out is before check-in'],
@@ -74,7 +66,7 @@ describe('stayFromFormValues', () => {
     })
   })
 
-  it('saves no plan when the plan is empty', () => {
+  it('saves no plan when there is none', () => {
     expect(stayFromFormValues(booked, draft, [site]).stayInterval.planned).toBeUndefined()
   })
 
