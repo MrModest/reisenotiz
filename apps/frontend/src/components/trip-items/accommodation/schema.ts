@@ -27,8 +27,7 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
       // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
       guestDraft: schemas.string('Full name', 100, false),
       rooms: z.number({ message: 'Rooms is required' }).int().min(1, 'Rooms is at least 1'),
-      // An empty name means nobody
-      reservedOn: schemas.person.extend({ fullname: schemas.string('Reserved by', 100, false) }),
+      reservedOn: schemas.string('Reserved by', 100, false),
       note: z.string(),
       attachments: z.array(schemas.attachment),
     })
@@ -87,7 +86,7 @@ export function stayFormValues(stay: Accommodation): StayFormValues {
     guests: stay.guests,
     guestDraft: '',
     rooms: stay.rooms,
-    reservedOn: stay.reservedOn ?? person(''),
+    reservedOn: stay.reservedOn?.fullname ?? '',
     note: stay.note,
     attachments: stay.attachments,
   }
@@ -100,7 +99,7 @@ const person = (fullname: string) => ({ id: generateUUID(), fullname, contacts: 
 export function stayFromFormValues(values: StayFormValues, stay: Accommodation, places: SavedPlaceEntry[]): Accommodation {
   const site = findSavedPlace(places, 'AccommodationSite', values.placeKey)
   if (!site) throw new Error(`No saved accommodation site ${values.placeKey}`)
-  const reservedBy = values.reservedOn.fullname.trim()
+  const reservedBy = values.reservedOn.trim()
   const guest = values.guestDraft.trim()
 
   return {
@@ -112,7 +111,7 @@ export function stayFromFormValues(values: StayFormValues, stay: Accommodation, 
     },
     guests: guest ? [...values.guests, person(guest)] : values.guests,
     rooms: values.rooms,
-    reservedOn: reservedBy ? { ...values.reservedOn, fullname: reservedBy } : undefined,
+    reservedOn: reservedBy ? person(reservedBy) : undefined,
     note: values.note,
     attachments: values.attachments.map((a) => ({ ...a, tripItemId: stay.id })),
   }

@@ -40,7 +40,7 @@ export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFo
           </div>
           <div className='grid grid-cols-2 gap-3'>
             <FieldInput name='rooms' label='Rooms' type='number' inputMode='numeric' inputClassName='font-mono' />
-            <FieldInput name='reservedOn.fullname' label='Reserved by' />
+            <FieldInput name='reservedOn' label='Reserved by' />
           </div>
           <FieldTextarea name='note' label='Notes' />
           <Field className='gap-1.5'>

@@ -79,10 +79,9 @@ describe('stayFromFormValues', () => {
   })
 
   it('saves guests, a guest name still being typed, and who reserved it as people', () => {
-    const anna = { id: 'p1', fullname: ' Anna Weber ', contacts: ['+43 1'] }
-    const stay = stayFromFormValues({ ...booked, guestDraft: ' Jonas Weber ', reservedOn: anna }, draft, [site])
+    const stay = stayFromFormValues({ ...booked, guestDraft: ' Jonas Weber ', reservedOn: ' Anna Weber ' }, draft, [site])
     expect(stay.guests.map((p) => p.fullname)).toEqual(['Jonas Weber'])
-    expect(stay.reservedOn).toEqual({ ...anna, fullname: 'Anna Weber' })
+    expect(stay.reservedOn).toMatchObject({ fullname: 'Anna Weber', contacts: [] })
   })
 
   it('saves nobody as having reserved it when the name is empty', () => {
