@@ -11,7 +11,7 @@ import { DetailActions } from '../shared/detail-actions'
 import { FactList, FactRow } from '../shared/fact-list'
 import { NotesBlock } from '../shared/notes-block'
 import { PersonChips } from '../shared/person-chips'
-import { countNights, unusedNightNote } from './nights'
+import { countNights } from './nights'
 
 export function AccommodationView({ item: stay }: { item: Accommodation }) {
   const entry = useSavedPlace(stay.placeKey)
@@ -55,7 +55,6 @@ export function AccommodationView({ item: stay }: { item: Accommodation }) {
 function StayHero({ stayInterval }: { stayInterval: Accommodation['stayInterval'] }) {
   const { provided, planned } = stayInterval
   const nights = countNights(provided)
-  const note = unusedNightNote(stayInterval)
 
   return (
     <div className='flex flex-col rounded-xl border border-border bg-card p-4'>
@@ -67,7 +66,7 @@ function StayHero({ stayInterval }: { stayInterval: Accommodation['stayInterval'
         </div>
         <HeroEnd label='Check-out' day={formatTo.dayShort(provided.out)} time={`By ${formatTo.time(provided.out)}`} end />
       </div>
-      {planned && <PlannedRow planned={planned} note={note} />}
+      {planned && <PlannedRow planned={planned} />}
     </div>
   )
 }
@@ -82,22 +81,19 @@ function HeroEnd({ label, day, time, end }: { label: string; day: string; time: 
   )
 }
 
-function PlannedRow({ planned, note }: { planned: StayInterval; note: string | undefined }) {
+function PlannedRow({ planned }: { planned: StayInterval }) {
   const when = (at: StayInterval['in']) => `${formatTo.dayMonth(at)} · ${formatTo.time(at)}`
 
   return (
-    <div className='mt-3 flex flex-col gap-2 border-t border-border pt-3 font-mono text-[11px] text-brand uppercase'>
-      <div className='flex items-center justify-between gap-3'>
-        <div className='flex flex-col gap-0.5'>
-          <Caps>You arrive</Caps>
-          {when(planned.in)}
-        </div>
-        <div className='flex flex-col items-end gap-0.5 text-right'>
-          <Caps>You leave</Caps>
-          {when(planned.out)}
-        </div>
+    <div className='mt-3 flex items-center justify-between gap-3 border-t border-border pt-3 font-mono text-[11px] text-brand uppercase'>
+      <div className='flex flex-col gap-0.5'>
+        <Caps>You arrive</Caps>
+        {when(planned.in)}
       </div>
-      {note && <p className='tracking-[.08em] wrap-anywhere'>{note}</p>}
+      <div className='flex flex-col items-end gap-0.5 text-right'>
+        <Caps>You leave</Caps>
+        {when(planned.out)}
+      </div>
     </div>
   )
 }

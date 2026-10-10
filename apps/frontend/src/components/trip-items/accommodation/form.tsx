@@ -13,8 +13,7 @@ import { FieldTextarea } from '../shared/field-textarea'
 import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
 import { PlacePicker } from '../shared/place-picker'
-import { unusedNightNote } from './nights'
-import { hasPlan, isComplete, NO_PLAN, stayFormSchema, stayFormValues, stayFromFormValues, toStayInterval, type StayFormValues } from './schema'
+import { hasPlan, NO_PLAN, stayFormSchema, stayFormValues, stayFromFormValues, type StayFormValues } from './schema'
 
 export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFormProps<Accommodation>) {
   const places = useSavedPlaces()
@@ -57,29 +56,21 @@ export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFo
 // The traveller's own arrival and departure, optional, within the booking
 function PlanGroup() {
   const { setValue } = useFormContext<StayFormValues>()
-  const [provided, planned] = useWatch<StayFormValues, ['provided', 'planned']>({ name: ['provided', 'planned'] })
-  // Both intervals are wall-clock values in the one site zone, so any shared zone gives the same days
-  const note =
-    isComplete(provided) && isComplete(planned)
-      ? unusedNightNote({ provided: toStayInterval(provided, 'UTC'), planned: toStayInterval(planned, 'UTC') })
-      : undefined
+  const planned = useWatch<StayFormValues, 'planned'>({ name: 'planned' })
 
   return (
     <section aria-label='Plan' className='flex flex-col gap-3 pt-3'>
       <div className='flex items-baseline justify-between gap-3 border-b border-border pb-2 font-mono text-[10px] tracking-[.08em] uppercase'>
         <h3>Plan</h3>
-        <div className='flex min-w-0 items-baseline gap-3'>
-          {note && <span className='text-right text-brand'>{note}</span>}
-          {hasPlan(planned) && (
-            <button
-              type='button'
-              className='shrink-0 text-muted-foreground uppercase hover:text-foreground'
-              onClick={() => setValue('planned', NO_PLAN, { shouldDirty: true, shouldValidate: true })}
-            >
-              Clear
-            </button>
-          )}
-        </div>
+        {hasPlan(planned) && (
+          <button
+            type='button'
+            className='text-muted-foreground uppercase hover:text-foreground'
+            onClick={() => setValue('planned', NO_PLAN, { shouldDirty: true, shouldValidate: true })}
+          >
+            Clear
+          </button>
+        )}
       </div>
       <DateTimeField dateName='planned.dateIn' timeName='planned.timeIn' dateLabel='You arrive' timeLabel='At' />
       <DateTimeField dateName='planned.dateOut' timeName='planned.timeOut' dateLabel='You leave' timeLabel='At' />

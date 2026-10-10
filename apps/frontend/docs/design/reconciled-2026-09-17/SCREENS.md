@@ -407,9 +407,6 @@ definition uses. `Accommodation` stays the type name in code
    - Lower: the bordered `YOU ARRIVE` / `YOU LEAVE` row, carrying `5 Sep · 16:40`. **Omitted
      entirely — row and separator both — when there is no planned interval.** Never empty, never
      dashed.
-   - **The unused-night note** sits in that planned row, in accent:
-     `ARRIVING 6 SEP · 1 PAID NIGHT UNUSED`, and symmetrically
-     `LEAVING 7 SEP · 1 PAID NIGHT UNUSED`. It exists only when the planned row does.
 4. **Fact list** — guests, rooms, reserved by. **Empty person lists render nothing** rather than
    `0 GUESTS`. **`CONFIRMATION`, `TOTAL` and `CANCELLATION` are cut**: a booking reference is not
    universal for accommodation the way it is for flights, an amount without a currency opens
@@ -497,8 +494,7 @@ store — submit re-anchors both typed values to the chosen place's zone.
   provided one**: `planned.in >= provided.in` and `planned.out <= provided.out`, validated and
   blocking. Two instant comparisons, no time-of-day reasoning.
   - A planned arrival on a **later day** than check-in is legal and saves — the traveller is
-    knowingly wasting a paid night. The unused-night note renders in the plan group's header, in
-    accent.
+    knowingly wasting a paid night.
   - What does not save is a plan outside the booking: arriving before check-in opens, or leaving
     after the by-time.
   - The plan is optional: all four fields empty means no plan. Once any is filled the rest are

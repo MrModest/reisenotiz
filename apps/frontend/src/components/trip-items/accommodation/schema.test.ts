@@ -25,7 +25,7 @@ describe('stayFormSchema', () => {
     expect(issues(booked)).toEqual([])
   })
 
-  it('accepts a later-day arrival, which leaves a paid night unused', () => {
+  it('accepts a later-day arrival', () => {
     expect(issues(plan('2026-09-06', '13:30', '2026-09-08', '11:00'))).toEqual([])
   })
 

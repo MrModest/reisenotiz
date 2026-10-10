@@ -44,7 +44,7 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
       if (!site) return
       const provided = toStayInterval(v.provided, site.tzone)
       if (isBefore(provided.out, provided.in)) issue(['provided', 'dateOut'], 'Check-out is before check-in')
-      if (!plan || !isComplete(v.planned)) return
+      if (!plan || !isValid(v.planned)) return
 
       // The plan must lie within the booking, compared as instants
       const planned = toStayInterval(v.planned, site.tzone)
@@ -63,10 +63,10 @@ export const NO_PLAN: StayIntervalValues = { dateIn: '', timeIn: '', dateOut: ''
 export const hasPlan = (v: StayIntervalValues) => Object.values(v).some(Boolean)
 
 // True when all four plan fields hold a valid date or time, so they can become a StayInterval.
-// Each plan field is optional on its own, so a half-typed plan is not complete.
-export const isComplete = (v: StayIntervalValues): v is z.infer<typeof stayIntervalSchema> => stayIntervalSchema.safeParse(v).success
+// Each plan field is optional on its own, so a half-typed plan is not valid.
+const isValid = (v: StayIntervalValues): v is z.infer<typeof stayIntervalSchema> => stayIntervalSchema.safeParse(v).success
 
-export const toStayInterval = (v: z.infer<typeof stayIntervalSchema>, zone: string): StayInterval => ({
+const toStayInterval = (v: z.infer<typeof stayIntervalSchema>, zone: string): StayInterval => ({
   in: convertTime(v.dateIn, v.timeIn, zone),
   out: convertTime(v.dateOut, v.timeOut, zone),
 })
@@ -107,7 +107,7 @@ export function stayFromFormValues(values: StayFormValues, stay: Accommodation, 
     placeKey: values.placeKey,
     stayInterval: {
       provided: toStayInterval(values.provided, site.tzone),
-      planned: isComplete(values.planned) ? toStayInterval(values.planned, site.tzone) : undefined,
+      planned: isValid(values.planned) ? toStayInterval(values.planned, site.tzone) : undefined,
     },
     guests: guest ? [...values.guests, person(guest)] : values.guests,
     rooms: values.rooms,

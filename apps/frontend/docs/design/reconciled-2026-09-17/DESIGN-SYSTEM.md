@@ -157,7 +157,7 @@ Eight named shapes in `src/lib/datetime/`, and no screen invents a ninth
 | --- | --- | --- |
 | `time` | `08:40` | timeline time column; both flight hero ends; stay hero `FROM 14:00` / `BY 11:00`; both forms' time fields |
 | `dayShort` | `Sat, 05 Sep` | timeline day header; both stay hero dates; flight view subline |
-| `dayMonth` | `5 Sep` | timeline row date prefix; stay hero planned row; the unused-night note |
+| `dayMonth` | `5 Sep` | timeline row date prefix; stay hero planned row |
 | `dayOfMonth` + `monthShort` | `05` / `Sep` | the trip-list date block, as two values |
 | `dateRange` | `5 – 16 Sep 2026` | home card meta line; timeline `PageHeader` subtitle |
 | `utcOffset` | `UTC+2` | under each flight hero airport code; stay view subline |

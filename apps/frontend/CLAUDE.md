@@ -248,11 +248,9 @@ before adding a new one — most needs are already covered.
   no contacts; an empty name saves none.
   `stayInterval` holds the booked `provided` interval and the traveller's optional `planned` one.
   `nights.ts` holds `countNights(provided)`, the calendar dates from check-in to check-out, never from
-  the plan, and `unusedNightNote(stayInterval)` (`Arriving 6 Sep · 1 paid night unused`, and the
-  `Leaving …` mirror) when the plan starts or ends on another day than the booking. The view's title
-  is the site's name, or `Unknown place` with no `City, Country · UTC+2` subline on a dangling link;
-  its hero renders from the stay alone, with the `You arrive` / `You leave` row and the note only when
-  there is a plan. `schema.ts` holds `stayFormSchema(places)`, `stayFormValues(stay)` and
+  the plan. The view's title is the site's name, or `Unknown place` with no `City, Country · UTC+2`
+  subline on a dangling link; its hero renders from the stay alone, with the `You arrive` /
+  `You leave` row only when there is a plan. `schema.ts` holds `stayFormSchema(places)`, `stayFormValues(stay)` and
   `stayFromFormValues(values, stay, places)`, which anchors every time to the site's zone. The plan
   is four optional fields, all empty for no plan, cleared by the `Plan` group's `Clear`; the schema
   asks for the rest once any is typed and refuses a plan outside the booking, compared as instants
