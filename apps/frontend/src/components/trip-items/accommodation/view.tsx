@@ -62,7 +62,7 @@ function StayHero({ stayInterval }: { stayInterval: Accommodation['stayInterval'
       <div className='flex items-center justify-between gap-3'>
         <HeroEnd label='Check-in' day={formatTo.dayShort(provided.in)} time={`From ${formatTo.time(provided.in)}`} />
         <div className='flex shrink-0 flex-col items-center'>
-          <span className='text-[20px] leading-none font-semibold text-brand tabular-nums'>{nights}</span>
+          <span className='font-mono text-[20px] leading-none font-semibold text-brand'>{nights}</span>
           <Caps>{nights === 1 ? 'Night' : 'Nights'}</Caps>
         </div>
         <HeroEnd label='Check-out' day={formatTo.dayShort(provided.out)} time={`By ${formatTo.time(provided.out)}`} end />

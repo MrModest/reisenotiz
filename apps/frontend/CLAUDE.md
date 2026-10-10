@@ -128,7 +128,7 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
   mutation hook, then navigate.
 - **Views are read-only** — no form, no draft state.
 - **Validate twice**: the form for UX (required, lengths), the store mutation hook for
-  invariants.
+  invariants (`assertValidTripItem` in `src/store/invariants.ts`, which throws).
 
 ### Component Architecture
 

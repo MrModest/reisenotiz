@@ -5,6 +5,7 @@ import { generateUUID } from '@/types/common/uuid'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
 import type { RootDoc, TripDoc } from './automerge/types'
 import { withoutUndefined } from './automerge/without-undefined'
+import { assertValidTripItem } from './invariants'
 
 function useRootDoc() {
   return useDocument<RootDoc>(useRootDocUrl(), { suspense: true })
@@ -107,6 +108,7 @@ export function useDeleteTrip() {
 export function useCreateTripItem(tripId: string) {
   const [, changeTripDoc] = useTripDoc(tripId)
   return (item: Omit<TripItem, 'id'>): string => {
+    assertValidTripItem(item)
     const id = generateUUID()
     changeTripDoc((d) => {
       d.tripItems[id] = withoutUndefined({ ...item, id } as TripItem)
@@ -118,6 +120,7 @@ export function useCreateTripItem(tripId: string) {
 export function useUpdateTripItem(tripId: string) {
   const [, changeTripDoc] = useTripDoc(tripId)
   return (itemId: string, item: TripItem): void => {
+    assertValidTripItem(item)
     const next = withoutUndefined(item)
     changeTripDoc((d) => {
       const stored = d.tripItems[itemId]
