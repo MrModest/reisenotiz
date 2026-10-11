@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react'
 import { Repo, RepoContext, interpretAsDocumentId, type DocHandle } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
 import { EMPTY_ROOT_DOC, type RootDoc, type TripDoc } from './automerge/types'
-import { usePlaceUsage, useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type PlaceSaveResult } from './saved-places'
+import { countPlaceUsage, usePlaceUsage, useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type PlaceSaveResult } from './saved-places'
 import type { AccommodationSite, Airport, TripItem } from '@/types'
 
 function setup() {
@@ -213,6 +213,18 @@ describe('saved places', () => {
     const { result: resolved } = renderHook(() => [useSavedPlace(key), useSavedPlace('NOPE')], { wrapper })
     expect(resolved.current[0]).toEqual({ type: 'AccommodationSite', key, place: site() })
     expect(resolved.current[1]).toBeUndefined()
+  })
+})
+
+describe('countPlaceUsage', () => {
+  it('counts each item once per place it links, across trip files, and skips unknown types', () => {
+    const tripFile = (...items: TripItem[]) => ({ trip: {} as TripDoc['trip'], tripItems: Object.fromEntries(items.map((i) => [i.id, i])) })
+    const usage = countPlaceUsage([
+      tripFile(flightLinking('f1', 'BER', 'MUC'), stayLinking('s1', 'site-1')),
+      tripFile(flightLinking('f2', 'BER', 'BER'), { id: 'x', type: 'Train', placeKey: 'BER' } as unknown as TripItem),
+    ])
+
+    expect(Object.fromEntries(usage)).toEqual({ BER: 2, MUC: 1, 'site-1': 1 })
   })
 })
 

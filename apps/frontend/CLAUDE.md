@@ -104,7 +104,8 @@ in this app.
   missing place change nothing. `usePlaceUsage()` maps each place key to the number of trip items
   linking it across every trip file; `remove` returns `false` and changes nothing for a place in
   use, counted over the trip files this device has loaded. A CRDT cannot enforce that block
-  against a concurrent link, so every link still renders an `Unknown place` fallback.
+  against a concurrent link, so a dangling link never crashes: a stay reads `Unknown place`, and a
+  flight renders from its IATA code.
 - **Document model**: `RootDoc` per user, `TripDoc` per trip — see
   `/docs/adr/0004-automerge-document-model.md` for the shape and why.
 - `RootDoc` holds the saved places in two maps keyed differently on purpose: `savedAirports` by

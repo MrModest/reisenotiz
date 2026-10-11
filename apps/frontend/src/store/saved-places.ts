@@ -13,6 +13,7 @@ import {
   type PlaceTypes,
   type SavedPlace,
   type TripItem,
+  type TripItemType,
 } from '@/types'
 
 export type PlaceSaveError = 'key-taken' | 'not-found'
@@ -64,11 +65,17 @@ export function useSavedPlace(placeKey: string | undefined): SavedPlaceEntry | u
   return useSavedPlaces().find((entry) => entry.key === placeKey)
 }
 
+// Exhaustive like the trip item registry, which the store cannot import, so a new type does not
+// compile until it says what it links
+const linkedPlaceKeysByType: { [K in TripItemType]: (item: Extract<Flight | Accommodation, { type: K }>) => string[] } = {
+  Flight: (flight) => [flight.departure.placeKey, flight.arrival.placeKey],
+  Accommodation: (stay) => [stay.placeKey],
+}
+
 // Items of a type this build does not know link nothing
 function linkedPlaceKeys(item: TripItem): string[] {
-  if (item.type === 'Flight') return [(item as Flight).departure.placeKey, (item as Flight).arrival.placeKey]
-  if (item.type === 'Accommodation') return [(item as Accommodation).placeKey]
-  return []
+  if (!Object.prototype.hasOwnProperty.call(linkedPlaceKeysByType, item.type)) return []
+  return (linkedPlaceKeysByType[item.type] as (item: TripItem) => string[])(item)
 }
 
 // How many trip items link each place, by key; an item linking a place twice counts once
