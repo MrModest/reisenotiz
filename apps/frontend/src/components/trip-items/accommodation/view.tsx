@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { formatTo } from '@/lib/datetime'
 import { routes } from '@/lib/routes'
-import { cn } from '@/lib/utils'
+import { cn, joinWith } from '@/lib/utils'
 import { countryName } from '@/services'
 import { useSavedPlace } from '@/store'
 import type { Accommodation, StayInterval } from '@/types'
@@ -17,7 +17,7 @@ export function AccommodationView({ item: stay }: { item: Accommodation }) {
   const entry = useSavedPlace(stay.placeKey)
   const site = entry?.type === 'AccommodationSite' ? entry.place : undefined
   // One offset above the hero covers all of its times, which share the site's zone
-  const where = site && [site.address.city, countryName(site.address.countryCode)].filter(Boolean).join(', ')
+  const where = site && joinWith(', ', [site.address.city, countryName(site.address.countryCode)])
   const subline = where && `${where} · ${formatTo.utcOffset(stay.stayInterval.provided.in)}`
 
   return (

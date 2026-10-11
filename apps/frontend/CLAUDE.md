@@ -52,6 +52,7 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
   `useTheme` (`src/hooks/use-theme.ts`) stores an explicit choice in `localStorage`, and the only
   control for it is Settings' Appearance section
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
+- Use `joinWith(separator, parts)` from `@/lib/utils` to join the parts of a line that are present
 - **Design System**: `docs/design/reconciled-2026-09-17/` defines radius, spacing, colour, type and
   every screen. ALWAYS consult it when creating or modifying UI components; start at its
   `DESIGN-SYSTEM.md`, then `SCREENS.md` for the screen you are building

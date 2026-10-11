@@ -1,6 +1,6 @@
 import { formatTo } from '@/lib/datetime'
 import { routes } from '@/lib/routes'
-import { cn } from '@/lib/utils'
+import { cn, joinWith } from '@/lib/utils'
 import { useSavedPlace } from '@/store'
 import type { Flight, FlightPoint } from '@/types'
 import { AddressLink } from '../shared/address-link'
@@ -13,7 +13,7 @@ import { PersonChips } from '../shared/person-chips'
 export function FlightView({ item: flight }: { item: Flight }) {
   const departure = useSavedPlace(flight.departure.placeKey)
   const arrival = useSavedPlace(flight.arrival.placeKey)
-  const subline = [flight.carrier, formatTo.dayShort(flight.departure.time)].filter(Boolean).join(' · ')
+  const subline = joinWith(' · ', [flight.carrier, formatTo.dayShort(flight.departure.time)])
 
   return (
     <>
@@ -60,7 +60,7 @@ function FlightHero({ flight }: { flight: Flight }) {
 
 // The offset sits under the code on both ends, always, so the hero has one height
 function HeroEnd({ point, end }: { point: FlightPoint; end?: boolean }) {
-  const where = [point.terminal, point.gate && `Gate ${point.gate}`].filter(Boolean).join(' · ')
+  const where = joinWith(' · ', [point.terminal, point.gate && `Gate ${point.gate}`])
 
   return (
     <div className={cn('flex min-w-0 flex-1 flex-col', end && 'items-end text-right')}>

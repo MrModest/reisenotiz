@@ -1,3 +1,4 @@
+import { joinWith } from '@/lib/utils'
 import type { Flight, FlightPoint } from '@/types'
 import type { TripItemModule } from '../module'
 import { createFlightDraft } from './draft'
@@ -5,7 +6,7 @@ import { FlightForm } from './form'
 import { FlightView } from './view'
 
 // The link is the airport's IATA code, so the summary needs no lookup and survives a dangling link
-const place = (point: FlightPoint) => [point.placeKey, point.terminal].filter(Boolean).join(' ')
+const place = (point: FlightPoint) => joinWith(' ', [point.placeKey, point.terminal])
 
 export const flightModule: TripItemModule<Flight> = {
   type: 'Flight',
@@ -19,7 +20,7 @@ export const flightModule: TripItemModule<Flight> = {
       type: 'Flight',
       at: flight.departure.time,
       title: flight.flightNumber,
-      summary: ['Departure', place(flight.departure), flight.seat && `Seat ${flight.seat}`].filter(Boolean).join(' · '),
+      summary: joinWith(' · ', ['Departure', place(flight.departure), flight.seat && `Seat ${flight.seat}`]),
     },
     {
       id: `${flight.id}-arrival`,

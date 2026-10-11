@@ -1,3 +1,4 @@
+import { joinWith } from '@/lib/utils'
 import { useEffect, useState } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
@@ -100,12 +101,12 @@ function SitePicker({ id, linked, onPick }: PickerProps) {
 function PlacePreview({ entry }: { entry: SavedPlaceEntry }) {
   const { place } = entry
   const title = `${place.name} · ${entry.type === 'Airport' ? entry.place.code : entry.place.kind}`
-  const address = [place.address.line, place.address.city].filter(Boolean).join(', ')
+  const address = joinWith(', ', [place.address.line, place.address.city])
 
   return (
     <div className='px-0.5 wrap-anywhere'>
       <p className='text-sm'>{title}</p>
-      <p className='font-mono text-[11px] text-muted-foreground'>{[address, place.tzone].filter(Boolean).join(' · ')}</p>
+      <p className='font-mono text-[11px] text-muted-foreground'>{joinWith(' · ', [address, place.tzone])}</p>
     </div>
   )
 }

@@ -1,3 +1,4 @@
+import { joinWith } from '@/lib/utils'
 import type { ReactNode } from 'react'
 import { useMapUrl } from '@/hooks/use-map-url'
 import type { Place } from '@/types'
@@ -15,7 +16,7 @@ export function AddressLink({ label, place, children }: { label: string; place: 
 
 function PlaceAddress({ place, children }: { place: Place; children?: ReactNode }) {
   const url = useMapUrl(place)
-  const address = [place.address.line, place.address.city].filter(Boolean).join(', ')
+  const address = joinWith(', ', [place.address.line, place.address.city])
 
   return (
     <div className='flex flex-col gap-0.5 wrap-anywhere'>

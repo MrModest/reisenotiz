@@ -1,5 +1,5 @@
 import { useSyncStatus, type SyncStatus } from '@/hooks/use-sync-status'
-import { cn } from '@/lib/utils'
+import { cn, joinWith } from '@/lib/utils'
 
 const LABEL: Record<SyncStatus, string> = {
   synced: 'Synced',
@@ -29,7 +29,7 @@ export function SyncStatusBadge({ variant, collapsed = false }: SyncStatusBadgeP
     <div
       role='status'
       aria-live='polite'
-      title={collapsed ? [label, note].filter(Boolean).join(' · ') : undefined}
+      title={collapsed ? joinWith(' · ', [label, note]) : undefined}
       className={cn(
         'flex shrink-0 flex-col gap-1 font-mono text-[10px] tracking-[.08em] uppercase',
         status === 'offline' || status === 'disabled' ? 'text-brand' : 'text-muted-foreground',
