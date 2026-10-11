@@ -14,3 +14,4 @@ export {
   useDeleteTripItem,
 } from './trips'
 export { findSavedPlace, useSavedPlaces, useSavedPlace, useSavedPlaceMutations, type SavedPlaceEntry, type PlaceSaveError, type PlaceSaveResult } from './saved-places'
+export { stayIntervalIssues } from './invariants'

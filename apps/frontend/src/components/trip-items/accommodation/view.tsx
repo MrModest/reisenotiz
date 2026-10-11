@@ -17,9 +17,8 @@ export function AccommodationView({ item: stay }: { item: Accommodation }) {
   const entry = useSavedPlace(stay.placeKey)
   const site = entry?.type === 'AccommodationSite' ? entry.place : undefined
   // One offset above the hero covers all of its times, which share the site's zone
-  const subline =
-    site &&
-    [[site.address.city, countryName(site.address.countryCode)].filter(Boolean).join(', '), formatTo.utcOffset(stay.stayInterval.provided.in)].join(' · ')
+  const where = site && [site.address.city, countryName(site.address.countryCode)].filter(Boolean).join(', ')
+  const subline = where && `${where} · ${formatTo.utcOffset(stay.stayInterval.provided.in)}`
 
   return (
     <>

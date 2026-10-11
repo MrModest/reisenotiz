@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { schemas } from '@/lib/validations/commons'
-import { convertTime, DateTime, formatTo } from '@/lib/datetime'
-import { findSavedPlace, type SavedPlaceEntry } from '@/store'
+import { convertTime, formatTo } from '@/lib/datetime'
+import { findSavedPlace, stayIntervalIssues, type SavedPlaceEntry } from '@/store'
 import { generateUUID, type Accommodation, type StayInterval } from '@/types'
 
 const stayIntervalSchema = z.object({ dateIn: schemas.date, timeIn: schemas.time, dateOut: schemas.date, timeOut: schemas.time })
@@ -25,23 +25,16 @@ export const stayFormSchema = (places: SavedPlaceEntry[]) =>
       attachments: z.array(schemas.attachment),
     })
     .superRefine((v, ctx) => {
-      const issue = (path: string[], message: string) => ctx.addIssue({ code: 'custom', path, message })
       const site = findSavedPlace(places, 'AccommodationSite', v.placeKey)
+      // placeKey's own refine reports a missing site; without one there is no zone to read the times in
       if (!site) return
-      const provided = toStayInterval(v.provided, site.tzone)
-      if (isBefore(provided.out, provided.in)) issue(['provided', 'dateOut'], 'Check-out is before check-in')
-      if (!v.planned) return
-
-      // The plan must lie within the booking, compared as instants
-      const planned = toStayInterval(v.planned, site.tzone)
-      if (isBefore(planned.in, provided.in)) issue(['planned', 'dateIn'], 'You arrive before check-in')
-      if (isBefore(provided.out, planned.out)) issue(['planned', 'dateOut'], 'You leave after check-out')
-      if (isBefore(planned.out, planned.in)) issue(['planned', 'dateOut'], 'You leave before you arrive')
+      const stayInterval = { provided: toStayInterval(v.provided, site.tzone), planned: v.planned && toStayInterval(v.planned, site.tzone) }
+      for (const { interval, end, message } of stayIntervalIssues(stayInterval)) {
+        ctx.addIssue({ code: 'custom', path: [interval, end === 'in' ? 'dateIn' : 'dateOut'], message })
+      }
     })
 
 export type StayFormValues = z.infer<ReturnType<typeof stayFormSchema>>
-
-const isBefore = (a: StayInterval['in'], b: StayInterval['in']) => DateTime.from(a).isBefore(DateTime.from(b))
 
 const toStayInterval = (v: z.infer<typeof stayIntervalSchema>, zone: string): StayInterval => ({
   in: convertTime(v.dateIn, v.timeIn, zone),

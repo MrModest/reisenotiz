@@ -490,7 +490,7 @@ store — submit re-anchors both typed values to the chosen place's zone.
 - **One place picker**, labelled `PROPERTY`. The accommodation combobox **lists saved sites only**,
   so on a fresh install it is empty and `Add` is the first move — the geocoder that would populate
   it is out of scope.
-- **The provided interval**, then the **planned** group. The planned interval **must lie within the
+- **The provided interval** in a `BOOKING` group, then the `PLAN` group. The planned interval **must lie within the
   provided one**: `planned.in >= provided.in` and `planned.out <= provided.out`, validated and
   blocking. Two instant comparisons, no time-of-day reasoning.
   - A planned arrival on a **later day** than check-in is legal and saves — the traveller is

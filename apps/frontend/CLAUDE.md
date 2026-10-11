@@ -129,7 +129,8 @@ The reasoning is in `docs/adr/0001-drafts-never-enter-the-store.md`. In practice
 - **Views are read-only** — no form, no draft state.
 - **Validate twice**: the form for UX (required, lengths), the store mutation hook for
   invariants (`assertValidTripItem` in `src/store/invariants.ts`, which throws; a stay must link a
-  saved site).
+  saved site). The stay's interval rules are one `stayIntervalIssues`, which its form schema also
+  reads, so the form and the store cannot drift.
 
 ### Component Architecture
 
@@ -221,7 +222,8 @@ before adding a new one — most needs are already covered.
 - Shared parts in `shared/`: for views, `FactList` / `FactRow`, `AddressLink` (over `useMapUrl`;
   a missing place reads a muted `Unknown place` with no link), `NotesBlock`, `AttachmentChips`,
   `DetailActions`; for forms, `FieldLabel` (and `SectionLabel`, the same mono caps over a block that
-  is not a control), `DateTimeField`, `PlacePicker`, `PersonChips` (read-only without `onChange`),
+  is not a control; `FormGroup`, a group heading over a rule with an optional action beside it),
+  `DateTimeField`, `PlacePicker`, `PersonChips` (read-only without `onChange`),
   `FormActions`, and the React Hook Form wrappers `FieldInput`, `FieldTextarea` and `FieldAttachments`.
   `AddressLink` renders its `children` beneath the address, as the stay's phone.
   `NotesBlock`, `FactRow`, `AddressLink`, `PersonChips` and `AttachmentChips` carry

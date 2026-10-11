@@ -140,7 +140,7 @@ Without `--font-mono` the timeline's time column stops aligning.
   `font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground`. It is a plain `div` or
   `h3`, **not** a `Label` — it has no control.
 - **A group heading** inside a form — a mono caps label over a rule, heading several labelled
-  controls (the flight's `DEPARTURE` / `ARRIVAL`, the stay's `PLAN`) — takes `text-foreground`
+  controls (the flight's `DEPARTURE` / `ARRIVAL`, the stay's `BOOKING` / `PLAN`) — takes `text-foreground`
   instead, so it outranks the muted labels beneath it.
 - A `Label` is used only where a real control follows, and always carries `htmlFor`.
 - **Numbers set in Inter take `tabular-nums`** — stat values, the countdown. Times and codes are

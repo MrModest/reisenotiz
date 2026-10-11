@@ -8,7 +8,7 @@ import type { TripItemFormProps } from '../module'
 import { DateTimeField } from '../shared/date-time-field'
 import { FieldAttachments } from '../shared/field-attachments'
 import { FieldInput } from '../shared/field-input'
-import { FieldLabel, SectionLabel } from '../shared/field-label'
+import { FieldLabel, FormGroup, SectionLabel } from '../shared/field-label'
 import { FieldTextarea } from '../shared/field-textarea'
 import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
@@ -31,8 +31,10 @@ export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFo
       >
         <div className='flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4'>
           <PlacePicker type='AccommodationSite' name='placeKey' label='Property' />
-          <DateTimeField dateName='provided.dateIn' timeName='provided.timeIn' dateLabel='Check-in' timeLabel='From' />
-          <DateTimeField dateName='provided.dateOut' timeName='provided.timeOut' dateLabel='Check-out' timeLabel='By' />
+          <FormGroup label='Booking'>
+            <DateTimeField dateName='provided.dateIn' timeName='provided.timeIn' dateLabel='Check-in' timeLabel='From' />
+            <DateTimeField dateName='provided.dateOut' timeName='provided.timeOut' dateLabel='Check-out' timeLabel='By' />
+          </FormGroup>
           <PlanGroup />
           <div className='pt-3'>
             <GuestsField />
@@ -59,9 +61,9 @@ function PlanGroup() {
   const planned = useWatch<StayFormValues, 'planned'>({ name: 'planned' })
 
   return (
-    <section aria-label='Plan' className='flex flex-col gap-3 pt-3'>
-      <div className='flex items-baseline justify-between gap-3 border-b border-border pb-2 font-mono text-[10px] tracking-[.08em] uppercase'>
-        <h3>Plan</h3>
+    <FormGroup
+      label='Plan'
+      action={
         <button
           type='button'
           className='text-muted-foreground uppercase hover:text-foreground'
@@ -73,14 +75,15 @@ function PlanGroup() {
         >
           {planned ? 'Clear' : 'Add plan'}
         </button>
-      </div>
+      }
+    >
       {planned && (
         <>
           <DateTimeField dateName='planned.dateIn' timeName='planned.timeIn' dateLabel='You arrive' timeLabel='At' />
           <DateTimeField dateName='planned.dateOut' timeName='planned.timeOut' dateLabel='You leave' timeLabel='At' />
         </>
       )}
-    </section>
+    </FormGroup>
   )
 }
 
