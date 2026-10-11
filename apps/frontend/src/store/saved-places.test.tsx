@@ -3,9 +3,9 @@ import { Suspense, type ReactNode } from 'react'
 import { act, renderHook } from '@testing-library/react'
 import { Repo, RepoContext, interpretAsDocumentId, type DocHandle } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
-import { EMPTY_ROOT_DOC, type RootDoc } from './automerge/types'
-import { useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type PlaceSaveResult } from './saved-places'
-import type { AccommodationSite, Airport } from '@/types'
+import { EMPTY_ROOT_DOC, type RootDoc, type TripDoc } from './automerge/types'
+import { usePlaceUsage, useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type PlaceSaveResult } from './saved-places'
+import type { AccommodationSite, Airport, TripItem } from '@/types'
 
 function setup() {
   const repo = new Repo({ network: [] })
@@ -27,7 +27,22 @@ function setup() {
     return { savedAirports, savedAccommodationSites }
   }
   const { result } = renderHook(() => ({ places: useSavedPlaces(), mutate: useSavedPlaceMutations() }), { wrapper })
-  return { wrapper, doc, result }
+  return { repo, rootHandle, wrapper, doc, result }
+}
+
+// Only the links matter to the usage count, so an item carries nothing else
+const flightLinking = (id: string, from: string, to: string) =>
+  ({ id, type: 'Flight', departure: { placeKey: from }, arrival: { placeKey: to } }) as unknown as TripItem
+const stayLinking = (id: string, placeKey: string) => ({ id, type: 'Accommodation', placeKey }) as unknown as TripItem
+
+function addTripFile(repo: Repo, rootHandle: DocHandle<RootDoc>, id: string, items: TripItem[]) {
+  const handle = repo.create<TripDoc>({
+    trip: { id } as TripDoc['trip'],
+    tripItems: Object.fromEntries(items.map((item) => [item.id, item])),
+  })
+  rootHandle.change((d) => {
+    d.tripIndex[id] = handle.url
+  })
 }
 
 const airport = (overrides: Partial<Airport> = {}): Airport => ({
@@ -198,6 +213,51 @@ describe('saved places', () => {
     const { result: resolved } = renderHook(() => [useSavedPlace(key), useSavedPlace('NOPE')], { wrapper })
     expect(resolved.current[0]).toEqual({ type: 'AccommodationSite', key, place: site() })
     expect(resolved.current[1]).toBeUndefined()
+  })
+})
+
+describe('saved places in use', () => {
+  async function inUse() {
+    const setupResult = setup()
+    const { repo, rootHandle, result } = setupResult
+    let siteKey = ''
+    await act(async () => {
+      result.current.mutate.add('Airport', airport())
+      result.current.mutate.add('Airport', airport({ code: 'MUC', name: 'Munich' }))
+      result.current.mutate.add('Airport', airport({ code: 'LIS', name: 'Lisbon' }))
+      siteKey = keyOf(result.current.mutate.add('AccommodationSite', site()))
+      addTripFile(repo, rootHandle, 'trip-a', [flightLinking('f1', 'BER', 'MUC'), stayLinking('s1', siteKey)])
+      addTripFile(repo, rootHandle, 'trip-b', [flightLinking('f2', 'MUC', 'BER'), flightLinking('f3', 'BER', 'BER')])
+    })
+    return { ...setupResult, siteKey }
+  }
+
+  it('counts the trip items linking each place across trip files', async () => {
+    const { wrapper, siteKey } = await inUse()
+    const { result } = renderHook(() => usePlaceUsage(), { wrapper })
+    await act(async () => {})
+
+    expect(result.current.get('BER')).toBe(3)
+    expect(result.current.get('MUC')).toBe(2)
+    expect(result.current.get(siteKey)).toBe(1)
+    expect(result.current.get('LIS')).toBeUndefined()
+  })
+
+  it('refuses to remove a place a trip item links, and removes an unused one', async () => {
+    const { result, doc, siteKey } = await inUse()
+    let refused: boolean | undefined
+    let removed: boolean | undefined
+    await act(async () => {
+      refused = result.current.mutate.remove('Airport', 'BER')
+      result.current.mutate.remove('AccommodationSite', siteKey)
+      removed = result.current.mutate.remove('Airport', 'LIS')
+    })
+
+    expect(refused).toBe(false)
+    expect(removed).toBe(true)
+    expect(doc().savedAirports.BER).toBeDefined()
+    expect(doc().savedAccommodationSites[siteKey]).toBeDefined()
+    expect(doc().savedAirports.LIS).toBeUndefined()
   })
 })
 

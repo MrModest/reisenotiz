@@ -101,7 +101,10 @@ in this app.
   the document inside its own change, since another device may have changed it since the render:
   `add` refuses a key already saved and `update` a place deleted meanwhile, both as a typed
   `PlaceSaveResult` (`key-taken` / `not-found`), and `archive`, `restore` and `remove` of a
-  missing place change nothing.
+  missing place change nothing. `usePlaceUsage()` maps each place key to the number of trip items
+  linking it across every trip file; `remove` returns `false` and changes nothing for a place in
+  use, counted over the trip files this device has loaded. A CRDT cannot enforce that block
+  against a concurrent link, so every link still renders an `Unknown place` fallback.
 - **Document model**: `RootDoc` per user, `TripDoc` per trip — see
   `/docs/adr/0004-automerge-document-model.md` for the shape and why.
 - `RootDoc` holds the saved places in two maps keyed differently on purpose: `savedAirports` by
@@ -278,8 +281,10 @@ before adding a new one — most needs are already covered.
   `PlaceForm`, whose `Save` is disabled until the form is dirty. The airport's code is fixed once
   saved, because it is the key; typing a code the airport dictionary knows prefills the rest.
 - `SavedPlaceRow` owns its `min-w-0`. The Places screen (`src/pages/saved-places.tsx`) owns the row
-  shell and its `Archive` / `Restore` / `Delete` actions, and derives its chips from the types
-  present.
+  shell and its actions, and derives its chips from the types present. An archived place offers
+  `Restore`; a place in use shows its usage count, `Archive` and a disabled `Delete`; an unused
+  place offers `Delete`. Archived places are left out of both pickers and still resolve wherever
+  they are linked.
 - A flight point links its airport by `placeKey`, the IATA code it is saved under, and a stay its
   site by `placeKey`, the site's uuid. Each resolves at the point of use with `useSavedPlace` or,
   where a hook cannot run, `findSavedPlace(places, type, key)`. `useAirports()` lists saved airports that are not

@@ -1,9 +1,19 @@
 import { useMemo } from 'react'
-import { useDocument } from '@automerge/react'
+import { interpretAsDocumentId, useDocument, useDocuments, useRepo, type Repo } from '@automerge/react'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
-import type { RootDoc } from '@/store/automerge/types'
+import type { RootDoc, TripDoc } from '@/store/automerge/types'
 import { withoutUndefined } from '@/store/automerge/without-undefined'
-import { generateUUID, type Airport, type Place, type PlaceType, type PlaceTypes, type SavedPlace } from '@/types'
+import {
+  generateUUID,
+  type Accommodation,
+  type Airport,
+  type Flight,
+  type Place,
+  type PlaceType,
+  type PlaceTypes,
+  type SavedPlace,
+  type TripItem,
+} from '@/types'
 
 export type PlaceSaveError = 'key-taken' | 'not-found'
 export type PlaceSaveResult = { ok: true; key: string } | { ok: false; reason: PlaceSaveError }
@@ -54,12 +64,47 @@ export function useSavedPlace(placeKey: string | undefined): SavedPlaceEntry | u
   return useSavedPlaces().find((entry) => entry.key === placeKey)
 }
 
+// Items of a type this build does not know link nothing
+function linkedPlaceKeys(item: TripItem): string[] {
+  if (item.type === 'Flight') return [(item as Flight).departure.placeKey, (item as Flight).arrival.placeKey]
+  if (item.type === 'Accommodation') return [(item as Accommodation).placeKey]
+  return []
+}
+
+// How many trip items link each place, by key; an item linking a place twice counts once
+export function countPlaceUsage(tripDocs: Iterable<TripDoc>): Map<string, number> {
+  const usage = new Map<string, number>()
+  for (const doc of tripDocs) {
+    for (const item of Object.values(doc.tripItems)) {
+      for (const key of new Set(linkedPlaceKeys(item))) usage.set(key, (usage.get(key) ?? 0) + 1)
+    }
+  }
+  return usage
+}
+
+export function usePlaceUsage(): Map<string, number> {
+  const [doc] = useRootDoc()
+  const [tripDocs] = useDocuments<TripDoc>(Object.values(doc.tripIndex), { suspense: true })
+  return useMemo(() => countPlaceUsage(tripDocs.values()), [tripDocs])
+}
+
+// The trip files this device has loaded; one it has not cannot be counted, which the
+// `Unknown place` fallback covers
+function residentTripDocs(repo: Repo, tripIndex: RootDoc['tripIndex']): TripDoc[] {
+  return Object.values(tripIndex).flatMap((url) => {
+    const handle = repo.handles[interpretAsDocumentId(url)]
+    return handle?.isReady() ? [handle.doc() as TripDoc] : []
+  })
+}
+
 // Every check runs inside the change against the document as it is then, not as a render saw it:
 // another device may have added or deleted the place in between.
 // - `add` never overwrites: a key already saved is refused as `key-taken`.
 // - `update` never recreates: a place deleted meanwhile is refused as `not-found`.
+// - `remove` refuses a place a trip item links, returning false.
 // - `archive`, `restore` and `remove` of a missing place change nothing.
 export function useSavedPlaceMutations() {
+  const repo = useRepo()
   const [, changeDoc] = useRootDoc()
 
   return {
@@ -102,11 +147,17 @@ export function useSavedPlaceMutations() {
       })
     },
 
-    remove(type: PlaceType, key: string) {
+    remove(type: PlaceType, key: string): boolean {
+      let removed = true
       changeDoc((d) => {
+        if (countPlaceUsage(residentTripDocs(repo, d.tripIndex)).get(key)) {
+          removed = false
+          return
+        }
         const places = d[mapOf[type]]
         if (places?.[key]) delete places[key]
       })
+      return removed
     },
 
     // Picking a dictionary airport saves it before anything uses it; one already saved is kept as is.
