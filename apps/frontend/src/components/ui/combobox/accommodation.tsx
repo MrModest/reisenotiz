@@ -1,3 +1,4 @@
+import { joinWith } from '@/lib/utils'
 import { useState } from 'react'
 import { Item, ItemContent, ItemDescription, ItemTitle } from '../item'
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './base'
@@ -57,7 +58,7 @@ export function AccommodationSelector({ id, items, selected = null, onSelect }: 
                 <ItemContent>
                   <ItemTitle className='block w-full truncate'>{record.place.name}</ItemTitle>
                   <ItemDescription>
-                    {record.place.kind} — {[record.place.address.city, countryName(record.place.address.countryCode)].filter(Boolean).join(', ')}
+                    {record.place.kind} — {joinWith(', ', [record.place.address.city, countryName(record.place.address.countryCode)])}
                   </ItemDescription>
                 </ItemContent>
               </Item>

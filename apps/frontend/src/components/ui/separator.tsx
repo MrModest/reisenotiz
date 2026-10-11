@@ -16,14 +16,4 @@ function Separator({ className, orientation = 'horizontal', ...props }: Separato
   )
 }
 
-function SeparatorWithLabel({ label, className }: { label: string; className?: string }) {
-  return (
-    <div className={cn('grid grid-cols-[1fr_auto_1fr] items-center gap-2', className)}>
-      <Separator orientation='horizontal' />
-      <span className='text-neutral-600 text-nowrap'>{label}</span>
-      <Separator orientation='horizontal' />
-    </div>
-  )
-}
-
-export { Separator, SeparatorWithLabel }
+export { Separator }

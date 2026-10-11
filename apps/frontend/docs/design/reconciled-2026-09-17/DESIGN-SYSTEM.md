@@ -140,7 +140,7 @@ Without `--font-mono` the timeline's time column stops aligning.
   `font-mono text-[10px] tracking-[.08em] uppercase text-muted-foreground`. It is a plain `div` or
   `h3`, **not** a `Label` — it has no control.
 - **A group heading** inside a form — a mono caps label over a rule, heading several labelled
-  controls (the flight's `DEPARTURE` / `ARRIVAL`, the stay's `PLAN`) — takes `text-foreground`
+  controls (the flight's `DEPARTURE` / `ARRIVAL`, the stay's `BOOKING` / `PLAN`) — takes `text-foreground`
   instead, so it outranks the muted labels beneath it.
 - A `Label` is used only where a real control follows, and always carries `htmlFor`.
 - **Numbers set in Inter take `tabular-nums`** — stat values, the countdown. Times and codes are
@@ -157,7 +157,7 @@ Eight named shapes in `src/lib/datetime/`, and no screen invents a ninth
 | --- | --- | --- |
 | `time` | `08:40` | timeline time column; both flight hero ends; stay hero `FROM 14:00` / `BY 11:00`; both forms' time fields |
 | `dayShort` | `Sat, 05 Sep` | timeline day header; both stay hero dates; flight view subline |
-| `dayMonth` | `5 Sep` | timeline row date prefix; stay hero planned row; the unused-night note |
+| `dayMonth` | `5 Sep` | timeline row date prefix; stay hero planned row |
 | `dayOfMonth` + `monthShort` | `05` / `Sep` | the trip-list date block, as two values |
 | `dateRange` | `5 – 16 Sep 2026` | home card meta line; timeline `PageHeader` subtitle |
 | `utcOffset` | `UTC+2` | under each flight hero airport code; stay view subline |

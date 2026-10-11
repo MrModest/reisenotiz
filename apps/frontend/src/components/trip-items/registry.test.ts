@@ -77,14 +77,18 @@ describe('flight toTimelineElements', () => {
 })
 
 describe('stay toTimelineElements', () => {
-  const draft = createAccommodationDraft('trip')
+  const site: SavedPlaceEntry = {
+    type: 'AccommodationSite',
+    key: 'site-1',
+    place: { name: 'Hotel Weisses Kreuz', kind: 'Hotel', address: { countryCode: 'AT', city: 'Innsbruck', line: 'Herzog-Friedrich-Strasse 31' }, tzone: 'Europe/Vienna' },
+  }
   const stay: Accommodation = {
-    ...draft,
+    ...createAccommodationDraft('trip'),
     id: 's1',
-    site: { ...draft.site, name: 'Hotel Weisses Kreuz', address: { ...draft.site.address, line: 'Herzog-Friedrich-Strasse 31' } },
+    placeKey: 'site-1',
     stayInterval: { provided: { in: at('2026-09-05T13:00:00.000Z'), out: at('2026-09-08T08:00:00.000Z') } },
   }
-  const toElements = (s: Accommodation) => getTripItemModule('Accommodation')!.toTimelineElements(s, [])
+  const toElements = (s: Accommodation, places = [site]) => getTripItemModule('Accommodation')!.toTimelineElements(s, places)
 
   it('is a check-in and a check-out at the provided times when nothing is planned', () => {
     expect(toElements(stay)).toEqual([
@@ -97,5 +101,12 @@ describe('stay toTimelineElements', () => {
     const planned = { in: at('2026-09-05T16:40:00.000Z'), out: at('2026-09-08T07:30:00.000Z') }
     const elements = toElements({ ...stay, stayInterval: { ...stay.stayInterval, planned } })
     expect(elements.map((e) => e.at)).toEqual([planned.in, planned.out])
+  })
+
+  it('reads Unknown place, with no address, when the site link dangles', () => {
+    expect(toElements(stay, []).map((e) => [e.title, e.summary])).toEqual([
+      ['Unknown place', 'Check-in'],
+      ['Unknown place', 'Check-out'],
+    ])
   })
 })

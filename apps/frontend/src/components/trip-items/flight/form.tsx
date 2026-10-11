@@ -8,7 +8,7 @@ import type { TripItemFormProps } from '../module'
 import { DateTimeField } from '../shared/date-time-field'
 import { FieldAttachments } from '../shared/field-attachments'
 import { FieldInput } from '../shared/field-input'
-import { FieldLabel, SectionLabel } from '../shared/field-label'
+import { FieldLabel, FormGroup, SectionLabel } from '../shared/field-label'
 import { FieldTextarea } from '../shared/field-textarea'
 import { FormActions } from '../shared/form-actions'
 import { PersonChips } from '../shared/person-chips'
@@ -55,15 +55,14 @@ export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormPro
 
 function FlightPointGroup({ point, label }: { point: 'departure' | 'arrival'; label: string }) {
   return (
-    <section aria-label={label} className='flex flex-col gap-3 pt-3'>
-      <h3 className='border-b border-border pb-2 font-mono text-[10px] tracking-[.08em] uppercase'>{label}</h3>
+    <FormGroup label={label}>
       <PlacePicker type='Airport' name={`${point}.placeKey`} label='Airport' />
       <DateTimeField dateName={`${point}.date`} timeName={`${point}.time`} />
       <div className='grid grid-cols-2 gap-3'>
         <FieldInput name={`${point}.terminal`} label='Terminal' />
         <FieldInput name={`${point}.gate`} label='Gate' />
       </div>
-    </section>
+    </FormGroup>
   )
 }
 

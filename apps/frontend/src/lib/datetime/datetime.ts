@@ -136,6 +136,15 @@ export class DateTime {
   }
 
   /**
+   * Calendar dates from `earlier` to this date, each date read in its own zone; times are ignored.
+   */
+  calendarDaysSince(earlier: DateTime): number {
+    // Each wall-clock date is re-created at UTC midnight, where every day is 24 hours long
+    const date = (dt: LuxonDateTime) => LuxonDateTime.utc(dt.year, dt.month, dt.day)
+    return date(this.dt).diff(date(earlier.dt), 'days').days
+  }
+
+  /**
    * Converts this date to a different timezone.
    */
   toZone(zone: string): DateTime {

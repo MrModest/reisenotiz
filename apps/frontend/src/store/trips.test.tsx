@@ -34,7 +34,12 @@ interface Setup {
 
 function setup(): Setup {
   const repo = new Repo({ network: [] })
-  const rootHandle = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC })
+  const rootHandle = repo.create<RootDoc>({
+    ...EMPTY_ROOT_DOC,
+    savedAccommodationSites: {
+      'site-1': { name: 'Hotel Adlon', kind: 'Hotel', tzone: 'Europe/Berlin', address: { countryCode: 'DE', city: 'Berlin' } },
+    },
+  })
 
   function wrapper({ children }: { children: ReactNode }) {
     return (
@@ -98,9 +103,9 @@ function stayFixture(tripId: string): Omit<Accommodation, 'id'> {
     type: 'Accommodation',
     note: '',
     attachments: [],
-    site: { name: 'Hotel', kind: 'Hotel', address: { countryCode: 'DE', city: 'Berlin' }, tzone: zone },
+    placeKey: 'site-1',
     reservedOn: undefined,
-    guests: 1,
+    guests: [],
     rooms: 1,
     stayInterval: { provided: { in: t(1), out: t(3) }, planned: undefined },
   }
@@ -213,7 +218,7 @@ describe('trips store hooks', () => {
 
     const url = rootHandle.doc().tripIndex[tripId]
     const item = getTripDoc(repo, url).tripItems[itemId] as Accommodation
-    expect(item.site.name).toBe('Hotel')
+    expect(item.placeKey).toBe('site-1')
     expect('reservedOn' in item).toBe(false)
     expect('planned' in item.stayInterval).toBe(false)
   })
@@ -222,7 +227,7 @@ describe('trips store hooks', () => {
     const { repo, rootHandle, wrapper } = setup()
     const tripId = await createTrip(wrapper)
     const stay = stayFixture(tripId)
-    const booked: Omit<Accommodation, 'id'> = { ...stay, reservedOn: 'Kamil' }
+    const booked: Omit<Accommodation, 'id'> = { ...stay, reservedOn: { id: 'p1', fullname: 'Kamil', contacts: [] } }
     const itemId = await createItem(wrapper, tripId, booked)
 
     const { result } = renderHook(() => useUpdateTripItem(tripId), { wrapper })
@@ -235,6 +240,35 @@ describe('trips store hooks', () => {
     expect('reservedOn' in item).toBe(false)
   })
 
+
+  describe('refuses a stay that breaks its invariants', () => {
+    const at = (day: number, hour = 15) =>
+      DateTime.fromObject({ year: 2026, month: 5, day, hour }, 'Europe/Berlin').toZonedInstant()
+    const cases: [string, (s: Omit<Accommodation, 'id'>) => Omit<Accommodation, 'id'>][] = [
+      ['no property', (s) => ({ ...s, placeKey: '' })],
+      ['a property that is not saved', (s) => ({ ...s, placeKey: 'site-gone' })],
+      ['check-out before check-in', (s) => ({ ...s, stayInterval: { provided: { in: at(3), out: at(1) } } })],
+      ['a plan before check-in', (s) => ({ ...s, stayInterval: { ...s.stayInterval, planned: { in: at(1, 10), out: at(2) } } })],
+      ['a plan after check-out', (s) => ({ ...s, stayInterval: { ...s.stayInterval, planned: { in: at(2), out: at(3, 18) } } })],
+      ['a plan leaving before arriving', (s) => ({ ...s, stayInterval: { ...s.stayInterval, planned: { in: at(2, 18), out: at(2, 10) } } })],
+    ]
+
+    it.each(cases)('on create: %s', async (_, broken) => {
+      const { repo, rootHandle, wrapper } = setup()
+      const tripId = await createTrip(wrapper)
+      const { result } = renderHook(() => useCreateTripItem(tripId), { wrapper })
+      expect(() => result.current(broken(stayFixture(tripId)))).toThrow()
+      expect(getTripDoc(repo, rootHandle.doc().tripIndex[tripId]).tripItems).toEqual({})
+    })
+
+    it.each(cases)('on update: %s', async (_, broken) => {
+      const { wrapper } = setup()
+      const tripId = await createTrip(wrapper)
+      const itemId = await createItem(wrapper, tripId, stayFixture(tripId))
+      const { result } = renderHook(() => useUpdateTripItem(tripId), { wrapper })
+      expect(() => result.current(itemId, { ...broken(stayFixture(tripId)), id: itemId })).toThrow()
+    })
+  })
   it('useDeleteTripItem removes the item from its TripDoc', async () => {
     const { repo, rootHandle, wrapper } = setup()
     const tripId = await createTrip(wrapper)

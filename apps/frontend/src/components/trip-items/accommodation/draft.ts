@@ -3,8 +3,7 @@ import { generateUUID } from '@/types/common/uuid'
 import type { Accommodation } from '@/types'
 
 export function createAccommodationDraft(tripId: string): Accommodation {
-  const zone = TZ.local()
-  const time = DateTime.now(zone).toZonedInstant()
+  const time = DateTime.now(TZ.local()).toZonedInstant()
 
   return {
     id: generateUUID(),
@@ -12,15 +11,8 @@ export function createAccommodationDraft(tripId: string): Accommodation {
     type: 'Accommodation',
     note: '',
     attachments: [],
-    site: {
-      name: '',
-      kind: 'Hotel',
-      address: { countryCode: '', city: '', line: '' },
-      contact: '',
-      tzone: zone,
-    },
-    reservedOn: undefined,
-    guests: 1,
+    placeKey: '',
+    guests: [],
     rooms: 1,
     stayInterval: { provided: { in: time, out: time } },
   }
