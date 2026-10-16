@@ -4,14 +4,17 @@ import './index.css'
 import { RouterProvider } from 'react-router'
 import { router } from '@/routes'
 import { SyncProvider } from '@/contexts/sync-context'
+import { PrototypeAuthGate } from '@/contexts/prototype-auth-gate'
 import { applyTheme, getStoredTheme } from '@/hooks/use-theme'
 
 applyTheme(getStoredTheme())
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SyncProvider>
-      <RouterProvider router={router} />
-    </SyncProvider>
+    <PrototypeAuthGate>
+      <SyncProvider>
+        <RouterProvider router={router} />
+      </SyncProvider>
+    </PrototypeAuthGate>
   </StrictMode>,
 )
