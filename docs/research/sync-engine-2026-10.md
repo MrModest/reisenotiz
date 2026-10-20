@@ -12,6 +12,8 @@ Today the app uses Automerge (`@automerge/automerge-repo` 2.5.x), and a thin Hon
 
 The target is a server that owns the schema and is the source of truth. The client must work offline, keep a durable local write queue, and sync on reconnect. It must handle multiple devices, and the library must own cross-tab and WebSocket plumbing. Field-level last-write-wins, or the server deciding, is enough; collaborative text CRDTs are not needed.
 
+Trip sharing is a planned feature. The trip is the smallest shareable unit, shared with another user as **read-only or read-write**. Saved places and persons are never shared as live, editable records; sharing one hands the recipient a copy.
+
 ---
 
 ## 2. Summary table
@@ -165,7 +167,8 @@ Adopting any of them reverses ADR-0002 (Automerge), ADR-0003 (no domain knowledg
 
 - **PostgreSQL becomes mandatory.** The SQLite-default deployment ends, and Better Auth would move to Postgres too. Decide whether that is acceptable for self-hosters.
 - **FSL licence.** Confirm that the "Competing Use" clause [P3] is acceptable if a hosted Reisenotiz SaaS is ever offered. Offering Reisenotiz is not offering a sync service, but check with care.
-- **Saved places under sharing.** Today places are per-user (ADR-0005). With trip sharing, a guest must sync the owner's places used by that trip. Decide whether that is a nested subquery stream [P12] or places scoped per trip.
+- **Trip sharing roles.** A `trip_shares (trip_id, user_id, role)` table with `viewer` and `editor` roles. Read access is the Sync Streams sharing pattern [P12]. The role only matters for writes: PowerSync streams rows down and has no write permissions of its own, so the upload endpoint in Hono rejects a viewer's writes, and the client rolls them back [P7]. The UI should still hide edit controls for viewers, so they don't see edits appear and then vanish.
+- **Saved places and persons under sharing.** They belong to a user and are shared only as copies. A shared trip's items still link to the owner's places and persons, so a guest syncs those rows through the trip (`id IN (SELECT place_id FROM trip_items WHERE trip_id IN (…))` [P12]) but can't edit them; only their owner can. Open: whether an editor can link their own places into someone else's trip (the trip would then reference two users' places), and whether "copy to my places" is a plain server-side insert.
 - **Relational model.** The document shapes (RootDoc, TripDoc with nested items, `Person` inside items) exist because Automerge stores JSON documents. With Postgres the model is normalised: `trips`, `trip_items`, `persons`, saved places and join tables, linked by foreign keys. That gives field-level LWW per row, and relation-based read rules become joins. Open: which tables a trip's read rule reaches (items, persons, the places items link to), and whether `persons` belong to a user or to a trip.
 - **Key strategy.** All three expect client-generated ids (UUIDs) for offline inserts. IATA-keyed `savedAirports` need a composite or uuid key.
 - **PWA plus workers.** Verify that `vite-plugin-pwa` precaches PowerSync's wasm and worker assets, and test offline cold start (**unverified**).
