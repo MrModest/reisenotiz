@@ -42,6 +42,8 @@ Trip sharing is a planned feature. The trip is the smallest shareable unit, shar
 
 **1. Self-hosting and licence.** The service "can be self-hosted using Docker. It is published to Docker Hub as journeyapps/powersync-service." Self-hosting has no dashboard. [P1] A self-hosted instance needs a source DB connection, "A bucket storage database … MongoDB and Postgres are supported", client auth and a sync config. [P4] For Postgres bucket storage, source and storage can share one server on PG 14+: "Using the same database (with separate schemas) is supported but may lead to higher CPU usage." [P4]
 
+Bucket storage is PowerSync's own derived data: "Each bucket stores the *recent history* of operations on each row", append-only and compacted, so reconnecting clients receive only what they missed; "the source database is not queried directly during streaming". [P22] Its on-disk format has a storage version. Version 4 is the default on MongoDB since Service 1.27.0, while Postgres bucket storage stays on version 2: "Postgres bucket storage does not currently support version 4." [P4] Version 4 adds two things. **Incremental reprocessing**: deploying a Sync Streams change rebuilds only the streams that changed, instead of everything. **S3 object storage**: large blocks of bucket data move to S3. [P23] On Postgres (version 2), every sync-rule deploy reprocesses all selected data in the background and then has every client download its data once more. [P23] At Reisenotiz's scale (a few users, kilobytes to megabytes each) that costs seconds, not a reason to run MongoDB. "Incremental reprocessing for Postgres and other source databases is planned", with no date. [P23]
+
 The service licence is **FSL-1.1-ALv2**. Use is permitted for any purpose "other than a Competing Use", and the licence grants Apache-2.0 "effective on the second anniversary of the date we make the Software available." [P3] Hosting it for your own app is a permitted use. The JS SDK (`powersync-ja/powersync-js`) is Apache-2.0. [P2] An Enterprise Self-Hosted Edition exists, but nothing requires it. [P1] Self-hosted instances report anonymous usage metrics through OpenTelemetry "unless you opt-out". [P19]
 
 Resulting compose services: `app`, `sync` (Hono), `postgres`, `powersync`, and `mongo` only if MongoDB storage is chosen.
@@ -64,8 +66,8 @@ Rejection works like this: "Change acknowledged but rejected (e.g. validation er
 - **Storage:** wa-sqlite with several VFS options. The default `IDBBatchAtomicVFS` uses IndexedDB. `OPFSCoopSyncVFS` is "Recommended for applications requiring multi-tab support, especially on Safari/iOS". [P14]
 - **Multi-tab:** "Multiple tab support relies on shared web workers", and a single shared sync worker serves all tabs. On Android, iOS and Safari, where shared workers are disabled by default, the SDK falls back to broadcast channels. [P14]
 - **React:** hooks `useQuery`, `useStatus` and `useSuspenseQuery`. [P15] `@powersync/react` 2.1.0 declares peer `react: "*"`, so React 19 is accepted (npm registry).
-- **PWA:** docs mention "offline-first PWAs". [P14] Service-worker interplay (precaching the wasm/worker assets with `vite-plugin-pwa`) is **unverified**.
-- **Bundle size:** no official figure (**unverified**).
+- **PWA:** docs mention "offline-first PWAs". [P14] The official React demo uses `vite-plugin-pwa` with `optimizeDeps.exclude: ['@powersync/web']`, `worker.format: 'es'` and `maximumFileSizeToCacheInBytes: 5 MiB`, because "The SQLite WASM builds are over the 2 MiB default; the app needs them precached to work offline." [P21] Verified in a throwaway build (see section 9): the default `generateSW` precache picks up every wasm and worker chunk, and the app cold-starts offline with data and queued writes intact.
+- **Bundle size:** no official figure. Measured in section 9: a 118 kB main chunk (36 kB gzip), and about 4 MB of precache without the encryption builds.
 - **TanStack DB:** `@tanstack/powersync-db-collection` exists if TanStack DB is wanted on top (npm).
 
 **8. Maturity.** Service v1.27.0 shipped on 2026-10-06, with tags from v1.23.1 on 2026-06-25 to v1.27.0 roughly monthly. `@powersync/web` 2.5.0 and `@powersync/react` 2.1.0 shipped on 2026-10-19. [P2] Legacy Sync Rules have a migration guide to Sync Streams. [P16] No pivot was found.
@@ -171,11 +173,40 @@ Adopting any of them reverses ADR-0002 (Automerge), ADR-0003 (no domain knowledg
 - **Saved places and persons under sharing.** They belong to a user and are shared only as copies. A shared trip's items still link to the owner's places and persons, so a guest syncs those rows through the trip (`id IN (SELECT place_id FROM trip_items WHERE trip_id IN (…))` [P12]) but can't edit them; only their owner can. Open: whether an editor can link their own places into someone else's trip (the trip would then reference two users' places), and whether "copy to my places" is a plain server-side insert.
 - **Relational model.** The document shapes (RootDoc, TripDoc with nested items, `Person` inside items) exist because Automerge stores JSON documents. With Postgres the model is normalised: `trips`, `trip_items`, `persons`, saved places and join tables, linked by foreign keys. That gives field-level LWW per row, and relation-based read rules become joins. Open: which tables a trip's read rule reaches (items, persons, the places items link to), and whether `persons` belong to a user or to a trip.
 - **Key strategy.** All three expect client-generated ids (UUIDs) for offline inserts. IATA-keyed `savedAirports` need a composite or uuid key.
-- **PWA plus workers.** Verify that `vite-plugin-pwa` precaches PowerSync's wasm and worker assets, and test offline cold start (**unverified**).
+- **PWA on iOS.** Offline cold start is verified in headless Chromium (section 9). Safari and installed iOS PWAs are not tested, and iOS storage eviction for PWAs that aren't installed still applies.
 - **Safari/iOS multi-tab.** Use `OPFSCoopSyncVFS` [P14], and test on iOS PWA installs.
 - **Rejection UX.** PowerSync advises returning 2xx with error details or an errors table [P6]. A user-visible "change rejected" surface would need design.
-- **Bundle size.** None of the three publishes a figure, so measure with the repo's bundle analysis before committing.
+- **Bundle size.** None of the three publishes a figure. PowerSync is measured in section 9; Zero and Electric are not.
 - **Migration path.** This is a one-off export from Automerge docs to relational rows, with no long-running dual sync.
+
+---
+
+## 9. Verified: PowerSync in an offline PWA
+
+This was run on 2026-10-20 with `@powersync/web` 2.5.0, `@journeyapps/wa-sqlite` 2.0.8, Vite 8.3.4, `vite-plugin-pwa` 1.3.0 and headless Chromium 154 (via `agent-browser` 0.27). No sync server was connected, so every write stayed in the local upload queue.
+
+**Setup.** The build used the demo's Vite settings [P21]: `optimizeDeps.exclude: ['@powersync/web']`, `worker.format: 'es'`, `generateSW` with `maximumFileSizeToCacheInBytes: 5 MiB`, and no custom `globPatterns`. On each load the page inserts one row into a synced table, then reports the row count, the number of entries in `ps_crud` (the local upload queue) and whether the service worker controls the page.
+
+**Precache.** The plugin's default glob includes `.wasm`. The generated `sw.js` precached all 31 entries (7,977 KiB):
+- four wasm builds: `wa-sqlite` (1.1 MB), `wa-sqlite-async` (2.3 MB), and `mc-*` variants of each (1.3 MB and 2.5 MB);
+- the worker chunk;
+- every VFS chunk.
+
+Each JS chunk appears twice because the worker has its own module graph. The `mc-*` builds are the SQLite3MultipleCiphers (encryption) variants. With `globIgnores: ['**/mc-*']` the precache drops to 25 entries (4,047 KiB), and the results below are unchanged. The main app chunk is 118 kB (36 kB gzip).
+
+**Results.** The same results held with all 31 entries and without the `mc-*` builds. Steps 1 and 2 were online. Steps 3 and 4 were a full browser shutdown, then a relaunch with the network disabled before the first navigation, on the same persistent profile.
+
+| Step | `IDBBatchAtomicVFS` | `OPFSCoopSyncVFS` |
+| --- | --- | --- |
+| 1. First visit, online | rows 1, queued 1 (no SW control yet) | rows 1, queued 1 |
+| 2. Reload, online | rows 2, queued 2, SW controls | rows 2, queued 2, SW controls |
+| 3. Browser restarted, **offline** cold start | rows 3, queued 3, SW controls | rows 3, queued 3, SW controls |
+
+So the shell, workers and wasm load from the precache, the local database reopens with its data, and new writes join the persisted upload queue while offline.
+
+**Gotcha found.** The `@powersync/web` 2.5.0 README shows `new WASQLiteOpenFactory({ dbFilename, vfs })`, but 2.5.0 expects `{ open: { … } }`, and passing the factory there fails with "The provided `database` option is invalid." Passing plain options, `database: { dbFilename, vfs }`, works.
+
+**Not covered.** Safari and iOS, the real upload path to a backend (`uploadData`), and service-worker updates while an upload is queued.
 
 ---
 
@@ -202,6 +233,9 @@ Adopting any of them reverses ADR-0002 (Automerge), ADR-0003 (no domain knowledg
 - [P18] Deploying Schema Changes: https://docs.powersync.com/maintenance-ops/deploying-schema-changes
 - [P19] Usage Reporting: https://docs.powersync.com/maintenance-ops/self-hosting/usage-reporting
 - [P20] Handling Update Conflicts: https://docs.powersync.com/handling-writes/handling-update-conflicts
+- [P21] React demo Vite config (PWA): https://github.com/powersync-ja/powersync-js/blob/main/demos/react-supabase-todolist/vite.config.mts
+- [P22] PowerSync Service architecture (buckets, operation history): https://docs.powersync.com/architecture/powersync-service
+- [P23] Storage version 4: https://docs.powersync.com/sync/advanced/storage-version-4
 
 **Zero**
 - [Z1] Open Source: https://zero.rocicorp.dev/docs/open-source ; https://github.com/rocicorp/mono/blob/main/LICENSE
