@@ -238,6 +238,34 @@ For a single user on their own trips, the only realistic rejections are bugs. Ru
 
 ---
 
+## 11. Database choice and scaling to a SaaS
+
+PowerSync uses two databases, and the choices are independent.
+
+**Source database: Postgres.** This one is hard to change later, because it holds the data.
+- PowerSync also accepts MongoDB 6.0+ as a source, through change streams with post-images (`changeStreamPreAndPostImages`) [P25].
+- The data is relational: trips, items, places, persons, shares, and many-to-many links.
+- Sync Streams are SQL with subqueries and joins, and every sharing example is relational [P12].
+- Postgres also gives foreign keys and `ON DELETE` rules, which section 10 relies on to avoid cascading rejections.
+- MongoDB would move those constraints into application code on every write path (sync upload, REST and MCP).
+- How Sync Streams behave over nested MongoDB documents is not documented (**unverified**).
+
+**Bucket storage: start on Postgres, switch to MongoDB if needed.** This one is cheap to change, because it is derived data: "Backups are not strictly required, since the data can be rebuilt by re-replicating from the source database." [P26]
+- **Self-hosters:** one Postgres serves both roles.
+- **A larger SaaS:** the production guide is written for MongoDB storage only [P26], MongoDB gets storage version 4 [P23], and the open Postgres-storage replication bugs don't apply there (see `powersync-issues-2026-10.md`).
+- **Switching:** a redeploy plus a full re-replication, with no data migration.
+
+**Scaling numbers** [P26]:
+- **Replication:** "Only one process can replicate at a time." Its load is "primarily driven by write load on the source database", which is small for trip edits.
+- **API containers:** each has a hard limit of 200 concurrent connections, with a target of 100 or fewer: "add 1x PowerSync API container per 100 connections".
+- **Production baseline:** one replication container, two or more API containers (1 GB and 1 vCPU each), and a three-node MongoDB replica set.
+- **What sizes it:** concurrent online devices, not registered users. Thousands of users likely means hundreds of concurrent connections, so a handful of API containers.
+- **Not stated:** limits on buckets per user. With one bucket per trip, check this before launch (**unverified**).
+
+**Licence for a SaaS.** FSL-1.1-ALv2 forbids only a "Competing Use": a commercial product that "substitutes for the Software", substitutes for a PowerSync product, or "offers the same or substantially similar functionality" [P3]. A trip-planning SaaS that uses PowerSync internally is a Permitted Purpose. Each release becomes Apache-2.0 "on the second anniversary". [P3] PowerSync Cloud is the managed alternative if running the service becomes a burden.
+
+---
+
 ## Sources
 
 **PowerSync**
@@ -265,6 +293,8 @@ For a single user on their own trips, the only realistic rejections are bugs. Ru
 - [P22] PowerSync Service architecture (buckets, operation history): https://docs.powersync.com/architecture/powersync-service
 - [P23] Storage version 4: https://docs.powersync.com/sync/advanced/storage-version-4
 - [P24] Handling write / validation errors: https://docs.powersync.com/handling-writes/handling-write-validation-errors
+- [P25] Source database setup (MongoDB): https://docs.powersync.com/configuration/source-db/setup
+- [P26] Self-hosting deployment architecture: https://docs.powersync.com/maintenance-ops/self-hosting/deployment-architecture
 
 **Zero**
 - [Z1] Open Source: https://zero.rocicorp.dev/docs/open-source ; https://github.com/rocicorp/mono/blob/main/LICENSE
