@@ -166,7 +166,7 @@ Adopting any of them reverses ADR-0002 (Automerge), ADR-0003 (no domain knowledg
 - **PostgreSQL becomes mandatory.** The SQLite-default deployment ends, and Better Auth would move to Postgres too. Decide whether that is acceptable for self-hosters.
 - **FSL licence.** Confirm that the "Competing Use" clause [P3] is acceptable if a hosted Reisenotiz SaaS is ever offered. Offering Reisenotiz is not offering a sync service, but check with care.
 - **Saved places under sharing.** Today places are per-user (ADR-0005). With trip sharing, a guest must sync the owner's places used by that trip. Decide whether that is a nested subquery stream [P12] or places scoped per trip.
-- **`Person` inside trip items.** Decide between a JSON column (simple, but LWW applies to the whole blob) and a `persons` table (field-level LWW).
+- **Relational model.** The document shapes (RootDoc, TripDoc with nested items, `Person` inside items) exist because Automerge stores JSON documents. With Postgres the model is normalised: `trips`, `trip_items`, `persons`, saved places and join tables, linked by foreign keys. That gives field-level LWW per row, and relation-based read rules become joins. Open: which tables a trip's read rule reaches (items, persons, the places items link to), and whether `persons` belong to a user or to a trip.
 - **Key strategy.** All three expect client-generated ids (UUIDs) for offline inserts. IATA-keyed `savedAirports` need a composite or uuid key.
 - **PWA plus workers.** Verify that `vite-plugin-pwa` precaches PowerSync's wasm and worker assets, and test offline cold start (**unverified**).
 - **Safari/iOS multi-tab.** Use `OPFSCoopSyncVFS` [P14], and test on iOS PWA installs.
