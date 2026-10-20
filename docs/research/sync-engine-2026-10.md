@@ -210,6 +210,33 @@ So the shell, workers and wasm load from the precache, the local database reopen
 
 ---
 
+## 10. When PowerSync reverts local changes
+
+The client never decides on its own to drop a local write. A write leaves the upload queue only when our `uploadData` code marks it complete, and our endpoint decides what that means [P24]:
+
+| Endpoint outcome | Client behaviour |
+| --- | --- |
+| Network error, 5xx, or `uploadData` throws | "The change is kept in the queue" and retried. A persistent bug "has to be fixed before the changes from the client can be processed", so the queue stalls instead of losing data. [P24] |
+| 2xx, write applied | The row is confirmed when the next checkpoint includes it. |
+| 2xx, write rejected (validation or conflict) | "The client rolls back the change": once the queue is empty, local state is replaced by server state. [P24] |
+| 2xx, but a bug skipped the write | The same as a rejection: the client reverts silently. This is the dangerous case, and it is our code's bug, not PowerSync's. |
+
+Rejection is per write, not per trip. Each row change is its own queue entry, so a rejected item reverts that item only.
+
+**Rejection scenarios for Reisenotiz:**
+- **Client and server validation disagree**, for example after a release changes a rule. Mitigation: share one schema module (such as zod) between the frontend and `apps/sync`, so a write the UI accepts is a write the server accepts.
+- **Cascading foreign-key failures.** If the trip insert is rejected, every item that references it also fails. The same happens when an item links a saved place that another device deleted. Mitigation: no rejections on the parent; soft-delete places, or use `ON DELETE SET NULL` instead of rejecting.
+- **Permissions changed while offline.** A guest's role was cut to viewer, or the trip was unshared. Rejecting is correct here, but the work should be kept.
+- **Concurrent edits** are not rejections. Last-write-wins applies per field, so another device's later edit to the same field wins, and other fields are kept.
+
+For a single user on their own trips, the only realistic rejections are bugs. Rules that keep "offline work vanished" from happening:
+1. Never return 2xx for a write that wasn't committed or explicitly recorded as rejected.
+2. Record every rejection in a `rejected_writes` table that syncs back to its user, as PowerSync recommends ("write the details to a separate table") [P24], so the UI can show it and offer recovery.
+3. Accept and normalise rather than reject wherever the data is still meaningful.
+4. Return 5xx (keep in queue) for anything unexpected, and alert on queue stalls, which are visible as the size of `ps_crud`.
+
+---
+
 ## Sources
 
 **PowerSync**
@@ -236,6 +263,7 @@ So the shell, workers and wasm load from the precache, the local database reopen
 - [P21] React demo Vite config (PWA): https://github.com/powersync-ja/powersync-js/blob/main/demos/react-supabase-todolist/vite.config.mts
 - [P22] PowerSync Service architecture (buckets, operation history): https://docs.powersync.com/architecture/powersync-service
 - [P23] Storage version 4: https://docs.powersync.com/sync/advanced/storage-version-4
+- [P24] Handling write / validation errors: https://docs.powersync.com/handling-writes/handling-write-validation-errors
 
 **Zero**
 - [Z1] Open Source: https://zero.rocicorp.dev/docs/open-source ; https://github.com/rocicorp/mono/blob/main/LICENSE
