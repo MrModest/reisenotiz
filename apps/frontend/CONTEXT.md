@@ -81,6 +81,10 @@ _Avoid_: Location, venue, spot
 A place the traveller keeps for reuse across trips. A trip item refers to a saved place rather than holding a copy of it, so correcting one corrects every trip that uses it — including trips already taken. Distinct from trip data: deleting a trip never removes a saved place. A saved place something still refers to can be archived but not deleted.
 _Avoid_: User record, favourite, saved item, dictionary
 
+**Place Source**:
+A public catalogue of places that offers candidates to pick from, such as the bundled list of airports or a geocoder. Picking a candidate saves it as a saved place; trip items never refer to a place source directly. An archived saved place does not hide the place source's entry it came from.
+_Avoid_: Public data, search source, dictionary
+
 **Place Type**:
 Which kind of place a place is — an airport, or an accommodation site. Distinct from an accommodation site's own kind, which says whether it is a hotel, a hostel, an apartment and so on.
 _Avoid_: Category, class, kind
