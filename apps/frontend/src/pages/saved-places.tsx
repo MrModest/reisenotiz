@@ -10,7 +10,7 @@ import { Item, ItemActions, ItemGroup } from '@/components/ui/item'
 import { Switch } from '@/components/ui/switch'
 import { useDocumentTitle } from '@/hooks/use-document-title'
 import { routes } from '@/lib/routes'
-import { useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type SavedPlaceEntry } from '@/store'
+import { usePlaceUsage, useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type SavedPlaceEntry } from '@/store'
 import type { PlaceType } from '@/types'
 
 type Filter = PlaceType | 'ALL'
@@ -18,6 +18,7 @@ type Filter = PlaceType | 'ALL'
 export function SavedPlacesPage() {
   useDocumentTitle('Places')
   const entries = useSavedPlaces()
+  const usage = usePlaceUsage()
   const [filter, setFilter] = useState<Filter>('ALL')
   const [showArchived, setShowArchived] = useState(false)
 
@@ -52,7 +53,7 @@ export function SavedPlacesPage() {
         ) : (
           <ItemGroup className='gap-0'>
             {shown.map((entry) => (
-              <SavedPlaceItem key={`${entry.type}:${entry.key}`} entry={entry} />
+              <SavedPlaceItem key={`${entry.type}:${entry.key}`} entry={entry} usedBy={usage.get(entry.key) ?? 0} />
             ))}
           </ItemGroup>
         )}
@@ -62,7 +63,9 @@ export function SavedPlacesPage() {
   )
 }
 
-function SavedPlaceItem({ entry }: { entry: SavedPlaceEntry }) {
+// A place in use is archived rather than deleted, so no trip loses its name; the store refuses
+// the delete too, since the button cannot see another device's links
+function SavedPlaceItem({ entry, usedBy }: { entry: SavedPlaceEntry; usedBy: number }) {
   const { icon, Row } = getPlaceTypeModule(entry.type)
   const { archive, restore, remove } = useSavedPlaceMutations()
 
@@ -80,14 +83,21 @@ function SavedPlaceItem({ entry }: { entry: SavedPlaceEntry }) {
           <Button variant='ghost' size='sm' onClick={() => restore(entry.type, entry.key)}>
             Restore
           </Button>
+        ) : usedBy > 0 ? (
+          <>
+            <span className='font-mono text-xs text-muted-foreground'>{usedBy === 1 ? '1 use' : `${usedBy} uses`}</span>
+            <Button variant='ghost' size='sm' onClick={() => archive(entry.type, entry.key)}>
+              Archive
+            </Button>
+            <Button variant='ghost' size='sm' disabled>
+              Delete
+            </Button>
+          </>
         ) : (
-          <Button variant='ghost' size='sm' onClick={() => archive(entry.type, entry.key)}>
-            Archive
+          <Button variant='ghost' size='sm' onClick={() => remove(entry.type, entry.key)}>
+            Delete
           </Button>
         )}
-        <Button variant='ghost' size='sm' onClick={() => remove(entry.type, entry.key)}>
-          Delete
-        </Button>
       </ItemActions>
     </Item>
   )
