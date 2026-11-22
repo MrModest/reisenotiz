@@ -6,7 +6,7 @@ A self-hosted, offline-first travel notes built as a PWA for keeping track of tr
 
 ## Screenshots and video
 
-[Watch the walkthrough](docs/screenshots/ScreenRecording.mp4) — trip timeline, flight and stay details, saved places, and dark mode. All travel details shown are fictional demo data.
+[Watch the walkthrough](docs/screenshots/walkthrough.mp4) — trip timeline, flight and stay details, saved places, and dark mode. All travel details shown are fictional demo data.
 
 **Desktop**
 
@@ -22,9 +22,9 @@ A self-hosted, offline-first travel notes built as a PWA for keeping track of tr
 **Mobile**
 
 <p>
-  <img src="docs/screenshots/TripTimeline.png" alt="Mobile trip timeline" width="260" />
-  <img src="docs/screenshots/FlightView.png" alt="Mobile flight details" width="260" />
-  <img src="docs/screenshots/HotelView.png" alt="Mobile accommodation details" width="260" />
+  <img src="docs/screenshots/mobile-trip-timeline.png" alt="Mobile trip timeline" width="260" />
+  <img src="docs/screenshots/mobile-flight-details.png" alt="Mobile flight details" width="260" />
+  <img src="docs/screenshots/mobile-stay-details.png" alt="Mobile accommodation details" width="260" />
 </p>
 
 ## Features
