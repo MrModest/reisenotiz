@@ -197,9 +197,12 @@ before adding a new one — most needs are already covered.
   which must be `@/lib/utils`
 
 **Trip Item Registry** (`src/components/trip-items/`):
-- `registry.ts` maps every `TripItemType` (`'Flight' | 'Accommodation'`) to a `TripItemModule`:
+- `TripItemTypes` (`src/types/trip/trip-item.ts`) maps each type name to its interface, and
+  `TripItemType` (`'Flight' | 'Accommodation'`) is its keys. Adding a type is one line there.
+- `registry.ts` maps every `TripItemType` to a `TripItemModule<TripItemTypes[K]>`:
   `type`, `label` (`Flight`, `Stay`), `icon`, `createDraft(tripId)`, `toTimelineElements(item, places)`,
-  `View` and `Form`. The map is exhaustive, so a new type does not compile until it has a module.
+  `View` and `Form`. The map is exhaustive, so a new type does not compile until it has a module,
+  nor until the saved places store says which places it links.
 - Every per-type decision goes through `getTripItemModule(type)`, never a `switch (type)`. It
   returns `undefined` for a type this build does not know, and the caller shows a short message.
   `tripItemModules` lists them for the type picker; `presentTripItemModules(items)` lists the
