@@ -67,7 +67,7 @@ See [ROADMAP.md](./ROADMAP.md) for planned features and future direction.
 ## License
 
 ### TLDR:
-- BSL 1.1 (Source-available; fair code)
+- PolyForm Noncommercial 1.0.0 (Source-available)
 - Free forever for private/non-commercial use.
 - Restricted for commercial use.
 
@@ -76,7 +76,7 @@ I want to keep the option open to run a paid hosted version in the future withou
 
 I also don’t like the “open core” model. Splitting the product into free vs paid features always feels messy. If I give something away, I want it to be the full version — not a crippled one.
 
-That’s why I went with BSL.
+That’s why I went with PolyForm Noncommercial.
 For me it’s a good middle ground:
 
 * free and complete for personal use
