@@ -28,27 +28,22 @@ function connectedDevices() {
 }
 
 describe('saved places sync across devices', () => {
-  it('propagates a place archived on device A to device B', async () => {
+  it('propagates a place edited on device A to device B', async () => {
     const { wrapperA, wrapperB } = connectedDevices()
+    const adlon = {
+      id: 'custom:adlon',
+      type: 'AccommodationSite',
+      name: 'Hotel Adlon',
+      kind: 'Hotel',
+      address: { countryCode: 'DE', city: 'Berlin' },
+      tzone: 'Europe/Berlin',
+    } as const
 
     const { result: mutate } = renderHook(() => useSavedPlaceMutations(), { wrapper: wrapperA })
-    let key = ''
-    await act(async () => {
-      const added = mutate.current.add('AccommodationSite', {
-        name: 'Hotel Adlon',
-        kind: 'Hotel',
-        address: { countryCode: 'DE', city: 'Berlin' },
-        tzone: 'Europe/Berlin',
-      })
-      if (added.ok) key = added.key
-    })
-    await act(async () => {
-      mutate.current.archive('AccommodationSite', key)
-    })
+    await act(async () => mutate.current.save(adlon))
+    await act(async () => mutate.current.save({ ...adlon, name: 'Adlon Kempinski' }))
 
     const { result: placesOnB } = renderHook(() => useSavedPlaces(), { wrapper: wrapperB })
-    await waitFor(() =>
-      expect(placesOnB.current.find((e) => e.key === key)?.place).toMatchObject({ name: 'Hotel Adlon', archived: true }),
-    )
+    await waitFor(() => expect(placesOnB.current).toEqual([{ ...adlon, name: 'Adlon Kempinski' }]))
   })
 })

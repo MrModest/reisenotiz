@@ -1,5 +1,6 @@
 import { DateTime, TZ } from '@/lib/datetime'
 import { generateUUID } from '@/types/common/uuid'
+import { airportModule } from '@/components/places/airport'
 import type { Flight } from '@/types'
 
 // Opens at the current time in the device zone; submit re-anchors it to each airport's zone
@@ -17,7 +18,7 @@ export function createFlightDraft(tripId: string): Flight {
     bookingCode: '',
     seat: '',
     passengers: [],
-    departure: { placeKey: '', time, terminal: '', gate: '' },
-    arrival: { placeKey: '', time, terminal: '', gate: '' },
+    departure: { place: airportModule.empty(), time, terminal: '', gate: '' },
+    arrival: { place: airportModule.empty(), time, terminal: '', gate: '' },
   }
 }

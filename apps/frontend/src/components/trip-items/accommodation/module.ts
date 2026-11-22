@@ -1,5 +1,4 @@
 import { joinWith } from '@/lib/utils'
-import { findSavedPlace } from '@/store'
 import type { Accommodation } from '@/types'
 import type { TripItemModule } from '../module'
 import { createAccommodationDraft } from './draft'
@@ -11,10 +10,9 @@ export const accommodationModule: TripItemModule<Accommodation> = {
   label: 'Stay',
   icon: 'accommodation',
   createDraft: createAccommodationDraft,
-  toTimelineElements: (stay, places) => {
-    const site = findSavedPlace(places, 'AccommodationSite', stay.placeKey)
-    const title = site?.name ?? 'Unknown place'
-    const summary = (role: string) => joinWith(' · ', [role, site?.address.line])
+  toTimelineElements: (stay) => {
+    const title = stay.place.name
+    const summary = (role: string) => joinWith(' · ', [role, stay.place.address.line])
 
     return [
       {

@@ -1,7 +1,6 @@
 import { formatTo } from '@/lib/datetime'
 import { routes } from '@/lib/routes'
 import { cn, joinWith } from '@/lib/utils'
-import { useSavedPlace } from '@/store'
 import type { Flight, FlightPoint } from '@/types'
 import { AddressLink } from '../shared/address-link'
 import { AttachmentChips } from '../shared/attachment-chips'
@@ -11,8 +10,6 @@ import { NotesBlock } from '../shared/notes-block'
 import { PersonChips } from '../shared/person-chips'
 
 export function FlightView({ item: flight }: { item: Flight }) {
-  const departure = useSavedPlace(flight.departure.placeKey)
-  const arrival = useSavedPlace(flight.arrival.placeKey)
   const subline = joinWith(' · ', [flight.carrier, formatTo.dayShort(flight.departure.time)])
 
   return (
@@ -33,8 +30,8 @@ export function FlightView({ item: flight }: { item: Flight }) {
               </FactRow>
             )}
           </FactList>
-          <AddressLink label='Departure airport' place={departure?.place} />
-          <AddressLink label='Arrival airport' place={arrival?.place} />
+          <AddressLink label='Departure airport' place={flight.departure.place} />
+          <AddressLink label='Arrival airport' place={flight.arrival.place} />
           <NotesBlock note={flight.note} />
           <AttachmentChips attachments={flight.attachments} />
         </div>
@@ -44,7 +41,6 @@ export function FlightView({ item: flight }: { item: Flight }) {
   )
 }
 
-// Everything here comes from the flight itself, so a dangling airport link costs the hero nothing
 function FlightHero({ flight }: { flight: Flight }) {
   return (
     <div className='flex items-start gap-3 rounded-xl border border-border bg-card p-4'>
@@ -64,7 +60,7 @@ function HeroEnd({ point, end }: { point: FlightPoint; end?: boolean }) {
 
   return (
     <div className={cn('flex min-w-0 flex-1 flex-col', end && 'items-end text-right')}>
-      <span className='font-mono text-[26px] leading-tight font-semibold'>{point.placeKey}</span>
+      <span className='font-mono text-[26px] leading-tight font-semibold'>{point.place.code}</span>
       <span className='font-mono text-[10px] text-muted-foreground'>{formatTo.utcOffset(point.time)}</span>
       <span className='mt-2.5 font-mono text-[18px] leading-tight'>{formatTo.time(point.time)}</span>
       {where && <span className='mt-1.5 font-mono text-[10px] tracking-[.08em] text-muted-foreground uppercase wrap-anywhere'>{where}</span>}

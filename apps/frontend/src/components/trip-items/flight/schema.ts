@@ -1,42 +1,36 @@
 import { z } from 'zod'
 import { schemas } from '@/lib/validations/commons'
 import { convertTime, formatTo } from '@/lib/datetime'
-import { findSavedPlace, type SavedPlaceEntry } from '@/store'
-import { generateUUID, type Flight, type FlightPoint } from '@/types'
+import { airportSchema } from '@/components/places/schema'
+import { customPlaceId, generateUUID, type Flight, type FlightPoint } from '@/types'
 
-// Takes the saved places because a link must resolve: the airport's zone is what typed times are read in
-export const flightFormSchema = (places: SavedPlaceEntry[]) => {
-  const point = z.object({
-    placeKey: z
-      .string()
-      .min(1, 'Airport is required')
-      .refine((key) => !key || findSavedPlace(places, 'Airport', key), 'Unknown place, pick the airport again'),
-    date: schemas.date,
-    time: schemas.time,
-    terminal: z.string(),
-    gate: z.string(),
-  })
+const point = z.object({
+  place: airportSchema,
+  date: schemas.date,
+  time: schemas.time,
+  terminal: z.string(),
+  gate: z.string(),
+})
 
-  return z.object({
-    flightNumber: z.string(),
-    carrier: z.string(),
-    departure: point,
-    arrival: point,
-    bookingCode: z.string(),
-    seat: z.string(),
-    passengers: z.array(schemas.person),
-    // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
-    passengerDraft: schemas.string('Full name', 100, false),
-    note: z.string(),
-    attachments: z.array(schemas.attachment),
-  })
-}
+export const flightFormSchema = z.object({
+  flightNumber: z.string(),
+  carrier: z.string(),
+  departure: point,
+  arrival: point,
+  bookingCode: z.string(),
+  seat: z.string(),
+  passengers: z.array(schemas.person),
+  // A name typed but not yet committed as a chip: it makes the form dirty and is saved with it
+  passengerDraft: schemas.string('Full name', 100, false),
+  note: z.string(),
+  attachments: z.array(schemas.attachment),
+})
 
-export type FlightFormValues = z.infer<ReturnType<typeof flightFormSchema>>
+export type FlightFormValues = z.infer<typeof flightFormSchema>
 type FlightPointValues = FlightFormValues['departure']
 
 const pointValues = (point: FlightPoint): FlightPointValues => ({
-  placeKey: point.placeKey,
+  place: point.place,
   date: formatTo.dateISO(point.time),
   time: formatTo.time(point.time),
   terminal: point.terminal ?? '',
@@ -59,13 +53,14 @@ export function flightFormValues(flight: Flight): FlightFormValues {
 }
 
 // Typed times are wall-clock values at the airport, so each is anchored to its airport's zone.
-// Call only with values `flightFormSchema(places)` accepted.
-export function flightFromFormValues(values: FlightFormValues, flight: Flight, places: SavedPlaceEntry[]): Flight {
-  const point = (v: FlightPointValues): FlightPoint => {
-    const airport = findSavedPlace(places, 'Airport', v.placeKey)
-    if (!airport) throw new Error(`No saved airport ${v.placeKey}`)
-    return { placeKey: v.placeKey, terminal: v.terminal, gate: v.gate, time: convertTime(v.date, v.time, airport.tzone) }
-  }
+// An airport typed in by hand gets its custom id here. Call only with values `flightFormSchema` accepted.
+export function flightFromFormValues(values: FlightFormValues, flight: Flight): Flight {
+  const point = (v: FlightPointValues): FlightPoint => ({
+    place: { ...v.place, id: v.place.id || customPlaceId() },
+    terminal: v.terminal,
+    gate: v.gate,
+    time: convertTime(v.date, v.time, v.place.tzone),
+  })
 
   return {
     ...flight,

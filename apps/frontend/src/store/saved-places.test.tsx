@@ -3,8 +3,8 @@ import { Suspense, type ReactNode } from 'react'
 import { act, renderHook } from '@testing-library/react'
 import { Repo, RepoContext, interpretAsDocumentId, type DocHandle } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
-import { EMPTY_ROOT_DOC, type RootDoc, type TripDoc } from './automerge/types'
-import { countPlaceUsage, usePlaceUsage, useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type PlaceSaveResult } from './saved-places'
+import { EMPTY_ROOT_DOC, type RootDoc } from './automerge/types'
+import { placesOf, useSavedPlace, useSavedPlaceMutations, useSavedPlaces } from './saved-places'
 import type { AccommodationSite, Airport, TripItem } from '@/types'
 
 function setup() {
@@ -22,38 +22,14 @@ function setup() {
   }
 
   const handle = repo.handles[interpretAsDocumentId(rootHandle.url)] as DocHandle<RootDoc>
-  const doc = () => {
-    const { savedAirports = {}, savedAccommodationSites = {} } = handle.doc()
-    return { savedAirports, savedAccommodationSites }
-  }
+  const saved = () => handle.doc().savedPlaces
   const { result } = renderHook(() => ({ places: useSavedPlaces(), mutate: useSavedPlaceMutations() }), { wrapper })
-  return { repo, rootHandle, wrapper, doc, result }
+  return { wrapper, saved, result }
 }
-
-// Only the links matter to the usage count, so an item carries nothing else
-const flightLinking = (id: string, from: string, to: string) =>
-  ({ id, type: 'Flight', departure: { placeKey: from }, arrival: { placeKey: to } }) as unknown as TripItem
-const stayLinking = (id: string, placeKey: string) => ({ id, type: 'Accommodation', placeKey }) as unknown as TripItem
-
-function addTripFile(repo: Repo, rootHandle: DocHandle<RootDoc>, id: string, items: TripItem[]) {
-  const handle = repo.create<TripDoc>({
-    trip: { id } as TripDoc['trip'],
-    tripItems: Object.fromEntries(items.map((item) => [item.id, item])),
-  })
-  rootHandle.change((d) => {
-    d.tripIndex[id] = handle.url
-  })
-}
-
-const airport = (overrides: Partial<Airport> = {}): Airport => ({
-  code: 'BER',
-  name: 'Berlin Brandenburg',
-  address: { countryCode: 'DE', city: 'Berlin' },
-  tzone: 'Europe/Berlin',
-  ...overrides,
-})
 
 const site = (overrides: Partial<AccommodationSite> = {}): AccommodationSite => ({
+  id: 'custom:adlon',
+  type: 'AccommodationSite',
   name: 'Hotel Adlon',
   kind: 'Hotel',
   address: { countryCode: 'DE', city: 'Berlin' },
@@ -61,237 +37,64 @@ const site = (overrides: Partial<AccommodationSite> = {}): AccommodationSite => 
   ...overrides,
 })
 
-function keyOf(result: PlaceSaveResult): string {
-  if (!result.ok) throw new Error(`Not saved: ${result.reason}`)
-  return result.key
+const ber: Airport = {
+  id: 'iata:BER',
+  type: 'Airport',
+  code: 'BER',
+  name: 'Berlin Brandenburg',
+  address: { countryCode: 'DE', city: 'Berlin' },
+  tzone: 'Europe/Berlin',
 }
 
 describe('saved places', () => {
-  it('adds an airport keyed by its IATA code', async () => {
-    const { result, doc } = setup()
-    let key = ''
-    await act(async () => {
-      key = keyOf(result.current.mutate.add('Airport', airport()))
-    })
+  it('saves a custom place under its id', async () => {
+    const { result, saved } = setup()
+    await act(async () => result.current.mutate.save(site()))
 
-    expect(key).toBe('BER')
-    expect(doc().savedAirports.BER.name).toBe('Berlin Brandenburg')
-    expect(result.current.places).toEqual([{ type: 'Airport', key: 'BER', place: airport() }])
+    expect(saved()['custom:adlon']).toEqual(site())
+    expect(result.current.places).toEqual([site()])
   })
 
-  it('adds an accommodation site keyed by a fresh uuid, dropping empty optional fields', async () => {
-    const { result, doc } = setup()
-    let key = ''
-    await act(async () => {
-      key = keyOf(result.current.mutate.add('AccommodationSite', site({ contact: undefined })))
-    })
+  it('overwrites the place saved under the same id, dropping a field the new one lacks', async () => {
+    const { result, saved } = setup()
+    await act(async () => result.current.mutate.save(site({ contact: '+49 30 2261 0' })))
+    await act(async () => result.current.mutate.save(site({ name: 'Adlon Kempinski' })))
 
-    expect(key).toMatch(/^[0-9a-f-]{36}$/)
-    expect(doc().savedAccommodationSites[key].name).toBe('Hotel Adlon')
-    expect('contact' in doc().savedAccommodationSites[key]).toBe(false)
+    expect(saved()['custom:adlon']).toEqual(site({ name: 'Adlon Kempinski' }))
   })
 
-  it('updates a place in place, keeping it archived', async () => {
-    const { result, doc } = setup()
-    let key = ''
-    await act(async () => {
-      key = keyOf(result.current.mutate.add('AccommodationSite', site()))
-    })
-    await act(async () => {
-      result.current.mutate.archive('AccommodationSite', key)
-    })
-    await act(async () => {
-      result.current.mutate.update('AccommodationSite', key, site({ name: 'Hotel Adlon Kempinski' }))
-    })
+  it("never saves a provider's place", async () => {
+    const { result, saved } = setup()
+    await act(async () => result.current.mutate.save(ber))
 
-    expect(doc().savedAccommodationSites[key]).toMatchObject({ name: 'Hotel Adlon Kempinski', archived: true })
+    expect(saved()).toEqual({})
   })
 
-  it('archives and restores a place', async () => {
-    const { result, doc } = setup()
-    await act(async () => {
-      result.current.mutate.add('Airport', airport())
-    })
+  it('deletes a place, and deleting a missing one changes nothing', async () => {
+    const { result, saved } = setup()
+    await act(async () => result.current.mutate.save(site()))
+    await act(async () => result.current.mutate.remove('custom:adlon'))
+    await act(async () => result.current.mutate.remove('custom:adlon'))
 
-    await act(async () => {
-      result.current.mutate.archive('Airport', 'BER')
-    })
-    expect(doc().savedAirports.BER.archived).toBe(true)
-
-    await act(async () => {
-      result.current.mutate.restore('Airport', 'BER')
-    })
-    expect('archived' in doc().savedAirports.BER).toBe(false)
+    expect(saved()).toEqual({})
   })
 
-  it('removes a place', async () => {
-    const { result, doc } = setup()
-    await act(async () => {
-      result.current.mutate.add('Airport', airport())
-    })
-    await act(async () => {
-      result.current.mutate.remove('Airport', 'BER')
-    })
-
-    expect(doc().savedAirports.BER).toBeUndefined()
-    expect(result.current.places).toEqual([])
-  })
-
-  it('materialises a dictionary airport under its IATA code', async () => {
-    const { result, doc } = setup()
-    let key = ''
-    await act(async () => {
-      key = result.current.mutate.materialiseAirport(airport({ address: { countryCode: 'DE', city: 'Berlin', line: '' } }))
-    })
-
-    expect(key).toBe('BER')
-    expect(doc().savedAirports.BER.name).toBe('Berlin Brandenburg')
-  })
-
-  it('leaves an already saved airport untouched when it is picked again', async () => {
-    const { result, doc } = setup()
-    await act(async () => {
-      result.current.mutate.add('Airport', airport({ name: 'BER, my spelling' }))
-    })
-    await act(async () => {
-      result.current.mutate.materialiseAirport(airport())
-    })
-
-    expect(doc().savedAirports.BER.name).toBe('BER, my spelling')
-  })
-
-  it('refuses to add an airport whose code is already saved, keeping the saved one', async () => {
-    const { result, doc } = setup()
-    await act(async () => {
-      result.current.mutate.add('Airport', airport({ name: 'BER, my spelling' }))
-    })
-    let second: PlaceSaveResult | undefined
-    await act(async () => {
-      second = result.current.mutate.add('Airport', airport())
-    })
-
-    expect(second).toEqual({ ok: false, reason: 'key-taken' })
-    expect(doc().savedAirports.BER.name).toBe('BER, my spelling')
-  })
-
-  it('reports an update to a place deleted meanwhile as not found, and recreates nothing', async () => {
-    const { result, doc } = setup()
-    let key = ''
-    await act(async () => {
-      key = keyOf(result.current.mutate.add('AccommodationSite', site()))
-    })
-    await act(async () => {
-      result.current.mutate.remove('AccommodationSite', key)
-    })
-    let update: PlaceSaveResult | undefined
-    await act(async () => {
-      update = result.current.mutate.update('AccommodationSite', key, site({ name: 'Renamed' }))
-    })
-
-    expect(update).toEqual({ ok: false, reason: 'not-found' })
-    expect(doc().savedAccommodationSites[key]).toBeUndefined()
-  })
-
-  it('leaves the document alone when archiving, restoring or removing a missing place', async () => {
-    const { result, doc } = setup()
-    await act(async () => {
-      result.current.mutate.archive('Airport', 'BER')
-      result.current.mutate.restore('Airport', 'BER')
-      result.current.mutate.remove('Airport', 'BER')
-    })
-
-    expect(doc().savedAirports).toEqual({})
-  })
-
-  it('resolves one saved place by its key', async () => {
+  it('reads one place by id, and nothing for no id', async () => {
     const { result, wrapper } = setup()
-    let key = ''
-    await act(async () => {
-      key = keyOf(result.current.mutate.add('AccommodationSite', site()))
-    })
+    await act(async () => result.current.mutate.save(site()))
 
-    const { result: resolved } = renderHook(() => [useSavedPlace(key), useSavedPlace('NOPE')], { wrapper })
-    expect(resolved.current[0]).toEqual({ type: 'AccommodationSite', key, place: site() })
-    expect(resolved.current[1]).toBeUndefined()
+    expect(renderHook(() => useSavedPlace('custom:adlon'), { wrapper }).result.current).toEqual(site())
+    expect(renderHook(() => useSavedPlace(undefined), { wrapper }).result.current).toBeUndefined()
   })
 })
 
-describe('countPlaceUsage', () => {
-  it('counts each item once per place it links, across trip files, and skips unknown types', () => {
-    const tripFile = (...items: TripItem[]) => ({ trip: {} as TripDoc['trip'], tripItems: Object.fromEntries(items.map((i) => [i.id, i])) })
-    const usage = countPlaceUsage([
-      tripFile(flightLinking('f1', 'BER', 'MUC'), stayLinking('s1', 'site-1')),
-      tripFile(flightLinking('f2', 'BER', 'BER'), { id: 'x', type: 'Train', placeKey: 'BER' } as unknown as TripItem),
-    ])
-
-    expect(Object.fromEntries(usage)).toEqual({ BER: 2, MUC: 1, 'site-1': 1 })
-  })
-})
-
-describe('saved places in use', () => {
-  async function inUse() {
-    const setupResult = setup()
-    const { repo, rootHandle, result } = setupResult
-    let siteKey = ''
-    await act(async () => {
-      result.current.mutate.add('Airport', airport())
-      result.current.mutate.add('Airport', airport({ code: 'MUC', name: 'Munich' }))
-      result.current.mutate.add('Airport', airport({ code: 'LIS', name: 'Lisbon' }))
-      siteKey = keyOf(result.current.mutate.add('AccommodationSite', site()))
-      addTripFile(repo, rootHandle, 'trip-a', [flightLinking('f1', 'BER', 'MUC'), stayLinking('s1', siteKey)])
-      addTripFile(repo, rootHandle, 'trip-b', [flightLinking('f2', 'MUC', 'BER'), flightLinking('f3', 'BER', 'BER')])
-    })
-    return { ...setupResult, siteKey }
-  }
-
-  it('counts the trip items linking each place across trip files', async () => {
-    const { wrapper, siteKey } = await inUse()
-    const { result } = renderHook(() => usePlaceUsage(), { wrapper })
-    await act(async () => {})
-
-    expect(result.current.get('BER')).toBe(3)
-    expect(result.current.get('MUC')).toBe(2)
-    expect(result.current.get(siteKey)).toBe(1)
-    expect(result.current.get('LIS')).toBeUndefined()
+describe('placesOf', () => {
+  it('lists the places a trip item holds', () => {
+    const flight = { type: 'Flight', departure: { place: ber }, arrival: { place: site() } } as unknown as TripItem
+    expect(placesOf(flight)).toEqual([ber, site()])
   })
 
-  it('refuses to remove a place a trip item links, and removes an unused one', async () => {
-    const { result, doc, siteKey } = await inUse()
-    let refused: boolean | undefined
-    let removed: boolean | undefined
-    await act(async () => {
-      refused = result.current.mutate.remove('Airport', 'BER')
-      result.current.mutate.remove('AccommodationSite', siteKey)
-      removed = result.current.mutate.remove('Airport', 'LIS')
-    })
-
-    expect(refused).toBe(false)
-    expect(removed).toBe(true)
-    expect(doc().savedAirports.BER).toBeDefined()
-    expect(doc().savedAccommodationSites[siteKey]).toBeDefined()
-    expect(doc().savedAirports.LIS).toBeUndefined()
-  })
-})
-
-describe('saved places on a root document older than the place maps', () => {
-  it('reads as empty and writes the first place', async () => {
-    const repo = new Repo({ network: [] })
-    const rootHandle = repo.create<Partial<RootDoc>>({ tripIndex: {} })
-    function wrapper({ children }: { children: ReactNode }) {
-      return (
-        <RepoContext.Provider value={repo}>
-          <RootDocUrlContext.Provider value={rootHandle.url}>
-            <Suspense fallback={null}>{children}</Suspense>
-          </RootDocUrlContext.Provider>
-        </RepoContext.Provider>
-      )
-    }
-    const { result } = renderHook(() => ({ places: useSavedPlaces(), mutate: useSavedPlaceMutations() }), { wrapper })
-    expect(result.current.places).toEqual([])
-
-    await act(async () => {
-      result.current.mutate.materialiseAirport(airport())
-    })
-    expect(result.current.places.map((e) => e.key)).toEqual(['BER'])
+  it('lists none for an item of a type this build does not know', () => {
+    expect(placesOf({ type: 'Train' } as unknown as TripItem)).toEqual([])
   })
 })

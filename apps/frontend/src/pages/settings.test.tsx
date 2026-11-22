@@ -8,7 +8,7 @@ import { AppearanceSettings, SyncSettings } from './settings'
 
 function setup() {
   const repo = new Repo({ network: [] })
-  const rootHandle = repo.create({ tripIndex: {}, savedAirports: {}, savedAccommodationSites: {} })
+  const rootHandle = repo.create({ tripIndex: {}, savedPlaces: {} })
   localStorage.setItem(ROOT_DOC_KEY, rootHandle.url)
 
   // syntactically valid automerge URL, but created in an unrelated, disconnected repo —

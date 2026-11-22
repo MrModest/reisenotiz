@@ -5,8 +5,7 @@ import { createFlightDraft } from './draft'
 import { FlightForm } from './form'
 import { FlightView } from './view'
 
-// The link is the airport's IATA code, so the summary needs no lookup and survives a dangling link
-const place = (point: FlightPoint) => joinWith(' ', [point.placeKey, point.terminal])
+const place = (point: FlightPoint) => joinWith(' ', [point.place.code, point.terminal])
 
 export const flightModule: TripItemModule<Flight> = {
   type: 'Flight',

@@ -2,7 +2,6 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Field, FieldError } from '@/components/ui/field'
 import { useFormField } from '@/hooks/use-form-field'
-import { useSavedPlaces } from '@/store'
 import type { Flight } from '@/types'
 import type { TripItemFormProps } from '../module'
 import { DateTimeField } from '../shared/date-time-field'
@@ -16,9 +15,8 @@ import { PlacePicker } from '../shared/place-picker'
 import { flightFormSchema, flightFormValues, flightFromFormValues, type FlightFormValues } from './schema'
 
 export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormProps<Flight>) {
-  const places = useSavedPlaces()
   const form = useForm<FlightFormValues>({
-    resolver: zodResolver(flightFormSchema(places)),
+    resolver: zodResolver(flightFormSchema),
     defaultValues: flightFormValues(flight),
     mode: 'onTouched',
   })
@@ -26,7 +24,7 @@ export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormPro
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit((values) => onSubmit(flightFromFormValues(values, flight, places)))}
+        onSubmit={form.handleSubmit((values) => onSubmit(flightFromFormValues(values, flight)))}
         className='flex min-h-0 flex-1 flex-col'
       >
         <div className='flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4'>
@@ -56,7 +54,7 @@ export function FlightForm({ item: flight, onSubmit, onCancel }: TripItemFormPro
 function FlightPointGroup({ point, label }: { point: 'departure' | 'arrival'; label: string }) {
   return (
     <FormGroup label={label}>
-      <PlacePicker type='Airport' name={`${point}.placeKey`} label='Airport' />
+      <PlacePicker type='Airport' name={`${point}.place`} label='Airport' />
       <DateTimeField dateName={`${point}.date`} timeName={`${point}.time`} />
       <div className='grid grid-cols-2 gap-3'>
         <FieldInput name={`${point}.terminal`} label='Terminal' />

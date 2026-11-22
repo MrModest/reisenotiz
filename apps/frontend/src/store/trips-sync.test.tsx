@@ -19,7 +19,7 @@ import {
   useTrips,
 } from './trips'
 import { DateTime, TZ } from '@/lib/datetime'
-import type { Trip, Flight } from '@/types'
+import type { Trip, Flight, Airport } from '@/types'
 
 interface Device {
   repo: Repo
@@ -63,6 +63,15 @@ function tripFixture(overrides: Partial<Trip> = {}): Omit<Trip, 'id'> {
   }
 }
 
+const airport = (code: string): Airport => ({
+  id: `iata:${code}`,
+  type: 'Airport',
+  code,
+  name: code,
+  address: { countryCode: 'DE', city: 'Berlin' },
+  tzone: 'Europe/Berlin',
+})
+
 function flightFixture(tripId: string): Omit<Flight, 'id'> {
   const zone = TZ.local()
   const t = (h: number) =>
@@ -78,11 +87,11 @@ function flightFixture(tripId: string): Omit<Flight, 'id'> {
     seat: '12A',
     passengers: [],
     departure: {
-      placeKey: 'TXL',
+      place: airport('TXL'),
       time: t(8),
     },
     arrival: {
-      placeKey: 'MUC',
+      place: airport('MUC'),
       time: t(10),
     },
   }

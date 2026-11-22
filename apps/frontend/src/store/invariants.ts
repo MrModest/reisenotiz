@@ -1,6 +1,6 @@
 import { DateTime } from '@/lib/datetime'
 import type { Accommodation, StayInterval, TripItem } from '@/types'
-import { findSavedPlace, type SavedPlaceEntry } from './saved-places'
+import { placesOf } from './saved-places'
 
 export type StayIntervalIssue = { interval: 'provided' | 'planned'; end: 'in' | 'out'; message: string }
 
@@ -19,12 +19,13 @@ export function stayIntervalIssues({ provided, planned }: Accommodation['stayInt
   return issues
 }
 
-function stayViolation(stay: Accommodation, places: SavedPlaceEntry[]): string | undefined {
-  if (!findSavedPlace(places, 'AccommodationSite', stay.placeKey)) return 'the property is not a saved site'
-  return stayIntervalIssues(stay.stayInterval)[0]?.message
+function violation(item: Omit<TripItem, 'id'>): string | undefined {
+  // The form gives a typed-in place its custom id on submit, so an empty one is a bug
+  if (placesOf(item).some((place) => !place.id)) return 'a place has no id'
+  if (item.type === 'Accommodation') return stayIntervalIssues((item as Accommodation).stayInterval)[0]?.message
 }
 
-export function assertValidTripItem(item: Omit<TripItem, 'id'>, places: SavedPlaceEntry[]): void {
-  const violation = item.type === 'Accommodation' ? stayViolation(item as Accommodation, places) : undefined
-  if (violation) throw new Error(`Invalid ${item.type}: ${violation}`)
+export function assertValidTripItem(item: Omit<TripItem, 'id'>): void {
+  const found = violation(item)
+  if (found) throw new Error(`Invalid ${item.type}: ${found}`)
 }

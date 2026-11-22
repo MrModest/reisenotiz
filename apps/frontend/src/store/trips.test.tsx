@@ -24,7 +24,25 @@ import {
   useTripItem,
 } from './trips'
 import { DateTime, TZ } from '@/lib/datetime'
-import type { Trip, TripItem, Flight, Accommodation } from '@/types'
+import type { Trip, TripItem, Flight, Accommodation, AccommodationSite, Airport } from '@/types'
+
+const airport = (code: string): Airport => ({
+  id: `iata:${code}`,
+  type: 'Airport',
+  code,
+  name: code,
+  address: { countryCode: 'DE', city: 'Berlin' },
+  tzone: 'Europe/Berlin',
+})
+
+const adlon: AccommodationSite = {
+  id: 'custom:adlon',
+  type: 'AccommodationSite',
+  name: 'Hotel Adlon',
+  kind: 'Hotel',
+  tzone: 'Europe/Berlin',
+  address: { countryCode: 'DE', city: 'Berlin' },
+}
 
 interface Setup {
   repo: Repo
@@ -34,12 +52,7 @@ interface Setup {
 
 function setup(): Setup {
   const repo = new Repo({ network: [] })
-  const rootHandle = repo.create<RootDoc>({
-    ...EMPTY_ROOT_DOC,
-    savedAccommodationSites: {
-      'site-1': { name: 'Hotel Adlon', kind: 'Hotel', tzone: 'Europe/Berlin', address: { countryCode: 'DE', city: 'Berlin' } },
-    },
-  })
+  const rootHandle = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC })
 
   function wrapper({ children }: { children: ReactNode }) {
     return (
@@ -85,11 +98,11 @@ function flightFixture(tripId: string): Omit<Flight, 'id'> {
     seat: '12A',
     passengers: [],
     departure: {
-      placeKey: 'TXL',
+      place: airport('TXL'),
       time: t(8),
     },
     arrival: {
-      placeKey: 'MUC',
+      place: airport('MUC'),
       time: t(10),
     },
   }
@@ -103,7 +116,7 @@ function stayFixture(tripId: string): Omit<Accommodation, 'id'> {
     type: 'Accommodation',
     note: '',
     attachments: [],
-    placeKey: 'site-1',
+    place: adlon,
     reservedOn: undefined,
     guests: [],
     rooms: 1,
@@ -183,16 +196,57 @@ describe('trips store hooks', () => {
     expect(item.type).toBe('Flight')
   })
 
-  it('writes a flight that links its airports by placeKey, with no copy of them', async () => {
+  it('writes a flight that holds a full copy of each airport', async () => {
     const { repo, rootHandle, wrapper } = setup()
     const tripId = await createTrip(wrapper)
     const itemId = await createItem(wrapper, tripId)
 
     const url = rootHandle.doc().tripIndex[tripId]
     const item = getTripDoc(repo, url).tripItems[itemId] as Flight
-    expect(item.departure.placeKey).toBe('TXL')
-    expect(item.arrival.placeKey).toBe('MUC')
-    expect('airport' in item.departure).toBe(false)
+    expect(item.departure.place).toEqual(airport('TXL'))
+    expect(item.arrival.place).toEqual(airport('MUC'))
+  })
+
+  describe('saves the custom places an item holds', () => {
+    it("saves a new custom place, and never a provider's", async () => {
+      const { rootHandle, wrapper } = setup()
+      const tripId = await createTrip(wrapper)
+      await createItem(wrapper, tripId)
+      await createItem(wrapper, tripId, stayFixture(tripId))
+
+      expect(rootHandle.doc().savedPlaces).toEqual({ 'custom:adlon': adlon })
+    })
+
+    it('overwrites the saved place when the item is saved with an edited copy', async () => {
+      const { rootHandle, wrapper } = setup()
+      const tripId = await createTrip(wrapper)
+      const stay = stayFixture(tripId)
+      const itemId = await createItem(wrapper, tripId, stay)
+
+      const { result } = renderHook(() => useUpdateTripItem(tripId), { wrapper })
+      await act(async () => {
+        result.current(itemId, { ...stay, id: itemId, place: { ...adlon, name: 'Adlon Kempinski' } } as Accommodation)
+      })
+
+      expect(rootHandle.doc().savedPlaces['custom:adlon'].name).toBe('Adlon Kempinski')
+    })
+
+    it('writes a deleted saved place back when an item holding it is saved', async () => {
+      const { rootHandle, wrapper } = setup()
+      const tripId = await createTrip(wrapper)
+      const stay = stayFixture(tripId)
+      const itemId = await createItem(wrapper, tripId, stay)
+      rootHandle.change((d) => {
+        delete d.savedPlaces['custom:adlon']
+      })
+
+      const { result } = renderHook(() => useUpdateTripItem(tripId), { wrapper })
+      await act(async () => {
+        result.current(itemId, { ...stay, id: itemId, rooms: 2 } as Accommodation)
+      })
+
+      expect(rootHandle.doc().savedPlaces['custom:adlon']).toEqual(adlon)
+    })
   })
 
   it('useUpdateTripItem mutates a single item field', async () => {
@@ -218,7 +272,7 @@ describe('trips store hooks', () => {
 
     const url = rootHandle.doc().tripIndex[tripId]
     const item = getTripDoc(repo, url).tripItems[itemId] as Accommodation
-    expect(item.placeKey).toBe('site-1')
+    expect(item.place).toEqual(adlon)
     expect('reservedOn' in item).toBe(false)
     expect('planned' in item.stayInterval).toBe(false)
   })
@@ -245,8 +299,7 @@ describe('trips store hooks', () => {
     const at = (day: number, hour = 15) =>
       DateTime.fromObject({ year: 2026, month: 5, day, hour }, 'Europe/Berlin').toZonedInstant()
     const cases: [string, (s: Omit<Accommodation, 'id'>) => Omit<Accommodation, 'id'>][] = [
-      ['no property', (s) => ({ ...s, placeKey: '' })],
-      ['a property that is not saved', (s) => ({ ...s, placeKey: 'site-gone' })],
+      ['a property with no id', (s) => ({ ...s, place: { ...adlon, id: '' } })],
       ['check-out before check-in', (s) => ({ ...s, stayInterval: { provided: { in: at(3), out: at(1) } } })],
       ['a plan before check-in', (s) => ({ ...s, stayInterval: { ...s.stayInterval, planned: { in: at(1, 10), out: at(2) } } })],
       ['a plan after check-out', (s) => ({ ...s, stayInterval: { ...s.stayInterval, planned: { in: at(2), out: at(3, 18) } } })],

@@ -1,4 +1,5 @@
 import type { ZonedInstant } from '@/types/common'
+import type { AccommodationSite } from './place'
 import { Person } from './person'
 import { TripItem } from './trip-item'
 
@@ -9,8 +10,7 @@ export interface StayInterval {
 
 export interface Accommodation extends TripItem {
   type: 'Accommodation'
-  // The saved site's uuid, which is its key in `savedAccommodationSites`
-  placeKey: string
+  place: AccommodationSite
   reservedOn?: Person
   guests: Person[]
   rooms: number

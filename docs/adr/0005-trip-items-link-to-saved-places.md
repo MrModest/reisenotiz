@@ -1,5 +1,7 @@
 # Trip items link to saved places, they do not copy them
 
+Superseded by [ADR 0006](0006-trip-items-copy-their-places.md).
+
 A trip item refers to a place by key — `FlightPoint.placeKey`, `Accommodation.placeKey` — and the place itself lives once, in the root document's `savedAirports` or `savedAccommodationSites`. Correcting a hotel's address corrects every trip that uses it.
 
 Copying the place into the item, so each trip keeps the place as it was, was rejected: the common case is a correction, and the rare case is wanting a trip to show what was true at the time. Rewriting history on trips already taken is the accepted cost — this is a planner, not an archive.
