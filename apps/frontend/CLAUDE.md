@@ -69,8 +69,6 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
   - Two text tiers only: `text-foreground` and `text-muted-foreground`
   - Times, codes, counts and all-caps labels are `font-mono`. Numbers set in Inter need
     `tabular-nums`
-  - The UI is under redesign, tracked by [#28](https://github.com/MrModest/reisenotiz/issues/28);
-    existing components may not match the design yet
 
 **Code Style**:
 - No semicolons (enforced by ESLint @stylistic/semi rule and Prettier)
