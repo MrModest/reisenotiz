@@ -5,15 +5,14 @@ import type { RootDoc, TripDoc } from '@/store/automerge/types'
 import { withoutUndefined } from '@/store/automerge/without-undefined'
 import {
   generateUUID,
-  type Accommodation,
   type Airport,
-  type Flight,
   type Place,
   type PlaceType,
   type PlaceTypes,
   type SavedPlace,
   type TripItem,
   type TripItemType,
+  type TripItemTypes,
 } from '@/types'
 
 export type PlaceSaveError = 'key-taken' | 'not-found'
@@ -67,7 +66,7 @@ export function useSavedPlace(placeKey: string | undefined): SavedPlaceEntry | u
 
 // Exhaustive like the trip item registry, which the store cannot import, so a new type does not
 // compile until it says what it links
-const linkedPlaceKeysByType: { [K in TripItemType]: (item: Extract<Flight | Accommodation, { type: K }>) => string[] } = {
+const linkedPlaceKeysByType: { [K in TripItemType]: (item: TripItemTypes[K]) => string[] } = {
   Flight: (flight) => [flight.departure.placeKey, flight.arrival.placeKey],
   Accommodation: (stay) => [stay.placeKey],
 }

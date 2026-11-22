@@ -1,11 +1,11 @@
-import type { Accommodation, Flight, TripItem, TripItemType } from '@/types'
+import type { TripItem, TripItemType, TripItemTypes } from '@/types'
 import type { TimelineElement } from '@/lib/timeline'
 import type { SavedPlaceEntry } from '@/store'
 import type { TripItemModule } from './module'
 import { accommodationModule } from './accommodation/module'
 import { flightModule } from './flight/module'
 
-const registry: { [K in TripItemType]: TripItemModule<Extract<Flight | Accommodation, { type: K }>> } = {
+const registry: { [K in TripItemType]: TripItemModule<TripItemTypes[K]> } = {
   Flight: flightModule,
   Accommodation: accommodationModule,
 }
