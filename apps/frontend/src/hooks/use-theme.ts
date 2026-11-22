@@ -1,23 +1,30 @@
 import { useState } from 'react'
 
-export type Theme = 'light' | 'dark'
+export type Theme = 'system' | 'light' | 'dark'
 
-const THEME_KEY = 'theme'
+export const THEME_KEY = 'theme'
 
-// Light is the default (#37); only an explicit choice turns dark on.
+// System is the default: no stored value. Only an explicit Light or Dark is stored.
 export function getStoredTheme(): Theme {
-  return localStorage.getItem(THEME_KEY) === 'dark' ? 'dark' : 'light'
+  const stored = localStorage.getItem(THEME_KEY)
+  return stored === 'light' || stored === 'dark' ? stored : 'system'
 }
 
+// The inline script in index.html does the same before first paint; keep the two in step.
 export function applyTheme(theme: Theme) {
-  document.documentElement.classList.toggle('dark', theme === 'dark')
+  document.querySelector<HTMLMetaElement>('meta[name="color-scheme"]')!.content = theme === 'system' ? 'light dark' : theme
+  for (const meta of document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')) {
+    const scheme = meta.dataset.scheme
+    meta.media = theme === 'system' ? `(prefers-color-scheme: ${scheme})` : scheme === theme ? 'all' : 'not all'
+  }
 }
 
 export function useTheme(): [Theme, (theme: Theme) => void] {
   const [theme, setTheme] = useState(getStoredTheme)
 
   function choose(next: Theme) {
-    localStorage.setItem(THEME_KEY, next)
+    if (next === 'system') localStorage.removeItem(THEME_KEY)
+    else localStorage.setItem(THEME_KEY, next)
     applyTheme(next)
     setTheme(next)
   }

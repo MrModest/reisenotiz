@@ -48,9 +48,13 @@ For what the domain words mean — Trip, Trip Item, Accommodation Site, Timeline
 - Tailwind CSS v4 with custom theme defined in `src/index.css`
 - Uses OKLCH color space for theme colors
 - CSS variables for light/dark mode theming
-- Custom dark mode variant using `@custom-variant dark (&:is(.dark *))`. Light is the default;
-  `useTheme` (`src/hooks/use-theme.ts`) stores an explicit choice in `localStorage`, and the only
-  control for it is Settings' Appearance section
+- Colour tokens are `light-dark()` pairs on `:root` and follow `color-scheme`. The theme is
+  `System` (the default, nothing stored), `Light` or `Dark`. A pinned choice lives in
+  `localStorage` and is written to `<meta name="color-scheme">` by an inline script in
+  `index.html` before first paint; `:root` maps that meta onto `color-scheme`. The `dark:` variant
+  keys off the same meta plus `prefers-color-scheme`, so there is no `.dark` class. `useTheme`
+  (`src/hooks/use-theme.ts`) changes it, and its only control is Settings' Appearance section.
+  The two `theme-color` metas follow the same choice
 - Use `cn()` utility from `@/lib/utils` for conditional class merging
 - Use `joinWith(separator, parts)` from `@/lib/utils` to join the parts of a line that are present
 - **Design System**: `docs/design/reconciled-2026-09-17/` defines radius, spacing, colour, type and

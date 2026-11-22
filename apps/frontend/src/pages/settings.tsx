@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { isValidAutomergeUrl, useRepo } from '@automerge/react'
 import { PageHeader } from '@/components/layout/page-header'
 import { useDocumentTitle } from '@/hooks/use-document-title'
-import { useTheme } from '@/hooks/use-theme'
-import { Switch } from '@/components/ui/switch'
+import { useTheme, type Theme } from '@/hooks/use-theme'
+import { ChipRow } from '@/components/ui/chip-row'
 import { Field, FieldLabel, FieldContent, FieldDescription, FieldError } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -63,17 +63,26 @@ export function SyncSettings() {
   )
 }
 
+const themeOptions: { value: Theme; label: string }[] = [
+  { value: 'system', label: 'System' },
+  { value: 'light', label: 'Light' },
+  { value: 'dark', label: 'Dark' },
+]
+
 export function AppearanceSettings() {
   const [theme, setTheme] = useTheme()
 
   return (
-    <Field orientation='horizontal'>
-      <FieldLabel htmlFor='dark-theme'>Dark theme</FieldLabel>
-      <Switch
-        id='dark-theme'
-        checked={theme === 'dark'}
-        onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-      />
+    <Field>
+      <FieldLabel>Theme</FieldLabel>
+      <ChipRow options={themeOptions} value={theme} onValueChange={setTheme} aria-label='Theme' />
+      {theme === 'system' && (
+        <FieldDescription>
+          Follows your device, currently{' '}
+          <span className='[@media(prefers-color-scheme:dark)]:hidden'>light</span>
+          <span className='hidden [@media(prefers-color-scheme:dark)]:inline'>dark</span>.
+        </FieldDescription>
+      )}
     </Field>
   )
 }

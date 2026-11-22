@@ -27,7 +27,7 @@ export default defineConfig({
         name: 'Reisenotiz',
         short_name: 'Reisenotiz',
         description: 'Reisenotiz PWA',
-        theme_color: '#000000',
+        theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
         icons: [

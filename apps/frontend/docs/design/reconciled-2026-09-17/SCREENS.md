@@ -582,7 +582,8 @@ forms show the same fields inline under their place picker.
 
 Two sections:
 
-- **Appearance** — light / dark. Dark is the design's; **light is the default**. This is the first
+- **Appearance** — system / light / dark. Dark is the design's; **system is the default**, and
+  while it is chosen a line under the chips names the device's current scheme. This is the first
   time mobile has a theme control: `ThemeSwitcher` lived in a `hidden md:flex` aside in the old
   shell, which is deleted.
 - **Sync** — the root document ID field. Today that one string *is* the account.
