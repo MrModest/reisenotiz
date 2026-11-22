@@ -1,0 +1,29 @@
+name: Feature or change
+description: A spec precise enough to hand to a coding agent as its prompt.
+labels: [enhancement, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Only maintainers open pull requests; a clear spec is the contribution. See [CONTRIBUTING.md](https://github.com/MrModest/reisenotiz/blob/main/CONTRIBUTING.md).
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What you're trying to do, and why. One or two sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: Behaviour
+      description: What happens today and what should happen instead. Name screens, fields or settings exactly; labels, defaults, what you see on a phone versus a desktop. Files involved, if you know them.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance
+      description: Steps a person could follow to check it's done, and what they'd see at the end. Edge cases (empty states, long trips, time zones, offline use, trips created before the change) and what this should not change.
+    validations:
+      required: true

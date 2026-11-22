@@ -23,14 +23,15 @@ behind it is, and that fits better in an issue.
 
 ## How to contribute
 
-Open an [issue](https://github.com/MrModest/reisenotiz/issues/new). The
+Open an [issue](https://github.com/MrModest/reisenotiz/issues/new/choose). The
 most useful issue is one precise enough to paste into a coding agent as its
 prompt. If an agent could build the right thing from it with no follow-up
 questions, it's a great issue.
 
 ### Feature requests and changes
 
-Write it as a prompt for an agent, in three parts:
+Write it as a prompt for an agent. The **Feature or change** issue template
+asks for three parts:
 
 - **Goal.** What you're trying to do, and why. One or two sentences.
 - **Behaviour.** What happens today and what should happen instead. Name
@@ -58,7 +59,7 @@ this change show a count too. Sorting or filtering by length is out of scope.
 
 ### Bug reports
 
-Include:
+The **Bug report** issue template asks for:
 
 - the version you run
 - how you run it: Docker or from source, and with or without the sync server
