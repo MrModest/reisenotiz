@@ -4,14 +4,28 @@ A self-hosted, offline-first travel notes built as a PWA for keeping track of tr
 
 > **MVP Stage** — This project is in early development. Features are limited, data is stored in browser localStorage only (no backend sync yet), and breaking changes may occur. Use at your own risk and back up any important data.
 
-## Screenshots
+## Screenshots and video
 
+[Watch the walkthrough](docs/screenshots/ScreenRecording.mp4) — trip timeline, flight and stay details, saved places, and dark mode. All travel details shown are fictional demo data.
 
-<https://github.com/user-attachments/assets/1a491a52-49dc-49fb-a3d8-6cfdd83132aa>
+**Desktop**
 
-![](docs/screenshots/TripTimeline.png)
-![](docs/screenshots/FlightView.png)
-![](docs/screenshots/HotelView.png)
+![Desktop trip timeline with flight details](docs/screenshots/DesktopTimeline.png)
+
+<details>
+<summary>Dark mode</summary>
+
+![Desktop trip timeline with accommodation details in dark mode](docs/screenshots/DesktopDark.png)
+
+</details>
+
+**Mobile**
+
+<p>
+  <img src="docs/screenshots/TripTimeline.png" alt="Mobile trip timeline" width="260" />
+  <img src="docs/screenshots/FlightView.png" alt="Mobile flight details" width="260" />
+  <img src="docs/screenshots/HotelView.png" alt="Mobile accommodation details" width="260" />
+</p>
 
 ## Features
 
