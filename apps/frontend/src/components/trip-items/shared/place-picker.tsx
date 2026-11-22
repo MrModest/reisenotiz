@@ -1,42 +1,36 @@
-import { joinWith } from '@/lib/utils'
-import { useEffect, useState } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { useState } from 'react'
+import { get, useFormContext, useFormState, useWatch } from 'react-hook-form'
+import { getPlaceTypeModule, placeMeta } from '@/components/places/registry'
 import { Button } from '@/components/ui/button'
-import { Field, FieldError } from '@/components/ui/field'
-import { AirportSelector } from '@/components/ui/combobox/airport'
-import { AccommodationSelector, type SavedSiteEntry } from '@/components/ui/combobox/accommodation'
-import { PlaceDialog } from '@/components/places/place-dialog'
-import { useAirports } from '@/hooks/use-airports'
-import { useFormField } from '@/hooks/use-form-field'
-import { useSavedPlace, useSavedPlaceMutations, useSavedPlaces, type SavedPlaceEntry } from '@/store'
-import type { PlaceType } from '@/types'
+import { PlaceSelector } from '@/components/ui/combobox/place'
+import { Field } from '@/components/ui/field'
+import { joinWith } from '@/lib/utils'
+import type { AnyPlace, PlaceType } from '@/types'
 import { FieldLabel } from './field-label'
 
 interface PlacePickerProps {
   type: PlaceType
+  // The form field holding the place itself
   name: string
   label: string
 }
 
-// Picking an entry replaces the link and never edits the place; `Add` / `Edit` opens the place dialog
-// from component state, so the half-filled form around it survives
+// Picking a suggestion copies it into the form; nothing reaches the store until the item is saved.
+// The place's fields open beneath it to type a place in or correct the copy. They start open on a
+// blank place, close on a pick, and stay open while the place is invalid, so an error is never hidden.
 export function PlacePicker({ type, name, label }: PlacePickerProps) {
-  const { field, error } = useFormField(name)
-  const entry = useSavedPlace(field.value || undefined)
-  const linked = entry?.type === type ? entry : undefined
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const { trigger } = useFormContext()
-  const errorMessage = error?.message
+  const { setValue } = useFormContext()
+  const place = useWatch({ name }) as AnyPlace
+  const { errors } = useFormState({ name })
+  const { empty, Fields } = getPlaceTypeModule(type)
+  const blank = !place.name
+  const [editing, setEditing] = useState(blank)
+  const open = editing || !!get(errors, name)
 
-  // A place added in the dialog is linked before the form re-renders with it, so that first check
-  // ran against the old places; check again once the link resolves
-  useEffect(() => {
-    if (linked && errorMessage) void trigger(name)
-  }, [linked, errorMessage, name, trigger])
-
-  function link(key: string) {
-    field.onChange(key)
-    field.onBlur()
+  function pick(picked: AnyPlace | null) {
+    // Clearing the selection starts over with a blank place and no id
+    setValue(name, picked ?? empty(), { shouldDirty: true, shouldValidate: !!picked })
+    setEditing(!picked)
   }
 
   return (
@@ -44,68 +38,32 @@ export function PlacePicker({ type, name, label }: PlacePickerProps) {
       <FieldLabel htmlFor={name}>{label}</FieldLabel>
       <div className='flex items-start gap-2'>
         <div className='min-w-0 flex-1'>
-          {type === 'Airport' ? (
-            <AirportPicker id={name} linked={linked} onPick={link} />
-          ) : (
-            <SitePicker id={name} linked={linked} onPick={link} />
-          )}
+          <PlaceSelector id={name} type={type} selected={place.id ? place : null} onSelect={pick} />
         </div>
-        <Button type='button' variant='outline' className='h-auto self-stretch px-3 text-sm' onClick={() => setDialogOpen(true)}>
-          {linked ? 'Edit' : 'Add'}
-        </Button>
+        {!blank && (
+          <Button type='button' variant='outline' className='h-auto self-stretch px-3 text-sm' onClick={() => setEditing(!open)}>
+            {open ? 'Done' : 'Edit'}
+          </Button>
+        )}
       </div>
-      {linked ? <PlacePreview entry={linked} /> : field.value && <p className='px-0.5 text-sm text-muted-foreground'>Unknown place</p>}
-      {error && <FieldError className='text-xs font-thin'>{error.message}</FieldError>}
-      {dialogOpen && (
-        <PlaceDialog type={type} placeKey={linked?.key} onSaved={(key) => link(key)} onClose={() => setDialogOpen(false)} />
+      {open ? (
+        <div className='flex flex-col gap-3 rounded-lg border border-border p-3'>
+          <Fields prefix={`${name}.`} />
+        </div>
+      ) : (
+        <PlacePreview place={place} />
       )}
     </Field>
   )
 }
 
-interface PickerProps {
-  id: string
-  linked: SavedPlaceEntry | undefined
-  onPick: (key: string) => void
-}
-
-// Saved and dictionary airports in one list; a dictionary airport is saved before it is linked
-function AirportPicker({ id, linked, onPick }: PickerProps) {
-  const airports = useAirports()
-  const { materialiseAirport } = useSavedPlaceMutations()
-
-  return (
-    <AirportSelector
-      id={id}
-      items={airports}
-      selected={linked?.type === 'Airport' ? linked.place : null}
-      onSelect={(airport) => onPick(airport ? materialiseAirport(airport) : '')}
-    />
-  )
-}
-
-function SitePicker({ id, linked, onPick }: PickerProps) {
-  const sites = useSavedPlaces().filter((e): e is SavedSiteEntry => e.type === 'AccommodationSite' && !e.place.archived)
-
-  return (
-    <AccommodationSelector
-      id={id}
-      items={sites}
-      selected={linked?.type === 'AccommodationSite' ? linked : null}
-      onSelect={(site) => onPick(site?.key ?? '')}
-    />
-  )
-}
-
 // Spelling the code out is what catches a typo that happens to be another valid code
-function PlacePreview({ entry }: { entry: SavedPlaceEntry }) {
-  const { place } = entry
-  const title = `${place.name} · ${entry.type === 'Airport' ? entry.place.code : entry.place.kind}`
+function PlacePreview({ place }: { place: AnyPlace }) {
   const address = joinWith(', ', [place.address.line, place.address.city])
 
   return (
     <div className='px-0.5 wrap-anywhere'>
-      <p className='text-sm'>{title}</p>
+      <p className='text-sm'>{joinWith(' · ', [place.name, placeMeta(place)])}</p>
       <p className='font-mono text-[11px] text-muted-foreground'>{joinWith(' · ', [address, place.tzone])}</p>
     </div>
   )

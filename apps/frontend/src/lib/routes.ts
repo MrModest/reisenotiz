@@ -24,7 +24,8 @@ export const routes = {
     list: '/saved-places',
     new: (type: PlaceType) =>
       `/saved-places/new?type=${type}`,
-    edit: (placeKey: string) =>
-      `/saved-places/${placeKey}/edit`,
+    // A place id holds a colon (`custom:…`)
+    edit: (placeId: string) =>
+      `/saved-places/${encodeURIComponent(placeId)}/edit`,
   },
 } as const

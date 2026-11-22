@@ -78,15 +78,27 @@ A location in the world — its name, its address, and the timezone its clocks r
 _Avoid_: Location, venue, spot
 
 **Saved Place**:
-A place the traveller keeps for reuse across trips. A trip item refers to a saved place rather than holding a copy of it, so correcting one corrects every trip that uses it — including trips already taken. Distinct from trip data: deleting a trip never removes a saved place. A saved place something still refers to can be archived but not deleted.
+A custom place kept as a template, to suggest and fill in the next time the traveller needs it. A trip item holds its own copy of each place it uses, so editing or deleting a saved place never changes a trip. Saved automatically whenever a trip item holding a custom place is saved.
 _Avoid_: User record, favourite, saved item, dictionary
+
+**Custom Place**:
+A place the traveller typed in by hand, rather than took from a place provider. Only custom places become saved places.
+_Avoid_: Manual place, user place
+
+**Place Provider**:
+Where places come from outside the traveller's own: today the airport dictionary, later a geocoder. Its places are offered as suggestions and are never saved, since the provider can always offer them again.
+_Avoid_: Source, dictionary, geocoder
+
+**Place Id**:
+What makes two places the same place: the provider entry a place came from, or, for a custom place, its own identity. Two places that describe the same airport but have different ids are different places.
+_Avoid_: Key, source id
 
 **Place Type**:
 Which kind of place a place is — an airport, or an accommodation site. Distinct from an accommodation site's own kind, which says whether it is a hotel, a hostel, an apartment and so on.
 _Avoid_: Category, class, kind
 
 **Airport**:
-A place identified by its code, where flights depart and arrive.
+A place where flights depart and arrive, known to travellers by its code.
 _Avoid_: Aerodrome, terminal
 
 **Accommodation Site**:

@@ -3,7 +3,6 @@ import { formatTo } from '@/lib/datetime'
 import { routes } from '@/lib/routes'
 import { cn, joinWith } from '@/lib/utils'
 import { countryName } from '@/services'
-import { useSavedPlace } from '@/store'
 import type { Accommodation, StayInterval } from '@/types'
 import { AddressLink } from '../shared/address-link'
 import { AttachmentChips } from '../shared/attachment-chips'
@@ -14,19 +13,18 @@ import { PersonChips } from '../shared/person-chips'
 import { countNights } from './nights'
 
 export function AccommodationView({ item: stay }: { item: Accommodation }) {
-  const entry = useSavedPlace(stay.placeKey)
-  const site = entry?.type === 'AccommodationSite' ? entry.place : undefined
+  const site = stay.place
   // One offset above the hero covers all of its times, which share the site's zone
-  const where = site && joinWith(', ', [site.address.city, countryName(site.address.countryCode)])
-  const subline = where && `${where} · ${formatTo.utcOffset(stay.stayInterval.provided.in)}`
+  const where = joinWith(', ', [site.address.city, countryName(site.address.countryCode)])
+  const subline = `${where} · ${formatTo.utcOffset(stay.stayInterval.provided.in)}`
 
   return (
     <>
       <div className='min-h-0 flex-1 overflow-y-auto'>
         <div className='flex flex-col gap-6 p-4'>
           <div className='flex flex-col gap-1'>
-            <h2 className='text-[26px] leading-tight font-semibold wrap-anywhere'>{site?.name ?? 'Unknown place'}</h2>
-            {subline && <p className='font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase'>{subline}</p>}
+            <h2 className='text-[26px] leading-tight font-semibold wrap-anywhere'>{site.name}</h2>
+            <p className='font-mono text-[11px] tracking-[.08em] text-muted-foreground uppercase'>{subline}</p>
           </div>
           <StayHero stayInterval={stay.stayInterval} />
           <FactList>
@@ -39,7 +37,7 @@ export function AccommodationView({ item: stay }: { item: Accommodation }) {
             {stay.reservedOn && <FactRow label='Reserved by'>{stay.reservedOn.fullname}</FactRow>}
           </FactList>
           <AddressLink label='Address' place={site}>
-            {site?.contact && <p className='font-mono text-[12px] text-muted-foreground'>{site.contact}</p>}
+            {site.contact && <p className='font-mono text-[12px] text-muted-foreground'>{site.contact}</p>}
           </AddressLink>
           <NotesBlock note={stay.note} />
           <AttachmentChips attachments={stay.attachments} />
@@ -50,7 +48,6 @@ export function AccommodationView({ item: stay }: { item: Accommodation }) {
   )
 }
 
-// Everything here comes from the stay itself, so a dangling site link costs the hero nothing
 function StayHero({ stayInterval }: { stayInterval: Accommodation['stayInterval'] }) {
   const { provided, planned } = stayInterval
   const nights = countNights(provided)

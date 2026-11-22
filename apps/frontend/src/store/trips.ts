@@ -5,8 +5,9 @@ import { generateUUID } from '@/types/common/uuid'
 import { useRootDocUrl } from '@/contexts/root-doc-context'
 import type { RootDoc, TripDoc } from './automerge/types'
 import { withoutUndefined } from './automerge/without-undefined'
+import { overwrite } from './automerge/overwrite'
 import { assertValidTripItem } from './invariants'
-import { useSavedPlaces } from './saved-places'
+import { placesOf, saveCustomPlaces } from './saved-places'
 
 function useRootDoc() {
   return useDocument<RootDoc>(useRootDocUrl(), { suspense: true })
@@ -106,32 +107,28 @@ export function useDeleteTrip() {
   }
 }
 
+// Writing an item also saves its custom places as templates, in the root document
 export function useCreateTripItem(tripId: string) {
   const [, changeTripDoc] = useTripDoc(tripId)
-  const places = useSavedPlaces()
+  const [, changeRoot] = useRootDoc()
   return (item: Omit<TripItem, 'id'>): string => {
-    assertValidTripItem(item, places)
+    assertValidTripItem(item)
     const id = generateUUID()
     changeTripDoc((d) => {
       d.tripItems[id] = withoutUndefined({ ...item, id } as TripItem)
     })
+    changeRoot((d) => saveCustomPlaces(d, placesOf(item)))
     return id
   }
 }
 
 export function useUpdateTripItem(tripId: string) {
   const [, changeTripDoc] = useTripDoc(tripId)
-  const places = useSavedPlaces()
+  const [, changeRoot] = useRootDoc()
   return (itemId: string, item: TripItem): void => {
-    assertValidTripItem(item, places)
-    const next = withoutUndefined(item)
-    changeTripDoc((d) => {
-      const stored = d.tripItems[itemId]
-      for (const key of Object.keys(stored)) {
-        if (!(key in next)) delete stored[key as keyof TripItem]
-      }
-      Object.assign(stored, next)
-    })
+    assertValidTripItem(item)
+    changeTripDoc((d) => overwrite(d.tripItems, itemId, item))
+    changeRoot((d) => saveCustomPlaces(d, placesOf(item)))
   }
 }
 

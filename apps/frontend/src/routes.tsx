@@ -83,7 +83,7 @@ export const router = createBrowserRouter([
         // The dialog routes mount over the still-mounted list
         children: [
           { path: 'new', Component: NewPlaceDialogRoute },
-          { path: ':placeKey/edit', Component: EditPlaceDialogRoute },
+          { path: ':placeId/edit', Component: EditPlaceDialogRoute },
         ],
       },
       {

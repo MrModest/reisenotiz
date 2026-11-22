@@ -377,9 +377,8 @@ holding `Delete` behind `ConfirmDialog` ([#49](https://github.com/MrModest/reise
 **Sticky footer**: `Edit`, full width. **`Add to calendar` is cut** — `.ics` export is out of scope
 and an inert button is worse than none.
 
-**When the place link dangles**, the hero still renders completely — codes, times, duration,
-terminal and gate all come from the item. The address block shows a muted `Unknown place` with no
-link ([#37](https://github.com/MrModest/reisenotiz/issues/37)).
+Everything here, the address blocks included, comes from the flight, which holds a copy of each
+airport ([#103](https://github.com/MrModest/reisenotiz/issues/103)).
 
 ---
 
@@ -395,11 +394,11 @@ definition uses. `Accommodation` stays the type name in code
 
 **Body**:
 
-1. **Title** 26px/600 — the site's name. Falls back to `Unknown place` on a dangling link.
+1. **Title** 26px/600 — the site's name.
 2. **Subline**, mono — `INNSBRUCK, AUSTRIA · UTC+2`. The offset is appended here because a stay
    names its place *above* the hero, and one marker there covers all four of the hero's times,
    including the accent planned row ([#53](https://github.com/MrModest/reisenotiz/issues/53)).
-   Dropped entirely on a dangling link. **No `DOUBLE ROOM` subline** — cut with the booking extras.
+   **No `DOUBLE ROOM` subline** — cut with the booking extras.
 3. **Hero** — two stacked regions split by a rule, `align-items: center`, its own card shell.
    - Upper: check-in `SAT, 05 SEP` / `FROM 14:00`, a 20px accent number over `NIGHTS` in the
      centre, check-out / `BY 11:00`. **The check-in window's late end is cut** — the hero reads
@@ -449,17 +448,19 @@ free-text string rendered verbatim; `14A · 14B` is what the traveller typed.
 its own place, and a display variant is the deferred reader-timezone feature entering through the
 form.
 
-**The place picker** — a combobox plus one adjacent labelled button, `Add` when nothing is linked
-and `Edit` when something is, with a two-line preview beneath the selection: name and code on the
-first line, address and timezone on the second
-([#39](https://github.com/MrModest/reisenotiz/issues/39)).
+**The place picker** — a combobox plus one adjacent labelled button, `Edit` when the place's fields
+are closed and `Done` when they are open. Beneath it sits either the place's fields or a two-line
+preview: name and code on the first line, address and timezone on the second
+([#39](https://github.com/MrModest/reisenotiz/issues/39),
+[#103](https://github.com/MrModest/reisenotiz/issues/103)).
 
-- The airport combobox **lists saved airports and dictionary matches in one undifferentiated list**.
-  Picking a dictionary entry materialises it into saved places, which is the whole point of the
-  seam, so marking which is which would expose plumbing the traveller has no use for.
-- The button opens `PlaceDialog` with no key on `Add` and the current key on `Edit`; `onSaved`
-  writes the link. Choosing a different entry in the combobox **replaces** the link and never edits
-  the place.
+- The combobox **lists saved places and dictionary matches in one list, ranked together**. A saved
+  place carries a bookmark, so the traveller can tell their own places from the dictionary's. The
+  same airport can appear twice, once as each.
+- Picking an entry **copies** it into the item and closes the fields. Nothing is saved until the
+  item is. Clearing the combobox starts over with a blank place.
+- A blank place opens with its fields showing, so a place the dictionary lacks is typed in right
+  there. The fields stay open while any of them is invalid.
 - The preview line is the only place `BER` is spelled out as *Berlin Brandenburg* — which is what
   catches a typo that happens to be another valid code.
 
@@ -484,12 +485,12 @@ store — submit re-anchors both typed values to the chosen place's zone.
 
 **Header**: `←`, `Bed` icon, title `New stay` / `Edit stay`. No actions.
 
-**About nine controls.** The property's name, kind and address are not here — they live in
-`PlaceDialog`, one surface over. Guests, rooms, reserved-by, **notes** and **attachments** are.
+**About nine controls**, plus the property's own fields while they are open. Guests, rooms,
+reserved-by, **notes** and **attachments** are here.
 
 - **One place picker**, labelled `PROPERTY`. The accommodation combobox **lists saved sites only**,
-  so on a fresh install it is empty and `Add` is the first move — the geocoder that would populate
-  it is out of scope.
+  so on a fresh install it is empty and the property is typed into its fields — the geocoder that
+  would populate it is out of scope.
 - **The provided interval** in a `BOOKING` group, then the `PLAN` group. The planned interval **must lie within the
   provided one**: `planned.in >= provided.in` and `planned.out <= provided.out`, validated and
   blocking. Two instant comparisons, no time-of-day reasoning.
@@ -527,26 +528,17 @@ the same component and behaviour as the timeline's. Labels are `Airport` and `Ac
 *Accommodation Site* stays the glossary term but reads badly on a chip. Selection is local state,
 not a URL parameter.
 
-**A `Show archived` toggle** sits beside the chips. Archived places are hidden by default and carry
-a `Restore` action when shown.
-
 **The row is the view.** There is no detail screen for a saved place — the row carries name,
-address, and the actions. `Item` / `ItemGroup`, mono meta, name and address one line each and
-truncating.
+address, and `Delete`. `Item` / `ItemGroup`, mono meta, name and address one line each and
+truncating. Every saved place can be deleted: trips hold their own copies, so no trip changes
+([#103](https://github.com/MrModest/reisenotiz/issues/103)).
 
-| Place state | Action offered | Effect |
-| --- | --- | --- |
-| unused | **Delete** | gone from the document |
-| linked by any trip item | **Archive**, with the usage count; delete disabled | hidden from pickers, still resolves wherever it is linked |
-| archived | **Restore** | back in the pickers |
-| link dangles anyway | — | `Unknown place` fallback, never a crash |
+**No `Add` button.** A place typed into a flight or a stay is saved by itself when the item is, so
+the screen manages what exists. Dictionary airports are never saved. It stays cheap to add later —
+a header slot and a menu over the place types.
 
-**No `Add` button.** Places arrive by themselves the first time you add a flight or a stay, so the
-screen manages what exists. It stays cheap to add later — a header slot and a menu over the place
-types.
-
-**Empty**: *the airports and places you use on trips appear here*. It says nothing is here yet
-rather than inviting you to add something, because there is nothing to press.
+**Empty**: *the places you type in on trips appear here*. It says nothing is here yet rather than
+inviting you to add something, because there is nothing to press.
 
 **No loading state**, and none would ever be seen: saved places live in the index document itself,
 which is the fastest read in the app.
@@ -555,39 +547,29 @@ which is the fastest read in the app.
 
 ## Place dialog
 
-`/saved-places/new` · `/saved-places/:key/edit` · **no frame** ·
+`/saved-places/new` · `/saved-places/:placeId/edit` · **no frame** ·
 [#37](https://github.com/MrModest/reisenotiz/issues/37),
 [#47](https://github.com/MrModest/reisenotiz/issues/47)
 
-A dialog, and the **same** dialog from both of its entry points. The Saved places screen reads those
-params and mounts it; the list stays mounted underneath, because a dialog is an overlay rather than
-a sibling route. The route buys the phone's back gesture.
-
-The second entry point is inside a form — the flight and stay forms open it beside the place picker,
-from component state with `onSaved`, so you can add a missing airport without leaving a half-filled
-draft. That draft has nowhere to go if the page unmounts, which is the whole reason this one surface
-is a dialog.
+A dialog over the Saved places screen, which reads those params and mounts it; the list stays
+mounted underneath, because a dialog is an overlay rather than a sibling route. The route buys the
+phone's back gesture.
 
 ```
-PlaceDialog<T>   { type, placeKey?, onSaved? }
+PlaceDialog   { type, placeId? }
 
-placeKey undefined  →  Add:  write a new saved place, return it
-placeKey given      →  Edit: update the saved place at that key, return it
+placeId undefined  →  Add:  write a new saved place under a new id
+placeId given      →  Edit: write over the saved place with that id
 ```
-
-It never learns who opened it.
 
 **Shared across both place types**: `PlaceFields` — name, address line, city, country, timezone.
 Country is a **dropdown of ISO codes**, never typed
 ([#31](https://github.com/MrModest/reisenotiz/issues/31)).
 
 **Per type**: an airport adds `code`, whose dictionary lookup **prefills** name, address and
-timezone — type `CDG`, correct what is wrong, save. One control covers both jobs, materialising a
-known airport or hand-entering one the dictionary lacks. An accommodation site adds `kind` and
-`contact`.
-
-**Adding a place from inside a draft trip item writes it immediately.** Abandon the form afterwards
-and the place is still saved — and deletable, because nothing links it.
+timezone — type `CDG`, correct what is wrong, save. The place stays the traveller's own, separate
+from the dictionary's airport. An accommodation site adds `kind` and `contact`. The flight and stay
+forms show the same fields inline under their place picker.
 
 ---
 

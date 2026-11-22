@@ -10,6 +10,8 @@ import { createFlightDraft } from './draft'
 import { FlightForm } from './form'
 
 const airport = (code: string, name: string, city: string): Airport => ({
+  id: `iata:${code}`,
+  type: 'Airport',
   code,
   name,
   address: { countryCode: 'DE', city },
@@ -28,8 +30,8 @@ function renderForm(onSubmit: (flight: Flight) => void) {
       </RootDocUrlContext.Provider>
     </RepoContext.Provider>,
   )
-  const airports = () => (repo.handles[interpretAsDocumentId(rootHandle.url)] as DocHandle<RootDoc>).doc().savedAirports ?? {}
-  return { airports }
+  const saved = () => (repo.handles[interpretAsDocumentId(rootHandle.url)] as DocHandle<RootDoc>).doc().savedPlaces
+  return { saved }
 }
 
 async function pickAirport(group: string, query: string, name: string) {
@@ -46,7 +48,7 @@ describe('FlightForm', () => {
       JSON.stringify({ fetchedAt: new Date().toISOString(), data: { DE: { code: 'DE', name: 'Germany' } } }),
     )
     localStorage.setItem(
-      'dict:airports-by-country-code',
+      'dict:airports-v2',
       JSON.stringify({
         fetchedAt: new Date().toISOString(),
         data: { BER: airport('BER', 'Berlin Brandenburg', 'Berlin'), MUC: airport('MUC', 'Munich Airport', 'Munich') },
@@ -83,18 +85,37 @@ describe('FlightForm', () => {
   })
 
   // #90: picking airports from the combobox used to leave Save doing nothing
-  it('saves dictionary airports it picks, then submits the flight linked to them', async () => {
+  it('submits a copy of each airport it picks, and writes nothing to the store', async () => {
     const onSubmit = vi.fn()
-    const { airports } = renderForm(onSubmit)
+    const { saved } = renderForm(onSubmit)
 
     await pickAirport('Departure', 'BER', 'Berlin Brandenburg')
     await pickAirport('Arrival', 'MUC', 'Munich Airport')
-    expect(Object.keys(airports()).sort()).toEqual(['BER', 'MUC'])
 
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
     await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
     const flight: Flight = onSubmit.mock.calls[0][0]
-    expect([flight.departure.placeKey, flight.arrival.placeKey]).toEqual(['BER', 'MUC'])
+    expect(flight.departure.place).toEqual(airport('BER', 'Berlin Brandenburg', 'Berlin'))
+    expect(flight.arrival.place.id).toBe('iata:MUC')
     expect(flight.departure.time.zone).toBe('Europe/Berlin')
+    expect(saved()).toEqual({})
+  })
+
+  it('submits an airport typed in by hand with a custom id', async () => {
+    const onSubmit = vi.fn()
+    renderForm(onSubmit)
+
+    const departure = within(await screen.findByRole('region', { name: 'Departure' }))
+    fireEvent.change(departure.getByLabelText(/Code/), { target: { value: 'XFW' } })
+    fireEvent.change(departure.getByLabelText(/Name/), { target: { value: 'Finkenwerder' } })
+    fireEvent.change(departure.getByLabelText(/City/), { target: { value: 'Hamburg' } })
+    fireEvent.change(departure.getByLabelText(/Country/), { target: { value: 'DE' } })
+    await pickAirport('Arrival', 'MUC', 'Munich Airport')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
+    const flight: Flight = onSubmit.mock.calls[0][0]
+    expect(flight.departure.place).toMatchObject({ code: 'XFW', name: 'Finkenwerder', address: { city: 'Hamburg', countryCode: 'DE' } })
+    expect(flight.departure.place.id).toMatch(/^custom:/)
   })
 })

@@ -2,7 +2,6 @@ import { FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Field, FieldError } from '@/components/ui/field'
 import { useFormField } from '@/hooks/use-form-field'
-import { useSavedPlaces } from '@/store'
 import type { Accommodation } from '@/types'
 import type { TripItemFormProps } from '../module'
 import { DateTimeField } from '../shared/date-time-field'
@@ -16,9 +15,8 @@ import { PlacePicker } from '../shared/place-picker'
 import { stayFormSchema, stayFormValues, stayFromFormValues, type StayFormValues } from './schema'
 
 export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFormProps<Accommodation>) {
-  const places = useSavedPlaces()
   const form = useForm<StayFormValues>({
-    resolver: zodResolver(stayFormSchema(places)),
+    resolver: zodResolver(stayFormSchema),
     defaultValues: stayFormValues(stay),
     mode: 'onTouched',
   })
@@ -26,11 +24,11 @@ export function AccommodationForm({ item: stay, onSubmit, onCancel }: TripItemFo
   return (
     <FormProvider {...form}>
       <form
-        onSubmit={form.handleSubmit((values) => onSubmit(stayFromFormValues(values, stay, places)))}
+        onSubmit={form.handleSubmit((values) => onSubmit(stayFromFormValues(values, stay)))}
         className='flex min-h-0 flex-1 flex-col'
       >
         <div className='flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4'>
-          <PlacePicker type='AccommodationSite' name='placeKey' label='Property' />
+          <PlacePicker type='AccommodationSite' name='place' label='Property' />
           <FormGroup label='Booking'>
             <DateTimeField dateName='provided.dateIn' timeName='provided.timeIn' dateLabel='Check-in' timeLabel='From' />
             <DateTimeField dateName='provided.dateOut' timeName='provided.timeOut' dateLabel='Check-out' timeLabel='By' />

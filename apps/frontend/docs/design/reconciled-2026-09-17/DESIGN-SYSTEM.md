@@ -329,7 +329,7 @@ painted and leaves the content whole, so a truncated link still copies and opens
 **Names are capped at 100 characters** through `schemas.string('Name', 100)` — trip name, saved
 place name, `Person.fullname`, attachment name. `description`, `note` and attachment links stay
 uncapped. 100 clears the longest airport name in `airports.csv` (90 characters), which must
-validate because a saved place is materialised from that row.
+validate because a flight copies its airport from that row and its form validates the copy.
 
 **The app has exactly two horizontal scrollers**: the timeline's chip row and Saved places' chip
 row, both with `ALL` pinned left. If any region scroller scrolls sideways, a rule above is being

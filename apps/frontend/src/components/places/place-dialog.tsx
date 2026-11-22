@@ -1,46 +1,40 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { useSavedPlace, useSavedPlaceMutations, type PlaceSaveError } from '@/store'
-import type { PlaceType, PlaceTypes } from '@/types'
+import { useSavedPlace, useSavedPlaceMutations } from '@/store'
+import { customPlaceId, type PlaceType } from '@/types'
+import { PlaceForm } from './place-form'
 import { getPlaceTypeModule } from './registry'
 
-interface PlaceDialogProps<T extends PlaceType> {
-  type: T
+interface PlaceDialogProps {
+  type: PlaceType
   // Absent to add a place, present to edit the one saved under it
-  placeKey?: string
-  onSaved?: (placeKey: string, place: PlaceTypes[T]) => void
+  placeId?: string
   onClose: () => void
 }
 
-// One dialog for the Places screen and the trip item forms alike; it never learns who opened it.
-export function PlaceDialog<T extends PlaceType>({ type, placeKey, onSaved, onClose }: PlaceDialogProps<T>) {
-  const { label, Form } = getPlaceTypeModule(type)
-  const entry = useSavedPlace(placeKey)
-  const { add, update } = useSavedPlaceMutations()
+// The Places screen's add and edit. Saving a place deleted on another device meanwhile writes it back.
+export function PlaceDialog({ type, placeId, onClose }: PlaceDialogProps) {
+  const { label, empty } = getPlaceTypeModule(type)
+  const saved = useSavedPlace(placeId)
+  const { save } = useSavedPlaceMutations()
 
-  if (placeKey && !entry) return null
-
-  const { archived, ...place } = (entry?.place ?? {}) as PlaceTypes[T] & { archived?: boolean }
-
-  // A place deleted on another device while it was being edited has nothing left to save into
-  function handleSubmit(saved: PlaceTypes[T]): PlaceSaveError | void {
-    const result = placeKey ? update(type, placeKey, saved) : add(type, saved)
-    if (!result.ok) {
-      if (result.reason === 'not-found') onClose()
-      return result.reason
-    }
-    onSaved?.(result.key, saved)
-    onClose()
-  }
+  if (placeId && !saved) return null
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {placeKey ? 'Edit' : 'New'} {label.toLowerCase()}
+            {placeId ? 'Edit' : 'New'} {label.toLowerCase()}
           </DialogTitle>
         </DialogHeader>
-        <Form place={entry ? (place as PlaceTypes[T]) : undefined} onSubmit={handleSubmit} onCancel={onClose} />
+        <PlaceForm
+          place={saved ?? { ...empty(), id: customPlaceId() }}
+          onSubmit={(place) => {
+            save(place)
+            onClose()
+          }}
+          onCancel={onClose}
+        />
       </DialogContent>
     </Dialog>
   )

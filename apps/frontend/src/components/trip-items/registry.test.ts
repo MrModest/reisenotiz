@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import type { Accommodation, Flight, TripItem } from '@/types'
-import type { SavedPlaceEntry } from '@/store'
+import type { Accommodation, AccommodationSite, Airport, Flight, TripItem } from '@/types'
 import { getTripItemModule, presentTripItemModules, toTimelineElements } from './registry'
 import { createFlightDraft } from './flight/draft'
 import { createAccommodationDraft } from './accommodation/draft'
@@ -30,8 +29,17 @@ describe('presentTripItemModules', () => {
   })
 
   it('gives every known item its elements and an unknown one none', () => {
-    expect(toTimelineElements([flight, stay, unknown], []).map((e) => e.tripItemId)).toEqual([flight.id, flight.id, stay.id, stay.id])
+    expect(toTimelineElements([flight, stay, unknown]).map((e) => e.tripItemId)).toEqual([flight.id, flight.id, stay.id, stay.id])
   })
+})
+
+const airport = (code: string): Airport => ({
+  id: `iata:${code}`,
+  type: 'Airport',
+  code,
+  name: code,
+  address: { countryCode: 'DE', city: '' },
+  tzone: 'Europe/Berlin',
 })
 
 describe('flight toTimelineElements', () => {
@@ -41,16 +49,10 @@ describe('flight toTimelineElements', () => {
     id: 'f1',
     flightNumber: 'LH 1953',
     seat: '14A',
-    departure: { ...draft.departure, placeKey: 'BER', terminal: 'T1', time: at('2026-09-05T06:40:00.000Z') },
-    arrival: { ...draft.arrival, placeKey: 'MUC', terminal: 'T2', time: at('2026-09-05T08:00:00.000Z') },
+    departure: { ...draft.departure, place: airport('BER'), terminal: 'T1', time: at('2026-09-05T06:40:00.000Z') },
+    arrival: { ...draft.arrival, place: airport('MUC'), terminal: 'T2', time: at('2026-09-05T08:00:00.000Z') },
   }
-  const airport = (code: string): SavedPlaceEntry => ({
-    type: 'Airport',
-    key: code,
-    place: { code, name: code, address: { countryCode: 'DE', city: '' }, tzone: 'Europe/Berlin' },
-  })
-  const places = [airport('BER'), airport('MUC')]
-  const toElements = (f: Flight, saved = places) => getTripItemModule('Flight')!.toTimelineElements(f, saved)
+  const toElements = (f: Flight) => getTripItemModule('Flight')!.toTimelineElements(f)
 
   it('is a departure and an arrival, both titled with the flight number', () => {
     expect(toElements(flight)).toEqual([
@@ -69,26 +71,24 @@ describe('flight toTimelineElements', () => {
     const named = { ...flight, departure: { ...flight.departure, terminal: 'North Terminal' } }
     expect(toElements(named)[0].summary).toBe('Departure · BER North Terminal · Seat 14A')
   })
-
-  // The link is the IATA code, so a deleted airport costs the timeline nothing
-  it('keeps both elements whole when an airport link dangles', () => {
-    expect(toElements(flight, [])).toEqual(toElements(flight))
-  })
 })
 
 describe('stay toTimelineElements', () => {
-  const site: SavedPlaceEntry = {
+  const site: AccommodationSite = {
+    id: 'custom:kreuz',
     type: 'AccommodationSite',
-    key: 'site-1',
-    place: { name: 'Hotel Weisses Kreuz', kind: 'Hotel', address: { countryCode: 'AT', city: 'Innsbruck', line: 'Herzog-Friedrich-Strasse 31' }, tzone: 'Europe/Vienna' },
+    name: 'Hotel Weisses Kreuz',
+    kind: 'Hotel',
+    address: { countryCode: 'AT', city: 'Innsbruck', line: 'Herzog-Friedrich-Strasse 31' },
+    tzone: 'Europe/Vienna',
   }
   const stay: Accommodation = {
     ...createAccommodationDraft('trip'),
     id: 's1',
-    placeKey: 'site-1',
+    place: site,
     stayInterval: { provided: { in: at('2026-09-05T13:00:00.000Z'), out: at('2026-09-08T08:00:00.000Z') } },
   }
-  const toElements = (s: Accommodation, places = [site]) => getTripItemModule('Accommodation')!.toTimelineElements(s, places)
+  const toElements = (s: Accommodation) => getTripItemModule('Accommodation')!.toTimelineElements(s)
 
   it('is a check-in and a check-out at the provided times when nothing is planned', () => {
     expect(toElements(stay)).toEqual([
@@ -101,12 +101,5 @@ describe('stay toTimelineElements', () => {
     const planned = { in: at('2026-09-05T16:40:00.000Z'), out: at('2026-09-08T07:30:00.000Z') }
     const elements = toElements({ ...stay, stayInterval: { ...stay.stayInterval, planned } })
     expect(elements.map((e) => e.at)).toEqual([planned.in, planned.out])
-  })
-
-  it('reads Unknown place, with no address, when the site link dangles', () => {
-    expect(toElements(stay, []).map((e) => [e.title, e.summary])).toEqual([
-      ['Unknown place', 'Check-in'],
-      ['Unknown place', 'Check-out'],
-    ])
   })
 })

@@ -17,7 +17,8 @@ export const countryDictionary = new Dictionary<Country>({
 })
 
 export const airportDictionary = new Dictionary<Airport>({
-  storageKey: 'dict:airports-by-country-code',
+  // Versioned with the stored shape, so a cache from before it is fetched again
+  storageKey: 'dict:airports-v2',
   fetcher: async () => {
     await countryDictionary.load()
     const codeByName = Object.fromEntries(countryDictionary.getAllValues().map((c) => [c.name, c.code]))

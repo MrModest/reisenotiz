@@ -25,6 +25,10 @@ describe('parseAirports', () => {
     expect(airports.HND).toMatchObject({ name: 'Tokyo Haneda Airport, Ota', address: { countryCode: 'JP', city: 'Tokyo' } })
   })
 
+  it('gives each airport its IATA place id', () => {
+    expect(parseAirports(airportsCsv, { Germany: 'DE', Japan: 'JP' }).BER).toMatchObject({ id: 'iata:BER', type: 'Airport', code: 'BER' })
+  })
+
   it('throws on a country name the country list lacks', () => {
     expect(() => parseAirports(airportsCsv, { Germany: 'DE' })).toThrow(/Japan/)
   })

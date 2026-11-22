@@ -4,12 +4,12 @@ import { useMapUrl } from '@/hooks/use-map-url'
 import type { Place } from '@/types'
 import { SectionLabel } from './field-label'
 
-// A link that dangles still names the block, with nothing to open. `children` sits beneath the address.
-export function AddressLink({ label, place, children }: { label: string; place: Place | undefined; children?: ReactNode }) {
+// `children` sits beneath the address
+export function AddressLink({ label, place, children }: { label: string; place: Place; children?: ReactNode }) {
   return (
     <section className='flex flex-col gap-1.5'>
       <SectionLabel>{label}</SectionLabel>
-      {place ? <PlaceAddress place={place}>{children}</PlaceAddress> : <p className='text-[15px] text-muted-foreground'>Unknown place</p>}
+      <PlaceAddress place={place}>{children}</PlaceAddress>
     </section>
   )
 }

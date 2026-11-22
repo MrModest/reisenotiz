@@ -61,6 +61,8 @@ export function parseAirports(csv: string, countryCodeByName: Record<string, str
     if (!countryCode) throw new Error(`Airport ${code} is in '${country}', which the country list lacks`)
 
     result[code] = {
+      id: `iata:${code}`,
+      type: 'Airport',
       code,
       name,
       address: {

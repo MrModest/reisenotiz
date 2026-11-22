@@ -1,22 +1,26 @@
 import { describe, it, expect, vi, beforeAll, afterEach } from 'vitest'
 import { Suspense } from 'react'
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Repo, RepoContext } from '@automerge/react'
 import { RootDocUrlContext } from '@/contexts/root-doc-context'
 import { EMPTY_ROOT_DOC, type RootDoc } from '@/store/automerge/types'
 import { countryDictionary } from '@/services'
-import type { Accommodation } from '@/types'
+import type { Accommodation, AccommodationSite } from '@/types'
 import { createAccommodationDraft } from './draft'
 import { AccommodationForm } from './form'
 
+const kreuz: AccommodationSite = {
+  id: 'custom:kreuz',
+  type: 'AccommodationSite',
+  name: 'Hotel Weisses Kreuz',
+  kind: 'Hotel',
+  address: { countryCode: 'AT', city: 'Innsbruck' },
+  tzone: 'Europe/Vienna',
+}
+
 function renderForm(onSubmit: (stay: Accommodation) => void) {
   const repo = new Repo({ network: [] })
-  const rootHandle = repo.create<RootDoc>({
-    ...EMPTY_ROOT_DOC,
-    savedAccommodationSites: {
-      'site-1': { name: 'Hotel Weisses Kreuz', kind: 'Hotel', address: { countryCode: 'AT', city: 'Innsbruck' }, tzone: 'Europe/Vienna' },
-    },
-  })
+  const rootHandle = repo.create<RootDoc>({ ...EMPTY_ROOT_DOC, savedPlaces: { 'custom:kreuz': kreuz } })
   render(
     <RepoContext.Provider value={repo}>
       <RootDocUrlContext.Provider value={rootHandle.url}>
@@ -52,35 +56,34 @@ describe('AccommodationForm', () => {
     await waitFor(() => expect(save).toHaveProperty('disabled', false))
   })
 
-  it('submits the stay linked to the saved site it picks, anchored to its zone', async () => {
+  it('submits a copy of the saved site it picks, anchored to its zone', async () => {
     const onSubmit = vi.fn()
     renderForm(onSubmit)
 
     // Base UI opens the list only on typing, which carries an inputType
     fireEvent.input(await screen.findByLabelText('Property'), { target: { value: 'Weis' }, inputType: 'insertText' })
-    fireEvent.click(await screen.findByRole('option', { name: /Hotel Weisses Kreuz/ }))
+    fireEvent.click(await screen.findByRole('option', { name: /Hotel Weisses Kreuz.*Saved/ }))
     fireEvent.click(screen.getByRole('button', { name: 'Save' }))
 
     await waitFor(() => expect(onSubmit).toHaveBeenCalledOnce())
     const stay: Accommodation = onSubmit.mock.calls[0][0]
-    expect(stay.placeKey).toBe('site-1')
+    expect(stay.place).toEqual(kreuz)
     expect(stay.stayInterval.provided.in).toEqual(stay.stayInterval.provided.out)
     expect(stay.stayInterval.provided.in.zone).toBe('Europe/Vienna')
     expect(stay.stayInterval.planned).toBeUndefined()
   })
 
-  // A site added from the form is linked before the form re-renders with it
-  it('links a site added through Add without a stale Unknown place error', async () => {
+  it("shows the property's fields while it is blank, and only its preview once a site is picked", async () => {
     renderForm(vi.fn())
-    fireEvent.click(await screen.findByRole('button', { name: 'Add' }))
-    const dialog = within(await screen.findByRole('dialog'))
-    fireEvent.change(dialog.getByLabelText(/Name/), { target: { value: 'Hotel Alpha' } })
-    fireEvent.change(dialog.getByLabelText(/City/), { target: { value: 'Innsbruck' } })
-    fireEvent.change(dialog.getByLabelText(/Country/), { target: { value: 'AT' } })
-    fireEvent.click(dialog.getByRole('button', { name: 'Save' }))
+    expect(await screen.findByLabelText(/Name/)).toBeTruthy()
 
-    expect(await screen.findByText('Hotel Alpha · Hotel')).toBeTruthy()
-    await waitFor(() => expect(screen.queryByText('Unknown place, pick the property again')).toBeNull())
+    fireEvent.input(screen.getByLabelText('Property'), { target: { value: 'Weis' }, inputType: 'insertText' })
+    fireEvent.click(await screen.findByRole('option', { name: /Hotel Weisses Kreuz/ }))
+
+    expect(await screen.findByText('Hotel Weisses Kreuz · Hotel')).toBeTruthy()
+    expect(screen.queryByLabelText(/Name/)).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    expect((screen.getByLabelText(/Name/) as HTMLInputElement).value).toBe('Hotel Weisses Kreuz')
   })
 
   it('shows the plan fields only after Add plan, starting from the booking, and Clear removes them', async () => {

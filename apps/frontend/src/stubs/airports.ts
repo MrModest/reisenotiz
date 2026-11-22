@@ -1,6 +1,6 @@
 import { Airport } from '@/types'
 
-export const airports: Airport[] = [
+const entries: Omit<Airport, 'id' | 'type'>[] = [
   {
     code: 'BER',
     name: 'Berlin Brandenburg Airport',
@@ -56,5 +56,7 @@ export const airports: Airport[] = [
     tzone: 'America/New_York',
   },
 ]
+
+export const airports: Airport[] = entries.map((a) => ({ ...a, id: `iata:${a.code}`, type: 'Airport' }))
 
 export const airportsByCode: Record<string, Airport> = Object.fromEntries(airports.map((a) => [a.code, a]))
