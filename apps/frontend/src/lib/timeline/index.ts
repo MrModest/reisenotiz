@@ -26,7 +26,7 @@ export interface TimelineDay {
  * non-empty days are emitted.
  */
 export function buildTimelineDays(elements: TimelineElement[], filter?: TripItemType): TimelineDay[] {
-  const sorted = [...elements].sort((a, b) => a.at.instant.localeCompare(b.at.instant))
+  const sorted = elements.toSorted((a, b) => a.at.instant.localeCompare(b.at.instant))
   const originZone = sorted[0]?.at.zone
   const days: TimelineDay[] = []
   let dayKey = ''

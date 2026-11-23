@@ -53,17 +53,36 @@ describe('AppearanceSettings', () => {
   afterEach(() => {
     cleanup()
     localStorage.clear()
-    document.documentElement.classList.remove('dark')
+    document.head.querySelectorAll('meta').forEach((meta) => meta.remove())
   })
 
-  it('starts light and switches the whole app to dark, remembering the choice', () => {
+  function colorSchemeMeta() {
+    const meta = document.createElement('meta')
+    meta.name = 'color-scheme'
+    meta.content = 'light dark'
+    document.head.append(meta)
+    return meta
+  }
+
+  it('starts on System, pins Dark when chosen and forgets it on System again', () => {
+    const meta = colorSchemeMeta()
     render(<AppearanceSettings />)
-    const toggle = screen.getByRole('switch', { name: 'Dark theme' })
-    expect(toggle.getAttribute('aria-checked')).toBe('false')
+    const option = (name: string) => screen.getByRole('button', { name })
+    expect(option('System').getAttribute('aria-pressed')).toBe('true')
 
-    fireEvent.click(toggle)
-
-    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    fireEvent.click(option('Dark'))
+    expect(meta.content).toBe('dark')
     expect(localStorage.getItem('theme')).toBe('dark')
+
+    fireEvent.click(option('System'))
+    expect(meta.content).toBe('light dark')
+    expect(localStorage.getItem('theme')).toBeNull()
+  })
+
+  it('opens on a stored choice', () => {
+    colorSchemeMeta()
+    localStorage.setItem('theme', 'light')
+    render(<AppearanceSettings />)
+    expect(screen.getByRole('button', { name: 'Light' }).getAttribute('aria-pressed')).toBe('true')
   })
 })

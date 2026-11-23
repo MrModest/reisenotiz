@@ -21,7 +21,7 @@ export function SavedPlacesPage() {
   const places = useSavedPlaces()
   const [filter, setFilter] = useState<Filter>('ALL')
 
-  const sorted = [...places].sort((a, b) => a.name.localeCompare(b.name))
+  const sorted = places.toSorted((a, b) => a.name.localeCompare(b.name))
   // A chip exists only for a type something saved has, so no filter can leave the list empty
   const present = placeTypeModules.filter((m) => places.some((p) => p.type === m.type))
   const active = present.some((m) => m.type === filter) ? filter : 'ALL'

@@ -37,9 +37,10 @@ const figure = (f) => `<figure id="${f.file}" class="flex flex-col gap-2">
 </figure>`
 
 const page = (head) => `<!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="color-scheme" content="dark">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Reisenotiz frames</title>
 ${head}
@@ -48,7 +49,7 @@ ${head}
 <header class="flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-border bg-background px-6 py-3">
   <div class="text-[15px] font-semibold">Reisenotiz — reconciled frames</div>
   <div class="text-[12px] text-muted-foreground">Drawn from <span class="font-mono">DESIGN-SYSTEM.md</span> and <span class="font-mono">SCREENS.md</span>. Where a frame and a decision disagree, the frame is wrong.</div>
-  <button onclick="document.documentElement.classList.toggle('dark')" class="ml-auto h-9 rounded-md border border-input bg-background px-3 text-[13px] font-medium">Theme</button>
+  <button onclick="const m = document.querySelector('meta[name=color-scheme]'); m.content = m.content === 'dark' ? 'light' : 'dark'" class="ml-auto h-9 rounded-md border border-input bg-background px-3 text-[13px] font-medium">Theme</button>
 </header>
 <main class="flex flex-wrap items-start gap-10 p-6">
 ${frames.map(figure).join('\n')}
@@ -107,7 +108,7 @@ const missing = await tab.evaluate(() =>
 if (missing.length) throw new Error(`fonts did not load: ${missing.join(', ')}`)
 
 for (const theme of ['dark', 'light']) {
-  await tab.evaluate((dark) => document.documentElement.classList.toggle('dark', dark), theme === 'dark')
+  await tab.evaluate((t) => { document.querySelector('meta[name="color-scheme"]').content = t }, theme)
   for (const f of frames) {
     await tab.locator(`[id="${f.file}"] .frame`).screenshot({ path: join(here, `${f.file}-${theme}.png`) })
   }
